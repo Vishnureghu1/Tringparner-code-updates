@@ -1,5 +1,5 @@
 <template>
-	<div style='background-color:black'>
+	<div >
 		<v-container>
 			<v-layout row wrap>
 				<v-flex class="d-flex justify-center mb-6 pt-6">
