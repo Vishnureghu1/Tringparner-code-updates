@@ -88,50 +88,48 @@
 // 'Content-Type': 'application/json',
 // 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6ODg5MTk3ODA4NSwiaWF0IjoxNjE5NTk2NDQyfQ.ivLx4XVN8wVcyA6_90rCyWU8LeN3XIsrr7oMleWSCqQ'
 // }
-const data = {"uid":"kugCotqp0JbALG8Xx6BM6pr43R22","phoneNumber": '8891978085'}
-axios.post("https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list", data,{
-	headers: {
-		'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6ODg5MTk3ODA4NSwiaWF0IjoxNjE5NTk2NDQyfQ.ivLx4XVN8wVcyA6_90rCyWU8LeN3XIsrr7oMleWSCqQ'
-	}}
-)
-.then((response) => {
-// dispatch({
-// type: FOUND_USER,
-// data: response.data[0]
+// const data = {"uid":"kugCotqp0JbALG8Xx6BM6pr43R22","phoneNumber": '8891978085'}
+// axios.post("https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list", data,{
+// 	headers: {
+// 		'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6ODg5MTk3ODA4NSwiaWF0IjoxNjE5NTk2NDQyfQ.ivLx4XVN8wVcyA6_90rCyWU8LeN3XIsrr7oMleWSCqQ'
+// 	}}
+// )
+// .then((response) => {
+// // dispatch({
+// // type: FOUND_USER,
+// // data: response.data[0]
+// // })
+// console.log(response)
 // })
-console.log(response)
+// .catch((error) => {
+// // dispatch({
+// // type: ERROR_FINDING_USER
+// // })
+// console.log(error)
+// })
+
+//************************************************
+
+var axios = require('axios');
+var data = JSON.stringify({"uid":"kugCotqp0JbALG8Xx6BM6pr43R22","phoneNumber":"8891978085"});
+
+var config = {
+  method: 'POST',
+  url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list',
+  headers: { 
+    'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6ODg5MTk3ODA4NSwiaWF0IjoxNjE5NTk2NDQyfQ.ivLx4XVN8wVcyA6_90rCyWU8LeN3XIsrr7oMleWSCqQ', 
+    'Content-Type': 'application/json'
+  },
+  data : data
+};
+
+axios(config)
+.then(function (response) {
+  console.log(JSON.stringify(response.data));
 })
-.catch((error) => {
-// dispatch({
-// type: ERROR_FINDING_USER
-// })
-console.log(error)
-})
-
-
-
-
-
-// var axios = require('axios');
-// var data = JSON.stringify({"uid":"kugCotqp0JbALG8Xx6BM6pr43R22","phoneNumber":"8891978085"});
-
-// var config = {
-//   method: 'POST',
-//   url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list',
-//   headers: { 
-//     'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6ODg5MTk3ODA4NSwiaWF0IjoxNjE5NTk2NDQyfQ.ivLx4XVN8wVcyA6_90rCyWU8LeN3XIsrr7oMleWSCqQ', 
-//     'Content-Type': 'application/json'
-//   },
-//   data : data
-// };
-
-// axios(config)
-// .then(function (response) {
-//   console.log(JSON.stringify(response.data));
-// })
-// .catch(function (error) {
-//   console.log(error);
-// });
+.catch(function (error) {
+  console.log(error);
+});
 					}
 				},
 				immediate: true
