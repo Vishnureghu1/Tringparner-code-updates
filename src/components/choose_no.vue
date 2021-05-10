@@ -1,9 +1,9 @@
 <template>
 	<div>
-		<v-container>
-			<v-layout row>
-				<v-flex class="d-flex justify-end mb-6 pt-6">
-					<v-card cols="8" width="100%" height="100%">
+		<v-container  fluid>
+			<v-layout align-center justify-center>
+				<v-flex xs12 sm8 md8>
+					<v-card class="mx-auto">
 						<v-row no-gutters>
 							<v-col cols="12">
 								<div class="mt-3 ml-3">

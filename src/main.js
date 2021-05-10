@@ -1,4 +1,4 @@
-import Vue from 'vue'
+  import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify';
@@ -7,12 +7,14 @@ import 'firebase/firestore';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import AxiosPlugin from 'vue-axios-cors'
+import store from './store'
 
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 Vue.use(AxiosPlugin)
-// Vue.http.headers.common['Access-Control-Allow-Origin'] = '*'
+export const eventBus = new Vue();
+
 firebase.initializeApp({
 	apiKey: "AIzaSyAbKeIOiuumM2AYsvPgJuyytH0CvIwxhsU",
     authDomain: "tringpartner-v2.firebaseapp.com",
@@ -25,9 +27,17 @@ firebase.initializeApp({
   });
 
 export const db = firebase.firestore();
+let app;
+console.log("app", app)
 
-new Vue({
-  router,
-  vuetify,
-  render: h => h(App)
-}).$mount('#app')
+firebase.default.auth().onAuthStateChanged(user => {
+  console.log('pre render',user);
+  if (!app){
+    app = new Vue({
+      router,
+      store,
+      vuetify,
+      render: h => h(App)
+    }).$mount('#app')
+  }
+})

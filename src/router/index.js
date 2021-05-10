@@ -16,9 +16,24 @@ const routes = [
     component: () => import(/* webpackChunkName: "choose_no" */ '../components/choose_no.vue')
   },
   {
+    path: '/pricing',
+    name: 'Pricing',
+    component: () => import(/* webpackChunkName: "pricing_plan" */ '../components/pricing_plan.vue')
+  },
+  {
+    path: '/billing_details',
+    name: 'billing_details',
+    component: () => import(/* webpackChunkName: "billing_details" */ '../components/billing_details.vue')
+  },
+  {
     path: '/trying',
-    name: 'Trying',
-    component: () => import(/* webpackChunkName: "choose_no" */ '../components/try.vue')
+    name: 'trying',
+    component: () => import(/* webpackChunkName: "billing_details" */ '../components/try.vue')
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import(/* webpackChunkName: "billing_details" */ '../components/dashboard.vue')
   }
 ]
 

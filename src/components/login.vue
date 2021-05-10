@@ -1,11 +1,11 @@
 <template>
 	<div >
-		<v-container>
-			<v-layout row wrap>
-				<v-flex class="d-flex justify-center mb-6 pt-6">
-					<v-card width="70%" height="100%">
+		<v-container  fluid>
+			<v-layout align-center justify-center>
+				<v-flex xs12 sm8 md8>
+					<v-card class="mx-auto">
 						<v-row no-gutters>
-							<v-col cols="lg-6 md-8 sm-12">
+							<v-col cols="lg-6">
 								<div class="mt-3 ml-3">
 									<v-app-bar color="white" flat>
 										<img class="mt-2 ml-2" :src="require('../../public/images/tring-logo.png')" height="35"/>
