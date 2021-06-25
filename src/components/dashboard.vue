@@ -1,76 +1,27 @@
 <template>
-  <v-card
-    class="mx-auto overflow-hidden"
-    width="800"
-    height="800"
-
-  >
-
-    <v-app-bar
-      color="light blue"
-      dark
-      prominent
-      height="75"
-    >
-      <v-app-bar-nav-icon class="mt-2 hidden-md-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title class="mt-3 ml-2">Tring Partner</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-				<v-btn icon>
-					<v-icon class="mt-3">mdi-chat-outline</v-icon>
-				</v-btn>
-				<label class='white--text mt-3'>support</label>
-    </v-app-bar>
-
-    <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      left
-      :permanent="$vuetify.breakpoint.mdAndUp"
-
-    >
-      <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
-          <v-list-item>
-            <v-list-item-title>Call Logs</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Dashboard</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Call Routing</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Greeting Message</v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>Whatsapp</v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>Billing</v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>Export</v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-card-text>
-			hello
-    </v-card-text>
-  </v-card>
+	<nav>
+	<v-card class="mx-auto overflow-hidden" width="800" height="800" >
+		<v-app-bar color="light blue" dark prominent height="75" >
+			<v-app-bar-nav-icon class="mt-2 hidden-md-and-up" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+			<v-toolbar-title class="mt-3 ml-2">Tring Partner</v-toolbar-title>
+			<v-spacer></v-spacer>
+			<v-btn icon>
+				<v-icon class="mt-3">mdi-chat-outline</v-icon>
+			</v-btn>
+			<label class='white--text mt-3'>support</label>
+		</v-app-bar>
+		<v-navigation-drawer v-model="drawer" absolute left :permanent="$vuetify.breakpoint.mdAndUp" >
+			<v-list nav dense >
+				<v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4" >
+					<v-list-item v-for="link in links" :key="link.text" router :to="link.route">
+						<v-list-item-title> {{ link.text }}</v-list-item-title>
+					</v-list-item>
+				</v-list-item-group>
+			</v-list>
+		</v-navigation-drawer>
+		<router-view></router-view>
+	</v-card>
+</nav>
 </template>
 
 
@@ -102,6 +53,15 @@ import { db } from '@/main.js';
     data: () => ({
       drawer: false,
       group: null,
+			links: [
+				{ icon: 'dashboard', text: 'Call Logs', route: '/call_logs' },
+				{ icon: 'folder', text: 'Analytics', route: '/analytics' },
+				{ icon: 'person', text: 'Manage User', route: '/manageUser' },
+				{ icon: 'dashboard', text: 'Greeting Message', route: '/greeting' },
+				{ icon: 'dashboard', text: 'Whatsapp', route: '/whatsapp' },
+				{ icon: 'dashboard', text: 'Billing', route: '/billing_details' },
+				{ icon: 'dashboard', text: 'Export', route: '/export' },
+			]
     }),
 
     watch: {

@@ -1,8 +1,9 @@
 <template>
-	<div>
+	<v-app class="grey lighten-3">
+	<div class="grey lighten-3" >
 		<v-container  fluid>
-			<v-layout align-center justify-center>
-				<v-flex xs12 sm8 md8>
+			<v-row justify="center">
+				<v-col sm="12" md="4">
 					<v-card class="mx-auto">
 						<v-row no-gutters>
 							<v-col cols="12">
@@ -45,10 +46,11 @@
 							</v-col>
 						</v-row>
 					</v-card>
-				</v-flex>
-			</v-layout>
+				</v-col>
+			</v-row>
 		</v-container>
 	</div>
+</v-app>
 </template>
 
 
@@ -56,27 +58,60 @@
 import firebase from 'firebase'
 import { db } from '@/main.js';
   export default {
-			created() {
-								firebase.auth().onAuthStateChanged(user => {
-							if (user) {
-								console.log("logged user details",user)
-								this.uid = user.uid
-								this.phno = user.phoneNumber.slice(3)
-								console.log("page pricing il user id", this.uid)
-								console.log("page pricing il user number", this.phno)
-								db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
-									querySnapshot.forEach((doc) => {
-									console.log(doc.id, " => ", doc.data());
-									let user_details = doc.data()
-									console.log(user_details.role)
-								})
-    })
-    .catch((error) => {
-        console.log("Error getting documents: ", error);
-    });
-						}
+		created() {
+			firebase.auth().onAuthStateChanged(user => {
+				if (user) {
+					console.log("logged user details",user)
+					this.uid = user.uid
+					this.phno = user.phoneNumber.slice(3)
+					console.log("page pricing il user id", this.uid)
+					console.log("page pricing il user number", this.phno)
+					
+					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							console.log(doc.id, " => ", doc.data());
+							let user_details = doc.data()
+							this.Udata = user_details
+							this.currentPage = this.Udata.currentPage
+							console.log(this.currentPage)
+							if (this.currentPage == "onboarding_listing") {
+								this.$router.push("/choose_no")
+							}
+							else if (this.currentPage == "onboarding_test_completed") {
+								this.$router.push("/test_number")
+							}
+							else if (this.currentPage == "onboarding_plan_details") {
+								this.$router.push("/pricing")
+							}
+							else if (this.currentPage == "onboarding_billing") {
+								this.$router.push("/billing")
+							}
+							else if (this.currentPage == "onboarding_success") {
+								this.$router.push("/manageUsers")
+							}
+							else if (this.currentPage == "onboarding_dashboard") {
+								this.$router.push("/manageUsers")
+							}
+
+
+						})
+					}).catch((error) => {
+						console.log("Error getting documents: ", error);
 					})
-    },
+					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							console.log(doc.id, " => ", doc.data());
+							let user_details = doc.data()
+							console.log(user_details.role)
+						})
+					})
+					.catch((error) => {
+						console.log("Error getting documents: ", error);
+					});
+				}
+			})
+		},
+		
     data() {
       return{
 					selectedItem: 1,
@@ -95,25 +130,25 @@ import { db } from '@/main.js';
 		},
 		methods: {
 			nextPage(){
-				const options = {
+				const user_stage = {
 					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
 					method: 'POST',
 
 					data: {
 								uid: this.uid,
 								phoneNumber: this.phno,
-						currentPage: 'onboarding_billing_details'
+								currentPage: 'onboarding_billing'
 					},
 				}
-				console.log(options)
-        this.$axios(options)
+				console.log(user_stage)
+        this.$axios(user_stage)
 					.then((response) => {
 						console.log(response)
 					})
 					.catch((error) => {
 						console.error(error);
 					})
-				this.$router.push("/billing_details")
+				this.$router.push("/billing")
 			}
 		}
 	}
