@@ -21,6 +21,12 @@
 									<div class="ml-4 mr-4">
 										<h3 class="mt-6 ml-5 text-center">Billing Address and Payment</h3>
 									</div>
+									<h4 class="ml-4 mr-4 mt-3">Select Payment Plan</h4>
+									<v-radio-group class="ml-4 mr-4" v-model="radio" row >
+										<v-radio label="Monthly Plan" value="monthly"></v-radio>
+										<v-radio label="Yearly Plan" value="yearly"></v-radio>
+									</v-radio-group>
+
 									<v-form @submit.prevent="" class="mt-3 ml-8 mr-4" ref="form" v-model="valid" lazy-validation >
 										<v-checkbox v-model="selected" label="Are you registered for GST" >
 										</v-checkbox>
@@ -46,7 +52,7 @@
 															<v-card-title>
 																<h4 class="font-weight-bold">Tax Breakup - Details</h4>
 															</v-card-title>
-															<v-card-body>
+															<v-card-body v-if="radio == 'monthly'">
 																<h3 class="mb-3 mt-3 text-center" >Plan - Tringpartner_1M_500</h3>
 																<h4 class="font-weight-bold text-center mb-3">Subtotal : 500</h4>
 																<div v-if="selected && state == 'Kerala'">
@@ -67,6 +73,30 @@
 																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 45</h5>
 																	<h5 class="text-center font-weight-light mb-3">Kerala Flood Cess @1% : 5</h5>
 																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 595</h4>
+																</div>
+															</v-card-body>
+
+															<v-card-body v-else>
+																<h3 class="mb-3 mt-3 text-center" >Plan - Tringpartner_1Y_5000</h3>
+																<h4 class="font-weight-bold text-center mb-3">Subtotal : 5000</h4>
+																<div v-if="selected && state == 'Kerala'">
+																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 450</h5>
+																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 450</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5900</h4>
+																</div>
+																<div v-if="selected && state != 'Kerala'">
+																	<h5 class="text-center font-weight-light mb-3">igst @18% : 900</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5900</h4>
+																</div>
+																<div v-if="!selected && state != 'Kerala'">
+																	<h5 class="text-center font-weight-light mb-3">igst @18% : 900</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5900</h4>
+																</div>
+																<div v-if="!selected && state == 'Kerala'">
+																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 450</h5>
+																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 450</h5>
+																	<h5 class="text-center font-weight-light mb-3">Kerala Flood Cess @1% : 50</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5950</h4>
 																</div>
 															</v-card-body>
 															<v-card-actions>
@@ -138,8 +168,8 @@ import { db } from '@/main.js';
 							let user_details = doc.data()
 							this.Udata = user_details
 							this.currentPage = this.Udata.currentPage
-							this.virtualnumber = this.Udata.virtualNumber
-							console.log(this.currentPage)
+							this.virtualnumber = this.Udata.virtualNumber[0]
+							console.log(this.virtualnumber)
 							if (this.currentPage == "onboarding_listing") {
 								this.$router.push("/choose_no")
 							}
@@ -185,11 +215,13 @@ import { db } from '@/main.js';
         rzp: '',
         order_id : '',
         getOtp : true,
+        radio: 'monthly',
+        planId: 1,
         pincodeDb : pincodeDB,
         otp : '',
         showBilling : true,
         pincodeInvalid : true,
-		dialog: false,
+				dialog: false,
         emailRules: [ 
 					v => !!v || 'E-mail is required',
 					v => /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(v) || 'E-mail must be valid',
@@ -303,7 +335,11 @@ import { db } from '@/main.js';
 			},
 
 			nextPage(){
-				
+				if(this.radio == 'monthly'){
+					this.planId = 1
+				}else {
+					this.planId = 2
+				}
 				const details = {
 					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/owner',
 					method: 'POST',
@@ -320,6 +356,7 @@ import { db } from '@/main.js';
 								Gstin: this.gst,
 								CompanyName: this.businessName,
 								Pincode: this.pincode,
+								PlanId : this.planId
 							},
 						}
 						console.log(details)

@@ -13,9 +13,9 @@
 										<div class="ml-4 mr-4">
 											<h3 class="mt-6 ml-5 mb-5 text-center">Addons</h3>
 										</div>
-										<v-btn class="mr-4 white--text mb-3" @click='prorate_U()' color='light-blue darken-1'> Add User (100 per month)</v-btn>
-										<v-btn class="mr-4 mb-3 white--text" @click='prorate_BN()' color='light-blue darken-1
-										' > Add Virtual Number (300 per month)</v-btn>
+										<v-btn class="mr-4 white--text mb-3" @click='prorate_U(1)' color='light-blue darken-1'> Add User @ {{user_amount}}</v-btn>
+										<v-btn class="mr-4 mb-3 white--text" @click='prorate_BN(1)' color='light-blue darken-1
+										' > Add Virtual Number @ {{number_amount}}</v-btn>
 
 										<h4 class="mt-6 ml-3 text-left">Active Addon Plans</h4>
 										<p v-if="showAddonDetails" class="text-left mt-2 ml-3"> No Active addons </p>
@@ -23,6 +23,8 @@
 											<p class="mt-2 ml-3 text-left"> Plan : {{ details.type }}</p>
 											<p class="mt-2 ml-3 text-left" v-if="details.type == 'BUSINESS_NUMBER'"> Virtual Number : {{ details.virtual_number }}</p>
 											<p class="mt-1 ml-3 text-left"> Purchase Date : {{  details.date }}</p>
+											<v-btn class="mb-2" v-if="details.type == 'BUSINESS_NUMBER'" text @click.prevent='delete_addons(details.type, details.virtual_number)' color='red'> Remove Addon </v-btn>
+											<v-btn class="mb-2" v-else text @click.prevent='delete_addons(details.type)' color='red'> Remove Addon </v-btn>
 											<v-divider></v-divider>
 										</div>
 									</div>
@@ -97,6 +99,9 @@ import moment from 'moment'
 							this.state = user_details.State
 							this.gst = user_details.Gstin
 							this.email = user_details.Email
+							this.planId = user_details.PlanId
+							this.lastRecharge = user_details.LastRecharge
+							this.renewalDay = user_details.RenewalDay
 							console.log(user_details.role)
 						})
 					})
@@ -121,6 +126,8 @@ import moment from 'moment'
 							this.showAddonDetails = true
 						}
 					})
+					this.prorate_U(0)
+					this.prorate_BN(0)
 				}
 			})
 		},
@@ -150,9 +157,72 @@ import moment from 'moment'
 			show : '',
 			reservedNumber : '',
 			showAddonDetails : false,
+			number_amount : '',
+			user_amount : '',
+			planId : '',
+			lastRecharge : '',
+			renewalDay : '',
     }),
     methods :{
-			prorate_U(){
+			delete_addons(type, virtual_number){
+				if (confirm("Do you want to delete this addon. Click Ok to confirm")) {
+					console.log("type ", type)
+					console.log("virtual_number" ,virtual_number)
+					if(type == 'USER') {
+						var token = localStorage.getItem('token');
+						const details = {
+						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/delete',
+						method: 'POST',
+						data: {
+							owner_uid: this.uid,
+							update_by : this.uid,
+							type: type
+						},
+						headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
+					}
+					console.log(details)
+					this.$axios(details)
+						.then((response) => {
+							console.log(response)
+							alert(response.data.message)
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+					}
+					else if (type == 'BUSINESS_NUMBER') {
+						var token = localStorage.getItem('token');
+						const details = {
+						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/delete',
+						method: 'POST',
+						data: {
+							owner_uid: this.uid,
+							update_by : this.uid,
+							type: type,
+							virtual_number : virtual_number
+						},
+						headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
+					}
+					console.log(details)
+					this.$axios(details)
+						.then((response) => {
+							console.log(response)
+							alert(response.data.message)
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+					}
+				}
+			},
+
+			prorate_U(status){
 				this.u = true
 				this.bm = false
 				var token = localStorage.getItem('token');
@@ -172,16 +242,25 @@ import moment from 'moment'
 					this.$axios(details)
 						.then((response) => {
 							console.log(response)
-							this.show = 'user'
-							this.dialog = true
-							this.remaining = response.data.reminingdays
-							this.amount = (response.data.amount)
+							if(status) {
+								this.show = 'user'
+								this.dialog = true
+								this.remaining = response.data.reminingdays
+							}
+							if(this.planId == 2) {
+								this.amount = (response.data.amount * 0.8)
+								this.user_amount = this.amount
+							}
+							else{
+								this.amount = (response.data.amount)
+								this.user_amount = this.amount								
+							}
 						})
 						.catch((error) => {
 							console.error(error);
 						})
 			},
-			prorate_BN(){
+			prorate_BN(status){
 				this.u = false
 				this.bm = true
 				var token = localStorage.getItem('token');
@@ -201,10 +280,19 @@ import moment from 'moment'
 				this.$axios(details)
 					.then((response) => {
 						console.log(response)
-						this.show = 'number'
-						this.dialog = true
-						this.remaining = response.data.reminingdays
-						this.amount = response.data.amount 
+						if(status) {
+							this.show = 'number'
+							this.dialog = true
+							this.remaining = response.data.reminingdays
+						}
+						if(this.planId == 2) {
+							this.amount = (response.data.amount * 0.8)
+							this.number_amount = this.amount
+						}
+						else{
+							this.amount = (response.data.amount)
+							this.number_amount = this.amount								
+						}
 					})
 					.catch((error) => {
 						console.error(error);

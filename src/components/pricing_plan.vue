@@ -21,17 +21,37 @@
 									<div class="ml-4 mr-4">
 										<h3 class="mt-6 ml-5 text-center">Pricing Plan</h3>
 									</div>
-
+								<div class="mt-3 text-center">
+									<v-tabs center-active>
+										<v-tab href="#one">
+											<h3 class="mt-3 mb-2 ml-5 text-center">Monthly Plan</h3>
+										</v-tab>
+										<v-tab-item key="one" id="one">
+											<v-card class="mx-auto" max-width="300" tile flat>
+												<h1 class="green--text"><span class="mr-1 green--text">₹</span>500 per month</h1>
+												<v-list-item v-for="(item, i) in items" :key="i">
+													<v-list-item-content>
+														<v-list-item-title v-text="item.text"></v-list-item-title>
+													</v-list-item-content>
+												</v-list-item>
+											</v-card>
+										</v-tab-item>
+										<v-tab href="#two" >
+											<h3 class="mt-3 mb-2 ml-5 text-center">Yearly Plan</h3>
+										</v-tab>
+										<v-tab-item key="two" id="two">
+											<v-card class="mx-auto" max-width="300" tile flat>
+												<h1 class="green--text"><span class="mr-1 green--text">₹</span>5000 per Year</h1>
+												<v-list-item v-for="(item, i) in items" :key="i">
+													<v-list-item-content>
+														<v-list-item-title v-text="item.text"></v-list-item-title>
+													</v-list-item-content>
+												</v-list-item>
+											</v-card>
+										</v-tab-item>
+									</v-tabs>
+								</div>
 									<div class="ml-4 mr-4 mt-5 text-center">
-										<v-card class="mx-auto" max-width="300" tile flat>
-
-											<h1 class="green--text"><span class="mr-1 green--text">₹</span>500 per month</h1>
-											<v-list-item v-for="(item, i) in items" :key="i">
-												<v-list-item-content>
-													<v-list-item-title v-text="item.text"></v-list-item-title>
-												</v-list-item-content>
-											</v-list-item>
-                    </v-card>
 										<div class="text-center">
 											<v-btn class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='nextPage()' color='light-green'> Make Payment </v-btn>
 										</div>
