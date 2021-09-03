@@ -7,7 +7,7 @@ import 'firebase/firestore';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import AxiosPlugin from 'vue-axios-cors'
-import store from './store'
+
 
 
 Vue.config.productionTip = false
@@ -35,7 +35,6 @@ firebase.default.auth().onAuthStateChanged(user => {
   if (!app){
     app = new Vue({
       router,
-      store,
       vuetify,
       render: h => h(App)
     }).$mount('#app')

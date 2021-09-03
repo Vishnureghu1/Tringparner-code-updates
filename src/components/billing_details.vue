@@ -15,6 +15,11 @@
 									<div class="ml-4 mr-4 mt-4 pt-4">
 										
 										<v-card-text>
+											<h4 class="ml-4 mr-4 mt-3">Select Payment Plan</h4>
+											<v-radio-group class="ml-4 mr-4" v-model="radio" row >
+												<v-radio label="Monthly Plan" value="monthly" @click="getRechargeAmount(radio)" ></v-radio>
+												<v-radio label="Yearly Plan" value="yearly" @click="getRechargeAmount(radio)" ></v-radio>
+											</v-radio-group>
 											<h3  class="mb-4">Credit Information </h3>
 											<h4> Last recharge</h4>
 											<h4 class="font-weight-regular"> {{ lastRecharge }}</h4>
@@ -25,8 +30,8 @@
 											<h4 class="font-weight-bold green--text mt-1">  {{ renewalDay }} </h4>
 											<v-divider></v-divider>
 											<h4 class="font-weight-bold black--text mt-2">  Amount without GST : Rs {{ without_gst }}  </h4>
-											<h4 class="font-weight-bold black--text mt-2">  Number of Virtual numbers added via addons : {{ virtual_number_count }} </h4>
-											<h4 class="font-weight-bold black--text mt-2">  Amount for the {{ virtual_number_count }} number(s) : Rs {{virtual_number_amount }} </h4>
+											<h4 class="font-weight-bold black--text mt-2" v-if="virtual_number_count">  Number of Virtual numbers added via addons : {{ virtual_number_count }} </h4>
+											<h4 class="font-weight-bold black--text mt-2" v-if="virtual_number_count">  Amount for the {{ virtual_number_count }} number(s) : Rs {{virtual_number_amount }} </h4>
 											<h4 class="font-weight-bold black--text mt-2" v-if="users_count > 0">  Number of Users added via addons : {{ users_count }} </h4>
 											<h4 class="font-weight-bold black--text mt-2" v-if="users_count > 0">  Amount for {{ users_count }} user(s) : {{users_amount }} </h4>
 											<h3 class="font-weight-bold black--text mt-2"> Total amount to pay : Rs {{total_pay}}</h3>
@@ -37,7 +42,6 @@
 												<p class="mt-2 ml-3 text-left"> Plan : {{ details.type }}</p>
 												<p class="mt-2 ml-3 text-left" v-if="details.type == 'BUSINESS_NUMBER'"> Virtual Number : {{ details.virtual_number }}</p>
 												<p class="mt-1 ml-3 text-left"> Purchase Date : {{  details.date }}</p>
-												<v-btn class="mb-2" text @click.prevent='delete_addons()' color='red'> Remove Addon </v-btn>
 												<v-divider></v-divider>
 											</div>
 
@@ -92,38 +96,14 @@ import { db } from '@/main.js';
 import moment from 'moment'
 import pincodeDB from "./pincodes.json"
 
-  export default {
-			created() {
-				firebase.auth().onAuthStateChanged(async(user) => {
-				if (user) {
-					console.log("logged user details",user)
-					this.uid = user.uid
-					this.phno = user.phoneNumber.slice(3)
-					const bill = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/bill',
-						method: 'POST',
-
-						data: {
-							uid: this.uid,
-						},
-					}
-					console.log(bill)
-					this.$axios(bill)
-						.then((response) => {
-							console.log(response)
-							this.virtual_number_count = response.data.number
-							this.virtual_number_amount = response.data.number_amount
-							this.users_count = response.data.user
-							this.users_amount = response.data.user_amount
-							this.total_pay = response.data.invoice_amount
-							this.without_gst = response.data.total_amount
-
-
-						})
-						.catch((error) => {
-							console.error(error);
-						})
-					await db.collection('users').where("uid" , "==" , this.uid).onSnapshot((querySnapshot) => {
+export default {
+		created() {
+			firebase.auth().onAuthStateChanged(async(user) => {
+			if (user) {
+				console.log("logged user details",user)
+				this.uid = user.uid
+				this.phno = user.phoneNumber.slice(3)
+				await db.collection('users').where("uid" , "==" , this.uid).onSnapshot((querySnapshot) => {
 					querySnapshot.forEach((doc) => {
 						console.log(doc.id, " => ", doc.data());
 						let user_details = doc.data()
@@ -140,6 +120,10 @@ import pincodeDB from "./pincodes.json"
 						this.lastRecharge = this.Udata.LastRecharge
 						this.renewalDay = this.Udata.RenewalDay
 						this.lastDay = this.Udata.LastDay
+						this.PlanId = this.Udata.PlanId
+						if(this.PlanId == 2) {
+							this.radio = 'yearly'
+						}
 						var GstAvailable = this.Udata.GSTAvailable
 						if (GstAvailable == 'N') {
 							this.selected = false
@@ -149,260 +133,287 @@ import pincodeDB from "./pincodes.json"
 						this.renewalDay = moment(this.renewalDay).format('dddd MMMM Do YYYY')
 						this.lastDay = moment(this.lastDay).format('dddd MMMM Do YYYY')
 						console.log(this.lastDay)
-						var timestamp = 1621326268528
-						var date = new Date(timestamp);
-						console.log('hello',date.getTime())
-						console.log("hii",date)
-						console.log(moment(date).format('MM/DD/YYYY hh:mm'))
-
 					})
-					})
+					this.getRechargeAmount(this.radio)
+				})
 
-					db.collection('UserAddonDetails').where("Uid" , "==" , this.uid).orderBy('PurchaseDate', "desc").onSnapshot((querySnapshot) => {
-						this.addon_array = []
-						if(!querySnapshot.empty) {
-							querySnapshot.forEach((doc) => {
-								console.log(doc.id, " => ", doc.data());
-								let addonDetails = doc.data()
-								var purchase_date = moment.unix(addonDetails.PurchaseDate).format('DD/MM hh:mm a')
-								var details = Object.assign({}, this.details, { date : purchase_date , uid: addonDetails.Uid , type : addonDetails.Type , virtual_number : addonDetails.VirtualNumber})
-								this.showAddonDetails = false
-								this.addon_array.push(details)
 
-							})
-						}
-						else {
-							this.showAddonDetails = true
-						}
-					})
+				db.collection('UserAddonDetails').where("Uid" , "==" , this.uid).orderBy('PurchaseDate', "desc").onSnapshot((querySnapshot) => {
+					this.addon_array = []
+					if(!querySnapshot.empty) {
+						querySnapshot.forEach((doc) => {
+							console.log(doc.id, " => ", doc.data());
+							let addonDetails = doc.data()
+							var purchase_date = moment.unix(addonDetails.PurchaseDate).format('DD/MM hh:mm a')
+							var details = Object.assign({}, this.details, { date : purchase_date , uid: addonDetails.Uid , type : addonDetails.Type , virtual_number : addonDetails.VirtualNumber})
+							this.showAddonDetails = false
+							this.addon_array.push(details)
 
-					db.collection('paymentTransaction').where("Uid" , "==" , this.uid).where("Status" , "==" , true).onSnapshot((querySnapshot) => {
-						this.payment_history = []
-						if(!querySnapshot.empty) {
-							querySnapshot.forEach((doc) => {
-								console.log(doc.id, " => ", doc.data());
-								let payment_details = doc.data()
-								var purchase_date = moment.unix(payment_details.Date).format('DD/MM')
-								var details = Object.assign({}, this.details, { date : purchase_date , amount: payment_details.InvoiceAmount , type : payment_details.Type })
-								this.payment_history.push(details)
+						})
+					}
+					else {
+						this.showAddonDetails = true
+					}
+				})
 
-							})
-						}
-					})
-				}
+				db.collection('paymentTransaction').where("Uid" , "==" , this.uid).where("Status" , "==" , true).onSnapshot((querySnapshot) => {
+					this.payment_history = []
+					if(!querySnapshot.empty) {
+						querySnapshot.forEach((doc) => {
+							console.log(doc.id, " => ", doc.data());
+							let payment_details = doc.data()
+							var purchase_date = moment.unix(payment_details.Date).format('DD/MM')
+							var details = Object.assign({}, this.details, { date : purchase_date , amount: payment_details.InvoiceAmount , type : payment_details.Type })
+							this.payment_history.push(details)
 
-			})
-	
-    },
-    data () {
-      return {
-        selected: true,
-        valid: true,
-        gst: '',
-        phno : '',
-        name: '',
-        email: '',
-        businessName: '',
-        city: '',
-        address: '',
-        pincode : '',
-        state: '',
-        rzp: '',
-				detail: {},
-				Udata : [],
-				realdata : [],
-				addon_array : [] ,
-				payment_history : [],
-				order_id : '',
-				razorpay_order_id : '',
-				razorpay_payment_id : '',
-				razorpay_signature : '',
-				virtual_number_amount : '',
-				user_amount : '',
-				without_gst : '',
-				lastRecharge : '',
-				lastDay : '',
-				renewalDay : '',
-				pincodeDb : pincodeDB,
-				showAddonDetails : false,
-				virtual_number_count : '',
-				users_count : '',
-				total_pay : '',
-				payment_data: [
-					{ text: 'Date', align: 'start', value: 'date' },
-					{ text: 'Type', value: 'type' },
-					{ text: 'Amount', value: 'amount' },
-					{ text: 'Invoice', value: '' },
-					],
-        emailRules: [ 
-					v => !!v || 'E-mail is required',
-					v => /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(v) || 'E-mail must be valid',
+						})
+					}
+				})
+			}
+
+		})
+
+  },
+  data () {
+    return {
+      selected: true,
+      valid: true,
+      gst: '',
+      phno : '',
+      name: '',
+      email: '',
+      businessName: '',
+      city: '',
+      address: '',
+      pincode : '',
+      state: '',
+      rzp: '',
+			detail: {},
+			Udata : [],
+			realdata : [],
+			addon_array : [] ,
+			payment_history : [],
+			order_id : '',
+			razorpay_order_id : '',
+			razorpay_payment_id : '',
+			razorpay_signature : '',
+			virtual_number_amount : '',
+			user_amount : '',
+			without_gst : '',
+			lastRecharge : '',
+			lastDay : '',
+			renewalDay : '',
+			pincodeDb : pincodeDB,
+			showAddonDetails : false,
+			virtual_number_count : '',
+			users_count : '',
+			total_pay : '',
+			PlanId : '',
+			radio : 'monthly',
+			payment_data: [
+				{ text: 'Date', align: 'start', value: 'date' },
+				{ text: 'Type', value: 'type' },
+				{ text: 'Amount', value: 'amount' },
+				{ text: 'Invoice', value: '' },
 				],
-				nameRules: [
-					v => !!v || 'Your Name is required',
-					v => (v && v.length < 50 ||  'Too many characters.Please try again !!'),
-					v => /^[a-zA-Z][a-zA-Z ]+$/.test(v) || 'Name should not contain symbols or digits. Please try again.',
+      emailRules: [ 
+				v => !!v || 'E-mail is required',
+				v => /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(v) || 'E-mail must be valid',
+			],
+			nameRules: [
+				v => !!v || 'Your Name is required',
+				v => (v && v.length < 50 ||  'Too many characters.Please try again !!'),
+				v => /^[a-zA-Z][a-zA-Z ]+$/.test(v) || 'Name should not contain symbols or digits. Please try again.',
 
-					],
-				gstRules: [
-					v => !!v || 'GST Number is required',
-					v => (v && v.length == 15 ||  'GST must contain 15 characters'),
-					v => /^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[a-zA-Z][0-9a-zA-Z]{1}$/.test(v) || 'GST must be valid',
-					],
-				businessNameRules : [
-					v => !!v || 'Your Business name is required',
-					v => (v && v.length < 100 ||  'Too many characters.Please try again !!'),
-					v => /[a-zA-Z][a-zA-Z ]*/.test(v) || 'Business Name should not contain symbols or digits. Please try again.',
+				],
+			gstRules: [
+				v => !!v || 'GST Number is required',
+				v => (v && v.length == 15 ||  'GST must contain 15 characters'),
+				v => /^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[a-zA-Z][0-9a-zA-Z]{1}$/.test(v) || 'GST must be valid',
+				],
+			businessNameRules : [
+				v => !!v || 'Your Business name is required',
+				v => (v && v.length < 100 ||  'Too many characters.Please try again !!'),
+				v => /[a-zA-Z][a-zA-Z ]*/.test(v) || 'Business Name should not contain symbols or digits. Please try again.',
 
-					],					
-				addressRules : [
-					v => !!v || 'Your Address is required',
-					v => (v && v.length < 100 ||  'Too many characters.Please try again !!'),
+				],					
+			addressRules : [
+				v => !!v || 'Your Address is required',
+				v => (v && v.length < 100 ||  'Too many characters.Please try again !!'),
 
-					],
-				pincodeRules : [
-					v => !!v || 'Your Pincode is required',
-					v => (v && v.length == 6 ||  'Pincode must contain 6 digits. Invalid Pincode !!'),
-					v => /^[0-9]*$/.test(v) || 'Pincode must contain 6 digits',
-					],        
+				],
+			pincodeRules : [
+				v => !!v || 'Your Pincode is required',
+				v => (v && v.length == 6 ||  'Pincode must contain 6 digits. Invalid Pincode !!'),
+				v => /^[0-9]*$/.test(v) || 'Pincode must contain 6 digits',
+				],        
+			}
+    },
+    methods : {
+			getRechargeAmount(radio) {
+				console.log(radio)
+				var PlanId = ''
+				if(radio == 'yearly') {
+					PlanId = 2
 				}
-      },
-      methods : {
-				searchPincode(){
-					console.log(this.pincodeDb)
-					console.log(this.pincode)
-					// var data = JSON.parse(this.pincodeDb)
-					var data = this.pincodeDb
-					console.log('before checking',this.pincodeInvalid)
-					var result = data.filter((item)=> {
-						if (item.id == this.pincode) {
-							this.city = item.name.city
-							this.state = item.name.state
-							console.log(item.name.city)
-							console.log(item.name.state)
-							this.pincodeInvalid = false
-							console.log('false',this.pincodeInvalid)
-
-						}
-						else {
-							this.pincodeInvalid = true
-							// console.log('true',this.pincodeInvalid)
-						}
-						// console.log('after',this.pincodeInvalid)
-					})
-				},
-				uppercase(){
-					this.gst = this.gst.toUpperCase();
-				},
-
-				validate () {
-					this.$refs.form.validate()
-					let v = this.$refs.form.validate()
-					if (v){
-						this.updateData()
-					}
-				},
-				delete_addons(){
-					if (confirm("Do you want to delete this addon. Click Ok to confirm")) {
-						alert('hii')
-					}
-				},
-
-				updateData(){
-					const user_data = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/update',
-						method: 'POST',
-						data: {
-								uid: this.uid,
-								phoneNumber: this.phno,
-								FirstName: this.name,
-								Email: this.email,
-								Address: this.address,
-								City: this.city,
-								State: this.state,
-								Gstin: this.gst,
-								CompanyName: this.businessName,
-								Pincode: this.pincode,
-						},
-					}
-					console.log(user_data)
-					this.$axios(user_data)
-						.then((response) => {
-							console.log(response)
-							alert(response.data.message)
-						})
-						.catch((error) => {
-							console.error(error);
-						})
-				},
-
-				recharge(){
-				var token = localStorage.getItem('token');
-				const user_details = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/payment',
+				else {
+					PlanId = 1
+				}
+				const bill = {
+					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/bill',
 					method: 'POST',
-					headers: { 
-						'token': token,
-						'Content-Type': 'application/json'
-					},
+
 					data: {
-						owner_uid: this.uid,
-						type: 'RECHARGE',
+						uid: this.uid,
+						PlanId: PlanId
 					},
 				}
-				console.log(user_details)
-				this.$axios(user_details)
+				console.log(bill)
+				this.$axios(bill)
 					.then((response) => {
 						console.log(response)
-						console.log('order_id',response)
-						console.log(response.data.order_id)
-						this.order_id = response.data.order_id
-				var options = {
-					key: "rzp_test_ThdwdEPh3QCHbo",
-					
-					order_id: this.order_id,
-					name: this.name,
-					currency: "INR", // Optional. Same as the Order currency
-					description: "Purchase Description",
-
-					handler:  (response) =>{
-						console.log(response)
-						alert('Recharge successfull')
-					},
-					modal: {
-						ondismiss: () => {
-							alert('payment cancelled')
-							console.log('Checkout form closed')
-						}
-					},
-					prefill: {
-            name: this.name,
-            email: this.email,
-            contact: this.phno
-					},
-					notes: {
-            address: this.address
-					},
-					theme: {
-            color: "#3399cc"
-					}
-				};
-				console.log(options)
-				var rzp1 = new Razorpay(options);
-				rzp1.on('payment.failed', function (response){
-					alert('payment failed');
-				});
-				rzp1.open();
-
+						this.virtual_number_count = response.data.number
+						this.virtual_number_amount = response.data.number_amount
+						this.users_count = response.data.user
+						this.users_amount = response.data.user_amount
+						this.total_pay = response.data.invoice_amount
+						this.without_gst = response.data.total_amount
 					})
+					.catch((error) => {
+						console.error(error);
+				})
+			},
 
-					.catch((error) => {user_details
+			searchPincode(){
+				console.log(this.pincodeDb)
+				console.log(this.pincode)
+				// var data = JSON.parse(this.pincodeDb)
+				var data = this.pincodeDb
+				console.log('before checking',this.pincodeInvalid)
+				var result = data.filter((item)=> {
+					if (item.id == this.pincode) {
+						this.city = item.name.city
+						this.state = item.name.state
+						console.log(item.name.city)
+						console.log(item.name.state)
+						this.pincodeInvalid = false
+						console.log('false',this.pincodeInvalid)
+
+					}
+					else {
+						this.pincodeInvalid = true
+						// console.log('true',this.pincodeInvalid)
+					}
+					// console.log('after',this.pincodeInvalid)
+				})
+			},
+			uppercase(){
+				this.gst = this.gst.toUpperCase();
+			},
+
+			validate () {
+				this.$refs.form.validate()
+				let v = this.$refs.form.validate()
+				if (v){
+					this.updateData()
+				}
+			},
+			updateData(){
+				const user_data = {
+					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/update',
+					method: 'POST',
+					data: {
+							uid: this.uid,
+							phoneNumber: this.phno,
+							FirstName: this.name,
+							Email: this.email,
+							Address: this.address,
+							City: this.city,
+							State: this.state,
+							Gstin: this.gst,
+							CompanyName: this.businessName,
+							Pincode: this.pincode,
+					},
+				}
+				console.log(user_data)
+				this.$axios(user_data)
+					.then((response) => {
+						console.log(response)
+						alert(response.data.message)
+					})
+					.catch((error) => {
 						console.error(error);
 					})
+			},
 
+			recharge(){
+			var token = localStorage.getItem('token');
+			const user_details = {
+				url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/payment',
+				method: 'POST',
+				headers: { 
+					'token': token,
+					'Content-Type': 'application/json'
+				},
+				data: {
+					owner_uid: this.uid,
+					type: 'RECHARGE',
+					PlanId: this.PlanId
+				},
+			}
+			console.log(user_details)
+			this.$axios(user_details)
+				.then((response) => {
+					console.log(response)
+					console.log('order_id',response)
+					console.log(response.data.order_id)
+					this.order_id = response.data.order_id
+			var options = {
+				key: "rzp_test_ThdwdEPh3QCHbo",
+				
+				order_id: this.order_id,
+				name: this.name,
+				currency: "INR", // Optional. Same as the Order currency
+				description: "Purchase Description",
 
+				handler:  (response) =>{
+					console.log(response)
+					alert('Recharge successfull')
+				},
+				modal: {
+					ondismiss: () => {
+						alert('payment cancelled')
+						console.log('Checkout form closed')
+					}
+				},
+				prefill: {
+          name: this.name,
+          email: this.email,
+          contact: this.phno
+				},
+				notes: {
+          address: this.address
+				},
+				theme: {
+          color: "#3399cc"
 				}
-      }
+			};
+			console.log(options)
+			var rzp1 = new Razorpay(options);
+			rzp1.on('payment.failed', function (response){
+				alert('payment failed');
+			});
+			rzp1.open();
+
+				})
+
+				.catch((error) => {user_details
+					console.error(error);
+				})
+
+
+			}
     }
+  }
 
 </script>
