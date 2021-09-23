@@ -18,42 +18,60 @@
 									</v-app-bar>
 								</div>	
 								<div>
-									<div class="ml-4 mr-4">
-										<h3 class="mt-6 ml-5 text-center">Pricing Plan</h3>
+								<div>
+									<div class="text-center">
+										<div class="mt-6">Your new Business Number is</div>
+										
+										<h3 class="mt-2 mb-3 red--text"> {{virtualNumber}} </h3>
+										<v-divider></v-divider>
 									</div>
-								<div class="mt-3 text-center">
-									<v-tabs center-active>
-										<v-tab href="#one">
-											<h3 class="mt-3 mb-2 ml-5 text-center">Monthly Plan</h3>
-										</v-tab>
-										<v-tab-item key="one" id="one">
-											<v-card class="mx-auto" max-width="300" tile flat>
-												<h1 class="green--text"><span class="mr-1 green--text">₹</span>500 per month</h1>
-												<v-list-item v-for="(item, i) in items" :key="i">
-													<v-list-item-content>
-														<v-list-item-title v-text="item.text"></v-list-item-title>
-													</v-list-item-content>
-												</v-list-item>
-											</v-card>
-										</v-tab-item>
-										<v-tab href="#two" >
-											<h3 class="mt-3 mb-2 ml-5 text-center">Yearly Plan</h3>
-										</v-tab>
-										<v-tab-item key="two" id="two">
-											<v-card class="mx-auto" max-width="300" tile flat>
-												<h1 class="green--text"><span class="mr-1 green--text">₹</span>5000 per Year</h1>
-												<v-list-item v-for="(item, i) in items" :key="i">
-													<v-list-item-content>
-														<v-list-item-title v-text="item.text"></v-list-item-title>
-													</v-list-item-content>
-												</v-list-item>
-											</v-card>
-										</v-tab-item>
-									</v-tabs>
+									<div >
+										<h3 class="mt-5 mb-5 text-center" >Choose Pricing Plan</h3>
+									</div>
+									<v-divider></v-divider>
+									<v-radio-group class="ml-16 mt-5 mr-16">
+										<div class="mb-4">
+
+												<v-radio >
+												<span slot="label" class="black--text ml-3">Try for 1 month @ just ₹ 500 
+													<h3 class="mt-3 text-center"> ₹ 500 + GST</h3>
+												</span>
+											</v-radio>
+						
+										<!-- 	<div class=" mb-2 text-center" >Try for 1 month @ just ₹ 500</div> -->
+										</div>
+										<v-divider></v-divider>
+
+										<div class="mt-5 mb-5">
+										
+												<v-radio >
+												<span slot="label" class="black--text ml-3">Pay for 6 months & Save 10%
+													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 3000</span> ₹2500 + GST</h3>
+												</span>
+											</v-radio>
+								
+										</div>
+										<v-divider></v-divider>
+
+										<div class="mt-5 mb-5">
+											
+												<v-radio >
+												<span slot="label" class="black--text ml-3">Pay for 6 months & Save 20%
+													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 6000</span> ₹5000 + GST</h3>
+												</span>
+											</v-radio>
+											
+										</div>
+										<v-divider></v-divider>
+									</v-radio-group>
+
 								</div>
+
+
+
 									<div class="ml-4 mr-4 mt-5 text-center">
 										<div class="text-center">
-											<v-btn class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='nextPage()' color='light-green'> Make Payment </v-btn>
+											<v-btn class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='nextPage()' color='blue'> Make Payment </v-btn>
 										</div>
                    </div>  
 								</div>
@@ -97,9 +115,6 @@ import { db } from '@/main.js';
 							if (this.currentPage == "onboarding_listing") {
 								this.$router.push("/choose_no")
 							}
-							else if (this.currentPage == "onboarding_test_completed") {
-								this.$router.push("/test_number")
-							}
 							else if (this.currentPage == "onboarding_plan_details") {
 								this.$router.push("/pricing")
 							}
@@ -107,10 +122,10 @@ import { db } from '@/main.js';
 								this.$router.push("/billing")
 							}
 							else if (this.currentPage == "onboarding_success") {
-								this.$router.push("/manageUsers")
+								this.$router.push("/emailVerification")
 							}
 							else if (this.currentPage == "onboarding_dashboard") {
-								this.$router.push("/manageUsers")
+								this.$router.push("/downloadApp")
 							}
 
 
@@ -122,7 +137,8 @@ import { db } from '@/main.js';
 						querySnapshot.forEach((doc) => {
 							console.log(doc.id, " => ", doc.data());
 							let user_details = doc.data()
-							console.log(user_details.role)
+							this.virtualNumber = user_details.virtualNumber[0]
+							console.log(user_details.virtualNumber)
 						})
 					})
 					.catch((error) => {
@@ -137,6 +153,7 @@ import { db } from '@/main.js';
 					selectedItem: 1,
 					uid : '',
 					phno : '',
+					virtualNumber : '',
 					items: [ 
 						{ text: '1 Cloud Business Number' },
 						{ text: '1 User Login' },
@@ -173,3 +190,9 @@ import { db } from '@/main.js';
 		}
 	}
 </script>
+
+<style scoped>
+.black--text /deep/ label {
+    color: black;
+}
+</style>

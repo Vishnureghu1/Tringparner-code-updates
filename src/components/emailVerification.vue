@@ -1,0 +1,199 @@
+<template>
+	<v-app class="grey lighten-3">
+	<div class="grey lighten-3" >
+		<v-container  fluid>
+			<v-row justify="center">
+				<v-col sm="12" md="4">
+					<v-card class="mx-auto">
+						<v-row no-gutters>
+							<v-col cols="12">
+								<div class="mt-3 ml-3">
+									<v-app-bar color="white" flat>
+										<img class="mt-2 ml-2" :src="require('../../public/images/tring-logo.png')" height="35"/>
+										<v-spacer></v-spacer>
+										<v-btn icon>
+											<v-icon color='red' >mdi-chat-outline</v-icon>
+										</v-btn>
+										<label class='red--text'>support</label>
+									</v-app-bar>
+								</div>
+								<div>
+									<div class="ml-4 mr-4">
+										<h3 class="mt-6 ml-5 text-center">Email Verification</h3>
+									</div>
+									<v-form @submit.prevent="" class="mt-3 ml-8 mr-4" ref="form" v-model="valid" lazy-validation >
+										<v-row>
+											<v-col v-if="getOtp">
+												<v-text-field label="Your Name" v-model="name" :rules="nameRules" required></v-text-field>
+												<v-text-field v-model="email" :rules="emailRules" label="Business E-mail" required ></v-text-field>
+												<v-text-field label="Source" append-icon="mdi-pencil" hint="For Example : Facebook, Linkedin etc" v-model="source" persistent-hint></v-text-field>
+												<div class="text-center">
+													<v-btn type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='requestOtp()' color='light-green'> Request Otp </v-btn>
+												</div>
+											</v-col>
+											<v-col v-else>
+												<v-text-field label="Enter otp" v-model="otp" required></v-text-field>
+												<div class="text-center">
+													<v-btn  type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='checkOtp()' color='light-green'> Confirm Otp </v-btn>
+												</div>
+											</v-col>
+										</v-row>
+									</v-form>
+								</div>
+										<div class="ml-9 mr-4 mb-8">
+											<small class="font-weight-light">By proceeding, you agree to our our <a href="
+											https://www.tringpartner.com/terms" target="_blank" class="text-blue">Terms &amp; Conditions</a>, <a href="https://www.tringpartner.com/privacy" target="_blank" class="text-blue">Privacy Policy. </a> &amp; <a href="
+											https://www.tringpartner.com/terms#fup" target="_blank" class="text-blue"> Fair Usage Policy. </a> </small>
+										</div>
+							</v-col>	
+						</v-row>
+					</v-card>
+				</v-col>
+			</v-row>
+		</v-container>
+	</div>
+</v-app>
+</template>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+import firebase from 'firebase'
+import pincodeDB from "./pincodes.json"
+import { db } from '@/main.js';
+  export default {
+			created() {
+				firebase.auth().onAuthStateChanged(user => {
+					if (user) {
+						console.log("logged user details",user)
+						this.uid = user.uid
+						this.phno = user.phoneNumber.slice(3)
+						console.log("billing il user id", this.uid)
+						console.log("billing il user number", this.phno)
+
+					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							console.log(doc.id, " => ", doc.data());
+							let user_details = doc.data()
+							this.Udata = user_details
+							this.currentPage = this.Udata.currentPage
+							this.name = this.Udata.FirstName
+							this.email = this.Udata.Email
+							this.virtualnumber = this.Udata.virtualNumber[0]
+							console.log(this.virtualnumber)
+							if (this.currentPage == "onboarding_listing") {
+								this.$router.push("/choose_no")
+							}
+							else if (this.currentPage == "onboarding_test_completed") {
+								this.$router.push("/test_number")
+							}
+							else if (this.currentPage == "onboarding_plan_details") {
+								this.$router.push("/pricing")
+							}
+							else if (this.currentPage == "onboarding_billing") {
+								this.$router.push("/billing")
+							}
+							else if (this.currentPage == "onboarding_success") {
+								this.$router.push("/emailVerification")
+							}
+							else if (this.currentPage == "onboarding_dashboard") {
+								this.$router.push("/downloadApp")
+							}
+
+
+						})
+					}).catch((error) => {
+						console.log("Error getting documents: ", error);
+					})
+
+				}
+			})
+    },
+    data () {
+      return {
+        phno : '',
+        name: '',
+        email: '',
+        virtualnumber : '',
+        source : 'General',
+        getOtp : true,
+        otp : '',
+        emailRules: [ 
+					v => !!v || 'E-mail is required',
+					v => /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(v) || 'E-mail must be valid',
+				],
+				nameRules: [
+					v => !!v || 'Your Name is required',
+					v => (v && v.length < 50 ||  'Too many characters.Please try again !!'),
+					v => /^[a-zA-Z][a-zA-Z ]+$/.test(v) || 'Name should not contain symbols or digits. Please try again.',
+
+					],
+        }
+      },
+    methods :{
+			requestOtp(){
+				const options = {
+					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/email/otp',
+					method: 'POST',
+
+					data: {
+						uid: this.uid,
+						email: this.email,
+						source: this.source
+					},
+				}
+				console.log(options)
+        this.$axios(options)
+					.then((response) => {
+						console.log(response)
+						this.getOtp = false
+					})
+					.catch((error) => {
+						console.error(error);
+					})
+				},
+
+				checkOtp(){
+					const options = {
+					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/email/verification',
+					method: 'POST',
+
+					data: {
+						uid: this.uid,
+						email: this.email,
+						otp : this.otp
+					},
+				}
+				console.log(options)
+        this.$axios(options)
+					.then((response) => {
+						console.log(response)
+						const user_stage = {
+							url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
+							method: 'POST',
+
+							data: {
+										uid: this.uid,
+										phoneNumber: this.phno,
+										currentPage: 'onboarding_dashboard'
+							},
+						}
+						console.log(user_stage)
+						this.$axios(user_stage)
+						.then((response) => {
+							console.log(response)
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+						this.$router.push("/downloadApp")
+					})
+					.catch((error) => {
+						console.error(error);
+					})
+				},
+	
+
+    }
+  }
+
+</script>
+

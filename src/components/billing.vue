@@ -17,13 +17,14 @@
 										<label class='red--text'>support</label>
 									</v-app-bar>
 								</div>
-								<div v-if="showBilling">
+								<div>
 									<div class="ml-4 mr-4">
 										<h3 class="mt-6 ml-5 text-center">Billing Address and Payment</h3>
 									</div>
 									<h4 class="ml-4 mr-4 mt-3">Select Payment Plan</h4>
-									<v-radio-group class="ml-4 mr-4" v-model="radio" row >
+									<v-radio-group class="ml-2 mr-1" v-model="radio" row >
 										<v-radio label="Monthly Plan" value="monthly"></v-radio>
+										<v-radio label="Half Yearly Plan" value="halfyearly"></v-radio>
 										<v-radio label="Yearly Plan" value="yearly"></v-radio>
 									</v-radio-group>
 
@@ -99,35 +100,13 @@
 																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5950</h4>
 																</div>
 															</v-card-body>
-															<v-card-actions>
+															<v-card-actions >
+																<v-spacer></v-spacer>
 																<v-btn color="red" text @click="dialog = false"> CANCEL </v-btn>
-																<v-btn color="green" text @click="dialog = false"> CONFIRM </v-btn>
 															</v-card-actions>
 														</v-card>
 													</v-dialog>
 													<v-btn  type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click="validate" color='light-blue'> Make Payment </v-btn>
-												</div>
-											</v-col>
-										</v-row>
-									</v-form>
-								</div>
-								<div v-else>
-									<div class="ml-4 mr-4">
-										<h3 class="mt-6 ml-5 text-center">Email Verification</h3>
-									</div>
-									<v-form @submit.prevent="" class="mt-3 ml-8 mr-4" ref="form" v-model="valid" lazy-validation >
-										<v-row>
-											<v-col v-if="getOtp">
-												<v-text-field label="Your Name" v-model="name" :rules="nameRules" required></v-text-field>
-												<v-text-field v-model="email" :rules="emailRules" label="Business E-mail" required ></v-text-field>
-												<div class="text-center">
-													<v-btn type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='requestOtp()' color='light-green'> Request Otp </v-btn>
-												</div>
-											</v-col>
-											<v-col v-else>
-												<v-text-field label="Enter otp" v-model="otp" required></v-text-field>
-												<div class="text-center">
-													<v-btn  type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='checkOtp()' color='light-green'> Confirm Otp </v-btn>
 												</div>
 											</v-col>
 										</v-row>
@@ -183,10 +162,10 @@ import { db } from '@/main.js';
 								this.$router.push("/billing")
 							}
 							else if (this.currentPage == "onboarding_success") {
-								this.$router.push("/calllogs")
+								this.$router.push("/emailVerification")
 							}
 							else if (this.currentPage == "onboarding_dashboard") {
-								this.$router.push("/calllogs")
+								this.$router.push("/downloadApp")
 							}
 
 
@@ -219,7 +198,6 @@ import { db } from '@/main.js';
         planId: 1,
         pincodeDb : pincodeDB,
         otp : '',
-        showBilling : true,
         pincodeInvalid : true,
 				dialog: false,
         emailRules: [ 
@@ -385,7 +363,8 @@ import { db } from '@/main.js';
 									let testing_status = doc.data()
 									if((testing_status.Stage == "PAID") && initial ) {
 										initial = false
-										this.showBilling = false
+										this.$router.push("/emailVerification")
+
 									}
 								})
 							})

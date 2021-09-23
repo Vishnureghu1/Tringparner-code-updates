@@ -34,24 +34,6 @@
 										<v-btn v-if="toggle_none != null" class="mr-4 mb-6 white--text text-center" width="40%" @click.prevent='reserveNumber()' color='light-blue darken-1'> Next </v-btn>
 									</div>
 								</div>
-								<div v-if='confirmNumber'>
-									<div class="ml-4 mr-4">
-									<h4 class="mt-6 ml-5 text-center">Testing your business number</h4>
-									
-									<h3 class="mt-6 ml-5 mb-3 text-center red--text"> {{ V_numbers[toggle_none] }}</h3>
-									<v-divider></v-divider>
-									</div>
-									<div class="ml-4 mr-4 mt-5 text-center">
-										<h4 class="mb-0 text-center mt-3">You'll soon receive a test call from</h4>
-										<h3 class="mb-6 text-center mt-3 blue--text">080-4547-5053</h3>
-									</div>
-									<div class="ml-4 mr-4 mb-6">
-										<v-progress-linear  color="blue" height="18" :value= 'value2' striped ></v-progress-linear>
-									</div>
-									<div>
-										<h4 class="mb-0 text-center mt-3">Initiating test call </h4>
-									</div>
-								</div>
 
 								<div class="ml-9 mr-4 mb-8">
 									<small class="font-weight-light">By proceeding, you agree to our our <a href="
@@ -91,9 +73,6 @@ import { db } from '@/main.js';
 								if (this.currentPage == "onboarding_listing") {
 									this.$router.push("/choose_no")
 								}
-								else if (this.currentPage == "onboarding_test_completed") {
-									this.$router.push("/test_number")
-								}
 								else if (this.currentPage == "onboarding_plan_details") {
 									this.$router.push("/pricing")
 								}
@@ -101,50 +80,16 @@ import { db } from '@/main.js';
 									this.$router.push("/billing")
 								}
 								else if (this.currentPage == "onboarding_success") {
-									this.$router.push("/calllogs")
+									this.$router.push("/emailVerification")
 								}
 								else if (this.currentPage == "onboarding_dashboard") {
-									this.$router.push("/calllogs")
+									this.$router.push("/downloadApp")
 								}
-
-
 							})
 						}).catch((error) => {
 							console.log("Error getting documents: ", error);
 						})
-						const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list',
-						method: 'POST',
-						data: {
-							uid: this.uid,
-							phoneNumber: this.phno
-						},
-					}
-					console.log(details)
-					this.$axios(details)
-						.then((response) => {
-							this.overlay = false
-							this.V_numbers = response.data.numbers
-							this.timerCount = response.data.Seconds
-							this.listingId = response.data.listingId
-							this.value = 100 - (0.55*(180-this.timerCount))
-							console.log(this.value)
-							console.log(response)
-							console.log(response.data.numbers)
-							console.log(response.data.Seconds)
-							this.progressbarTimer(this.value)
-							if(this.V_numbers.length === 0){
-								alert('Numbers not available , please try later!!')
-								this.overlay = true
-								this.value = 0
-								this.timerCount = 0
-
-							}
-							
-						})
-						.catch((error) => {
-							console.error(error);
-						})
+						this.getNumbersList()
 				}
 			})
     },
@@ -166,6 +111,42 @@ import { db } from '@/main.js';
       }
     },
     methods:{
+			getNumbersList(){
+				this.overlay = true
+				const details = {
+					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list',
+					method: 'POST',
+					data: {
+						uid: this.uid,
+						phoneNumber: this.phno
+					},
+				}
+				console.log(details)
+				this.$axios(details)
+					.then((response) => {
+						this.overlay = false
+						this.V_numbers = response.data.numbers
+						this.timerCount = response.data.Seconds
+						this.listingId = response.data.listingId
+						this.value = 100 - (0.55*(180-this.timerCount))
+						console.log(this.value)
+						console.log(response)
+						console.log(response.data.numbers)
+						console.log(response.data.Seconds)
+						this.progressbarTimer(this.value)
+						if(this.V_numbers.length === 0){
+							alert('Numbers not available , please try later!!')
+							this.overlay = true
+							this.value = 0
+							this.timerCount = 0
+
+						}
+						
+					})
+					.catch((error) => {
+						console.error(error);
+					})
+				},
 			reserveNumber() {
 				let virtualNumber = this.V_numbers[this.toggle_none]
 				console.log(virtualNumber)
@@ -196,36 +177,18 @@ import { db } from '@/main.js';
 						data: {
 							uid: this.uid,
 							phoneNumber: this.phno,
-							currentPage: 'onboarding_testing_completed'
+							currentPage: 'onboarding_plan_details'
 						},
 					}
 						console.log(user_stage)
 						this.$axios(user_stage)
 							.then((response) => {
 								console.log(response)
+								this.$router.push("/pricing")
 							})
 							.catch((error) => {
 								console.error(error);
-							}).finally(() => {
-									this.numberList = false
-									this.confirmNumber = true
-									var initial = true
-									if(initial) {
-										db.collection('users').where("uid" , "==" , this.uid).onSnapshot((querySnapshot) => {
-											querySnapshot.forEach((doc) => {
-												console.log(doc.id, " => ", doc.data());
-												let testing_status = doc.data()
-												console.log("before",initial)
-												if((testing_status.testcallType == "Answered" || testing_status.testcallType == "Missed") && initial ) {
-													initial = false
-													console.log("after",initial)
-													console.log("you again")
-													this.$router.push("/test_number")
-												}
-											})
-										})
-									}
-								})
+							})
 						})
 					},
 // user stage current page onbording_testing_complete
@@ -234,17 +197,23 @@ import { db } from '@/main.js';
 					// console.log(value)
 					if (value > 0) {
 						var myVar = setInterval(() => {
-							if (this.value > 0) {
-							// console.log('before',this.value)
-							this.value = this.value - 0.55
-							// console.log('after',this.value)
-							// this.value2 = this.value2 - 10
-							this.timerCount--;
-							// console.log('after',this.timerCount)
-						} else {
-						this.value = 0
-						this.timerCount = 0
-					}
+							if (this.value > 1) {
+								// console.log('before',this.value)
+								this.value = this.value - 0.55
+								// console.log('after',this.value)
+								// this.value2 = this.value2 - 10
+								this.timerCount--;
+								// console.log('after',this.timerCount)
+							} 
+							else {
+								this.timerCount = 180
+								this.value = 100
+								this.getNumbersList()
+							}
+							// else {
+							// 	this.value = 0
+							// 	this.timerCount = 0
+							// }
 						}, 1000);
 
 					}
