@@ -178,10 +178,10 @@ import { db } from '@/main.js';
 												this.$router.push("/billing")
 											}
 											else if (this.currentPage == "onboarding_success") {
-												this.$router.push("/calllogs")
+												this.$router.push("/emailVerification")
 											}
 											else if (this.currentPage == "onboarding_dashboard") {
-												this.$router.push("/calllogs")
+												this.$router.push("/downloadApp")
 											}
 											else {
 												const user_stage = {
@@ -313,10 +313,10 @@ import { db } from '@/main.js';
 									this.$router.push("/billing")
 								}
 								else if (this.currentPage == "onboarding_success") {
-									this.$router.push("/calllogs")
+									this.$router.push("/emailVerification")
 								}
 								else if (this.currentPage == "onboarding_dashboard") {
-									this.$router.push("/calllogs")
+									this.$router.push("/downloadApp")
 								}
 							}
 

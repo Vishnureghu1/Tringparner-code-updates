@@ -67,9 +67,9 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/test_number',
-    name: 'test_number',
-    component: () => import(/* webpackChunkName: "test_number" */ '../components/test_number.vue'),
+    path: '/emailVerification',
+    name: 'emailVerification',
+    component: () => import(/* webpackChunkName: "test_number" */ '../components/emailVerification.vue'),
     meta: {requiresAuth: true}
   },
   {
@@ -112,6 +112,12 @@ const routes = [
     path: '/analytics',
     name: 'analytics',
     component: () => import(/* webpackChunkName: "analytics" */ '../components/analytics.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/downloadApp',
+    name: 'downloadApp',
+    component: () => import(/* webpackChunkName: "analytics" */ '../components/downloadApp.vue'),
     meta: {requiresAuth: true}
   }
 
