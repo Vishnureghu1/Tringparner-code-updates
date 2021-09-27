@@ -71,7 +71,7 @@
 
 									<div class="ml-4 mr-4 mt-5 text-center">
 										<div class="text-center">
-											<v-btn class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='nextPage()' color='blue'> Make Payment </v-btn>
+											<v-btn class="mr-4 mb-6 mt-6 white--text text-center" max-width @click.prevent='nextPage()' color='blue'> Make Payment </v-btn>
 										</div>
                    </div>  
 								</div>

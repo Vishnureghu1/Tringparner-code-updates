@@ -76,6 +76,29 @@
 																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 595</h4>
 																</div>
 															</v-card-body>
+															<v-card-body v-else-if="radio == 'halfyearly'">
+																<h3 class="mb-3 mt-3 text-center" >Plan - Tringpartner_6M_2500</h3>
+																<h4 class="font-weight-bold text-center mb-3">Subtotal : 2500</h4>
+																<div v-if="selected && state == 'Kerala'">
+																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 225</h5>
+																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 225</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 2950</h4>
+																</div>
+																<div v-if="selected && state != 'Kerala'">
+																	<h5 class="text-center font-weight-light mb-3">igst @18% : 90</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 2950</h4>
+																</div>
+																<div v-if="!selected && state != 'Kerala'">
+																	<h5 class="text-center font-weight-light mb-3">igst @18% : 90</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 2950</h4>
+																</div>
+																<div v-if="!selected && state == 'Kerala'">
+																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 45</h5>
+																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 45</h5>
+																	<h5 class="text-center font-weight-light mb-3">Kerala Flood Cess @1% : 5</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 2955</h4>
+																</div>
+															</v-card-body>
 
 															<v-card-body v-else>
 																<h3 class="mb-3 mt-3 text-center" >Plan - Tringpartner_1Y_5000</h3>
@@ -106,7 +129,7 @@
 															</v-card-actions>
 														</v-card>
 													</v-dialog>
-													<v-btn  type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click="validate" color='light-blue'> Make Payment </v-btn>
+													<v-btn  type="submit" class="mr-4 mb-6 mt-6 white--text text-center" max-width @click="validate" color='light-blue'> Make Payment </v-btn>
 												</div>
 											</v-col>
 										</v-row>
@@ -315,8 +338,11 @@ import { db } from '@/main.js';
 			nextPage(){
 				if(this.radio == 'monthly'){
 					this.planId = 1
-				}else {
+				}else if (this.radio == 'halfyearly') {
 					this.planId = 2
+				}
+				else {
+					this.planId = 3
 				}
 				const details = {
 					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/owner',

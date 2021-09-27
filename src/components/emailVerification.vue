@@ -166,24 +166,6 @@ import { db } from '@/main.js';
         this.$axios(options)
 					.then((response) => {
 						console.log(response)
-						const user_stage = {
-							url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
-							method: 'POST',
-
-							data: {
-										uid: this.uid,
-										phoneNumber: this.phno,
-										currentPage: 'onboarding_dashboard'
-							},
-						}
-						console.log(user_stage)
-						this.$axios(user_stage)
-						.then((response) => {
-							console.log(response)
-						})
-						.catch((error) => {
-							console.error(error);
-						})
 						this.$router.push("/downloadApp")
 					})
 					.catch((error) => {

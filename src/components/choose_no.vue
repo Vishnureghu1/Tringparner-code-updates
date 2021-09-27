@@ -107,47 +107,52 @@ import { db } from '@/main.js';
 				toggle_none : null,
 				changecolor : false,
 				overlay: true,
-
+				reserve: false,
       }
     },
     methods:{
 			getNumbersList(){
-				this.overlay = true
-				const details = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list',
-					method: 'POST',
-					data: {
-						uid: this.uid,
-						phoneNumber: this.phno
-					},
-				}
-				console.log(details)
-				this.$axios(details)
-					.then((response) => {
-						this.overlay = false
-						this.V_numbers = response.data.numbers
-						this.timerCount = response.data.Seconds
-						this.listingId = response.data.listingId
-						this.value = 100 - (0.55*(180-this.timerCount))
-						console.log(this.value)
-						console.log(response)
-						console.log(response.data.numbers)
-						console.log(response.data.Seconds)
-						this.progressbarTimer(this.value)
-						if(this.V_numbers.length === 0){
-							alert('Numbers not available , please try later!!')
-							this.overlay = true
-							this.value = 0
-							this.timerCount = 0
+				if(!this.reserve) {
+					this.timerCount = 180
+					this.value = 100
+					this.overlay = true
+					const details = {
+						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list',
+						method: 'POST',
+						data: {
+							uid: this.uid,
+							phoneNumber: this.phno
+						},
+					}
+					console.log(details)
+					this.$axios(details)
+						.then((response) => {
+							this.overlay = false
+							this.V_numbers = response.data.numbers
+							this.timerCount = response.data.Seconds
+							this.listingId = response.data.listingId
+							this.value = 100 - (0.55*(180-this.timerCount))
+							console.log(this.value)
+							console.log(response)
+							console.log(response.data.numbers)
+							console.log(response.data.Seconds)
+							this.progressbarTimer(this.value)
+							if(this.V_numbers.length === 0){
+								alert('Numbers not available , please try later!!')
+								this.overlay = true
+								this.value = 0
+								this.timerCount = 0
 
-						}
-						
-					})
-					.catch((error) => {
-						console.error(error);
-					})
+							}
+							
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+					}
 				},
 			reserveNumber() {
+				this.reserve = true
 				let virtualNumber = this.V_numbers[this.toggle_none]
 				console.log(virtualNumber)
 				const reserve = {
@@ -200,20 +205,16 @@ import { db } from '@/main.js';
 							if (this.value > 1) {
 								// console.log('before',this.value)
 								this.value = this.value - 0.55
-								// console.log('after',this.value)
 								// this.value2 = this.value2 - 10
 								this.timerCount--;
 								// console.log('after',this.timerCount)
 							} 
 							else {
-								this.timerCount = 180
-								this.value = 100
-								this.getNumbersList()
+								if(!this.reserve){
+									this.overlay = true
+									this.$router.go()
+								}
 							}
-							// else {
-							// 	this.value = 0
-							// 	this.timerCount = 0
-							// }
 						}, 1000);
 
 					}
