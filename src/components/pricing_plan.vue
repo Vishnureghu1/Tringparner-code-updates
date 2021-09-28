@@ -56,7 +56,7 @@
 										<div class="mt-5 mb-5">
 											
 												<v-radio >
-												<span slot="label" class="black--text ml-3">Pay for 6 months & Save 20%
+												<span slot="label" class="black--text ml-3">Pay for 1 year & Save 20%
 													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 6000</span> ₹5000 + GST</h3>
 												</span>
 											</v-radio>
