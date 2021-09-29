@@ -22,6 +22,7 @@
 									<h4 class="mt-6 text-center">Choose your business number</h4>
 									
 									<p class="mt-6 text-center" v-if="(timerCount%60) != -1" >Time Remaining : {{ Math.floor(timerCount/60) }} mins {{ timerCount%60 }} sec</p>
+									<p class="mt-6 text-center" v-else > Timed Out !!! </p>
 									<div class="ml-5 mr-5">
 										<v-progress-linear  color="deep-orange" height="14" :value= 'value' striped ></v-progress-linear>
 									</div>
@@ -138,7 +139,8 @@ import { db } from '@/main.js';
 							console.log(response.data.Seconds)
 							this.progressbarTimer(this.value)
 							if(this.V_numbers.length === 0){
-								alert('Numbers not available , please try later!!')
+								// alert('Numbers not available , please try later!!')
+
 								this.overlay = true
 								this.value = 0
 								this.timerCount = 0
