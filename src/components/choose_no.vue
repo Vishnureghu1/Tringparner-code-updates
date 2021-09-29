@@ -21,7 +21,7 @@
 								<div v-if='numberList'>
 									<h4 class="mt-6 text-center">Choose your business number</h4>
 									
-									<p class="mt-6 text-center">Time Remaining : {{ Math.floor(timerCount/60) }} mins {{ timerCount%60 }} sec</p>
+									<p class="mt-6 text-center" v-if="(timerCount%60) != -1" >Time Remaining : {{ Math.floor(timerCount/60) }} mins {{ timerCount%60 }} sec</p>
 									<div class="ml-5 mr-5">
 										<v-progress-linear  color="deep-orange" height="14" :value= 'value' striped ></v-progress-linear>
 									</div>
