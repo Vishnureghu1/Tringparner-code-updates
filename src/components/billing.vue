@@ -22,7 +22,7 @@
 										<h3 class="mt-6 ml-5 text-center">Billing Address and Payment</h3>
 									</div>
 									<h4 class="ml-4 mr-4 mt-3">Select Payment Plan</h4>
-									<v-radio-group class="ml-2 mr-1" v-model="radio" row >
+									<v-radio-group class="ml-1 mr-1" v-model="radio" row >
 										<v-radio label="Monthly Plan" value="monthly"></v-radio>
 										<v-radio label="Half Yearly Plan" value="halfyearly"></v-radio>
 										<v-radio label="Yearly Plan" value="yearly"></v-radio>
@@ -72,8 +72,7 @@
 																<div v-if="!selected && state == 'Kerala'">
 																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 45</h5>
 																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 45</h5>
-																	<h5 class="text-center font-weight-light mb-3">Kerala Flood Cess @1% : 5</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 595</h4>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 590</h4>
 																</div>
 															</v-card-body>
 															<v-card-body v-else-if="radio == 'halfyearly'">
