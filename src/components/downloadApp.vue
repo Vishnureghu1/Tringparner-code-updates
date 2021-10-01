@@ -26,6 +26,8 @@
 										<v-icon x-large color="green darken-2" >mdi-checkbox-marked-circle </v-icon>
 									</div>
 									<div>
+										<h3 class="mt-6 text-center blue--text"><a class="text-decoration-none" href="https://tringpartner.page.link/signupapp">Click to Open in Mobile app</a></h3>
+										<h3 class="mt-6 text-center black--text">OR</h3>
 										<h3 class="mt-6 text-center blue--text">Download The Mobile App</h3>
 									</div>
 									<div class="text-center">
