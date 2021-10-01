@@ -35,7 +35,27 @@
 										<v-btn v-if="toggle_none != null" class="mr-4 mb-6 white--text text-center" width="40%" @click.prevent='reserveNumber()' color='light-blue darken-1'> Next </v-btn>
 									</div>
 								</div>
-
+      <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        max-width="400"
+      >
+        <template v-slot:default="dialog">
+          <v-card outlined shaped elevation="8">
+            <v-card-text>
+              <div class="text-h6 mt-4 red--text">No numbers Available </div>
+              <div class="text-h6 mt-2 red--text">Try after sometime !! </div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                color="danger"
+                @click="dialog.value = false"
+              >Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
 								<div class="ml-9 mr-4 mb-8">
 									<small class="font-weight-light">By proceeding, you agree to our our <a href="
 									https://www.tringpartner.com/terms" target="_blank" class="text-blue">Terms &amp; Conditions</a>, <a href="https://www.tringpartner.com/privacy" target="_blank" class="text-blue">Privacy Policy. </a> &amp; <a href="
@@ -109,6 +129,8 @@ import { db } from '@/main.js';
 				changecolor : false,
 				overlay: true,
 				reserve: false,
+				NoNumbers: false,
+				dialog: false,
       }
     },
     methods:{
@@ -140,8 +162,8 @@ import { db } from '@/main.js';
 							this.progressbarTimer(this.value)
 							if(this.V_numbers.length === 0){
 								// alert('Numbers not available , please try later!!')
-
-								this.overlay = true
+								this.dialog = true
+								this.overlay = false
 								this.value = 0
 								this.timerCount = 0
 
