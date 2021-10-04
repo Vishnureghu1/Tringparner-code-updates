@@ -21,12 +21,8 @@
 									<div class="ml-4 mr-4">
 										<h3 class="mt-6 ml-5 text-center">Billing Address and Payment</h3>
 									</div>
-									<h4 class="ml-4 mr-4 mt-3">Select Payment Plan</h4>
-									<v-radio-group class="ml-1 mr-1" v-model="radio" row >
-										<v-radio label="Monthly Plan" value="monthly"></v-radio>
-										<v-radio label="Half Yearly Plan" value="halfyearly"></v-radio>
-										<v-radio label="Yearly Plan" value="yearly"></v-radio>
-									</v-radio-group>
+
+
 
 									<v-form @submit.prevent="" class="mt-3 ml-8 mr-4" ref="form" v-model="valid" lazy-validation >
 										<v-checkbox v-model="selected" label="Are you registered for GST" >
@@ -43,17 +39,87 @@
 												<v-text-field label="Pincode" v-model="pincode" :rules="pincodeRules" @change="searchPincode()" required></v-text-field>
 												<v-text-field label="City" v-model="city" required></v-text-field>
 												<v-text-field label="State" v-model="state" required></v-text-field>
-
+												
+												<h2 v-if="radio == 1" class="text-center font-weight-regular"> Total Amount Payable : ₹ 590 /- </h2>
+												<h2 v-else-if="radio == 2" class="text-center font-weight-regular"> Total Amount Payable : ₹ 3186 /-</h2>
+												<h2 v-else-if="radio == 3" class="text-center font-weight-regular"> Total Amount Payable : ₹ 5664 /- </h2>
 												<div class="text-center">
 													<v-dialog v-model="dialog" persistent max-width="600px">
 														<template v-slot:activator="{ on, attrs }">
-															<v-btn color="primary" dark v-bind="attrs" v-on="on" plain > VIEW TAX BRAEKUP </v-btn>
+															<v-btn color="primary" dark v-bind="attrs" v-on="on" plain > PRICE BREAKUP </v-btn>
 														</template>
 														<v-card>
 															<v-card-title>
-																<h4 class="font-weight-bold">Tax Breakup - Details</h4>
+																<h4 class="font-weight-bold">PRICE BREAKUP</h4>
 															</v-card-title>
-															<v-card-body v-if="radio == 'monthly'">
+
+
+
+									<v-radio-group class="ml-16 mt-5 mr-16" v-model="radio">
+										<div class="mb-4">
+
+												<v-radio value="1">>
+												<span slot="label" class="black--text ml-3">Try for 1 month @ just ₹ 500 
+													<h3 class="mt-3 text-center"> ₹ 500 + GST</h3>
+													<div v-if="radio == 1">
+														<h4 class="text-right font-weight-bold mt-3 mb-2">Subtotal : ₹ 500</h4>
+														<h4 class="text-right font-weight-regular mb-2">cgst @9% : ₹ 45</h4>
+														<h4 class="text-right font-weight-regular mb-2">sgst @9% : ₹ 45</h4>
+														<h3 class="font-weight-bold text-center mb-2">Total Amount Payable :₹ 590 /-</h3>
+													</div>
+												</span>
+											</v-radio>
+						
+										<!-- 	<div class=" mb-2 text-center" >Try for 1 month @ just ₹ 500</div> -->
+										</div>
+										<v-divider></v-divider>
+
+										<div class="mt-5 mb-5">
+										
+												<v-radio value="2">>
+												<span slot="label" class="black--text ml-3">Pay for 6 months & Save 10%
+													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 3000</span> ₹ 2700 + GST</h3>
+													<div v-if="radio == 2">
+														<h4 class="text-right font-weight-bold mt-3 mb-3">Subtotal : ₹ 2700</h4>
+														<h4 class="text-right font-weight-regular mb-3">cgst @9% : ₹ 243</h4>
+														<h4 class="text-right font-weight-regular mb-3">sgst @9% : ₹ 243</h4>
+														<h3 class="font-weight-bold text-center mb-2">Total Amount Payable :₹ 3186 /-</h3>
+													</div>
+												</span>
+											</v-radio>
+								
+										</div>
+										<v-divider></v-divider>
+
+										<div class="mt-5 mb-5">
+											
+												<v-radio value="3">>
+												<span slot="label" class="black--text ml-3">Pay for 1 year & Save 20%
+													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 6000</span> ₹ 4800 + GST</h3>
+													<div v-if="radio == 3">
+														<h4 class="text-right font-weight-bold mt-3 mb-3">Subtotal : ₹ 4800</h4>
+														<h4 class="text-right font-weight-regular mb-3">cgst @9% : ₹ 432</h4>
+														<h4 class="text-right font-weight-regular mb-3">sgst @9% : ₹ 432</h4>
+														<h3 class="font-weight-bold text-center mb-2">Total Amount Payable :₹ 5664 /-</h3>
+													</div>
+												</span>
+											</v-radio>
+										</div>
+									</v-radio-group>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 															<v-card-body v-if="radio == 'monthly'">
 																<h3 class="mb-3 mt-3 text-center" >Plan - Tringpartner_1M_500</h3>
 																<h4 class="font-weight-bold text-center mb-3">Subtotal : 500</h4>
 																<div v-if="selected && state == 'Kerala'">
@@ -72,7 +138,8 @@
 																<div v-if="!selected && state == 'Kerala'">
 																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 45</h5>
 																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 45</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 590</h4>
+																	<h5 class="text-center font-weight-light mb-3">Kerala Flood Cess @1% : 5</h5>
+																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 595</h4>
 																</div>
 															</v-card-body>
 															<v-card-body v-else-if="radio == 'halfyearly'">
@@ -119,10 +186,11 @@
 																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 432</h5>
 																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5664</h4>
 																</div>
-															</v-card-body>
+															</v-card-body> -->
 															<v-card-actions >
 																<v-spacer></v-spacer>
 																<v-btn color="red" text @click="dialog = false"> CANCEL </v-btn>
+																<v-btn color="blue" text @click="dialog = false"> CONFIRM </v-btn>
 															</v-card-actions>
 														</v-card>
 													</v-dialog>
@@ -179,6 +247,7 @@ import { db } from '@/main.js';
 								this.$router.push("/pricing")
 							}
 							else if (this.currentPage == "onboarding_billing") {
+								this.radio = localStorage.getItem('planId')
 								this.$router.push("/billing")
 							}
 							else if (this.currentPage == "onboarding_success") {
@@ -217,6 +286,7 @@ import { db } from '@/main.js';
         radio: 'monthly',
         planId: 1,
         pincodeDb : pincodeDB,
+        radio: '',
         otp : '',
         pincodeInvalid : true,
 				dialog: false,
@@ -333,14 +403,6 @@ import { db } from '@/main.js';
 			},
 
 			nextPage(){
-				if(this.radio == 'monthly'){
-					this.planId = 1
-				}else if (this.radio == 'halfyearly') {
-					this.planId = 2
-				}
-				else {
-					this.planId = 3
-				}
 				const details = {
 					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/owner',
 					method: 'POST',
@@ -357,7 +419,7 @@ import { db } from '@/main.js';
 								Gstin: this.gst,
 								CompanyName: this.businessName,
 								Pincode: this.pincode,
-								PlanId : this.planId
+								PlanId : this.radio
 							},
 						}
 						console.log(details)

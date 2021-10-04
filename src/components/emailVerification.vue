@@ -26,7 +26,7 @@
 											<v-col v-if="getOtp">
 												<v-text-field label="Your Name" v-model="name" :rules="nameRules" required></v-text-field>
 												<v-text-field v-model="email" :rules="emailRules" label="Business E-mail" required ></v-text-field>
-												<v-text-field label="Source" append-icon="mdi-pencil" hint="For Example : Facebook, Linkedin etc" v-model="source" persistent-hint></v-text-field>
+												<v-text-field label="Source" append-icon="mdi-pencil" hint="Change source name of your business number. For Example : Facebook, Linkedin etc" v-model="source" persistent-hint></v-text-field>
 												<div class="text-center">
 													<v-btn type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='requestOtp()' color='light-green'> Request Otp </v-btn>
 												</div>

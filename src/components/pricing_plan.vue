@@ -29,10 +29,10 @@
 										<h3 class="mt-5 mb-5 text-center" >Choose Pricing Plan</h3>
 									</div>
 									<v-divider></v-divider>
-									<v-radio-group class="ml-16 mt-5 mr-16">
+									<v-radio-group class="ml-16 mt-5 mr-16" v-model="radio">
 										<div class="mb-4">
 
-												<v-radio >
+												<v-radio value="1">>
 												<span slot="label" class="black--text ml-3">Try for 1 month @ just ₹ 500 
 													<h3 class="mt-3 text-center"> ₹ 500 + GST</h3>
 												</span>
@@ -44,7 +44,7 @@
 
 										<div class="mt-5 mb-5">
 										
-												<v-radio >
+												<v-radio value="2">>
 												<span slot="label" class="black--text ml-3">Pay for 6 months & Save 10%
 													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 3000</span> ₹2700 + GST</h3>
 												</span>
@@ -55,7 +55,7 @@
 
 										<div class="mt-5 mb-5">
 											
-												<v-radio >
+												<v-radio value="3">>
 												<span slot="label" class="black--text ml-3">Pay for 1 year & Save 20%
 													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 6000</span> ₹4800 + GST</h3>
 												</span>
@@ -102,8 +102,6 @@ import { db } from '@/main.js';
 					console.log("logged user details",user)
 					this.uid = user.uid
 					this.phno = user.phoneNumber.slice(3)
-					console.log("page pricing il user id", this.uid)
-					console.log("page pricing il user number", this.phno)
 					
 					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
 						querySnapshot.forEach((doc) => {
@@ -154,6 +152,7 @@ import { db } from '@/main.js';
 					uid : '',
 					phno : '',
 					virtualNumber : '',
+					radio: '2',
 					items: [ 
 						{ text: '1 Cloud Business Number' },
 						{ text: '1 User Login' },
@@ -180,6 +179,7 @@ import { db } from '@/main.js';
 				console.log(user_stage)
         this.$axios(user_stage)
 					.then((response) => {
+						localStorage.setItem('planId',this.radio)
 						console.log(response)
 					})
 					.catch((error) => {
