@@ -138,7 +138,7 @@ import { db } from '@/main.js';
 						console.log('ID', this.uid)
 						console.log('phno', this.phNo)
 						const options = {
-							url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/login',
+							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/login',
 							method: 'POST',
 							data: {
 								uid: this.uid,
@@ -185,7 +185,7 @@ import { db } from '@/main.js';
 											}
 											else {
 												const user_stage = {
-												url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
+												url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',
 												method: 'POST',
 
 												data: {
@@ -250,7 +250,7 @@ import { db } from '@/main.js';
 						console.log('U details', user_details)
 						console.log('U type',typeof(user_details.phoneNumber))
 						const options = {
-							url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/login',
+							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/login',
 							method: 'POST',
 							data: {
 								uid: 'v1otGb9OZnTXbgsekcB7mVfpzgI3',
@@ -277,7 +277,7 @@ import { db } from '@/main.js';
 		},
 
 		created() {
-			this.initReCaptcha()
+			this.initReCaptcha()	
 			firebase.auth().onAuthStateChanged(user => {
 				if (user) {
 					console.log("logged user details",user)
@@ -327,6 +327,8 @@ import { db } from '@/main.js';
 					})
 				}
 			})
+			let url = new URL(location.href).searchParams.get('number')
+			this.phNo = url
 		}
 	}
 	
