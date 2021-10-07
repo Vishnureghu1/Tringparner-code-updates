@@ -7,7 +7,7 @@
 					<v-col sm="12" lg="9"  class="mx-sm-auto my-md-16">
 						<v-card>
 							<v-row no-gutters >
-								<v-col  sm="12" md="6" justify="center">
+								<v-col  sm="12" md="12" lg="6" justify="center">
 									<div class="mt-3 ml-3">
 										<v-app-bar color="white" flat>
 											<img class="mt-2 ml-2" :src="require('../../public/images/tring-logo.png')" height="35"/>
@@ -54,7 +54,7 @@
 										</div>
 									</div>
 								</v-col>
-								<v-col sm="12" md="6">
+								<v-col sm="12" md="12" lg="6">
 									<div class="video-wrapper mt-3 ml-10  ml-md-9 ">	
 										<video onplay="videoPlayed()" onpause="videoPaused()" width="303" height="448" controls poster="../../public/images/partner/tp_thumbnail.jpg">
 										<source src="../../public/images/tp_action.mp4" type="video/mp4">
@@ -129,7 +129,6 @@ import { db } from '@/main.js';
 			console.log('user details', user)
 			console.log('user details', userid)
 			// this.uid = this.userid
-			console.log('chumma data',this.uid)
 			}).catch(function (error) {
 			console.log('error details', error)
 			// alert('Invalid OTP')
@@ -138,7 +137,7 @@ import { db } from '@/main.js';
 						console.log('ID', this.uid)
 						console.log('phno', this.phNo)
 						const options = {
-							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/login',
+							url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/login',
 							method: 'POST',
 							data: {
 								uid: this.uid,
@@ -185,7 +184,7 @@ import { db } from '@/main.js';
 											}
 											else {
 												const user_stage = {
-												url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',
+												url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
 												method: 'POST',
 
 												data: {
@@ -250,7 +249,7 @@ import { db } from '@/main.js';
 						console.log('U details', user_details)
 						console.log('U type',typeof(user_details.phoneNumber))
 						const options = {
-							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/login',
+							url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/login',
 							method: 'POST',
 							data: {
 								uid: 'v1otGb9OZnTXbgsekcB7mVfpzgI3',
