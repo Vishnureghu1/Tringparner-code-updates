@@ -66,6 +66,27 @@
 						</v-card>
 					</v-col>
 				</v-row>
+      <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        max-width="400"
+      >
+        <template v-slot:default="dialog">
+          <v-card outlined shaped elevation="8">
+            <v-card-text>
+              <div class="text-h6 mt-4 red--text">Oops something went wrong</div>
+              <div class="text-h6 mt-2 red--text">Try after sometime !! </div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                color="danger"
+                @click="dialog.value = false"
+              >Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
 		</v-container>
   </div>
 </v-app>
@@ -86,6 +107,8 @@ import { db } from '@/main.js';
 		phNo : '',
 		uid : '',
 		currentPage: '',
+		dialog : false,
+		errorMessage: '',
 		role : '',
 		numberRules: [ 
 			// v => (v && v.length == 10 ||  'Number must contain 10 digits. Invalid Number !!'),
@@ -106,12 +129,13 @@ import { db } from '@/main.js';
 					let phoneNumber = countryCode + this.phNo
 					let appVerifier = this.appVerifier
 					firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-						.then(function (confirmationResult) {
+						.then((confirmationResult) => {
 							window.confirmationResult = confirmationResult;
-						}).catch(function (error) {
-							console.log('sms not sent', error)
-							alert('Error ! SMS not sent')
-						});
+						}).catch((error) => {
+							this.errorMessage = error.message
+							console.log(this.errorMessage)
+							// this.sendErrorLog(errorMessage)
+						})
 				}
 			},
 
@@ -160,7 +184,7 @@ import { db } from '@/main.js';
 										console.log(this.currentPage)
 										console.log(this.role)
 										if(this.role == 'ADMIN' || this.role == 'AGENT') {
-											this.$router.push("/calllogs")
+											this.$router.push("/downloadApp")
 										}
 										else {
 
@@ -209,11 +233,6 @@ import { db } from '@/main.js';
 										}).catch((error) => {
 											console.log("Error getting documents: ", error);
 										})
-
-
-
-								
-
 							})
 							.catch((error) => {
 								console.error(error);
@@ -239,40 +258,27 @@ import { db } from '@/main.js';
 			this.appVerifier =  window.recaptchaVerifier
 		},1000)
 		},
-		testing (){
-						// let phoneNumber = this.phNo
-						this.$store.commit('chumma', {phoneNumber : this.phNo})
+		sendErrorLog(errorMessage){
+			this.dialog = true
+			const errorLog = {
+				url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/login/failure',
+				method: 'POST',
 
-						var user_details = ''
-						console.log(this.phNo)
-						user_details = { uid: "kugCotqp0JbALG8Xx6BM6pr43R22" , phoneNumber: "8891978085" }
-						console.log('U details', user_details)
-						console.log('U type',typeof(user_details.phoneNumber))
-						const options = {
-							url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/login',
-							method: 'POST',
-							data: {
-								uid: 'v1otGb9OZnTXbgsekcB7mVfpzgI3',
-								phoneNumber: '8428258159'
-							}
-						}
-			this.$axios(options)
-							.then((response) => {
-								console.log(response.data)
-								console.log(response.data.token)
-								localStorage.setItem('token',response.data.token)
-							})
-							.catch((error) => {
-								console.error(error);
-							}).finally(() => {
-								// this.$root.$emit('Token', response.data.token);
-								console.log(this.mynumber)
-								console.log(this.myuid)
-								// eventBus.$emit('phno', this.mynumber);
-								// eventBus.$emit('uid', this.myuid);
-								this.$router.push("/choose_no")
-							})
+				data: {
+					reason: errorMessage,
+					login_number : this.phNo
+				},
 			}
+			console.log(errorLog)
+				.$axios(errorLog)
+				.then((response) => {
+					console.log(response)
+					this.dialog =  true
+				})
+				.catch((error) => {
+					console.error(error);
+				})
+		}
 		},
 
 		created() {
