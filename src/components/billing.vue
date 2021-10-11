@@ -44,7 +44,7 @@
 												<h3 v-else-if="radio == 2" class=" font-weight-regular"> Total Amount Payable : ₹ 3186/-</h3>
 												<h3 v-else-if="radio == 3" class=" font-weight-regular"> Total Amount Payable : ₹ 5664/- </h3>
 												<div class="text-center">
-													<v-dialog v-model="dialog" persistent max-width="600px">
+													<v-dialog v-model="dialog" persistent max-width="500px">
 <!-- 														<template v-slot:activator="{ on, attrs }">
 															<v-btn color="primary" dark v-bind="attrs" v-on="on" plain > PRICE BREAKUP </v-btn>
 														</template> -->
@@ -55,17 +55,17 @@
 
 
 
-									<v-radio-group class="ml-16 mt-5 mr-16" v-model="radio">
+									<v-radio-group class="ml-5 mt-5 mr-2" v-model="radio">
 										<div class="mb-4">
 
-												<v-radio value="1">>
+												<v-radio value="1">
 												<span slot="label" class="black--text ml-3">Try for 1 month @ just ₹ 500 
 													<h3 class="mt-3 text-center"> ₹ 500 + GST</h3>
 													<div v-if="radio == 1">
 														<h4 class="text-right font-weight-bold mt-3 mb-2">Subtotal : ₹ 500</h4>
 														<h4 class="text-right font-weight-regular mb-2">cgst @9% : ₹ 45</h4>
 														<h4 class="text-right font-weight-regular mb-2">sgst @9% : ₹ 45</h4>
-														<h3 class="font-weight-bold text-center mb-2">Total Amount Payable :₹ 590 /-</h3>
+														<h4 class="font-weight-bold mb-2">Total Amount Payable :₹ 590/-</h4>
 													</div>
 												</span>
 											</v-radio>
@@ -76,14 +76,14 @@
 
 										<div class="mt-5 mb-5">
 										
-												<v-radio value="2">>
+												<v-radio value="2">
 												<span slot="label" class="black--text ml-3">Pay for 6 months & Save 10%
 													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 3000</span> ₹ 2700 + GST</h3>
 													<div v-if="radio == 2">
 														<h4 class="text-right font-weight-bold mt-3 mb-3">Subtotal : ₹ 2700</h4>
 														<h4 class="text-right font-weight-regular mb-3">cgst @9% : ₹ 243</h4>
 														<h4 class="text-right font-weight-regular mb-3">sgst @9% : ₹ 243</h4>
-														<h3 class="font-weight-bold text-center mb-2">Total Amount Payable :₹ 3186 /-</h3>
+														<h4 class="font-weight-bold mb-2">Total Amount Payable :₹ 3186/-</h4>
 													</div>
 												</span>
 											</v-radio>
@@ -93,30 +93,30 @@
 
 										<div class="mt-5 mb-5">
 											
-												<v-radio value="3">>
+												<v-radio value="3">
 												<span slot="label" class="black--text ml-3">Pay for 1 year & Save 20%
 													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 6000</span> ₹ 4800 + GST</h3>
 													<div v-if="radio == 3">
 														<h4 class="text-right font-weight-bold mt-3 mb-3">Subtotal : ₹ 4800</h4>
 														<h4 class="text-right font-weight-regular mb-3">cgst @9% : ₹ 432</h4>
 														<h4 class="text-right font-weight-regular mb-3">sgst @9% : ₹ 432</h4>
-														<h3 class="font-weight-bold text-center mb-2">Total Amount Payable :₹ 5664 /-</h3>
+														<h4 class="font-weight-bold mb-2">Total Amount Payable :₹ 5664/-</h4>
 													</div>
 												</span>
 											</v-radio>
 										</div>
 									</v-radio-group>
-															<v-card-actions >
+															<v-card-actions>
 																<v-spacer></v-spacer>
-																<v-btn color="red" text @click="dialog = false"> CANCEL </v-btn>
-																<v-btn color="blue" text @click="dialog = false"> CONFIRM </v-btn>
+																<v-btn color="blue" class="mb-4" text @click="dialog = false"> CANCEL </v-btn>
+																<v-btn color="red" class="white--text mb-4" rounded @click="dialog = false"> PROCEED TO PAY </v-btn>
 															</v-card-actions>
 														</v-card>
 													</v-dialog>
 													<v-row no-gutters class="mb-4 mt-3">
 
 														<v-col cols="6" sm="6" md="6" lg="6" xl="6" xs="3">
-															<v-btn class="" @click="dialog=true" width="80px" text color='light-blue'> Price Breakup </v-btn>
+															<v-btn  @click="dialog=true" width="80px" text color='light-blue'> Price Breakup </v-btn>
 														</v-col>
 														<v-col cols="6" sm="6" md="6" lg="6" xl="6" xs="3">
 															<v-btn  type="submit" class="white--text" width="135px" @click="validate" color='light-blue'> Make Payment </v-btn>
