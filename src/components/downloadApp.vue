@@ -59,7 +59,7 @@ import { db } from '@/main.js';
 						console.log("logged user details",user)
 						this.uid = user.uid
 						this.phno = user.phoneNumber.slice(3)
-
+						this.$analytics.logEvent("Web Successfully signed up");
 					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
 						querySnapshot.forEach((doc) => {
 							console.log(doc.id, " => ", doc.data());
@@ -105,9 +105,11 @@ import { db } from '@/main.js';
       },
     methods :{
 			playStore(){
+				this.$analytics.logEvent("Web Google play app download");
 				window.open(`https://play.google.com`)
 			},
 			appStore(){
+				this.$analytics.logEvent("Web App store app download");
 				window.open(`https://www.apple.com/in/app-store/`)
 			}
   }

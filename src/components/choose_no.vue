@@ -194,6 +194,7 @@ import { db } from '@/main.js';
         this.$axios(reserve)
 					.then((response) => {
 						console.log(response)
+						this.$analytics.logEvent("Web Number reserved");
 					})
 					.catch((error) => {
 						console.error(error);
@@ -213,6 +214,7 @@ import { db } from '@/main.js';
 						this.$axios(user_stage)
 							.then((response) => {
 								console.log(response)
+								this.$analytics.logEvent("Web Pricing plan");
 								this.$router.push("/pricing")
 							})
 							.catch((error) => {

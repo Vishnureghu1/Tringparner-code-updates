@@ -147,6 +147,7 @@ import { db } from '@/main.js';
         this.$axios(options)
 					.then((response) => {
 						console.log(response)
+						this.$analytics.logEvent("Web Email Otp send");
 						this.getOtp = false
 					})
 					.catch((error) => {
@@ -169,6 +170,7 @@ import { db } from '@/main.js';
         this.$axios(options)
 					.then((response) => {
 						console.log(response)
+						this.$analytics.logEvent("Web Email verification");
 						this.$router.push("/downloadApp")
 					})
 					.catch((error) => {

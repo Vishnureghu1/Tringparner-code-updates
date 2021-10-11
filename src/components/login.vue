@@ -134,6 +134,7 @@ import { db } from '@/main.js';
 						}).catch((error) => {
 							this.errorMessage = error.message
 							console.log(this.errorMessage)
+							// this.$analytics.logEvent("Web Otp send");
 							// this.sendErrorLog(errorMessage)
 						})
 				}
@@ -183,6 +184,7 @@ import { db } from '@/main.js';
 										this.role = this.Udata.role
 										console.log(this.currentPage)
 										console.log(this.role)
+										this.$analytics.logEvent("Web Otp verified");
 										if(this.role == 'ADMIN' || this.role == 'AGENT') {
 											this.$router.push("/downloadApp")
 										}
@@ -221,6 +223,7 @@ import { db } from '@/main.js';
 											this.$axios(user_stage)
 												.then((response) => {
 													console.log(response)
+													this.$analytics.logEvent("Web onboarding_listing");
 													this.$router.push("/choose_no")
 												})
 												.catch((error) => {

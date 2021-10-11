@@ -181,11 +181,13 @@ import { db } from '@/main.js';
 					.then((response) => {
 						localStorage.setItem('planId',this.radio)
 						console.log(response)
+						this.$analytics.logEvent("Web Billing page");
+						this.$router.push("/billing")
 					})
 					.catch((error) => {
 						console.error(error);
 					})
-				this.$router.push("/billing")
+
 			}
 		}
 	}
