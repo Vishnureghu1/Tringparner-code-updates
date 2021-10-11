@@ -3,7 +3,7 @@
 	<div class="grey lighten-3" >
 		<v-container  fluid>
 			<v-row justify="center">
-				<v-col sm="12" md="4">
+				<v-col sm="6" md="4">
 					<v-card class="mx-auto">
 						<v-row no-gutters>
 							<v-col cols="12">
@@ -24,7 +24,7 @@
 
 
 
-									<v-form @submit.prevent="" class="mt-3 ml-8 mr-4" ref="form" v-model="valid" lazy-validation >
+									<v-form @submit.prevent="" class="mt-3 ml-5 mr-4" ref="form" v-model="valid" lazy-validation >
 										<v-checkbox v-model="selected" label="Are you registered for GST" >
 										</v-checkbox>
 										<v-row>
@@ -40,14 +40,14 @@
 												<v-text-field label="City" v-model="city" required></v-text-field>
 												<v-text-field label="State" v-model="state" required></v-text-field>
 												
-												<h2 v-if="radio == 1" class="text-center font-weight-regular"> Total Amount Payable : ₹ 590 /- </h2>
-												<h2 v-else-if="radio == 2" class="text-center font-weight-regular"> Total Amount Payable : ₹ 3186 /-</h2>
-												<h2 v-else-if="radio == 3" class="text-center font-weight-regular"> Total Amount Payable : ₹ 5664 /- </h2>
+												<h3 v-if="radio == 1" class=" font-weight-regular"> Total Amount Payable : ₹ 590/- </h3>
+												<h3 v-else-if="radio == 2" class=" font-weight-regular"> Total Amount Payable : ₹ 3186/-</h3>
+												<h3 v-else-if="radio == 3" class=" font-weight-regular"> Total Amount Payable : ₹ 5664/- </h3>
 												<div class="text-center">
 													<v-dialog v-model="dialog" persistent max-width="600px">
-														<template v-slot:activator="{ on, attrs }">
+<!-- 														<template v-slot:activator="{ on, attrs }">
 															<v-btn color="primary" dark v-bind="attrs" v-on="on" plain > PRICE BREAKUP </v-btn>
-														</template>
+														</template> -->
 														<v-card>
 															<v-card-title>
 																<h4 class="font-weight-bold">PRICE BREAKUP</h4>
@@ -106,87 +106,6 @@
 											</v-radio>
 										</div>
 									</v-radio-group>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 															<v-card-body v-if="radio == 'monthly'">
-																<h3 class="mb-3 mt-3 text-center" >Plan - Tringpartner_1M_500</h3>
-																<h4 class="font-weight-bold text-center mb-3">Subtotal : 500</h4>
-																<div v-if="selected && state == 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 45</h5>
-																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 45</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 590</h4>
-																</div>
-																<div v-if="selected && state != 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">igst @18% : 90</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 590</h4>
-																</div>
-																<div v-if="!selected && state != 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">igst @18% : 90</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 590</h4>
-																</div>
-																<div v-if="!selected && state == 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 45</h5>
-																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 45</h5>
-																	<h5 class="text-center font-weight-light mb-3">Kerala Flood Cess @1% : 5</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 595</h4>
-																</div>
-															</v-card-body>
-															<v-card-body v-else-if="radio == 'halfyearly'">
-																<h3 class="mb-3 mt-3 text-center" >Plan - Tringpartner_6M_2700</h3>
-																<h4 class="font-weight-bold text-center mb-3">Subtotal : 2700</h4>
-																<div v-if="selected && state == 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 243</h5>
-																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 243</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 3186</h4>
-																</div>
-																<div v-if="selected && state != 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">igst @18% : 486</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 3186</h4>
-																</div>
-																<div v-if="!selected && state != 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">igst @18% : 486</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 3186</h4>
-																</div>
-																<div v-if="!selected && state == 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 243</h5>
-																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 243</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 3186</h4>
-																</div>
-															</v-card-body>
-
-															<v-card-body v-else>
-																<h3 class="mb-3 mt-3 text-center" >Plan - Tringpartner_1Y_4800</h3>
-																<h4 class="font-weight-bold text-center mb-3">Subtotal : 4800</h4>
-																<div v-if="selected && state == 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 432</h5>
-																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 432</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5664</h4>
-																</div>
-																<div v-if="selected && state != 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">igst @18% : 664</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5664</h4>
-																</div>
-																<div v-if="!selected && state != 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">igst @18% : 664</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5664</h4>
-																</div>
-																<div v-if="!selected && state == 'Kerala'">
-																	<h5 class="text-center font-weight-light mb-3">cgst @9% : 432</h5>
-																	<h5 class="text-center font-weight-light mb-3">sgst @9% : 432</h5>
-																	<h4 class="font-weight-bold text-center mb-2">Total Amount Payable : 5664</h4>
-																</div>
-															</v-card-body> -->
 															<v-card-actions >
 																<v-spacer></v-spacer>
 																<v-btn color="red" text @click="dialog = false"> CANCEL </v-btn>
@@ -194,7 +113,15 @@
 															</v-card-actions>
 														</v-card>
 													</v-dialog>
-													<v-btn  type="submit" class="mr-4 mb-6 mt-6 white--text text-center" max-width @click="validate" color='light-blue'> Make Payment </v-btn>
+													<v-row no-gutters class="mb-4 mt-3">
+
+														<v-col cols="6" sm="6" md="6" lg="6" xl="6" xs="3">
+															<v-btn class="" @click="dialog=true" width="80px" text color='light-blue'> Price Breakup </v-btn>
+														</v-col>
+														<v-col cols="6" sm="6" md="6" lg="6" xl="6" xs="3">
+															<v-btn  type="submit" class="white--text" width="135px" @click="validate" color='light-blue'> Make Payment </v-btn>
+														</v-col>
+													</v-row>
 												</div>
 											</v-col>
 										</v-row>
