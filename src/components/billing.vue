@@ -5,6 +5,9 @@
 			<v-row justify="center">
 				<v-col sm="6" md="4">
 					<v-card class="mx-auto">
+						<v-overlay :value="overlay">
+							<v-progress-circular indeterminate color="red" size="60" :width="6"></v-progress-circular>
+						</v-overlay>
 						<v-row no-gutters>
 							<v-col cols="12">
 								<div class="mt-3 ml-3">
@@ -17,13 +20,22 @@
 										<label class='red--text'>support</label>
 									</v-app-bar>
 								</div>
+								<v-dialog v-model="dialog2" transition="dialog-bottom-transition" max-width="300">
+									<template v-slot:default="dialog2">
+										<v-card outlined shaped elevation="8">
+											<v-card-text>
+												<div class="text-h6 mt-4 red--text">Payment Closed</div>
+											</v-card-text>
+											<v-card-actions class="justify-end">
+												<v-btn text color="danger" @click="dialog2.value = false" >Close </v-btn>
+											</v-card-actions>
+										</v-card>
+									</template>
+								</v-dialog>
 								<div>
 									<div class="ml-4 mr-4">
 										<h3 class="mt-6 ml-5 text-center">Billing Address and Payment</h3>
 									</div>
-
-
-
 									<v-form @submit.prevent="" class="mt-3 ml-5 mr-4" ref="form" v-model="valid" lazy-validation >
 										<v-checkbox v-model="selected" label="Are you registered for GST" >
 										</v-checkbox>
@@ -116,10 +128,10 @@
 													<v-row no-gutters class="mb-4 mt-3">
 
 														<v-col cols="6" sm="6" md="6" lg="6" xl="6" xs="3">
-															<v-btn  @click="dialog=true" width="80px" text color='light-blue'> Price Breakup </v-btn>
+															<v-btn  @click="dialog=true" width="115px" class="blue--text caption font-weight-bold" color='white'> Price Breakup </v-btn>
 														</v-col>
 														<v-col cols="6" sm="6" md="6" lg="6" xl="6" xs="3">
-															<v-btn  type="submit" class="white--text" width="135px" @click="validate" color='light-blue'> Make Payment </v-btn>
+															<v-btn  type="submit" class="white--text caption font-weight-bold" width="115px" @click="validate" color='light-blue'> Make Payment </v-btn>
 														</v-col>
 													</v-row>
 												</div>
@@ -208,12 +220,14 @@ import { db } from '@/main.js';
         state: '',
         virtualnumber : '',
         rzp: '',
+        dialog2 : false,
         order_id : '',
         getOtp : true,
         radio: 'monthly',
         planId: 1,
         pincodeDb : pincodeDB,
         radio: '',
+        overlay : false,
         otp : '',
         pincodeInvalid : true,
 				dialog: false,
@@ -274,48 +288,6 @@ import { db } from '@/main.js';
 					// console.log('after',this.pincodeInvalid)
 				})
 			},
-			requestOtp(){
-				const options = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/email/otp',
-					method: 'POST',
-
-					data: {
-						uid: this.uid,
-						email: this.email
-					},
-				}
-				console.log(options)
-        this.$axios(options)
-					.then((response) => {
-						console.log(response)
-						this.getOtp = false
-					})
-					.catch((error) => {
-						console.error(error);
-					})
-				},
-
-				checkOtp(){
-					const options = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/email/verification',
-					method: 'POST',
-
-					data: {
-						uid: this.uid,
-						email: this.email,
-						otp : this.otp
-					},
-				}
-				console.log(options)
-        this.$axios(options)
-					.then((response) => {
-						console.log(response)
-						this.$router.push("/calllogs")
-					})
-					.catch((error) => {
-						console.error(error);
-					})
-				},
 
 			uppercase(){
 				this.gst = this.gst.toUpperCase();
@@ -330,6 +302,7 @@ import { db } from '@/main.js';
 			},
 
 			nextPage(){
+				this.overlay = true
 				const details = {
 					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/owner',
 					method: 'POST',
@@ -392,11 +365,17 @@ import { db } from '@/main.js';
             address: this.address
 					},
 					theme: {
-            color: "#3399cc"
-					}
+            color: "#D32F2F"
+					},
+					modal: {
+						ondismiss: () => {
+							this.dialog2 = true
+						}
+					},
 				};
 				console.log(options)
 				var rzp1 = new Razorpay(options);
+				this.overlay = false
 				rzp1.open();
 
 							})

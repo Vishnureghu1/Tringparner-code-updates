@@ -6,6 +6,9 @@
 				<v-row justify="center">
 					<v-col sm="12" lg="9"  class="mx-sm-auto my-md-16">
 						<v-card>
+							<v-overlay :value="overlay">
+								<v-progress-circular indeterminate color="red" size="60" :width="6"></v-progress-circular>
+							</v-overlay>
 							<v-row no-gutters >
 								<v-col  sm="12" md="12" lg="6" justify="center">
 									<div class="mt-3 ml-3">
@@ -37,7 +40,7 @@
 													<v-text-field v-model='otp' label="Enter OTP" type='text' required ></v-text-field>
 													<v-btn class="mr-4" @click.prevent='sendOtp()' color='white lighten-3' width="40%"> RESENT OTP</v-btn>
 													<v-btn class="mr-4 white--text" @click.prevent='verifyOtp()' color='light-blue darken-1
-													' width="40%"> LOGIN</v-btn>
+													' width="40%"> LOGIN </v-btn>
 												</v-form>
 											</div>
 										</v-container>
@@ -109,6 +112,7 @@ import { db } from '@/main.js';
 		currentPage: '',
 		dialog : false,
 		errorMessage: '',
+		overlay : false,
 		role : '',
 		numberRules: [ 
 			// v => (v && v.length == 10 ||  'Number must contain 10 digits. Invalid Number !!'),
@@ -140,13 +144,12 @@ import { db } from '@/main.js';
 				}
 			},
 
-			verifyOtp(){
+	verifyOtp(){
 		if(this.otp.length != 6){
 			alert('Invalid OTP Format !');
 		}	else {
-			let vm = this
+			this.overlay = true
 			let userid = ''
-			console.log(vm)
 			let code = this.otp
 			window.confirmationResult.confirm(code).then(function (result) {
 			var user = result.user;
@@ -186,26 +189,33 @@ import { db } from '@/main.js';
 										console.log(this.role)
 										this.$analytics.logEvent("Web Otp verified");
 										if(this.role == 'ADMIN' || this.role == 'AGENT') {
+											this.overlay = false
 											this.$router.push("/downloadApp")
 										}
 										else {
 
 											if (this.currentPage == "onboarding_listing") {
+												this.overlay = false
 												this.$router.push("/choose_no")
 											}
 											else if (this.currentPage == "onboarding_test_completed") {
+												this.overlay = false
 												this.$router.push("/test_number")
 											}
 											else if (this.currentPage == "onboarding_plan_details") {
+												this.overlay = false
 												this.$router.push("/pricing")
 											}
 											else if (this.currentPage == "onboarding_billing") {
+												this.overlay = false
 												this.$router.push("/billing")
 											}
 											else if (this.currentPage == "onboarding_success") {
+												this.overlay = false
 												this.$router.push("/emailVerification")
 											}
 											else if (this.currentPage == "onboarding_dashboard") {
+												// this.overlay = false
 												this.$router.push("/downloadApp")
 											}
 											else {
@@ -223,6 +233,7 @@ import { db } from '@/main.js';
 											this.$axios(user_stage)
 												.then((response) => {
 													console.log(response)
+													this.overlay = false
 													this.$analytics.logEvent("Web onboarding_listing");
 													this.$router.push("/choose_no")
 												})
@@ -305,7 +316,7 @@ import { db } from '@/main.js';
 							console.log(this.currentPage)
 							console.log(this.role)
 							if(this.role == 'ADMIN' || this.role == 'AGENT') {
-								this.$router.push("/calllogs")
+								this.$router.push("/downloadApp")
 							}
 							else {
 								if (this.currentPage == "onboarding_listing") {
