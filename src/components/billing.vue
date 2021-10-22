@@ -121,7 +121,7 @@
 															<v-card-actions>
 																<v-spacer></v-spacer>
 																<v-btn color="blue" class="mb-4" text @click="dialog = false"> CANCEL </v-btn>
-																<v-btn color="red" class="white--text mb-4" rounded @click="dialog = false"> PROCEED TO PAY </v-btn>
+																<v-btn color="red" class="white--text mb-4" rounded @click="validate"> PROCEED TO PAY </v-btn>
 															</v-card-actions>
 														</v-card>
 													</v-dialog>
@@ -296,6 +296,7 @@ import { db } from '@/main.js';
 			validate () {
 				this.$refs.form.validate()
 				let v = this.$refs.form.validate()
+				this.dialog = false
 				if (v){
 					this.nextPage()
 				}
