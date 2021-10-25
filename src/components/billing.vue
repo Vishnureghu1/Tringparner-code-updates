@@ -49,8 +49,8 @@
 												<v-text-field v-if='!selected' v-model="email" :rules="emailRules" label="Your E-mail" required ></v-text-field>
 												<v-text-field label="Address" v-model="address" :rules="addressRules" required></v-text-field>
 												<v-text-field label="Pincode" v-model="pincode" :rules="pincodeRules" @change="searchPincode()" required></v-text-field>
-												<v-text-field label="City" v-model="city" required></v-text-field>
-												<v-text-field label="State" v-model="state" required></v-text-field>
+												<v-text-field label="City" v-model="city" readonly required></v-text-field>
+												<v-text-field label="State" v-model="state" readonly required></v-text-field>
 												
 												<h3 v-if="radio == 1" class=" font-weight-regular"> Total Amount Payable : ₹ 590/- </h3>
 												<h3 v-else-if="radio == 2" class=" font-weight-regular"> Total Amount Payable : ₹ 3186/-</h3>
