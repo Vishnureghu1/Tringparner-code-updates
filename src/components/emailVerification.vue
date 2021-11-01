@@ -26,14 +26,16 @@
 											<v-col v-if="getOtp">
 												<v-text-field label="Your Name" v-model="name" :rules="nameRules" required></v-text-field>
 												<v-text-field v-model="email" :rules="emailRules" label="Business E-mail" required ></v-text-field>
-												<v-text-field label="Source" append-icon="mdi-pencil" hint="Change source name of your business number. For Example : Facebook, Linkedin etc" v-model="source" persistent-hint></v-text-field>
+												<v-text-field label="Source Name of your Business Number" append-icon="mdi-pencil" hint="Change source name of your business number. For Example : Facebook, Linkedin etc" v-model="source" persistent-hint></v-text-field>
 												<div class="text-center">
 													<v-btn type="submit" class="mt-6 mb-4 white--text text-center" max-width @click.prevent='requestOtp()' color='light-green'> Request Otp </v-btn>
 												</div>
 											</v-col>
 											<v-col v-else>
 												<v-text-field v-model="email" :rules="emailRules" label="Business E-mail" required ></v-text-field>
-												<v-text-field label="Enter otp" v-model="otp" required></v-text-field>
+												<v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation >
+													<v-text-field label="Enter OTP" :rules="[otpConfirmationRule]" v-model="otp" required></v-text-field>
+												</v-form>
 											</v-col>
 										</v-row>
 										<div class="text-center" v-if="!getOtp">
@@ -117,6 +119,7 @@ import { db } from '@/main.js';
         email: '',
         virtualnumber : '',
         source : 'General',
+        otpCorrect : true ,
         getOtp : true,
         otp : '',
         emailRules: [ 
@@ -129,8 +132,16 @@ import { db } from '@/main.js';
 					v => /^[a-zA-Z][a-zA-Z ]+$/.test(v) || 'Name should not contain symbols or digits. Please try again.',
 
 					],
+					// otpRule : [
+					// 	v => (v.length < 5 || 'Too many characters.Please try again !!' ),
+					// ]
         }
       },
+      computed: {
+    otpConfirmationRule() {
+      return () => ( this.otpCorrect || 'Invalid OTP' )
+    }
+},
     methods :{
 			requestOtp(){
 				const options = {
@@ -154,6 +165,10 @@ import { db } from '@/main.js';
 						console.error(error);
 					})
 				},
+				validate () {
+					this.$refs.form.validate()
+					let v = this.$refs.form.validate()
+				},
 
 				checkOtp(){
 					const options = {
@@ -169,9 +184,18 @@ import { db } from '@/main.js';
 				console.log(options)
         this.$axios(options)
 					.then((response) => {
-						console.log(response)
-						this.$analytics.logEvent("Web Email verification");
-						this.$router.push("/downloadApp")
+						console.log(response.data.status)
+						if (response.data.status){
+							this.otpCorrect = true
+							this.validate()
+							this.$analytics.logEvent("Web Email verification");
+							this.$router.push("/downloadApp")
+						}
+						else {
+							this.otpCorrect = false
+							this.validate()
+							console.log("invalid otp")
+						}
 					})
 					.catch((error) => {
 						console.error(error);

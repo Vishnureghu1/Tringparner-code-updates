@@ -312,7 +312,7 @@ import { db } from '@/main.js';
 								uid: this.uid,
 								phoneNumber: this.phno,
 								virtual_number: this.virtualnumber,
-								FirstName: this.name,
+								FirstName: this.businessName,
 								Email: this.email,
 								Address: this.address,
 								City: this.city,
