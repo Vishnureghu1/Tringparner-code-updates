@@ -320,7 +320,8 @@ import { db } from '@/main.js';
 								Gstin: this.gst,
 								CompanyName: this.businessName,
 								Pincode: this.pincode,
-								PlanId : this.radio
+								PlanId : this.radio,
+								payment_mode : 'web',
 							},
 						}
 						console.log(details)
