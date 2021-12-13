@@ -55,7 +55,7 @@
 																		<br>
 																		
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
-																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules" counter maxlength="75" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" class="grey--text" ></v-text-field>
+																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules" counter maxlength="75" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" class="black--text" ></v-text-field>
 																		</div>
 																		<br>
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
@@ -301,6 +301,7 @@ import moment from 'moment'
       sendReminder(date , time , unique_id, message) {
 				console.log(date)
 				console.log(time)
+				
 				const user_data = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder',
 					method: 'POST',
