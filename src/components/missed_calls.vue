@@ -21,7 +21,7 @@
 														<div>
 														<v-row>
 															<v-col cols="12" sm="10">
-																<h3  class="font-weight-light"> <v-icon  class="mr-3" color="green" >mdi-arrow-bottom-left</v-icon> {{ details.callerNumber }}  </h3>
+																<h3  class="font-weight-light"> <v-icon  class="mr-3" color="red" >mdi-arrow-bottom-right</v-icon> {{ details.callerNumber }}  </h3>
 																<br>
 															</v-col>
 															<v-spacer></v-spacer>
@@ -60,7 +60,7 @@
 																		</div>
 																		<br>
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
-																			<v-text-field v-model="Reminder" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Reminder" :rules="rules" append-icon="mdi-pencil" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" ></v-text-field>
+																			<v-text-field v-model="Reminder" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Reminder" @click="dialog = true" ></v-text-field>
 																		</div>
 																	</div>
 																</v-col>
@@ -79,6 +79,40 @@
 									</div>
 								</v-col>
 							</v-row>
+							<v-dialog
+								v-model="dialog"
+								max-width="300px"
+							>
+							<v-card>
+								<v-card-title class="text-h5">
+									Use Google's location service?
+								</v-card-title>
+
+								<v-card-text>
+									Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+								</v-card-text>
+
+									<v-card-actions>
+										<v-spacer></v-spacer>
+
+											<v-btn
+												color="green darken-1"
+												text
+												@click="dialog = false"
+											>
+												Disagree
+											</v-btn>
+
+											<v-btn
+												color="green darken-1"
+												text
+												@click="dialog = false"
+											>
+													Agree
+												</v-btn>
+									</v-card-actions>
+							</v-card>
+						</v-dialog>
 					</v-flex>
 				</v-layout>
 			</v-container>
@@ -113,13 +147,13 @@ import moment from 'moment'
 			note : [],
 			show_notes : false,
 			dialog : false,
-			dialog2 : false,
 			add_note : true,
 			callback_uid : '',
 			rules: [v => v.length <= 75 || 'Max 75 characters'],
 			password: 'Password',
       show: false,
       marker: true,
+
     }),
 		methods: {
       sendMessage (unique_id, message) {
@@ -164,7 +198,7 @@ import moment from 'moment'
 
   },
 		created() {
-				db.collection('callLogs').where("owneruid" , "==" , "rp7aem0HEVWyYeLZQ4ytSNyjyG02").where("callstatus" , "==" , "Answered").orderBy('dateTime', "desc").onSnapshot((querySnapshot) => {
+				db.collection('callLogs').where("owneruid" , "==" , "rp7aem0HEVWyYeLZQ4ytSNyjyG02").where("callstatus" , "==" , "Missed").orderBy('dateTime', "desc").onSnapshot((querySnapshot) => {
 					this.realdata = []
 					if(!querySnapshot.empty) {
 						querySnapshot.forEach(async (doc) => {
@@ -178,10 +212,41 @@ import moment from 'moment'
 							call_time = moment(date).fromNow();
 							console.log("converted time",call_time)
 							var note = ''
-							var calledNumber = this.calldetails.callerNumber.slice(0, 5) + ' ' + this.calldetails.callerNumber.slice(5, 7) + ' ' + this.calldetails.callerNumber.slice(7, 11)
-							var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
-							this.detail = Object.assign({}, this.detail, { callstatus : this.calldetails.callstatus , name: this.calldetails.name[0] ,dateTime : call_time , conversationduration : this.calldetails.conversationduration ,callerNumber : calledNumber, uniqueid : this.calldetails.uniqueid , Note : note , source : this.calldetails.source , virtualnumber : virtualnumber, called_name : this.called_name , recordingUrl : this.calldetails.recordingurl })
-							this.realdata.push(this.detail)
+							
+							var uid = ''
+							var user_name = ''
+							var owneruid = ''
+							if(this.calldetails.Notes) {
+								note = this.calldetails.Notes
+							}
+							else {
+								console.log('no note')
+								note = [{ Note :  ''}]
+							}
+							if(this.calldetails.ClickCount) {
+								
+								uid = this.calldetails.ClickCount.Uid
+								user_name = this.calldetails.name
+								owneruid = this.calldetails.owneruid
+								console.log('user id ', this.click_details.user_name)
+									if(uid == owneruid && this.calldetails.callstatus == 'Missed' ) {
+										this.called_name = 'You'
+									}
+									else if(uid == owneruid && this.calldetails.callstatus == 'Answered') {
+										this.called_name = user_name
+									}
+								} 
+								else {
+									console.log('no callback')
+									
+									uid = ''
+									user_name = ''
+									owneruid = ''
+									this.called_name = ''
+								}
+								var calledNumber = this.calldetails.callerNumber.slice(0, 5) + ' ' + this.calldetails.callerNumber.slice(5, 7) + ' ' + this.calldetails.callerNumber.slice(7, 11)
+								var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
+								this.detail = Object.assign({}, this.detail, { callstatus : this.calldetails.callstatus , name: this.calldetails.name[0] ,dateTime : call_time , conversationduration : this.calldetails.conversationduration ,callerNumber : calledNumber, uniqueid : this.calldetails.uniqueid , Note : note , source : this.calldetails.source , virtualnumber : virtualnumber, called_name : this.called_name , recordingUrl : this.calldetails.recordingurl })
 							console.log('snap calllog ', this.realdata)
 							})
 					}

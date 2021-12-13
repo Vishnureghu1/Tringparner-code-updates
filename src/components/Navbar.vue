@@ -45,7 +45,7 @@
         </v-navigation-drawer>
         <v-app-bar  class="white" app clipped-left>
                   <v-app-bar color="white" flat>
-                    <img class="mt-2 ml-2" :src="require('../../public/images/tring-logo.png')" height="35"/>
+                    <img class="mt-2 ml-2" :src="require('../../public/tring-logo.png')" height="35"/>
                     <v-spacer></v-spacer>
                     <v-btn icon>
                       <v-icon color="black" >mdi-bell-outline</v-icon>
@@ -76,9 +76,9 @@
       group: null,
       role : '',
       subMenu: [
-      { icon: 'dashboard', text: 'All Calls', route: '/active_call' },
-      { icon: 'dashboard', text: 'Missed Calls', route: '/missed_call' },
-      { icon: 'dashboard', text: 'Answered Calls', route: '/greeting' },
+      { icon: 'dashboard', text: 'All Calls', route: '/all_calls' },
+      { icon: 'dashboard', text: 'Missed Calls', route: '/missed_calls' },
+      { icon: 'dashboard', text: 'Answered Calls', route: '/answered_call' },
 
     ],
     more: [

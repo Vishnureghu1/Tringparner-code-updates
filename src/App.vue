@@ -1,9 +1,8 @@
 <template>
   <v-app app>
-  <Navbar>
+  <Navbar/>
 
     <v-main class="ma-4">
-      
     </v-main>
   
   </v-app>
