@@ -18,7 +18,8 @@
     "vue-sound": "0.0.4",
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.4.0",
-    "vuetify-audio": "^0.3.3"
+    "vuetify-audio": "^0.3.3",
+    "vuetify-datetime-picker": "^2.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
