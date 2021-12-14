@@ -4,7 +4,7 @@
             <v-list flat>
                 <v-list-item active-class="red--text">
                     <v-list-item-content>
-                        <v-list-item-title class="grey--text"> <v-icon  class="mr-3" color="grey" >mdi-radar</v-icon> Dashboard</v-list-item-title>
+                        <v-list-item-title class="grey--text" @click="dashboard()"> <v-icon  class="mr-3" color="grey">mdi-radar</v-icon> Dashboard</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
@@ -99,6 +99,9 @@
       },
     },
       methods:{
+        dashboard(){
+          this.$router.push("/dashboard")
+        },
     }
   }
   </script>

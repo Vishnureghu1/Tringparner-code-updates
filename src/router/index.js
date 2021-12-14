@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import login from '@/components/login.vue'
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 
@@ -9,27 +9,33 @@ console.log(firebase)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'login',
+    component: login
   },
 
   {
     path: '/answered_call',
     name: 'answered_call',
     component: () => import(/* webpackChunkName: "missed_call" */ '../components/answered_call.vue'),
-    //meta: {requiresAuth: true}
+    meta: {requiresAuth: true}
   },
   {
     path: '/missed_calls',
     name: 'missed_calls',
     component: () => import(/* webpackChunkName: "missed_call" */ '../components/missed_calls.vue'),
-    //meta: {requiresAuth: true}
+    meta: {requiresAuth: true}
   },
   {
     path: '/all_calls',
     name: 'all_calls',
     component: () => import(/* webpackChunkName: "missed_call" */ '../components/all_calls.vue'),
-    //meta: {requiresAuth: true}
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/Dashboard.vue'),
+    meta: {requiresAuth: true}
   },
 ]
 
@@ -37,6 +43,19 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach( (to,from,next)=>{
+  const  requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  console.log ('data',requiresAuth);
+  const isAuthenticated = firebase.default.auth().currentUser;
+  console.log(!isAuthenticated);
+  if (requiresAuth && !isAuthenticated){
+    next('/');
+  }else {
+    console.log('else part');
+    next();
+  }
 })
 
 export default router
