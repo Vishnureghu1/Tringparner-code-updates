@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-model="drawer" clipped app class="white"  width="280px" permanent>
+        <v-navigation-drawer v-if="['login', 'Login'].indexOf(this.$route.name) != 0 && ['ChooseNumbers', 'ChooseNumbers'].indexOf(this.$route.name) != 0 && ['SelectPlan', 'SelectPlan'].indexOf(this.$route.name) != 0 && ['Billing', 'Billing'].indexOf(this.$route.name) != 0 && ['Review', 'Review'].indexOf(this.$route.name) != 0" v-model="drawer" clipped app class="white"  width="280px" permanent>
             <v-list flat>
                 <v-list-item active-class="red--text">
                     <v-list-item-content>
@@ -23,7 +23,7 @@
 
                 <v-list-item  active-class="red--text">
                     <v-list-item-content>
-                        <v-list-item-title class="grey--text"> <v-icon  class="mr-3" color="grey" >mdi-chart-bar</v-icon> Reports </v-list-item-title>
+                        <v-list-item-title class="grey--text" @click="report()"> <v-icon  class="mr-3" color="grey" >mdi-chart-bar</v-icon> Reports </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
@@ -82,13 +82,13 @@
 
     ],
     more: [
-      { icon: 'dashboard', text: 'Business Number', route: '/active_call' },
-      { icon: 'dashboard', text: 'Manage Users', route: '/missed_call' },
-      { icon: 'dashboard', text: 'Add-Ons', route: '/greeting' },
-      { icon: 'dashboard', text: 'Billing Information', route: '/greeting' },
-      { icon: 'dashboard', text: 'Account Info', route: '/greeting' },
-      { icon: 'dashboard', text: 'FAQs', route: '/greeting' },
-      { icon: 'dashboard', text: 'Get Support', route: '/greeting' },
+      { icon: 'dashboard', text: 'Business Number', route: '/BusinessNumber' },
+      { icon: 'dashboard', text: 'Manage Users', route: '/ManageUsers' },
+      { icon: 'dashboard', text: 'Add-Ons', route: '/Addons' },
+      { icon: 'dashboard', text: 'Billing Information', route: '/BillingInformation' },
+      { icon: 'dashboard', text: 'Account Info', route: '/AccountInformation' },
+      { icon: 'dashboard', text: 'FAQs', route: '/FAQs' },
+      { icon: 'dashboard', text: 'Get Support', route: '/GetSupport' },
 
     ],
     }),
@@ -101,6 +101,9 @@
       methods:{
         dashboard(){
           this.$router.push("/dashboard")
+        },
+        report(){
+          this.$router.push("/report")
         },
     }
   }

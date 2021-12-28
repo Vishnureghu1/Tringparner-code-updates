@@ -8,11 +8,16 @@ Vue.use(VueRouter)
 console.log(firebase)
 const routes = [
   {
-    path: '/',
-    name: 'login',
-    component: login
-  },
-
+      path: '*',
+      redirect: '/login'
+  }, {
+      path: '/',
+      redirect: '/login'
+  }, {
+      path: '/login',
+      name: 'login',
+      component: login
+  }, 
   {
     path: '/answered_call',
     name: 'answered_call',
@@ -35,6 +40,72 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: () => import(/* webpackChunkName: "missed_call" */ '../views/Dashboard.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/report',
+    name: 'report',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/Report.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/Addons',
+    name: 'Addons',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/Addons.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/BillingInformation',
+    name: 'BillingInformation',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/BillingInformation.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/BusinessNumber',
+    name: 'BusinessNumber',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/BusinessNumber.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/FAQs',
+    name: 'FAQs',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/FAQs.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/AccountInformation',
+    name: 'AccountInformation',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/AccountInformation.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/GetSupport',
+    name: 'GetSupport',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/GetSupport.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/ChooseNumbers',
+    name: 'ChooseNumbers',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/ChooseNumbers.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/SelectPlan',
+    name: 'SelectPlan',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/SelectPlan.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/Billing',
+    name: 'Billing',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/Billing.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/Review',
+    name: 'Review',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/Review.vue'),
     meta: {requiresAuth: true}
   },
 ]

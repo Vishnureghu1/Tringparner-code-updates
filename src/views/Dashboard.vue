@@ -37,29 +37,29 @@
 																</v-row>
 															</div>
 														</v-expansion-panel-header>
-														<v-expansion-panel-content v-for="(item,i) in 2" :key="i">
-															<v-row>
-																<v-col cols="12" sm="10">
-																	<h3  class="number_heading font-weight-light">+91 88919 78 085</h3>
-																	<h6 class="comment_heading font-weight-light">00.10 , 3 mins ago, Shinu</h6> 
-																	<br>
-																</v-col>
-																<v-spacer></v-spacer>
-																<v-col cols="12" sm="2" align="end">
-																	<v-menu offset-y>
-																		<template v-slot:activator="{ on, attrs }">
-																			<v-icon v-bind="attrs" v-on="on" color="black" >mdi-dots-vertical</v-icon>
-																		</template>
-																		<v-list>
-																			<v-list-item v-for="(item, index) in items" :key="index">
-																				<v-list-item-title :class="item.color">{{ item.title }}</v-list-item-title>
-																			</v-list-item>
-																		</v-list>
-																	</v-menu>
+																<v-expansion-panel-content v-for="(item,i) in 2" :key="i">
+																	<v-row>
+																		<v-col cols="12" sm="10">
+																			<h3  class="number_heading font-weight-light">+91 88919 78 085</h3>
+																			<h6 class="comment_heading font-weight-light">00.10 , 3 mins ago, Shinu</h6> 
+																			<br>
+																		</v-col>
+																		<v-spacer></v-spacer>
+																		<v-col cols="12" sm="2" align="end">
+																			<v-menu offset-y>
+																				<template v-slot:activator="{ on, attrs }">
+																					<v-icon v-bind="attrs" v-on="on" color="black" >mdi-dots-vertical</v-icon>
+																				</template>
+																				<v-list>
+																					<v-list-item v-for="(item, index) in items" :key="index">
+																						<v-list-item-title :class="item.color">{{ item.title }}</v-list-item-title>
+																					</v-list-item>
+																				</v-list>
+																			</v-menu>
 
-																</v-col>
-															</v-row>
-														</v-expansion-panel-content>
+																		</v-col>
+																	</v-row>
+																</v-expansion-panel-content>
 													</v-expansion-panel>
 												</v-expansion-panels>
 											</v-col>
@@ -155,7 +155,7 @@
   }
   </script>
 
-  <style scoped>
+<style scoped>
 .page_title {
 	font-family: 'Lato', Bold;
   font-size: 23px 
