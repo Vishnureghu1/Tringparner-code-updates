@@ -5,6 +5,9 @@
 					<v-flex xs12 sm12 md12>						
 							<v-row no-gutters>
 								<v-col cols="12" align="center" >
+								<v-overlay :value="overlay">
+									<v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
+								</v-overlay>
 									<v-card color="transparent" outlined class="" max-width="800">
 										<h2 class="page_title  mb-4 mt-10">Review Informations and Pay Now</h2>
 										<h2 class="sub_title mb-16">Review your business information like business address</h2>
@@ -77,7 +80,8 @@ import { db } from '@/main.js';
 			email : '',
 			planId : '',
 			name : '',
-			orderId : ''
+			orderId : '',
+			overlay : false,
 
     }),
 
@@ -155,6 +159,7 @@ import { db } from '@/main.js';
 
 					handler:  (response) =>{
 						console.log(response);
+						this.overlay = true
 						var initial = true
 						if(initial) {
 							db.collection('users').where("uid" , "==" , this.uid).onSnapshot((querySnapshot) => {
@@ -163,6 +168,7 @@ import { db } from '@/main.js';
 									let testing_status = doc.data()
 									if((testing_status.Stage == "PAID") && initial ) {
 										initial = false
+										this.overlay = false
 										this.$router.push("/Dashboard")
 
 									}
@@ -200,7 +206,7 @@ import { db } from '@/main.js';
 
 <style scoped>
 .page_title {
-	font-family: 'Nunito', Regular;
+	font-family: 'lato', bold;
   font-size: 23px ;
   color: #3B3B3B;
 }

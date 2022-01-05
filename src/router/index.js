@@ -108,6 +108,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "missed_call" */ '../views/Review.vue'),
     meta: {requiresAuth: true}
   },
+  {
+    path: '/CallFlowSettings',
+    name: 'CallFlowSettings',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/CallFlowSettings.vue'),
+    meta: {requiresAuth: true}
+  },
 ]
 
 const router = new VueRouter({

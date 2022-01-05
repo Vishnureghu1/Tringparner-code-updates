@@ -5,6 +5,9 @@
 					<v-flex xs12 sm12 md12>						
 							<v-row no-gutters>
 								<v-col cols="12" align="center" >
+								<v-overlay :value="overlay">
+									<v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
+								</v-overlay>
 									<v-card color="transparent" outlined class="" max-width="800">
 										<v-row>
 											<v-col cols="12" sm='6'>	
@@ -12,11 +15,11 @@
 												<v-form @submit.prevent="" class="mt-3 ml-5 mr-4" ref="form" v-model="valid" lazy-validation >
 													<v-text-field outlined label="Business Name" v-model="businessName" :rules="businessNameRules" required></v-text-field>
 													<v-text-field outlined label="Billing Name" v-model="billingName" :rules="businessNameRules" required></v-text-field>
-													<v-text-field outlined label="Address" v-model="address" :rules="addressRules" required></v-text-field>
-													<v-text-field outlined label="City" v-model="city"  required></v-text-field>
-													<v-text-field outlined label="State" v-model="state"  required></v-text-field>
-												
-													<v-text-field outlined label="Pincode" v-model="pincode" ></v-text-field>
+													<v-text-field  outlined v-model="email" :rules="emailRules" label="Business E-mail" required ></v-text-field>
+													<v-text-field outlined label="Address" v-model="address" :rules="addressRules" required></v-text-field>												
+													<v-text-field outlined label="Pincode" v-model="pincode" @change="searchPincode()" ></v-text-field>
+													<v-text-field outlined label="City" v-model="city"  readonly required></v-text-field>
+													<v-text-field outlined label="State" v-model="state"  readonly required></v-text-field>
 													<v-text-field outlined label="GST No(if any)" v-model="gst" :rules="gstRules" ></v-text-field>
 
 												</v-form>
@@ -40,6 +43,7 @@
 <script>
 import firebase from 'firebase'
 import { db } from '@/main.js';
+import pincodeDB from "../components/pincodes.json"
   export default {
     data: () => ({
 			radio1 : true,
@@ -63,6 +67,7 @@ import { db } from '@/main.js';
       getOtp : true,
       otp : '',
       planId : '',
+      pincodeDb : pincodeDB,
       pincodeInvalid : true,
 			dialog: false,
       emailRules: [ 
@@ -96,6 +101,7 @@ import { db } from '@/main.js';
 				v => (v && v.length == 6 ||  'Pincode must contain 6 digits. Invalid Pincode !!'),
 				v => /^[0-9]*$/.test(v) || 'Pincode must contain 6 digits',
 				],
+				overlay : false
     }),
 		components: {
 		},
@@ -117,6 +123,31 @@ import { db } from '@/main.js';
 			})
 		},
 		methods: {
+			searchPincode(){
+				console.log(this.pincodeDb)
+				console.log(this.pincode)
+				// var data = JSON.parse(this.pincodeDb)
+				var data = this.pincodeDb
+				console.log('before checking',this.pincodeInvalid)
+				var result = data.filter((item)=> {
+					if (item.id == this.pincode) {
+						this.city = item.name.city
+						this.state = item.name.state
+						console.log(item.name.city)
+						console.log(item.name.state)
+						this.pincodeInvalid = false
+						console.log('false',this.pincodeInvalid)
+						console.log(result)
+
+
+					}
+					else {
+						this.pincodeInvalid = true
+						// console.log('true',this.pincodeInvalid)
+					}
+					// console.log('after',this.pincodeInvalid)
+				})
+			},
 			nextPage(){
 				this.overlay = true
 				const details = {
@@ -175,7 +206,7 @@ import { db } from '@/main.js';
 
 <style scoped>
 .page_title {
-	font-family: 'Nunito', Regular;
+	font-family: 'lato', bold;
   font-size: 23px ;
   color: #3B3B3B;
 }

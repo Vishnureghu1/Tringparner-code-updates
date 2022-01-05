@@ -5,6 +5,9 @@
 					<v-flex xs12 sm12 md12>
 							<v-row no-gutters>
 								<v-col cols="12" align="center">
+									<v-overlay :value="overlay">
+										<v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
+									</v-overlay>
 									<v-card color="transparent" outlined class="" max-width="280">
 										<h2 class="page_title mt-16 mb-13">Welcome to Tring Partner</h2>
 										<h2 class="sub_title mt-8 mb-13">Use your mobile number to get started with Tring Partner</h2>
@@ -17,17 +20,16 @@
 													'> Next </v-btn>
 												</v-form>
 											</div>	
-
 											<div class="mt-1 ml-2" v-if="getOtp">
 												<h4 class="name_heading mt-4" align="start">Enter OTP</h4>
 												<v-otp-input length="6" v-model="otp"></v-otp-input>
 												<div class="mt-4"> 
-													<a class="link_style text-decoration-underline">
+													<a class="link_style text-decoration-underline" @click.prevent='sendOtp()'>
 														Resend OTP
 													</a> 
 													<br>
 													<br> 
-													<a class="link_style text-decoration-underline">
+													<a class="link_style text-decoration-underline" @click="changeLoginNumber()">
 														Change Number
 													</a>
 												</div>
@@ -64,6 +66,7 @@ import { db } from '@/main.js';
 			dialog : false,
 			errorMessage: '',
 			role : '',
+			overlay : false
     }),
 		components: {
 		},
@@ -82,26 +85,23 @@ import { db } from '@/main.js';
 							this.currentPage = this.Udata.currentPage
 							this.role = this.Udata.role
 							if(this.role == 'ADMIN' || this.role == 'AGENT') {
-								this.$router.push("/all_calls")
+								this.$router.push("/Dashboard")
 							}
 							else {
 								if (this.currentPage == "onboarding_listing") {
-									this.$router.push("/choose_no")
-								}
-								else if (this.currentPage == "onboarding_test_completed") {
-									this.$router.push("/test_number")
+									this.$router.push("/ChooseNumbers")
 								}
 								else if (this.currentPage == "onboarding_plan_details") {
-									this.$router.push("/pricing")
+									this.$router.push("/SelectPlan")
 								}
 								else if (this.currentPage == "onboarding_billing") {
-									this.$router.push("/billing")
+									this.$router.push("/Billing")
 								}
-								else if (this.currentPage == "onboarding_success") {
-									this.$router.push("/emailVerification")
+								else if (this.currentPage == "onboarding_review") {
+									this.$router.push("/Review")
 								}
-								else if (this.currentPage == "onboarding_dashboard") {
-									this.$router.push("/all_calls")
+								else if (this.currentPage == "onboarding_dashboard" || this.currentPage == "onboarding_success") {
+									this.$router.push("/Dashboard")
 								}
 							}
 						})
@@ -113,6 +113,7 @@ import { db } from '@/main.js';
 		},
 		methods: {
 			sendOtp(){
+				this.otp = 'XXXXXX'
 				if(this.phNo.length != 10){
 					alert('Invalid Phone Number Format !');
 				} 
@@ -132,11 +133,17 @@ import { db } from '@/main.js';
 					})
 				}
 			},
+	changeLoginNumber(){
+		this.phNo = ''
+		this.getNumber = true
+		this.getOtp = false
+	},
 	verifyOtp(){
 		if(this.otp.length != 6){
 			alert('Invalid OTP Format !');
 		}	
 		else {
+			this.overlay = true
 			let userid = ''
 			let code = this.otp
 			window.confirmationResult.confirm(code).then(function (result) {
@@ -161,7 +168,7 @@ import { db } from '@/main.js';
 				this.$axios(options)
 					.then((response) => {
 						console.log(response.data)
-						console.log(response.data.token)
+						console.log(this.uid)
 						localStorage.setItem('token',response.data.token)
 						db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
 							querySnapshot.forEach((doc) => {
@@ -172,35 +179,30 @@ import { db } from '@/main.js';
 								this.role = this.Udata.role
 								console.log(this.currentPage)
 								console.log(this.role)
-								this.$analytics.logEvent("Web Otp verified");
 								if(this.role == 'ADMIN' || this.role == 'AGENT') {
 									this.overlay = false
-									this.$router.push("/all_calls")
+									this.$router.push("/Dashboard")
 								}
 								else {
 									if (this.currentPage == "onboarding_listing") {
 										this.overlay = false
-										this.$router.push("/choose_no")
-									}
-									else if (this.currentPage == "onboarding_test_completed") {
-										this.overlay = false
-										this.$router.push("/test_number")
+										this.$router.push("/ChooseNumbers")
 									}
 									else if (this.currentPage == "onboarding_plan_details") {
 										this.overlay = false
-										this.$router.push("/pricing")
+										this.$router.push("/SelectPlan")
 									}
 									else if (this.currentPage == "onboarding_billing") {
 										this.overlay = false
-										this.$router.push("/all_calls")
+										this.$router.push("/Billing")
 									}
-									else if (this.currentPage == "onboarding_success") {
+									else if (this.currentPage == "onboarding_review") {
 										this.overlay = false
-										this.$router.push("/emailVerification")
+										this.$router.push("/Review")
 									}
-									else if (this.currentPage == "onboarding_dashboard") {
-										// this.overlay = false
-										this.$router.push("/all_calls")
+									else if (this.currentPage == 'onboarding_dashboard' || this.currentPage == 'onboarding_success') {
+										this.overlay = false
+										this.$router.push("/Dashboard")
 									}
 									else {
 										const user_stage = {
@@ -217,8 +219,7 @@ import { db } from '@/main.js';
 										.then((response) => {
 											console.log(response)
 											this.overlay = false
-											this.$analytics.logEvent("Web onboarding_listing");
-											this.$router.push("/choose_no")
+											this.$router.push("/ChooseNumbers")
 										})
 										.catch((error) => {
 											console.error(error);

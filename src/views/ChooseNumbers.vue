@@ -5,17 +5,20 @@
 				<v-flex xs12 sm12 md12>
 						<v-row no-gutters>
 							<v-col cols="12" align="center">
+								<v-overlay :value="overlay">
+									<v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
+								</v-overlay>
 								<v-card color="transparent" outlined class="" max-width="600">
 									<h2 class="page_title mt-16 mb-13">Select your Virtual Number</h2>
 									<h2 class="sub_title mt-8 mb-13">Select any one Virtual Number you want to use or tap refresh to get another <br> list of numbers.</h2>
 									<div>
-										<v-radio-group  v-model="radio">
+										<v-radio-group  v-model="radio" v-if="V_numbers[0]">
 											<v-row>
 													<v-col cols="12" sm='6'>																		
 														<v-card class=""  @click="colorChange(radio,V_numbers[0])" :style="radio1 ? 'border: 1px solid #EE1C25;border-radius: 10px;' : 'border: 1px solid #B4B4B4;border-radius: 10px;'" >
 															<v-radio color='red' value="1" class="ml-4">
 																<span slot="label" class="black--text ml-3">
-																	<h2 class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[0]}}</h2> 
+																	<h2 v-if="V_numbers[0]" class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[0]}}</h2> 
 																</span>
 															</v-radio>
 														</v-card>	
@@ -24,7 +27,7 @@
 														<v-card class="" @click="colorChange(radio,V_numbers[1])" :style="radio2 ? 'border:1px solid #EE1C25;border-radius: 10px;' : 'border: 1px solid #B4B4B4;border-radius: 10px;'" >
 															<v-radio color='red' value="2" class="ml-4">
 																<span slot="label" class="black--text ml-3">
-																	<h2 class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[1]}}</h2> 
+																	<h2 v-if="V_numbers[0]" class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[1]}}</h2> 
 																</span>
 															</v-radio>
 														</v-card>	
@@ -34,7 +37,7 @@
 														<v-card class="" @click="colorChange(radio,V_numbers[2])" :style="radio3 ? 'border: 1px solid #EE1C25;border-radius: 10px;' : 'border: 1px solid #B4B4B4;border-radius: 10px;'">
 															<v-radio color='red' value="3" class="ml-4">
 																<span slot="label" class="black--text ml-3">
-																	<h2 class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[2]}}</h2> 
+																	<h2 v-if="V_numbers[0]" class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[2]}}</h2> 
 																</span>
 															</v-radio>
 														</v-card>														
@@ -43,7 +46,7 @@
 														<v-card class="" @click="colorChange(radio,V_numbers[3])" :style="radio4 ? 'border: 1px solid #EE1C25;border-radius: 10px;' : 'border: 1px solid #B4B4B4;border-radius: 10px;'">
 															<v-radio color='red' value="4" class="ml-4">
 																<span slot="label" class="black--text ml-3">
-																	<h2 class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[3]}}</h2> 
+																	<h2 v-if="V_numbers[0]" class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[3]}}</h2> 
 																</span>
 															</v-radio>
 														</v-card>														
@@ -52,7 +55,7 @@
 														<v-card class="" @click="colorChange(radio,V_numbers[4])" :style="radio5 ? 'border: 1px solid #EE1C25;border-radius: 10px;' : 'border: 1px solid #B4B4B4;border-radius: 10px;'">
 															<v-radio color='red' value="5" class="ml-4">
 																<span slot="label" class="black--text ml-3">
-																	<h2 class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[4]}}</h2> 
+																	<h2 v-if="V_numbers[0]" class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[4]}}</h2> 
 																</span>
 															</v-radio>
 														</v-card>														
@@ -61,7 +64,7 @@
 														<v-card class="" @click="colorChange(radio,V_numbers[5])" :style="radio6 ? 'border: 1px solid #EE1C25;border-radius: 10px;' : 'border: 1px solid #B4B4B4;border-radius: 10px;'">
 															<v-radio color='red' value="6" class="ml-4">
 																<span slot="label" class="black--text ml-3">
-																	<h2 class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[5]}}</h2> 
+																	<h2 v-if="V_numbers[0]" class="page_title mt-3 ml-2 mb-5">+91 {{V_numbers[5]}}</h2> 
 																</span>
 															</v-radio>
 														</v-card>														
@@ -74,7 +77,7 @@
 											Refresh list({{ timerCount }}s)
 										</a> 
 									</div>
-									<v-btn v-if="radio != null" class="btn_text mt-15 white--text text-capitalize" width="19%" rounded  color='#EE1C25' @click.prevent='reserveNumber()'> Next </v-btn>
+									<v-btn v-if="radio != null" class="btn_text mt-10 white--text text-capitalize" width="19%" rounded  color='#EE1C25' @click.prevent='reserveNumber()'> Next </v-btn>
 								</v-card>
 							</v-col>
 						</v-row>
@@ -90,6 +93,7 @@ import firebase from 'firebase'
 import { db } from '@/main.js';
   export default {
     data: () => ({
+			radio : '',
 			radio1 : false,
 			radio2 : false,
 			radio3 : false,
@@ -207,22 +211,27 @@ import { db } from '@/main.js';
 					console.log(details)
 					this.$axios(details)
 					.then((response) => {
-						this.overlay = false
-						this.V_numbers = response.data.numbers
-						this.timerCount = response.data.Seconds
 						this.listingId = response.data.listingId
-						this.value = 100 - (0.55*(180-this.timerCount))
-						console.log(this.value)
-						console.log(response)
-						console.log(response.data.numbers)
-						console.log(response.data.Seconds)
-						this.progressbarTimer(this.value)
-						if(this.V_numbers.length === 0){
-							this.dialog = true
+						if(this.listingId){
 							this.overlay = false
-							this.value = 0
-							this.timerCount = 0
+							this.V_numbers = response.data.numbers
+							this.timerCount = response.data.Seconds
+							this.value = 100 - (0.55*(180-this.timerCount))
+							console.log(this.value)
+							console.log(response)
+							console.log(response.data.numbers)
+							console.log(response.data.Seconds)
+							this.progressbarTimer(this.value)
+							if(this.V_numbers.length === 0){
+								this.dialog = true
+								this.overlay = false
+								this.value = 0
+								this.timerCount = 0
 
+							}
+						}
+						else {
+							this.overlay = true
 						}
 					})
 					.catch((error) => {
@@ -231,6 +240,7 @@ import { db } from '@/main.js';
 				}
 			},
 			reserveNumber() {
+				this.overlay = true
 				this.reserve = true
 				const reserve = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/reserve',
@@ -288,6 +298,7 @@ import { db } from '@/main.js';
 							else {
 								if(!this.reserve){
 									this.overlay = true
+									this.getNumbersList()
 									//this.$router.go()
 								}
 							}

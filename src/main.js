@@ -7,10 +7,12 @@ import 'firebase/firestore';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import AxiosPlugin from 'vue-axios-cors'
+import VueGoogleCharts from 'vue-google-charts'
+
 
 Vue.prototype.$http = AxiosPlugin;
 Vue.config.productionTip = false;
-
+Vue.use(VueGoogleCharts)
 Vue.use(VueAxios, axios);
 Vue.use(AxiosPlugin);
 
