@@ -34,10 +34,10 @@
 													<v-icon v-bind="attrs" v-on="on" color="#EE1C25" >mdi-arrow-right</v-icon>
 												</v-col>											
 												<v-col cols="12" sm='6'>
-													<h2 class="link_style mt-1 ml-5 mb-5">Call Flow Settings </h2>
+													<h2 class="link_style mt-1 ml-5 mb-5" @click="CallFlowSettings()">Call Flow Settings </h2>
 												</v-col>
 												<v-col cols="12" sm='6' align="end">
-													<v-icon v-bind="attrs" v-on="on" color="#EE1C25" >mdi-arrow-right</v-icon>
+													<v-icon v-bind="attrs" v-on="on" color="#EE1C25" @click="CallFlowSettings()" >mdi-arrow-right</v-icon>
 												</v-col>
 											</v-row>
 										</v-card>
@@ -71,13 +71,15 @@
         {
           text: 'Business Numbers',
           disabled: false,
-          href: 'breadcrumbs_link_1',
+          to: { name: 'BusinessNumber'},
         },
       ],
     }),
 
     methods:{
-
+			CallFlowSettings(){
+				this.$router.push("/CallFlowSettings")
+			}
     }
   }
   </script>

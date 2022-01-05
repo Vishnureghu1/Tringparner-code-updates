@@ -114,6 +114,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "missed_call" */ '../views/CallFlowSettings.vue'),
     meta: {requiresAuth: true}
   },
+  {
+    path: '/PauseNumber',
+    name: 'PauseNumber',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/PauseNumber.vue'),
+    meta: {requiresAuth: true}
+  },
 ]
 
 const router = new VueRouter({

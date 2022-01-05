@@ -8,8 +8,8 @@
 								<v-col cols="12">
 									<div class="ml-8">
 										<v-row>
-											<v-col cols="12" sm="10">
-												<h2 class="page_title mt-6 ml-5">Advanced Options</h2>
+											<v-col cols="12" sm="11">
+												<span ><h2 class="page_title mt-6"> <v-icon  class="mr-2" color="black" @click="goBack()">mdi-arrow-left</v-icon>  Advanced Options</h2> </span>
 												<v-breadcrumbs :items="items">
 													<template v-slot:divider>
 														<v-icon>mdi-chevron-right</v-icon>
@@ -89,11 +89,11 @@
 										<v-divider></v-divider>
 										<v-row>
 											<v-col cols="6">
-												<h2 class="name_heading mt-4  mr-7 ">Pause Virtual Number</h2>
-												<h2 class="comment_heading mt-1 mb-5 mr-7">Temporarily pause receiving calls on this virtual number.</h2>
+												<h2 class="name_heading mt-4  mr-7" @click="callPauseNumber()">Pause Virtual Number</h2>
+												<h2 class="comment_heading mt-1 mb-5 mr-7" @click="callPauseNumber()">Temporarily pause receiving calls on this virtual number.</h2>
 											</v-col>
 											<v-col cols="6" align="end">
-												<span ><v-icon  class="mt-6 mb-5 mr-7" color="#EE1C25" >mdi-arrow-right</v-icon> </span>
+												<span ><v-icon  class="mt-6 mb-5 mr-7" @click="callPauseNumber()" color="#EE1C25" >mdi-arrow-right</v-icon> </span>
 											</v-col>
 										</v-row>
 										<v-divider></v-divider>									
@@ -115,26 +115,34 @@
 		components: {
 		},
 		created() {
-
+			window.scrollTo(0,0); //scroll to top
     },
     data: () => ({
       items: [
         {
           text: 'More',
           disabled: false,
-          href: 'breadcrumbs_dashboard',
-          color: 'Black'
+          to: { name: 'BusinessNumber'},
         },
         {
           text: 'Business Numbers',
           disabled: false,
-          href: 'breadcrumbs_link_1',
+          to: { name: 'BusinessNumber'},
+        },
+        {
+          text: 'Call Flow Settings',
+          disabled: true,
         },
       ],
     }),
 
     methods:{
-
+			goBack(){
+				this.$router.push("/BusinessNumber")
+			},
+			callPauseNumber(){
+				this.$router.push("/PauseNumber")
+			}
     }
   }
   </script>

@@ -79,6 +79,7 @@ import firebase from 'firebase'
 		},
 
 		created() {
+			window.scrollTo(0,0); //scroll to top
 			firebase.auth().onAuthStateChanged(user => {
 				if (user) {
 					console.log("logged user details",user)
