@@ -67,6 +67,12 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
+    path: '/ManageUsers',
+    name: 'ManageUsers',
+    component: () => import(/* webpackChunkName: "missed_call" */ '../views/ManageUsers.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
     path: '/FAQs',
     name: 'FAQs',
     component: () => import(/* webpackChunkName: "missed_call" */ '../views/FAQs.vue'),

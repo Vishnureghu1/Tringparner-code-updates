@@ -10,8 +10,8 @@
 										<v-row>
 											<v-col cols="12" sm="10">
 												<h2 class="page_title mt-6 ml-5">Business Numbers</h2>
-												<v-breadcrumbs :items="items">
-													<template v-slot:divider>
+												<v-breadcrumbs class="breadcrumbs" :items="items">
+													<template class="breadcrumbs" v-slot:divider>
 														<v-icon>mdi-chevron-right</v-icon>
 													</template>
 												</v-breadcrumbs>
@@ -84,10 +84,20 @@
   }
   </script>
 
-<style scoped>
-.page_title {
-	font-family: 'Lato', Bold;
-  font-size: 23px 
+<style type="text/css">
+.page-title {
+	text-align: left;
+	font: normal normal bold 23px/28px Lato;
+  letter-spacing: 0px;
+  color: #3B3B3B;
+	opacity: 1;
+}
+.breadcrumbs {
+	font: normal normal bold 10px/12px Lato;
+	text-align: left;
+	letter-spacing: 0px;
+	color: #3B3B3B;
+	opacity: 1;
 }
 .heading {
 	font-family: 'lato', Bold;
@@ -111,6 +121,13 @@
 	font-family: 'lato', Regular;
   font-size: 16px;	
 	color: #EE1C25;
+}
+.nunito-title {
+	text-align: left;
+	font: normal normal bold 16px/22px Nunito;
+	letter-spacing: 0px;
+	color: #3B3B3B;
+	opacity: 1;
 }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-navigation-drawer v-if="['login', 'Login'].indexOf(this.$route.name) != 0 && ['ChooseNumbers', 'ChooseNumbers'].indexOf(this.$route.name) != 0 && ['SelectPlan', 'SelectPlan'].indexOf(this.$route.name) != 0 && ['Billing', 'Billing'].indexOf(this.$route.name) != 0 && ['Review', 'Review'].indexOf(this.$route.name) != 0" v-model="drawer" clipped app class="white"  width="280px" permanent>
-            <v-list flat>
+            <!-- <v-list flat>
                 <v-list-item active-class="red--text">
                     <v-list-item-content>
                         <v-list-item-title class="grey--text" @click="dashboard()"> <v-icon  class="mr-3" color="grey">mdi-radar</v-icon> Dashboard</v-list-item-title>
@@ -12,7 +12,9 @@
 
                   <template v-slot:activator>
                     <v-list-item-content>
-                      <v-list-item-title class="grey--text"> <v-icon  class="mr-3" color="grey" >mdi-phone</v-icon> Call Logs</v-list-item-title>
+                      <v-list-item-title class="grey--text"> 
+                        <v-icon  class="mr-3" color="grey" >mdi-phone</v-icon> Call Logs
+                      </v-list-item-title>
                     </v-list-item-content>
                   </template>
                   <v-list-item v-for="title in subMenu" :key="title.text" router :to="title.route" link>
@@ -41,18 +43,133 @@
 
 
 
+            </v-list> -->
+            <!-- NEW LINKS -->
+            <v-list flat>
+              <!-- <v-list-item v-for="link in links[userRole]" :key="link.text" router :to="link.route" class="red--text" active-class="border red--text" style="color:green;">
+                    <template v-if="userRole == link.role" color="green--text" >
+
+                        <v-list-item-action>
+                            <v-icon>{{link.icon}}</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title >{{link.text}}</v-list-item-title>
+                        </v-list-item-content>
+   
+                    </template>
+                </v-list-item> -->
+
+                <div v-for="(link, i) in links[userRole]" :key="i">
+
+                    <v-list-item
+                        v-if="!link.subLinks"
+                        :to="link.to"
+                        active-class="tpred--text"
+                        avatar
+                        class="grey--text"
+                    >
+                        <v-list-item-icon>
+                            <v-icon>{{ link.icon }}</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-title class="menu-text" v-text="link.text" />
+                    </v-list-item>
+
+                    <v-list-group
+                        v-else
+                        :key="link.text"
+                        no-action
+                        :prepend-icon="link.icon"
+                        :value="false"
+                        class="grey--text"
+                        active-class="grey--text"
+                    >
+                        <template v-slot:activator>
+                          <v-list-item-title class="menu-text grey--text" active-class="tpred--text" >{{ link.text }}</v-list-item-title>
+                         </template>
+
+                        <v-list-item
+                            v-for="sublink in link.subLinks"
+                            :to="sublink.to"
+                            :key="sublink.text"
+                            class="grey--text"
+                            active-class="tpred--text"
+                        >
+                            <v-list-item-title class="menu-text ml-2">{{ sublink.text }}</v-list-item-title>
+                            <v-list-item-icon class="grey--text">
+                              <v-icon>{{ sublink.icon }}</v-icon>
+                            </v-list-item-icon>
+
+                        </v-list-item>
+
+                    </v-list-group>
+
+                </div>
             </v-list>
+            <!-- NEW LINKS -->
         </v-navigation-drawer>
-        <v-app-bar  class="white" app clipped-left>
+        <v-app-bar :key="rerenderKey"  class="white" app clipped-left>
                   <v-app-bar color="white" flat>
                     <img class="mt-2 ml-2" :src="require('../../public/tring-logo.png')" height="35"/>
                     <v-spacer></v-spacer>
-                    <v-btn icon>
-                      <v-icon color="black" >mdi-bell-outline</v-icon>
-                    </v-btn>
-                    <v-avatar class="ml-5" size="40">
-                        <v-img src="/img1.png"></v-img>
-                    </v-avatar>
+
+                    <div v-if="isLoggedIn">
+                      <v-btn icon>
+                        <v-icon color="black" @click="logout">mdi-bell-outline</v-icon>
+                      </v-btn>
+                    <!-- DROP DOWM MENU FROM AVATAR   -->
+                    <v-menu
+                      bottom
+                      min-width="247px"
+                      min-height="218px"
+                      rounded
+                      offset-y
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-avatar v-on="on" class="ml-5" size="40">
+                            <v-img src="/img1.png"></v-img>
+                        </v-avatar>
+                      </template>
+                      <v-card>
+                        <v-list-item-content class="align-left">
+                          <div class="mx-auto pa-1 text-left">
+                            <v-row>
+                              <v-col class="col-4">
+                                <v-avatar class="menu-avatar-pic">
+                                  <v-img src="/img1.png"></v-img>
+                                </v-avatar>
+                              </v-col>
+                              <v-col class="col-8">
+                                <v-row>
+                                  <v-col  align="left">
+                                    <div  class="">
+                                      <h4 class="" style="font: normal normal normal 23px/31px Nunito;">{{ userFirstName }}</h4>
+                                      <div class="">
+                                        <h5 class="comment_heading font-weight-light mt-1" >+91 {{ userPhoneNumber }}</h5>
+                                      </div>
+                                    </div>
+
+                                  </v-col>
+                                </v-row>
+                              </v-col>
+                            </v-row>
+
+                          </div>
+                        </v-list-item-content>
+                        <v-list-item-content>
+                          <span class="avatar-menu-item">FAQ</span>
+                        </v-list-item-content>
+                        <v-list-item-content>
+                          <span class="avatar-menu-item">Contact Us</span>
+                        </v-list-item-content>
+                        <v-list-item-content>
+                          <span class="avatar-menu-item" @click="logout">Log Out</span>
+                        </v-list-item-content>
+                      </v-card>
+                    </v-menu>
+                    <!-- DROP DOWM MENU FROM AVATAR   -->
+
+                    </div>
                   </v-app-bar>
         </v-app-bar>
         <v-content>
@@ -67,44 +184,171 @@
 </template>
 
 <script>
+  // import { db } from '@/main.js';
+  import firebase from 'firebase'
   export default {
-      created() {
+    async created() {
+
+      let localStorageUserObj = localStorage.getItem('tpu');
+
+      if (localStorageUserObj) {
+        let parsedUser = JSON.parse(localStorageUserObj);
+        this.userEmail = parsedUser.Email;
+        console.log('Navbar-user-FirstName', parsedUser.FirstName);
+        console.log('Navbar-user-Email', parsedUser.Email);
+        console.log(parsedUser);
+        this.userRole = parsedUser.role;
+        this.isLoggedIn = true;
+        this.userFirstName = parsedUser.FirstName;
+        this.userPhoneNumber = parsedUser.PhoneNumber;
+        this.forceRerenderKey();
+      }
 
     },
-    data: () => ({
+  data: () => ({
       drawer: false,
+      isLoggedIn: false,
+      userRole:'',
+      userFirstName: '',
+      userPhoneNumber: '',
+      rerenderKey: 0,
       group: null,
-      role : '',
-      subMenu: [
-      { icon: 'dashboard', text: 'All Calls', route: '/all_calls' },
-      { icon: 'dashboard', text: 'Missed Calls', route: '/missed_calls' },
-      { icon: 'dashboard', text: 'Answered Calls', route: '/answered_call' },
+      role: '',
+      links: {
+        'OWNER' : [
+          {
+            to: '/dashboard',
+            icon: 'mdi-radar',
+            text: 'Dashboard',
+          }, 
+          {
+            icon: 'mdi-phone',
+            text: 'Call Logs',
+            subLinks: [{
+              text: 'All Calls',
+              to: '/all_calls',
+              icon: ''
+            }, {
+              text: 'Missed Calls',
+              to: '/missed_calls',
+              icon: ''
+            }, {
+              text: 'Answered Calls',
+              to: '/answered_call',
+              icon: ''
+            } ]
+          }, 
+          {
+            to: '/report',
+            icon: 'mdi-chart-bar',
+            text: 'Report',
+          }, 
+          {
+            icon: 'mdi-dots-horizontal',
+            text: 'More',
+            subLinks: [
+              {
+                icon: '',
+                text: 'Business Number',
+                to: '/BusinessNumber'
+              }, {
+                icon: '',
+                text: 'Manage Users',
+                to: '/ManageUsers'
+              }, {
+                icon: '',
+                text: 'Add-Ons',
+                to: '/Addons'
+              }, {
+                icon: '',
+                text: 'Billing Information',
+                to: '/BillingInformation'
+              }, {
+                icon: '',
+                text: 'Account Info',
+                to: '/AccountInformation'
+              }, {
+                icon: '',
+                text: 'FAQs',
+                to: '/FAQs'
+              }, {
+                icon: '',
+                text: 'Get Support',
+                to: '/GetSupport'
+              }
+            ]
+          }
+      ],
+        'ADMIN' : [
+          {
+            to: '/dashboard',
+            icon: 'mdi-radar',
+            text: 'Dashboard',
+          }, 
+        ],
+        'AGENT' : [
 
-    ],
-    more: [
-      { icon: 'dashboard', text: 'Business Number', route: '/BusinessNumber' },
-      { icon: 'dashboard', text: 'Manage Users', route: '/ManageUsers' },
-      { icon: 'dashboard', text: 'Add-Ons', route: '/Addons' },
-      { icon: 'dashboard', text: 'Billing Information', route: '/BillingInformation' },
-      { icon: 'dashboard', text: 'Account Info', route: '/AccountInformation' },
-      { icon: 'dashboard', text: 'FAQs', route: '/FAQs' },
-      { icon: 'dashboard', text: 'Get Support', route: '/GetSupport' },
-
-    ],
+        ],
+      },
     }),
-
     watch: {
       group () {
         this.drawer = false
       },
+      isLoggedIn () {
+        console.log('forceRerenderKey watch');
+        this.forceRerenderKey();
+      }
     },
       methods:{
+        forceRerenderKey: function() {
+          this.rerenderKey += 1;
+        },
+        logout: function() {
+            console.log('clicked logout');
+            // firebase.auth()
+            firebase.auth().signOut();
+            localStorage.removeItem('tpu');
+            this.rerenderKey += 1;
+            this.$router.push("login").catch(()=>{});
+        },
         dashboard(){
-          this.$router.push("/dashboard")
+          this.$router.push("/dashboard").catch(()=>{})
         },
         report(){
-          this.$router.push("/report")
+          this.$router.push("/report").catch(()=>{})
         },
     }
   }
   </script>
+  <style type="text/css">
+    .v-list-item--active {
+      color: red;
+    }
+    .v-list-group--active {
+      color: red;
+    }
+    .menu-text {
+      font: normal normal 300 14px/16px Ubuntu;
+      letter-spacing: 0px;
+      text-align: left;
+      /*color: #808080;*/
+      opacity: 1;
+    }
+
+    .avatar-menu-item {
+      text-align: left;
+      font: normal normal normal 14px/19px Nunito;
+      letter-spacing: 0px;
+      color: #3B3B3B;
+      opacity: 1;
+      margin-left: 14px;
+      /*margin-top: 14px;*/
+      height: 19px;
+      cursor: pointer;
+    }
+    .menu-avatar-pic {
+      width: 64px;
+      height: 64px;
+    }
+  </style>

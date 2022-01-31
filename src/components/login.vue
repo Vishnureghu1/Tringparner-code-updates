@@ -72,35 +72,32 @@ import { db } from '@/main.js';
 		},
 
 		created() {
-			this.initReCaptcha()	
+			this.initReCaptcha()
 			firebase.auth().onAuthStateChanged(user => {
 				if (user) {
 					this.uid = user.uid
 					this.phno = user.phoneNumber.slice(3)
-					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
+					db.collection('users').where("uid", "==", this.uid).get().then((querySnapshot) => {
 						querySnapshot.forEach((doc) => {
 							console.log(doc.id, " => ", doc.data());
+							console.log('<-------------------LOGGING USER DETAILS----------------------->');
+							localStorage.setItem('tpu', JSON.stringify(doc.data()));
 							let user_details = doc.data()
 							this.Udata = user_details
 							this.currentPage = this.Udata.currentPage
 							this.role = this.Udata.role
-							if(this.role == 'ADMIN' || this.role == 'AGENT') {
+							if (this.role == 'ADMIN' || this.role == 'AGENT') {
 								this.$router.push("/Dashboard")
-							}
-							else {
+							} else {
 								if (this.currentPage == "onboarding_listing") {
 									this.$router.push("/ChooseNumbers")
-								}
-								else if (this.currentPage == "onboarding_plan_details") {
+								} else if (this.currentPage == "onboarding_plan_details") {
 									this.$router.push("/SelectPlan")
-								}
-								else if (this.currentPage == "onboarding_billing") {
+								} else if (this.currentPage == "onboarding_billing") {
 									this.$router.push("/Billing")
-								}
-								else if (this.currentPage == "onboarding_review") {
+								} else if (this.currentPage == "onboarding_review") {
 									this.$router.push("/Review")
-								}
-								else if (this.currentPage == "onboarding_dashboard" || this.currentPage == "onboarding_success") {
+								} else if (this.currentPage == "onboarding_dashboard" || this.currentPage == "onboarding_success") {
 									this.$router.push("/Dashboard")
 								}
 							}
@@ -112,148 +109,140 @@ import { db } from '@/main.js';
 			})
 		},
 		methods: {
-			sendOtp(){
+			sendOtp() {
 				this.otp = 'XXXXXX'
-				if(this.phNo.length != 10){
+				if (this.phNo.length != 10) {
 					alert('Invalid Phone Number Format !');
-				} 
-				else {
+				} else {
 					this.getNumber = false
 					this.getOtp = true
 					let countryCode = '+91'
 					let phoneNumber = countryCode + this.phNo
 					let appVerifier = this.appVerifier
 					firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-					.then((confirmationResult) => {
-						window.confirmationResult = confirmationResult;
-					})
-					.catch((error) => {
-						this.errorMessage = error.message
-						console.log(this.errorMessage)
-					})
-				}
-			},
-	changeLoginNumber(){
-		this.phNo = ''
-		this.getNumber = true
-		this.getOtp = false
-	},
-	verifyOtp(){
-		if(this.otp.length != 6){
-			alert('Invalid OTP Format !');
-		}	
-		else {
-			this.overlay = true
-			let userid = ''
-			let code = this.otp
-			window.confirmationResult.confirm(code).then(function (result) {
-			userid = result.user.uid;
-			})
-			.catch(function (error) {
-			console.log('error details', error)
-			})
-			.finally(() => {
-				this.uid = userid
-				console.log('ID', this.uid)
-				console.log('phno', this.phNo)
-				const options = {
-					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/login',
-					method: 'POST',
-					data: {
-						uid: this.uid,
-						phoneNumber: this.phNo
-					}
-				}
-				console.log(options)
-				this.$axios(options)
-					.then((response) => {
-						console.log(response.data)
-						console.log(this.uid)
-						localStorage.setItem('token',response.data.token)
-						db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
-							querySnapshot.forEach((doc) => {
-								console.log(doc.id, " => ", doc.data());
-								let user_details = doc.data()
-								this.Udata = user_details
-								this.currentPage = this.Udata.currentPage
-								this.role = this.Udata.role
-								console.log(this.currentPage)
-								console.log(this.role)
-								if(this.role == 'ADMIN' || this.role == 'AGENT') {
-									this.overlay = false
-									this.$router.push("/Dashboard")
-								}
-								else {
-									if (this.currentPage == "onboarding_listing") {
-										this.overlay = false
-										this.$router.push("/ChooseNumbers")
-									}
-									else if (this.currentPage == "onboarding_plan_details") {
-										this.overlay = false
-										this.$router.push("/SelectPlan")
-									}
-									else if (this.currentPage == "onboarding_billing") {
-										this.overlay = false
-										this.$router.push("/Billing")
-									}
-									else if (this.currentPage == "onboarding_review") {
-										this.overlay = false
-										this.$router.push("/Review")
-									}
-									else if (this.currentPage == 'onboarding_dashboard' || this.currentPage == 'onboarding_success') {
-										this.overlay = false
-										this.$router.push("/Dashboard")
-									}
-									else {
-										const user_stage = {
-										url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',
-										method: 'POST',
-										data: {
-													uid: this.uid,
-													phoneNumber: this.phno,
-													currentPage: 'onboarding_listing'
-										},
-									}
-									console.log(user_stage)
-									this.$axios(user_stage)
-										.then((response) => {
-											console.log(response)
-											this.overlay = false
-											this.$router.push("/ChooseNumbers")
-										})
-										.catch((error) => {
-											console.error(error);
-										})
-									}
-								}
-							})
+						.then((confirmationResult) => {
+							window.confirmationResult = confirmationResult;
 						})
 						.catch((error) => {
-							console.log("Error getting documents: ", error);
+							this.errorMessage = error.message
+							console.log(this.errorMessage)
 						})
-					})
-					.catch((error) => {
-						console.error(error);
-					})
-			});
-		}
-	},
-	initReCaptcha(){
-		setTimeout(()=>{
-			let vm = this
-			console.log('render on create',vm)
-			window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-			'size': 'invisible',
-			'callback': function(response) {
-				console.log('reCAPTCHA', response)
+				}
 			},
-			'expired-callback': function() {
+		changeLoginNumber() {
+			this.phNo = ''
+			this.getNumber = true
+			this.getOtp = false
+		},
+		verifyOtp() {
+			if (this.otp.length != 6) {
+				alert('Invalid OTP Format !');
+			} else {
+				this.overlay = true
+				let userid = ''
+				let code = this.otp
+				window.confirmationResult.confirm(code).then(function(result) {
+						userid = result.user.uid;
+					})
+					.catch(function(error) {
+						console.log('error details', error)
+					})
+					.finally(() => {
+						this.uid = userid
+						console.log('ID', this.uid)
+						console.log('phno', this.phNo)
+						const options = {
+							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/login',
+							method: 'POST',
+							data: {
+								uid: this.uid,
+								phoneNumber: this.phNo
+							}
+						}
+						console.log(options)
+						this.$axios(options)
+							.then((response) => {
+								console.log(response.data)
+								console.log(this.uid)
+								localStorage.setItem('token', response.data.token)
+								db.collection('users').where("uid", "==", this.uid).get().then((querySnapshot) => {
+										querySnapshot.forEach((doc) => {
+											console.log(doc.id, " => ", doc.data());
+											console.log('<-------------------VERIFY OTP LOGGING USER DETAILS----------------------->');
+											localStorage.setItem('tpu', JSON.stringify(doc.data()));
+											let user_details = doc.data()
+											this.Udata = user_details
+											this.currentPage = this.Udata.currentPage
+											this.role = this.Udata.role
+											console.log(this.currentPage)
+											console.log(this.role)
+											if (this.role == 'ADMIN' || this.role == 'AGENT') {
+												this.overlay = false
+												this.$router.push("/Dashboard").catch(() => {});
+											} else {
+												if (this.currentPage == "onboarding_listing") {
+													this.overlay = false
+													this.$router.push("/ChooseNumbers").catch(() => {});
+												} else if (this.currentPage == "onboarding_plan_details") {
+													this.overlay = false
+													this.$router.push("/SelectPlan").catch(() => {});
+												} else if (this.currentPage == "onboarding_billing") {
+													this.overlay = false
+													this.$router.push("/Billing").catch(() => {});
+												} else if (this.currentPage == "onboarding_review") {
+													this.overlay = false
+													this.$router.push("/Review").catch(() => {});
+												} else if (this.currentPage == 'onboarding_dashboard' || this.currentPage == 'onboarding_success') {
+													this.overlay = false
+													this.$router.push("/Dashboard").catch(() => {});
+												} else {
+													const user_stage = {
+														url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',
+														method: 'POST',
+														data: {
+															uid: this.uid,
+															phoneNumber: this.phno,
+															currentPage: 'onboarding_listing'
+														},
+													}
+													console.log(user_stage)
+													this.$axios(user_stage)
+														.then((response) => {
+															console.log(response)
+															this.overlay = false
+															this.$router.push("/ChooseNumbers").catch(() => {});
+														})
+														.catch((error) => {
+															console.error(error);
+														})
+												}
+											}
+										})
+									})
+									.catch((error) => {
+										console.log("Error getting documents: ", error);
+									})
+							})
+							.catch((error) => {
+								console.error(error);
+							})
+					});
 			}
-			});
-			this.appVerifier =  window.recaptchaVerifier
-		},1000)
-	},
-
+		},
+		initReCaptcha() {
+			setTimeout(() => {
+				let vm = this
+				console.log('render on create', vm)
+				window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+					'size': 'invisible',
+					'callback': function(response) {
+						console.log('reCAPTCHA', response)
+					},
+					'expired-callback': function() {}
+				});
+				this.appVerifier = window.recaptchaVerifier
+			}, 1000)
+		},
 	}
   }
 </script>

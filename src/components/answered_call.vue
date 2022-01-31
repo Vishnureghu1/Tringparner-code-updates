@@ -9,7 +9,7 @@
 									<div class="ml-3">
 										<v-row>
 											<v-col cols="12" sm="10">
-												<h2 class="mt-6 mb-5">Call Log</h2>
+												<h2 class="mt-6 mb-5">Answered Call</h2>
 											</v-col>
 											<v-col cols="12" sm="2" align="end">
 												<span ><v-icon  class="mt-6 mb-5 mr-4 " color="black" >mdi-magnify</v-icon> <v-icon  class="mt-6 mb-5 mr-7" color="black" >mdi-menu</v-icon> </span>

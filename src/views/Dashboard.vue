@@ -136,23 +136,36 @@
 
 <script>
 	import { Icon } from '@iconify/vue2';
-  export default {
+	export default {
 
 		components: {
 			Icon,
 		},
-		created() {
+		async created() {
 
-    },
-    data: () => ({
+			let localStorageUserObj = localStorage.getItem('tpu');
+
+			if (localStorageUserObj) {
+				let parsedUser = JSON.parse(localStorageUserObj);
+				this.userEmail = parsedUser.Email;
+				console.log('Dashboard-user-FirstName', parsedUser.FirstName);
+				console.log('Dashboard-user-Email', parsedUser.Email);
+				console.log(parsedUser);
+				this.userRole = parsedUser.role;
+			}
+
+		},
+		data: () => ({
 			missedCallPanel: [0, 1],
 			skippedCallPanel: [0, 1],
-    }),
+			userEmail: '',
+			userRole: ''
+		}),
 
-    methods:{
+		methods: {
 
-    }
-  }
+		}
+	}
   </script>
 
 <style scoped>
