@@ -170,24 +170,24 @@
 
 <style scoped>
 .page_title {
-	font-family: 'Lato', Bold;
+	/*font-family: 'Lato', Bold;*/
   font-size: 23px 
 }
 .heading {
-	font-family: 'lato', Bold;
+	/*font-family: 'lato', Bold;*/
   font-size: 16px 
 }
 .name_heading {
-	font-family: 'Nunito', bold;
+	/*font-family: 'Nunito', bold;*/
   font-size: 14px 	
 }
 .number_heading {
-	font-family: 'Nunito', bold;
+	/*font-family: 'Nunito', bold;*/
   font-size: 16px; 	
   color: #3B3B3B;
 }
 .comment_heading {
-	font-family: 'Nunito', Light;
+	/*font-family: 'Nunito', Light;*/
   font-size: 10px;
   color: #808080;
 }

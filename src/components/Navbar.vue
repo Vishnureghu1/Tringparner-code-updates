@@ -112,9 +112,77 @@
                     <v-spacer></v-spacer>
 
                     <div v-if="isLoggedIn">
-                      <v-btn icon>
-                        <v-icon color="black" @click="logout">mdi-bell-outline</v-icon>
-                      </v-btn>
+
+                    <!-- NOTIFICATION MENU -->
+                    <v-menu
+                      bottom
+                      width="378px"
+                      height="504px"
+                      rounded
+                      offset-y
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-btn v-on="on" icon>
+                          <v-icon color="black">mdi-bell-outline</v-icon>
+                        </v-btn>
+                      </template>
+
+                      <v-card
+                        class="mx-auto"
+                        max-width="500"
+                      >
+                        <v-card-title class="black--text white darken-4">
+                          Notification Center
+                          <v-spacer></v-spacer>
+                          <div align="center" class="notif-mark">View all</div>
+                          <span fab small>
+                            <v-icon>mdi-close</v-icon>
+                          </span>
+                        </v-card-title>
+
+                        <v-divider></v-divider>
+
+                        <v-virtual-scroll
+                          :items="notificationCenterItems"
+                          :item-height="90"
+                          height="300"
+                          width="500"
+                        >
+                          <template v-slot:default="{ item }">
+                            <v-list-item>
+                              <v-row>
+                                <v-col cols="12">
+                                  <div class="notif-type" >Call Notification</div>
+                                  <div class="notif-content" >{{ item.content }}</div>
+                                  <div class="notif-time mb-2" >Today, 12:01pm</div>
+                                </v-col>
+                              </v-row>
+                              <!-- <v-list-item-action>
+                                <v-btn depressed small>
+                                  View User
+                                  <v-icon color="orange darken-4" right>
+                                    mdi-open-in-new
+                                  </v-icon>
+                                </v-btn>
+                              </v-list-item-action> -->
+
+                            </v-list-item>
+                            <v-divider></v-divider>
+                          </template>
+                        </v-virtual-scroll>
+
+                        <v-card-text class="pt-4 text-center">
+                          <v-row>
+                            <v-col cols="12" align="center" class="notif-mark" >
+                              Mark all as read(10)
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                      </v-card>
+
+                    </v-menu>
+                    <!-- NOTIFICATION MENU -->
                     <!-- DROP DOWM MENU FROM AVATAR   -->
                     <v-menu
                       bottom
@@ -212,6 +280,69 @@
       rerenderKey: 0,
       group: null,
       role: '',
+      notificationCenterItems:[
+        {
+          id:1,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:2,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:3,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:4,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:5,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:6,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:7,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:8,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:9,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+        {
+          id:10,
+          type: 'Call Notification',
+          content: 'You have a Missed Call From +91 988809991',
+          time:'Today, 12:01pm'
+        },
+      ],
+
       links: {
         'OWNER' : [
           {
@@ -327,7 +458,13 @@
       color: red;
     }
     .menu-text {
-      font: normal normal 300 14px/16px Ubuntu;
+      /*font: normal normal 300 14px/16px Ubuntu;*/
+      font-weight: normal;
+      font-stretch: normal;
+      font-variant: normal;
+      font-size: 14px;
+      line-height: 16px;
+      /*font-family: Nunito;*/
       letter-spacing: 0px;
       text-align: left;
       /*color: #808080;*/
@@ -336,7 +473,13 @@
 
     .avatar-menu-item {
       text-align: left;
-      font: normal normal normal 14px/19px Nunito;
+      /*font: normal normal normal 14px/19px Nunito;*/
+      font-weight: normal;
+      font-stretch: normal;
+      font-variant: normal;
+      font-size: 14px;
+      line-height: 19px;
+      /*font-family: Nunito;*/
       letter-spacing: 0px;
       color: #3B3B3B;
       opacity: 1;
@@ -348,5 +491,66 @@
     .menu-avatar-pic {
       width: 64px;
       height: 64px;
+    }
+    .notif-type {
+      height: 14px;
+      text-align: left;
+      /*font: normal normal normal 10px/14px Nunito;*/
+      font-weight: normal;
+      font-stretch: normal;
+      font-variant: normal;
+      font-size: 10px;
+      line-height: 14px;
+      /*font-family: Nunito;*/
+      letter-spacing: 0px;
+      color: #3B3B3B;
+      opacity: 1;
+      cursor: pointer;
+    }
+    .notif-content {
+      /*height: 19px;*/
+      text-align: left;
+      /*font: normal normal bold 14px/19px Nunito;*/
+      font-weight: normal;
+      font-stretch: normal;
+      font-variant: normal;
+      font-size: 14px;
+      line-height: 19px;
+      /*font-family: Nunito;*/
+      letter-spacing: 0px;
+      color: #3B3B3B;
+      opacity: 1;
+      cursor: pointer;
+    }
+    .notif-time {
+      /*height: 19px;*/
+      text-align: left;
+      /*font: normal normal normal 14px/19px Nunito;*/
+      font-weight: normal;
+      font-stretch: normal;
+      font-variant: normal;
+      font-size: 14px;
+      line-height: 19px;
+      /*font-family: Nunito;*/
+      letter-spacing: 0px;
+      color: #3B3B3B;
+      opacity: 1;
+      cursor: pointer;
+    }
+    .notif-mark {
+      /*height: 19px;*/
+      /*text-align: right;*/
+      text-decoration: underline;
+      /*font: normal normal normal 14px/19px Nunito;*/
+      font-weight: normal;
+      font-stretch: normal;
+      font-variant: normal;
+      font-size: 14px;
+      line-height: 19px;
+      /*font-family: Nunito;*/
+      letter-spacing: 0px;
+      color: #EE1C25;
+      opacity: 1;
+      cursor: pointer;
     }
   </style>
