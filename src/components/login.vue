@@ -1,130 +1,117 @@
 <template>
-	<v-app class="grey lighten-3">
-	<div class="grey lighten-3" >
-		<v-container >
-		<!-- 	<v-layout > -->
-				<v-row justify="center">
-					<v-col sm="12" lg="9"  class="mx-sm-auto my-md-16">
-						<v-card>
-							<v-overlay :value="overlay">
-								<v-progress-circular indeterminate color="red" size="60" :width="6"></v-progress-circular>
-							</v-overlay>
-							<v-row no-gutters >
-								<v-col  sm="12" md="12" lg="6" justify="center">
-									<div class="mt-3 ml-3">
-										<v-app-bar color="white" flat>
-											<img class="mt-2 ml-2" :src="require('../../public/images/tring-logo.png')" height="35"/>
-											<v-spacer></v-spacer>
-											<v-btn icon>
-												<v-icon color='red text-subtitle-2' >mdi-chat-outline</v-icon>
-											</v-btn>
-											<label class='red--text text-subtitle-2'>CHAT WITH US</label>
-										</v-app-bar>
-									</div>
-									<div class="ml-4">
-										<h4 class="mt-6 ml-5">Login or Sign Up</h4>
-										<v-container>
-											<div class="mt-1 ml-2" v-if="getNumber">
-												<v-form @submit.prevent="submit">
-													<!-- <p>{{ phno }} </p> -->
-													<v-text-field v-model='phNo' prefix="+91" color='grey darken-4' label="Enter your Phone Number" type='text' :rules="numberRules" required ></v-text-field>
-													<v-btn class="mr-4 white--text" width="100%" @click.prevent='sendOtp()' color='light-blue darken-1
-													'> REQUEST OTP </v-btn>
-													<!-- <v-btn class="mr-4 white--text" width="100%" @click.prevent='testing()' color='light-blue darken-1
-													'> testing </v-btn> -->
-												</v-form>
-											</div>
-											<!-- <div id="recaptcha-container"></div><br> -->
-											<div class="mt-1 ml-2" v-if="getOtp">
-												<v-form @submit.prevent="submit">
-													<v-text-field v-model='otp' label="Enter OTP" type='text' required ></v-text-field>
-													<v-btn class="mr-4" @click.prevent='sendOtp()' color='white lighten-3' width="40%"> RESENT OTP</v-btn>
-													<v-btn class="mr-4 white--text" @click.prevent='verifyOtp()' color='light-blue darken-1
-													' width="40%"> LOGIN </v-btn>
-												</v-form>
-											</div>
-										</v-container>
-										<p class="mt-1 ml-5 font-weight-regular">For verification, an sms will be be sent to your mobile number. By proceeding, you agree to our <a href="https://www.tringpartner.com/terms" target="_blank"  class="text-blue">Terms & Conditions</a> & <a href="https://www.tringpartner.com/privacy" target="_blank" class="text-blue">Privacy Policy. </a>
-										</p>
+	<v-app >
+			<v-container  fluid>
+				<v-layout >
+					<v-flex xs12 sm12 md12>
+							<v-row no-gutters>
+								<v-col cols="12" align="center">
+									<v-overlay :value="overlay">
+										<v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
+									</v-overlay>
+									<v-card color="transparent" outlined class="" max-width="280">
+										<h2 class="page_title mt-16 mb-13">Welcome to Tring Partner</h2>
+										<h2 class="sub_title mt-8 mb-13">Use your mobile number to get started with Tring Partner</h2>
 										<div>
-											<p class="ml-5 mt-4 grey--text font-weight-medium">Trusted by</p>
-											<v-flex class="d-flex justify-space-around mb-5">
-												<img class="mt-2 ml-2" :src="require('../../public/images/partner/1_a.png')" height="20"/>
-												<img class="mt-2 ml-2" :src="require('../../public/images/partner/2_a.png')" height="20"/>
-												<img class="mt-2 ml-2" :src="require('../../public/images/partner/3_a.png')" height="20"/>
-												<img class="mt-2 ml-2" :src="require('../../public/images/partner/4_a.png')" height="20"/>
-											</v-flex>
+											<div class="mt-1 ml-2" v-if='getNumber'>
+												<h4 class="name_heading mt-4 ml-2" align="start">Login or Sign Up</h4>
+												<v-form @submit.prevent="submit">
+													<v-text-field outlined v-model='phNo' prefix="+91" color='grey darken-4' label="Mobile Number" type='text' :rules="numberRules" required class="mt-4" ></v-text-field>
+													<v-btn class="btn_text mt-15 white--text text-capitalize" width="70%" rounded @click.prevent='sendOtp()' color='#EE1C25
+													'> Next </v-btn>
+												</v-form>
+											</div>	
+											<div class="mt-1 ml-2" v-if="getOtp">
+												<h4 class="name_heading mt-4" align="start">Enter OTP</h4>
+												<v-otp-input length="6" v-model="otp"></v-otp-input>
+												<div class="mt-4"> 
+													<a class="link_style text-decoration-underline" @click.prevent='sendOtp()'>
+														Resend OTP
+													</a> 
+													<br>
+													<br> 
+													<a class="link_style text-decoration-underline" @click="changeLoginNumber()">
+														Change Number
+													</a>
+												</div>
+												<v-btn class="btn_text mt-15 white--text text-capitalize" width="70%" rounded @click.prevent='verifyOtp()' color='#EE1C25
+													'> Submit </v-btn>
+											</div>
 										</div>
-									</div>
-								</v-col>
-								<v-col sm="12" md="12" lg="6">
-									<div class="video-wrapper mt-3 ml-10  ml-md-9 ">	
-										<video onplay="videoPlayed()" onpause="videoPaused()" width="303" height="448" controls poster="../../public/images/partner/tp_thumbnail.jpg">
-										<source src="../../public/images/tp_action.mp4" type="video/mp4">
-										</video>
-									</div>
+									</v-card>
+									<div id="recaptcha-container"></div>
 								</v-col>
 							</v-row>
-							<div id="recaptcha-container"></div>
-						</v-card>
-					</v-col>
-				</v-row>
-      <v-dialog
-        v-model="dialog"
-        transition="dialog-bottom-transition"
-        max-width="400"
-      >
-        <template v-slot:default="dialog">
-          <v-card outlined shaped elevation="8">
-            <v-card-text>
-              <div class="text-h6 mt-4 red--text">Oops something went wrong</div>
-              <div class="text-h6 mt-2 red--text">Try after sometime !! </div>
-            </v-card-text>
-            <v-card-actions class="justify-end">
-              <v-btn
-                text
-                color="danger"
-                @click="dialog.value = false"
-              >Close</v-btn>
-            </v-card-actions>
-          </v-card>
-        </template>
-      </v-dialog>
-		</v-container>
-  </div>
-</v-app>
+					</v-flex>
+				</v-layout>
+			</v-container>
+	</v-app>
 </template>
+
 
 <script>
 import firebase from 'firebase'
 import { db } from '@/main.js';
 
-	export default {
+  export default {
+    data: () => ({
+			otp: 'XXXXXX',
+			getNumber : true,
+			getOtp : false,
+			numberRules: [ 
+				v => /^[0-9]*$/.test(v) || 'No characters Allowed',
+				],
+			phNo: '',
+			uid : '',
+			currentPage: '',
+			dialog : false,
+			errorMessage: '',
+			role : '',
+			overlay : false
+    }),
+		components: {
+		},
 
-	data(){
-		return{
-		appVerifier : '',
-		otp : '',
-		getNumber : true,
-		getOtp : false,
-		phNo : '',
-		uid : '',
-		currentPage: '',
-		dialog : false,
-		errorMessage: '',
-		overlay : false,
-		role : '',
-		numberRules: [ 
-			// v => (v && v.length == 10 ||  'Number must contain 10 digits. Invalid Number !!'),
-			v => /^[0-9]*$/.test(v) || 'No characters Allowed',
-			],
-		}
-	},
-
-	methods: {
-
-			sendOtp(){
-				if(this.phNo.length != 10){
+		created() {
+			this.initReCaptcha()
+			firebase.auth().onAuthStateChanged(user => {
+				if (user) {
+					this.uid = user.uid
+					this.phno = user.phoneNumber.slice(3)
+					db.collection('users').where("uid", "==", this.uid).get().then((querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							console.log(doc.id, " => ", doc.data());
+							console.log('<-------------------LOGGING USER DETAILS----------------------->');
+							localStorage.setItem('tpu', JSON.stringify(doc.data()));
+							let user_details = doc.data()
+							this.Udata = user_details
+							this.currentPage = this.Udata.currentPage
+							this.role = this.Udata.role
+							if (this.role == 'ADMIN' || this.role == 'AGENT') {
+								this.$router.push("/Dashboard")
+							} else {
+								if (this.currentPage == "onboarding_listing") {
+									this.$router.push("/ChooseNumbers")
+								} else if (this.currentPage == "onboarding_plan_details") {
+									this.$router.push("/SelectPlan")
+								} else if (this.currentPage == "onboarding_billing") {
+									this.$router.push("/Billing")
+								} else if (this.currentPage == "onboarding_review") {
+									this.$router.push("/Review")
+								} else if (this.currentPage == "onboarding_dashboard" || this.currentPage == "onboarding_success") {
+									this.$router.push("/Dashboard")
+								}
+							}
+						})
+					}).catch((error) => {
+						console.log("Error getting documents: ", error);
+					})
+				}
+			})
+		},
+		methods: {
+			sendOtp() {
+				this.otp = 'XXXXXX'
+				if (this.phNo.length != 10) {
 					alert('Invalid Phone Number Format !');
 				} else {
 					this.getNumber = false
@@ -135,37 +122,37 @@ import { db } from '@/main.js';
 					firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
 						.then((confirmationResult) => {
 							window.confirmationResult = confirmationResult;
-						}).catch((error) => {
+						})
+						.catch((error) => {
 							this.errorMessage = error.message
 							console.log(this.errorMessage)
-							// this.$analytics.logEvent("Web Otp send");
-							// this.sendErrorLog(errorMessage)
 						})
 				}
 			},
-
-	verifyOtp(){
-		if(this.otp.length != 6){
-			alert('Invalid OTP Format !');
-		}	else {
-			this.overlay = true
-			let userid = ''
-			let code = this.otp
-			window.confirmationResult.confirm(code).then(function (result) {
-			var user = result.user;
-			userid = result.user.uid;
-			console.log('user details', user)
-			console.log('user details', userid)
-			// this.uid = this.userid
-			}).catch(function (error) {
-			console.log('error details', error)
-			// alert('Invalid OTP')
-			}).finally(() => {
+		changeLoginNumber() {
+			this.phNo = ''
+			this.getNumber = true
+			this.getOtp = false
+		},
+		verifyOtp() {
+			if (this.otp.length != 6) {
+				alert('Invalid OTP Format !');
+			} else {
+				this.overlay = true
+				let userid = ''
+				let code = this.otp
+				window.confirmationResult.confirm(code).then(function(result) {
+						userid = result.user.uid;
+					})
+					.catch(function(error) {
+						console.log('error details', error)
+					})
+					.finally(() => {
 						this.uid = userid
 						console.log('ID', this.uid)
 						console.log('phno', this.phNo)
 						const options = {
-							url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/login',
+							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/login',
 							method: 'POST',
 							data: {
 								uid: this.uid,
@@ -176,180 +163,120 @@ import { db } from '@/main.js';
 						this.$axios(options)
 							.then((response) => {
 								console.log(response.data)
-								console.log(response.data.token)
-								localStorage.setItem('token',response.data.token)
-								db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
-									querySnapshot.forEach((doc) => {
-										console.log(doc.id, " => ", doc.data());
-										let user_details = doc.data()
-										this.Udata = user_details
-										this.currentPage = this.Udata.currentPage
-										this.role = this.Udata.role
-										console.log(this.currentPage)
-										console.log(this.role)
-										this.$analytics.logEvent("Web Otp verified");
-										if(this.role == 'ADMIN' || this.role == 'AGENT') {
-											this.overlay = false
-											this.$router.push("/downloadApp")
-										}
-										else {
-
-											if (this.currentPage == "onboarding_listing") {
+								console.log(this.uid)
+								localStorage.setItem('token', response.data.token)
+								db.collection('users').where("uid", "==", this.uid).get().then((querySnapshot) => {
+										querySnapshot.forEach((doc) => {
+											console.log(doc.id, " => ", doc.data());
+											console.log('<-------------------VERIFY OTP LOGGING USER DETAILS----------------------->');
+											localStorage.setItem('tpu', JSON.stringify(doc.data()));
+											let user_details = doc.data()
+											this.Udata = user_details
+											this.currentPage = this.Udata.currentPage
+											this.role = this.Udata.role
+											console.log(this.currentPage)
+											console.log(this.role)
+											if (this.role == 'ADMIN' || this.role == 'AGENT') {
 												this.overlay = false
-												this.$router.push("/choose_no")
-											}
-											else if (this.currentPage == "onboarding_test_completed") {
-												this.overlay = false
-												this.$router.push("/test_number")
-											}
-											else if (this.currentPage == "onboarding_plan_details") {
-												this.overlay = false
-												this.$router.push("/pricing")
-											}
-											else if (this.currentPage == "onboarding_billing") {
-												this.overlay = false
-												this.$router.push("/billing")
-											}
-											else if (this.currentPage == "onboarding_success") {
-												this.overlay = false
-												this.$router.push("/emailVerification")
-											}
-											else if (this.currentPage == "onboarding_dashboard") {
-												// this.overlay = false
-												this.$router.push("/downloadApp")
-											}
-											else {
-												const user_stage = {
-												url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
-												method: 'POST',
-
-												data: {
+												this.$router.push("/Dashboard").catch(() => {});
+											} else {
+												if (this.currentPage == "onboarding_listing") {
+													this.overlay = false
+													this.$router.push("/ChooseNumbers").catch(() => {});
+												} else if (this.currentPage == "onboarding_plan_details") {
+													this.overlay = false
+													this.$router.push("/SelectPlan").catch(() => {});
+												} else if (this.currentPage == "onboarding_billing") {
+													this.overlay = false
+													this.$router.push("/Billing").catch(() => {});
+												} else if (this.currentPage == "onboarding_review") {
+													this.overlay = false
+													this.$router.push("/Review").catch(() => {});
+												} else if (this.currentPage == 'onboarding_dashboard' || this.currentPage == 'onboarding_success') {
+													this.overlay = false
+													this.$router.push("/Dashboard").catch(() => {});
+												} else {
+													const user_stage = {
+														url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',
+														method: 'POST',
+														data: {
 															uid: this.uid,
 															phoneNumber: this.phno,
 															currentPage: 'onboarding_listing'
-												},
+														},
+													}
+													console.log(user_stage)
+													this.$axios(user_stage)
+														.then((response) => {
+															console.log(response)
+															this.overlay = false
+															this.$router.push("/ChooseNumbers").catch(() => {});
+														})
+														.catch((error) => {
+															console.error(error);
+														})
+												}
 											}
-											console.log(user_stage)
-											this.$axios(user_stage)
-												.then((response) => {
-													console.log(response)
-													this.overlay = false
-													this.$analytics.logEvent("Web onboarding_listing");
-													this.$router.push("/choose_no")
-												})
-												.catch((error) => {
-													console.error(error);
-												})
-											}
-										}
-
 										})
-										}).catch((error) => {
-											console.log("Error getting documents: ", error);
-										})
+									})
+									.catch((error) => {
+										console.log("Error getting documents: ", error);
+									})
 							})
 							.catch((error) => {
 								console.error(error);
 							})
-						// this.writeDb() 
-			});
-				}
-		},
-
-			initReCaptcha(){
-		setTimeout(()=>{
-			let vm = this
-			console.log('render on create',vm)
-			window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-			'size': 'invisible',
-			'callback': function(response) {
-				console.log('reCAPTCHA', response)
-			},
-			'expired-callback': function() {
+					});
 			}
-			});
-
-			this.appVerifier =  window.recaptchaVerifier
-		},1000)
 		},
-		sendErrorLog(errorMessage){
-			this.dialog = true
-			const errorLog = {
-				url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/login/failure',
-				method: 'POST',
-
-				data: {
-					reason: errorMessage,
-					login_number : this.phNo
-				},
-			}
-			console.log(errorLog)
-				.$axios(errorLog)
-				.then((response) => {
-					console.log(response)
-					this.dialog =  true
-				})
-				.catch((error) => {
-					console.error(error);
-				})
-		}
+		initReCaptcha() {
+			setTimeout(() => {
+				let vm = this
+				console.log('render on create', vm)
+				window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+					'size': 'invisible',
+					'callback': function(response) {
+						console.log('reCAPTCHA', response)
+					},
+					'expired-callback': function() {}
+				});
+				this.appVerifier = window.recaptchaVerifier
+			}, 1000)
 		},
-
-		created() {
-			this.initReCaptcha()	
-			firebase.auth().onAuthStateChanged(user => {
-				if (user) {
-					console.log("logged user details",user)
-					this.uid = user.uid
-					this.phno = user.phoneNumber.slice(3)
-					console.log("user id", this.uid)
-					console.log("user number", this.phno)
-
-					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
-						querySnapshot.forEach((doc) => {
-							console.log(doc.id, " => ", doc.data());
-							let user_details = doc.data()
-							this.Udata = user_details
-							this.currentPage = this.Udata.currentPage
-							console.log(this.currentPage)
-							this.role = this.Udata.role
-							console.log(this.currentPage)
-							console.log(this.role)
-							if(this.role == 'ADMIN' || this.role == 'AGENT') {
-								this.$router.push("/downloadApp")
-							}
-							else {
-								if (this.currentPage == "onboarding_listing") {
-									this.$router.push("/choose_no")
-								}
-								else if (this.currentPage == "onboarding_test_completed") {
-									this.$router.push("/test_number")
-								}
-								else if (this.currentPage == "onboarding_plan_details") {
-									this.$router.push("/pricing")
-								}
-								else if (this.currentPage == "onboarding_billing") {
-									this.$router.push("/billing")
-								}
-								else if (this.currentPage == "onboarding_success") {
-									this.$router.push("/emailVerification")
-								}
-								else if (this.currentPage == "onboarding_dashboard") {
-									this.$router.push("/downloadApp")
-								}
-							}
-
-
-						})
-					}).catch((error) => {
-						console.log("Error getting documents: ", error);
-					})
-				}
-			})
-			let url = new URL(location.href).searchParams.get('number')
-			this.phNo = url
-		}
 	}
-	
-
+  }
 </script>
+
+<style scoped>
+.page_title {
+	font-family: 'Lato', Bold;
+  font-size: 23px 
+}
+.sub_title {
+	font-family: 'Nunito', light;
+  font-size: 16px;
+  color: #3B3B3B;
+}
+.name_heading {
+	font-family: 'Nunito', light;
+  font-size: 14px;
+  color: #3B3B3B;	
+}
+.number_heading {
+	font-family: 'Nunito', light;
+  font-size: 37px; 	
+  color: #3B3B3B;
+}
+.comment_heading {
+	font-family: 'Nunito', Regular;
+  font-size: 10px;
+  color: #808080;
+}
+.link_style{
+	color: #EE1C25;
+}
+.btn_text{
+	font-family: 'Nunito', light;
+  font-size: 14px;
+}
+</style>

@@ -1,42 +1,38 @@
 import Vue from 'vue'
 import App from './App.vue'
+import vuetify from '../plugins/vuetify'
 import router from './router'
-import vuetify from '../plugins/vuetify';
 import firebase from "firebase/app";
 import 'firebase/firestore';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import AxiosPlugin from 'vue-axios-cors'
+import VueGoogleCharts from 'vue-google-charts'
 
 
+Vue.prototype.$http = AxiosPlugin;
+Vue.config.productionTip = false;
+Vue.use(VueGoogleCharts)
+Vue.use(VueAxios, axios);
+Vue.use(AxiosPlugin);
 
-Vue.config.productionTip = false
-Vue.use(VueAxios, axios)
-Vue.use(AxiosPlugin)
-export const eventBus = new Vue();
+export const bus = new Vue();
 
 firebase.initializeApp({
-	apiKey: "AIzaSyAbKeIOiuumM2AYsvPgJuyytH0CvIwxhsU",
-    authDomain: "tringpartner-v2.firebaseapp.com",
-    databaseURL: "https://tringpartner-v2-default-rtdb.firebaseio.com",
-    projectId: "tringpartner-v2",
-    storageBucket: "tringpartner-v2.appspot.com",
-    messagingSenderId: "448716065880",
-    appId: "1:448716065880:web:fa9c09fe22e88d873b4e2d",
-    measurementId: "G-Y2513C98CT"
-  });
+  apiKey: "AIzaSyBXibeZC-vEjCOetmvBhwFS3mYz3VcyzRU",
+  authDomain: "test-tpv2.firebaseapp.com",
+  databaseURL: "https://test-tpv2-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "test-tpv2",
+  storageBucket: "test-tpv2.appspot.com",
+  messagingSenderId: "915926362222",
+  appId: "1:915926362222:web:b3f914ef56f454161c5e7f",
+  measurementId: "G-7429HVQX2D"
+});
 
 export const db = firebase.firestore();
-let app;
-console.log("app", app)
 
-firebase.default.auth().onAuthStateChanged(user => {
-  console.log('pre render',user);
-  if (!app){
-    app = new Vue({
-      router,
-      vuetify,
-      render: h => h(App)
-    }).$mount('#app')
-  }
-})
+new Vue({
+  router,
+  vuetify,
+  render: h => h(App)
+}).$mount('#app')

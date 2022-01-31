@@ -1,76 +1,173 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-model="drawer" clipped app class="white"  width="300px">
-            <v-list flat>
-                <v-list-item @click="calllogs()" active-class="red--text">
+        <v-navigation-drawer v-if="['login', 'Login'].indexOf(this.$route.name) != 0 && ['ChooseNumbers', 'ChooseNumbers'].indexOf(this.$route.name) != 0 && ['SelectPlan', 'SelectPlan'].indexOf(this.$route.name) != 0 && ['Billing', 'Billing'].indexOf(this.$route.name) != 0 && ['Review', 'Review'].indexOf(this.$route.name) != 0" v-model="drawer" clipped app class="white"  width="280px" permanent>
+            <!-- <v-list flat>
+                <v-list-item active-class="red--text">
                     <v-list-item-content>
-                        <v-list-item-title class="black--text"> Call Logs </v-list-item-title>
+                        <v-list-item-title class="grey--text" @click="dashboard()"> <v-icon  class="mr-3" color="grey">mdi-radar</v-icon> Dashboard</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
-                <v-list-item v-if="this.role == 'OWNER' || this.role == 'ADMIN'" @click="analytics()" active-class="red--text">
-                    <v-list-item-content>
-                        <v-list-item-title class="black--text"> Analytics </v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-
-                <v-list-item v-if="this.role == 'OWNER'" @click="addons()" active-class="red--text">
-                  <v-list-item-content>
-                      <v-list-item-title class="black--text"> Addons </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-
-                <v-list-item v-if="this.role == 'OWNER' || this.role == 'ADMIN'" @click="manageUsers()" active-class="red--text">
-                    <v-list-item-content>
-                        <v-list-item-title class="black--text"> Manage Users </v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-
-                <v-list-group no-action v-if="this.role == 'OWNER' || this.role == 'ADMIN'">
+                <v-list-group no-action >
 
                   <template v-slot:activator>
                     <v-list-item-content>
-                      <v-list-item-title>Call Distribution</v-list-item-title>
+                      <v-list-item-title class="grey--text"> 
+                        <v-icon  class="mr-3" color="grey" >mdi-phone</v-icon> Call Logs
+                      </v-list-item-title>
                     </v-list-item-content>
                   </template>
                   <v-list-item v-for="title in subMenu" :key="title.text" router :to="title.route" link>
-                    <v-list-item-title v-text="title.text"></v-list-item-title>
+                    <v-list-item-title class="grey--text" v-text="title.text"></v-list-item-title>
                   </v-list-item>
                 </v-list-group> 
 
 
-                <v-list-item v-if="this.role == 'OWNER' || this.role == 'ADMIN'" @click="block_calls()" active-class="red--text">
+                <v-list-item  active-class="red--text">
                     <v-list-item-content>
-                        <v-list-item-title class="black--text"> Block Calls </v-list-item-title>
+                        <v-list-item-title class="grey--text" @click="report()"> <v-icon  class="mr-3" color="grey" >mdi-chart-bar</v-icon> Reports </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
-                <v-list-item v-if="this.role == 'OWNER'" @click="billing()" active-class="red--text">
+                 <v-list-group no-action >
+
+                  <template v-slot:activator>
                     <v-list-item-content>
-                        <v-list-item-title class="black--text"> Billing </v-list-item-title>
+                      <v-list-item-title class="grey--text"> <v-icon  class="mr-3" color="grey" >mdi-dots-horizontal</v-icon> More</v-list-item-title>
                     </v-list-item-content>
-                </v-list-item>
+                  </template>
+                  <v-list-item v-for="title in more" :key="title.text" router :to="title.route" link>
+                    <v-list-item-title class="grey--text" v-text="title.text"></v-list-item-title>
+                  </v-list-item>
+                </v-list-group> 
 
-                <v-list-item @click="myinfo()" active-class="red--text">
-                    <v-list-item-content>
-                        <v-list-item-title class="black--text"> My Info </v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
+            </v-list> -->
+            <!-- NEW LINKS -->
+            <v-list flat>
+              <!-- <v-list-item v-for="link in links[userRole]" :key="link.text" router :to="link.route" class="red--text" active-class="border red--text" style="color:green;">
+                    <template v-if="userRole == link.role" color="green--text" >
 
+                        <v-list-item-action>
+                            <v-icon>{{link.icon}}</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title >{{link.text}}</v-list-item-title>
+                        </v-list-item-content>
+   
+                    </template>
+                </v-list-item> -->
 
+                <div v-for="(link, i) in links[userRole]" :key="i">
+
+                    <v-list-item
+                        v-if="!link.subLinks"
+                        :to="link.to"
+                        active-class="tpred--text"
+                        avatar
+                        class="grey--text"
+                    >
+                        <v-list-item-icon>
+                            <v-icon>{{ link.icon }}</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-title class="menu-text" v-text="link.text" />
+                    </v-list-item>
+
+                    <v-list-group
+                        v-else
+                        :key="link.text"
+                        no-action
+                        :prepend-icon="link.icon"
+                        :value="false"
+                        class="grey--text"
+                        active-class="grey--text"
+                    >
+                        <template v-slot:activator>
+                          <v-list-item-title class="menu-text grey--text" active-class="tpred--text" >{{ link.text }}</v-list-item-title>
+                         </template>
+
+                        <v-list-item
+                            v-for="sublink in link.subLinks"
+                            :to="sublink.to"
+                            :key="sublink.text"
+                            class="grey--text"
+                            active-class="tpred--text"
+                        >
+                            <v-list-item-title class="menu-text ml-2">{{ sublink.text }}</v-list-item-title>
+                            <v-list-item-icon class="grey--text">
+                              <v-icon>{{ sublink.icon }}</v-icon>
+                            </v-list-item-icon>
+
+                        </v-list-item>
+
+                    </v-list-group>
+
+                </div>
             </v-list>
+            <!-- NEW LINKS -->
         </v-navigation-drawer>
-        <v-app-bar  class="blue-grey darken-1" app clipped-left>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer">
-
-            </v-app-bar-nav-icon>
-                  <v-app-bar color="blue-grey darken-1" flat>
-                    <img class="mt-2 ml-2" :src="require('../../public/images/tring-logo-white.png')" height="35"/>
+        <v-app-bar :key="rerenderKey"  class="white" app clipped-left>
+                  <v-app-bar color="white" flat>
+                    <img class="mt-2 ml-2" :src="require('../../public/tring-logo.png')" height="35"/>
                     <v-spacer></v-spacer>
-                    <v-btn icon>
-                      <v-icon color='white' >mdi-chat-outline</v-icon>
-                    </v-btn>
-                    <label class='white--text'>support</label>
+
+                    <div v-if="isLoggedIn">
+                      <v-btn icon>
+                        <v-icon color="black" @click="logout">mdi-bell-outline</v-icon>
+                      </v-btn>
+                    <!-- DROP DOWM MENU FROM AVATAR   -->
+                    <v-menu
+                      bottom
+                      min-width="247px"
+                      min-height="218px"
+                      rounded
+                      offset-y
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-avatar v-on="on" class="ml-5" size="40">
+                            <v-img src="/img1.png"></v-img>
+                        </v-avatar>
+                      </template>
+                      <v-card>
+                        <v-list-item-content class="align-left">
+                          <div class="mx-auto pa-1 text-left">
+                            <v-row>
+                              <v-col class="col-4">
+                                <v-avatar class="menu-avatar-pic">
+                                  <v-img src="/img1.png"></v-img>
+                                </v-avatar>
+                              </v-col>
+                              <v-col class="col-8">
+                                <v-row>
+                                  <v-col  align="left">
+                                    <div  class="">
+                                      <h4 class="" style="font: normal normal normal 23px/31px Nunito;">{{ userFirstName }}</h4>
+                                      <div class="">
+                                        <h5 class="comment_heading font-weight-light mt-1" >+91 {{ userPhoneNumber }}</h5>
+                                      </div>
+                                    </div>
+
+                                  </v-col>
+                                </v-row>
+                              </v-col>
+                            </v-row>
+
+                          </div>
+                        </v-list-item-content>
+                        <v-list-item-content>
+                          <span class="avatar-menu-item">FAQ</span>
+                        </v-list-item-content>
+                        <v-list-item-content>
+                          <span class="avatar-menu-item">Contact Us</span>
+                        </v-list-item-content>
+                        <v-list-item-content>
+                          <span class="avatar-menu-item" @click="logout">Log Out</span>
+                        </v-list-item-content>
+                      </v-card>
+                    </v-menu>
+                    <!-- DROP DOWM MENU FROM AVATAR   -->
+
+                    </div>
                   </v-app-bar>
         </v-app-bar>
         <v-content>
@@ -85,74 +182,171 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-import { db } from '@/main.js';
+  // import { db } from '@/main.js';
+  import firebase from 'firebase'
   export default {
-      created() {
-                firebase.auth().onAuthStateChanged(user => {
-              if (user) {
-                console.log("logged user details",user)
-                this.uid = user.uid
-                this.phno = user.phoneNumber.slice(3)
-                console.log("page navbar il user id", this.uid)
-                console.log("page navbar  il user number", this.phno)
-                db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
-                  querySnapshot.forEach((doc) => {
-                  console.log(doc.id, " => ", doc.data());
-                  let user_details = doc.data()
-                  this.role = user_details.role
-                  console.log(this.role)
-                })
-    })
-    .catch((error) => {
-        console.log("Error getting documents: ", error);
-    });
-            }
-          })
+    async created() {
+
+      let localStorageUserObj = localStorage.getItem('tpu');
+
+      if (localStorageUserObj) {
+        let parsedUser = JSON.parse(localStorageUserObj);
+        this.userEmail = parsedUser.Email;
+        console.log('Navbar-user-FirstName', parsedUser.FirstName);
+        console.log('Navbar-user-Email', parsedUser.Email);
+        console.log(parsedUser);
+        this.userRole = parsedUser.role;
+        this.isLoggedIn = true;
+        this.userFirstName = parsedUser.FirstName;
+        this.userPhoneNumber = parsedUser.PhoneNumber;
+        this.forceRerenderKey();
+      }
+
     },
-    data: () => ({
+  data: () => ({
       drawer: false,
+      isLoggedIn: false,
+      userRole:'',
+      userFirstName: '',
+      userPhoneNumber: '',
+      rerenderKey: 0,
       group: null,
-      role : '',
-      subMenu: [
-      { icon: 'dashboard', text: 'Add Agent', route: '/add_agents' },
-      { icon: 'dashboard', text: 'Active Calls', route: '/active_call' },
-      { icon: 'dashboard', text: 'Missed Call', route: '/missed_call' },
-      { icon: 'dashboard', text: 'Greeting Message', route: '/greeting' },
+      role: '',
+      links: {
+        'OWNER' : [
+          {
+            to: '/dashboard',
+            icon: 'mdi-radar',
+            text: 'Dashboard',
+          }, 
+          {
+            icon: 'mdi-phone',
+            text: 'Call Logs',
+            subLinks: [{
+              text: 'All Calls',
+              to: '/all_calls',
+              icon: ''
+            }, {
+              text: 'Missed Calls',
+              to: '/missed_calls',
+              icon: ''
+            }, {
+              text: 'Answered Calls',
+              to: '/answered_call',
+              icon: ''
+            } ]
+          }, 
+          {
+            to: '/report',
+            icon: 'mdi-chart-bar',
+            text: 'Report',
+          }, 
+          {
+            icon: 'mdi-dots-horizontal',
+            text: 'More',
+            subLinks: [
+              {
+                icon: '',
+                text: 'Business Number',
+                to: '/BusinessNumber'
+              }, {
+                icon: '',
+                text: 'Manage Users',
+                to: '/ManageUsers'
+              }, {
+                icon: '',
+                text: 'Add-Ons',
+                to: '/Addons'
+              }, {
+                icon: '',
+                text: 'Billing Information',
+                to: '/BillingInformation'
+              }, {
+                icon: '',
+                text: 'Account Info',
+                to: '/AccountInformation'
+              }, {
+                icon: '',
+                text: 'FAQs',
+                to: '/FAQs'
+              }, {
+                icon: '',
+                text: 'Get Support',
+                to: '/GetSupport'
+              }
+            ]
+          }
+      ],
+        'ADMIN' : [
+          {
+            to: '/dashboard',
+            icon: 'mdi-radar',
+            text: 'Dashboard',
+          }, 
+        ],
+        'AGENT' : [
 
-    ],
+        ],
+      },
     }),
-
     watch: {
       group () {
         this.drawer = false
       },
+      isLoggedIn () {
+        console.log('forceRerenderKey watch');
+        this.forceRerenderKey();
+      }
     },
       methods:{
-      calllogs(){
-        this.$router.push("/calllogs")
-      },
-      addons(){
-        this.$router.push("/addons")
-      },
-      manageUsers(){
-        this.$router.push("/manageUsers")
-      },
-      block_calls(){
-        this.$router.push("/block_calls")
-      },
-      billing(){
-        this.$router.push("/billing_details")
-      },
-      myinfo(){
-        this.$router.push("/myinfo")
-      },
-      greetingMessage(){
-        this.$router.push("/greeting")
-      },
-      analytics(){
-        this.$router.push("/analytics")
-      },
+        forceRerenderKey: function() {
+          this.rerenderKey += 1;
+        },
+        logout: function() {
+            console.log('clicked logout');
+            // firebase.auth()
+            firebase.auth().signOut();
+            localStorage.removeItem('tpu');
+            this.rerenderKey += 1;
+            this.$router.push("login").catch(()=>{});
+        },
+        dashboard(){
+          this.$router.push("/dashboard").catch(()=>{})
+        },
+        report(){
+          this.$router.push("/report").catch(()=>{})
+        },
     }
   }
   </script>
+  <style type="text/css">
+    .v-list-item--active {
+      color: red;
+    }
+    .v-list-group--active {
+      color: red;
+    }
+    .menu-text {
+      font: normal normal 300 14px/16px Ubuntu;
+      letter-spacing: 0px;
+      text-align: left;
+      /*color: #808080;*/
+      opacity: 1;
+    }
+
+    .avatar-menu-item {
+      text-align: left;
+      font: normal normal normal 14px/19px Nunito;
+      letter-spacing: 0px;
+      color: #3B3B3B;
+      opacity: 1;
+      margin-left: 14px;
+      /*margin-top: 14px;*/
+      height: 19px;
+      cursor: pointer;
+    }
+    .menu-avatar-pic {
+      width: 64px;
+      height: 64px;
+    }
+  </style>
