@@ -249,26 +249,26 @@ import { db } from '@/main.js';
 
 <style scoped>
 .page_title {
-	font-family: 'Lato', Bold;
+	font-family: 'Lato', Bold, !important;
   font-size: 23px 
 }
 .sub_title {
-	font-family: 'Nunito', light;
+	font-family: 'Nunito', light, !important;
   font-size: 16px;
   color: #3B3B3B;
 }
 .name_heading {
-	font-family: 'Nunito', light;
+	font-family: 'Nunito', light, !important;
   font-size: 14px;
   color: #3B3B3B;	
 }
 .number_heading {
-	font-family: 'Nunito', light;
+	font-family: 'Nunito', light, !important;
   font-size: 37px; 	
   color: #3B3B3B;
 }
 .comment_heading {
-	font-family: 'Nunito', Regular;
+	font-family: 'Nunito', Regular, !important;
   font-size: 10px;
   color: #808080;
 }
@@ -276,7 +276,7 @@ import { db } from '@/main.js';
 	color: #EE1C25;
 }
 .btn_text{
-	font-family: 'Nunito', light;
+	font-family: 'Nunito', light, !important;
   font-size: 14px;
 }
 </style>

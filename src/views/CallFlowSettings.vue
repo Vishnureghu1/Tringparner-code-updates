@@ -33,7 +33,9 @@
 												<h2 class="comment_heading mt-1 mb-5 mr-7 ">Configure how incoming calls are redirected between your agents.</h2>
 											</v-col>
 											<v-col cols="6" align="end">
+												<router-link :to="{ name: 'CallPreference'}">
 												<span ><v-icon  class="mt-6 mb-5 mr-7" color="#EE1C25" >mdi-arrow-right</v-icon> </span>
+												</router-link>
 											</v-col>
 										</v-row>
 										<v-divider></v-divider>
@@ -121,7 +123,7 @@
       items: [
         {
           text: 'More',
-          disabled: false,
+          disabled: true,
           to: { name: 'BusinessNumber'},
         },
         {
