@@ -21,7 +21,8 @@
 														<div>
 														<v-row>
 															<v-col cols="12" sm="10">
-																<h3  class="font-weight-light"> <v-icon  class="mr-3" color="red" >mdi-arrow-bottom-right</v-icon> {{ details.callerNumber }}  </h3>
+														
+																<h3  class="font-weight-light"> <v-icon  class="mr-3" color="red" >mdi-arrow-bottom-right</v-icon> +91 {{ details.callerNumber }}    </h3>
 																<br>
 															</v-col>
 															<v-spacer></v-spacer>
@@ -122,6 +123,7 @@
 
 
 <script>
+import firebase from 'firebase';
 import { db } from '@/main.js';
 import moment from 'moment'
 
@@ -198,8 +200,22 @@ import moment from 'moment'
 
   },
 		created() {
-				db.collection('callLogs').where("owneruid" , "==" , "rp7aem0HEVWyYeLZQ4ytSNyjyG02").where("callstatus" , "==" , "Missed").orderBy('dateTime', "desc").onSnapshot((querySnapshot) => {
-					this.realdata = []
+
+			let localStorageUserObj = localStorage.getItem('tpu');
+
+			if (localStorageUserObj) {
+				let parsedUser = JSON.parse(localStorageUserObj);
+				this.userEmail = parsedUser.Email;
+
+				this.userRole = parsedUser.role;
+					firebase.auth().onAuthStateChanged(user => {
+					if (user) {
+
+							this.uid = user.uid;
+							console.log('User Id : '+this.uid);
+							
+				db.collection('callLogs').where("owneruid" , "==" , this.uid).where("callstatus" , "==" , "Missed").orderBy('dateTime', "desc").onSnapshot((querySnapshot) => {
+					
 					if(!querySnapshot.empty) {
 						querySnapshot.forEach(async (doc) => {
 							console.log(doc.id, " => ", doc.data());
@@ -228,7 +244,7 @@ import moment from 'moment'
 								uid = this.calldetails.ClickCount.Uid
 								user_name = this.calldetails.name
 								owneruid = this.calldetails.owneruid
-								console.log('user id ', this.click_details.user_name)
+								// console.log('user id ', this.click_details.user_name)
 									if(uid == owneruid && this.calldetails.callstatus == 'Missed' ) {
 										this.called_name = 'You'
 									}
@@ -244,9 +260,10 @@ import moment from 'moment'
 									owneruid = ''
 									this.called_name = ''
 								}
-								var calledNumber = this.calldetails.callerNumber.slice(0, 5) + ' ' + this.calldetails.callerNumber.slice(5, 7) + ' ' + this.calldetails.callerNumber.slice(7, 11)
-								var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
-								this.detail = Object.assign({}, this.detail, { callstatus : this.calldetails.callstatus , name: this.calldetails.name[0] ,dateTime : call_time , conversationduration : this.calldetails.conversationduration ,callerNumber : calledNumber, uniqueid : this.calldetails.uniqueid , Note : note , source : this.calldetails.source , virtualnumber : virtualnumber, called_name : this.called_name , recordingUrl : this.calldetails.recordingurl })
+				var calledNumber = this.calldetails.callerNumber.slice(0, 5) + ' ' + this.calldetails.callerNumber.slice(5, 7) + ' ' + this.calldetails.callerNumber.slice(7, 11)
+							var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
+							this.detail = Object.assign({}, this.detail, { callstatus : this.calldetails.callstatus , name: this.calldetails.name[0] ,dateTime : call_time , conversationduration : this.calldetails.conversationduration ,callerNumber : calledNumber, uniqueid : this.calldetails.uniqueid , Note : note , source : this.calldetails.source , virtualnumber : virtualnumber, called_name : this.called_name , recordingUrl : this.calldetails.recordingurl })
+							this.realdata.push(this.detail)
 							console.log('snap calllog ', this.realdata)
 							})
 					}
@@ -254,7 +271,18 @@ import moment from 'moment'
 						//alert('no calls')									
 					}
 				})
+
+
+
+					}
+				
+		})
+
+  }
+
+			
 		}
+	
   }
 </script>
 

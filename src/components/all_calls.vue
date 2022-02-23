@@ -238,6 +238,7 @@
 
 
 <script>
+import firebase from 'firebase'
 import { db } from '@/main.js';
 import moment from 'moment'
 import { Icon } from '@iconify/vue2';
@@ -276,13 +277,17 @@ import { Icon } from '@iconify/vue2';
 			menu2: false,
 			menu1: false,
 			radio : 'radio-1', 
+			Reminder:'',
 			reminderMessage : '',
 			date : '',
 			time : '',
 
     }),
 		methods: {
-      sendMessage (unique_id, message) {
+
+      sendMessage (unique_id,message) {
+	
+		console.log(unique_id);
 				const user_data = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',
 					method: 'POST',
@@ -352,7 +357,23 @@ import { Icon } from '@iconify/vue2';
 
   },
 		created() {
-				db.collection('callLogs').where("owneruid" , "==" , "rp7aem0HEVWyYeLZQ4ytSNyjyG02").orderBy('dateTime', "desc").onSnapshot((querySnapshot) => {
+
+					let localStorageUserObj = localStorage.getItem('tpu');
+
+			if (localStorageUserObj) {
+				let parsedUser = JSON.parse(localStorageUserObj);
+				this.userEmail = parsedUser.Email;
+
+				this.userRole = parsedUser.role;
+					firebase.auth().onAuthStateChanged(user => {
+					if (user) {
+
+							this.uid = user.uid;
+							console.log('User Id : '+this.uid);
+							this.sendMessage(this.uid);
+
+// LcbxlNgkdCZRY8sfkBbmd7FYcXM2
+	db.collection('callLogs').where("owneruid" , "==" , this.uid).orderBy('dateTime', "desc").onSnapshot((querySnapshot) => {
 					this.realdata = []
 					if(!querySnapshot.empty) {
 						querySnapshot.forEach(async (doc) => {
@@ -385,7 +406,18 @@ import { Icon } from '@iconify/vue2';
 						//alert('no calls')									
 					}
 				})
+
+
+
+					}
+				
+		})
+
+  }
+
+			
 		}
+	
   }
 </script>
 
@@ -397,8 +429,6 @@ import { Icon } from '@iconify/vue2';
 }
 .v-expansion-panel {
 	border-bottom: 1px solid #ddd;
-	border-bottom-spacing : 15px;
-	: 100px;
 }
 .v-expansion-panel-header {
 	line-height: 0.9 !important;

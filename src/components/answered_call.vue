@@ -88,6 +88,7 @@
 
 
 <script>
+import firebase from 'firebase';
 import { db } from '@/main.js';
 import moment from 'moment'
 
@@ -164,7 +165,19 @@ import moment from 'moment'
 
   },
 		created() {
-				db.collection('callLogs').where("owneruid" , "==" , "rp7aem0HEVWyYeLZQ4ytSNyjyG02").where("callstatus" , "==" , "Answered").orderBy('dateTime', "desc").onSnapshot((querySnapshot) => {
+				let localStorageUserObj = localStorage.getItem('tpu');
+
+			if (localStorageUserObj) {
+				let parsedUser = JSON.parse(localStorageUserObj);
+				this.userEmail = parsedUser.Email;
+
+				this.userRole = parsedUser.role;
+					firebase.auth().onAuthStateChanged(user => {
+					if (user) {
+
+							this.uid = user.uid;
+							console.log('User Id : '+this.uid);
+				db.collection('callLogs').where("owneruid" , "==" , this.uid).where("callstatus" , "==" , "Answered").orderBy('dateTime', "desc").onSnapshot((querySnapshot) => {
 					this.realdata = []
 					if(!querySnapshot.empty) {
 						querySnapshot.forEach(async (doc) => {
@@ -189,7 +202,18 @@ import moment from 'moment'
 						//alert('no calls')									
 					}
 				})
+
+
+
+					}
+				
+		})
+
+  }
+
+			
 		}
+	
   }
 </script>
 

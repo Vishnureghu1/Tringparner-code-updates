@@ -136,6 +136,7 @@
 import firebase from 'firebase'
 	import { Icon } from '@iconify/vue2';
 	import { db } from '@/main.js';
+	import moment from 'moment'
 	
 	export default {
 
@@ -203,6 +204,7 @@ import firebase from 'firebase'
 							db.collection('callLogs')
 							.where("callstatus", "==", "Missed")
 							.where("owneruid", "==", this.uid )
+							.orderBy('dateTime', "asc")
 							// .where("date", "==", new Date().getTime() )
 							.get()
 							.then((querySnapshot) => {
@@ -211,11 +213,19 @@ import firebase from 'firebase'
 					agentData.forEach((agentData) => {	
 						var agentID = agentData.AgentUid;
 						var agentName = agentData.Name;
+						var callerNumber = '+91 '+logs.data().callerNumber.slice(0, 5) + ' ' + logs.data().callerNumber.slice(5, 7) + ' ' + logs.data().callerNumber.slice(7, 11);
+							console.log(callerNumber);
+
+							var timestamp = logs.data().dateTime
+							var date = new Date(timestamp);
+						var call_time = moment(date).format('hh:mm a')
+							call_time = moment(date).fromNow();
+
 							this.agentPanel.indexOf(agentID) === -1 ? this.agentPanel.push(agentID) :  this.missedCallPanel.push({
 								id: this.nextTodoId++,
-								callTime: logs.data().dateTime,
-								callerNumber:logs.data().callerNumber,
-								ringduration:logs.data().ringduration,
+								callTime: call_time,
+								callerNumber:callerNumber,
+								ringduration:'00:'+logs.data().ringduration,
 								agentId:agentID,
 								agentName:agentName,
 						});
@@ -246,6 +256,7 @@ import firebase from 'firebase'
 							.where("callstatus", "==", "Answered")
 							.where("owneruid", "==", this.uid )
 							// .where("date", "==", new Date().getTime() )
+							.orderBy('dateTime', "asc")
 							.get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
@@ -256,11 +267,19 @@ import firebase from 'firebase'
 						
 						var agentID = agentData.AgentUid;
 						var agentName = agentData.Name;
+							var callerNumber = '+91 '+logs.data().callerNumber.slice(0, 5) + ' ' + logs.data().callerNumber.slice(5, 7) + ' ' + logs.data().callerNumber.slice(7, 11);
+							console.log(callerNumber);
+							// var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
+var timestamp = logs.data().dateTime
+							var date = new Date(timestamp);
+						var call_time = moment(date).format('hh:mm a')
+							call_time = moment(date).fromNow();
+
 						this.skippedCallPanel.push({
 				
-								callTime: logs.data().dateTime,
-								callerNumber:logs.data().callerNumber,
-								ringduration:logs.data().ringduration,
+								callTime: call_time,
+								callerNumber:callerNumber,
+								ringduration:'00:'+logs.data().ringduration,
 								agentId:agentID,
 								agentName:agentName,
 						});
@@ -287,21 +306,24 @@ import firebase from 'firebase'
 					if (user) {
 
 						this.uid = user.uid;
-db.collection('Reminders')
-         .where('OwnerUid', '==',  this.uid)
+			db.collection('Reminders')
+        .where('OwnerUid', '==',  this.uid)
         .get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
 										console.log(logs.data());
 							
 				
-
-						
+var callerNumber = '+91 '+logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);
+var timestamp = logs.data().ReminderAt
+							var date = new Date(timestamp);
+						var call_time = moment(date).format('hh:mm a')
+							call_time = moment(date).fromNow();
 
 						this.remiderCalls.push({
 				
-								ReminderAt: logs.data().ReminderAt,
-								callerNumber: logs.data().Number,
+								ReminderAt: call_time,
+								callerNumber: callerNumber,
 	
 						
 						});
