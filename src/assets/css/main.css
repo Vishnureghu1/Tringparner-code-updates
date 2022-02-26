@@ -141,3 +141,15 @@ body {
     opacity: 1;
     cursor: pointer;
 }
+
+.calls_list h3 {
+    font-family: 'Nunito', bold;
+    font-size: 16px;
+    color: #3B3B3B;
+}
+
+.date_time {
+    font-family: 'Nunito', bold;
+    font-size: 14px;
+    color: #808080;
+}

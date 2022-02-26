@@ -15,13 +15,13 @@
 												<span ><v-icon  class="mt-6 mb-5 mr-4 " color="black" >mdi-magnify</v-icon> <v-icon  class="mt-6 mb-5 mr-7" color="black" >mdi-filter-variant</v-icon> </span>
 											</v-col>
 										</v-row>
-											<v-expansion-panels accordion flat >
+											<v-expansion-panels accordion flat>
 												<v-expansion-panel v-for="(details) in realdata" :key="details.text">
 													<v-expansion-panel-header expand-icon="">
 														<div>
-														<v-row>
+														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
-																<h3  class="font-weight-light"> <v-icon  class="mr-3" color="green" >mdi-arrow-bottom-left</v-icon> {{ details.callerNumber }}  </h3>
+																<h3  class="font-weight-light"> <v-icon  class="mr-3" color="green" >mdi-arrow-bottom-left</v-icon> +91 {{ details.callerNumber }}  </h3>
 																<br>
 															</v-col>
 															<v-spacer></v-spacer>
@@ -39,7 +39,7 @@
 
 															</v-col>
 														</v-row>
-															<div class="ml-10 font-weight-thin">{{details.dateTime}}, {{details.name}} </div> 
+															<div class="ml-10 font-weight-thin date_time">{{details.dateTime}}, {{details.name}} </div> 
 															<div class="ml-10 mt-3 font-weight-thin" v-for="getNotes in details.Note " :key="getNotes.text" >
 																<div> <span v-if="getNotes.Note != ''" class="mdi mdi-note grey--text"> </span> {{ getNotes.Note }}</div>
 															</div>
@@ -186,10 +186,29 @@ import moment from 'moment'
 							this.calldetails = user_details
 							var timestamp = this.calldetails.dateTime
 							var date = new Date(timestamp);
-							console.log("full time",date)
+							// console.log("full time",date)
+							// var call_time = moment(date).format('hh:mm a')
+							// call_time = moment(date).fromNow();
+							// console.log("converted time",call_time)
+
+							var myCurrentDate=new Date();
+							var missedTresholdDate=new Date(myCurrentDate);
+							missedTresholdDate.setDate(missedTresholdDate.getDate()- 2	);//2 days before
+							console.log(missedTresholdDate);
+
+							console.log(timestamp); //missed call date
+							console.log(missedTresholdDate.getTime()); //addon date
+							console.log(myCurrentDate.getTime()); //today's date
+
+							if(timestamp <= missedTresholdDate.getTime()){
+							call_time = moment(date).format('D MMM Y hh:mm a')
+							
+							}else{
+							
 							var call_time = moment(date).format('hh:mm a')
 							call_time = moment(date).fromNow();
-							console.log("converted time",call_time)
+
+							}
 							var note = ''
 							var calledNumber = this.calldetails.callerNumber.slice(0, 5) + ' ' + this.calldetails.callerNumber.slice(5, 7) + ' ' + this.calldetails.callerNumber.slice(7, 11)
 							var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)

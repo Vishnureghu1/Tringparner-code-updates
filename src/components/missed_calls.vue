@@ -19,7 +19,7 @@
 												<v-expansion-panel v-for="(details) in realdata" :key="details.text">
 													<v-expansion-panel-header expand-icon="">
 														<div>
-														<v-row>
+														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
 														
 																<h3  class="font-weight-light"> <v-icon  class="mr-3" color="red" >mdi-arrow-bottom-right</v-icon> +91 {{ details.callerNumber }}    </h3>
@@ -40,7 +40,7 @@
 
 															</v-col>
 														</v-row>
-															<div class="ml-10 font-weight-thin">{{details.dateTime}}, {{details.name}} </div> 
+															<div class="ml-10 font-weight-thin date_time">{{details.dateTime}}, {{details.name}} </div> 
 															<div class="ml-10 mt-3 font-weight-thin" v-for="getNotes in details.Note " :key="getNotes.text" >
 																<div> <span v-if="getNotes.Note != ''" class="mdi mdi-note grey--text"> </span> {{ getNotes.Note }}</div>
 															</div>
@@ -224,11 +224,37 @@ import moment from 'moment'
 							var timestamp = this.calldetails.dateTime
 							var date = new Date(timestamp);
 							console.log("full time",date)
+							// var call_time = moment(date).format('hh:mm a')
+							// call_time = moment(date).fromNow();
+							// console.log("converted time",call_time)
+
+
+							var myCurrentDate=new Date();
+							var missedTresholdDate=new Date(myCurrentDate);
+							missedTresholdDate.setDate(missedTresholdDate.getDate()- 2	);//2 days before
+							console.log(missedTresholdDate);
+
+							console.log(timestamp); //missed call date
+							console.log(missedTresholdDate.getTime()); //addon date
+							console.log(myCurrentDate.getTime()); //today's date
+
+							if(timestamp <= missedTresholdDate.getTime()){
+							call_time = moment(date).format('D MMM Y hh:mm a')
+							
+							}else{
+							
 							var call_time = moment(date).format('hh:mm a')
 							call_time = moment(date).fromNow();
-							console.log("converted time",call_time)
+
+							}
+
+
+
+
+
+
+
 							var note = ''
-							
 							var uid = ''
 							var user_name = ''
 							var owneruid = ''

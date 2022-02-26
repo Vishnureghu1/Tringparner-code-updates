@@ -15,12 +15,13 @@
 												<span ><v-icon  class="mt-6 mb-5 mr-4 " color="black" >mdi-magnify</v-icon> <v-icon  class="mt-6 mb-5 mr-7" color="black" >mdi-filter-variant</v-icon> </span>
 											</v-col>
 										</v-row>
+										<!-- {{realdata}} -->
 											<v-expansion-panels accordion flat >
 												<v-expansion-panel v-for="(details) in realdata" :key="details.text">
-													<!-- {{details}} -->
+													
 													<v-expansion-panel-header expand-icon="">
 														<div>
-														<v-row>
+														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
 																<h3  class="font-weight-light"> <v-icon v-if="details.callstatus == 'Answered'" class="mr-3" color="green" >mdi-arrow-bottom-left</v-icon> <Icon v-else class="mr-3"  :inline="true" color="red" icon="mdi:call-missed" width="24" height="24"/>+91 {{ details.callerNumber }}  </h3>
 																<br>
@@ -33,14 +34,15 @@
 																	</template>
 																	<v-list>
 																		<v-list-item v-for="(item, index) in items" :key="index">
-																			<v-list-item-title :class="item.color">{{ item.title }}</v-list-item-title>
+																			<v-list-item-title :class="item.color" :link="items.url">{{ item.title }}</v-list-item-title>
 																		</v-list-item>
 																	</v-list>
 																</v-menu>
 
 															</v-col>
 														</v-row>
-															<div class="ml-10 font-weight-thin">{{details.dateTime}}, {{details.name}} </div> 
+															<div class="ml-10 font-weight-thin date_time">{{details.dateTime}}, {{details.name}} </div> 
+															<!-- {{detail}} -->
 															<div class="ml-10 mt-3 font-weight-thin" v-for="getNotes in details.Note " :key="getNotes.text" >
 																<div> <span v-if="getNotes.Note != ''" class="mdi mdi-note grey--text"> </span> {{ getNotes.Note }}</div>
 															</div>
@@ -48,7 +50,7 @@
 													</v-expansion-panel-header>
 													<v-expansion-panel-content>
 														<div >
-														<v-row >
+														<v-row>
 																<v-col cols="12" sm="6">
 																	<div class="ml-10">
 																		<h6  class="font-weight-thin"> Source </h6>
@@ -64,8 +66,10 @@
 																		</div>
 																	</div>
 																</v-col>
-																<v-col cols="12" sm="6">
-																	<audio controls>
+																<!-- {{details}} -->
+																<v-col cols="12" sm="6" v-if="details.callstatus!='Missed'">
+																
+																	<audio controls >
 																		<source src="details.recordingUrl" type="audio/mpeg">
 																		Your browser does not support the audio tag.
 																	</audio>
@@ -250,10 +254,10 @@ import { Icon } from '@iconify/vue2';
 		},
     data: () => ({
 			items: [
-        { title: 'Add Note' ,color: 'black--text'},
-        { title: 'Add Reminder',color: 'black--text' },
-        { title: 'Call This Number',color: 'black--text' },
-        { title: 'Block This Number',color: 'red--text' },
+        { title: 'Add Note' ,color: 'black--text', url: 'add_note'},
+        { title: 'Add Reminder',color: 'black--text' , url: 'add_number'},
+        { title: 'Call This Number',color: 'black--text' , url: 'call_this_number'},
+        { title: 'Block This Number',color: 'red--text' , url: 'block_number'},
       ],
       uid : '',
 			phno : '',
