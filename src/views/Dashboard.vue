@@ -311,11 +311,12 @@ var timestamp = logs.data().dateTime
 				this.userRole = parsedUser.role;
 				
 				firebase.auth().onAuthStateChanged(user => {
-					if (user) {
+					if (user && this.userRole=='OWNER') {
 
 						this.uid = user.uid;
 			db.collection('Reminders')
         .where('OwnerUid', '==',  this.uid)
+		// .where('ReminderAt',"==", new Date().getTime())
         .get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
@@ -339,35 +340,47 @@ var timestamp = logs.data().ReminderAt
 					}).catch((error) => {
 						console.log("Error getting logs: ", error);
 					})
-				}})
+				}else{
+
+
+						this.uid = user.uid;
+			db.collection('Reminders')
+        .where('AgentUid', '==',  this.uid)
+			// .where('ReminderAt',"==", new Date().getTime())
+        .get()
+							.then((querySnapshot) => {
+									querySnapshot.forEach((logs) => {
+										// console.log(logs.data());
+							
+				
+var callerNumber = '+91 '+logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);
+var timestamp = logs.data().ReminderAt
+							var date = new Date(timestamp);
+						var call_time = moment(date).format('hh:mm a')
+							call_time = moment(date).fromNow();
+
+						this.remiderCalls.push({
+				
+								ReminderAt: call_time,
+								callerNumber: callerNumber,
+	
+						
+						});
+						})
+					}).catch((error) => {
+						console.log("Error getting logs: ", error);
+					})
+
+
+
+				}
+				
+				
+				
+				})
 			}
 		}
 		}
 	}
   </script>
 
-<style scoped>
-.page_title {
-	/*font-family: 'Lato', Bold;*/
-  font-size: 23px 
-}
-.heading {
-	/*font-family: 'lato', Bold;*/
-  font-size: 16px 
-}
-.name_heading {
-	/*font-family: 'Nunito', bold;*/
-  font-size: 14px 	
-}
-.number_heading {
-	/*font-family: 'Nunito', bold;*/
-  font-size: 16px; 	
-  color: #3B3B3B;
-}
-.comment_heading {
-	/*font-family: 'Nunito', Light;*/
-  font-size: 10px;
-  color: #808080;
-}
-
-</style>

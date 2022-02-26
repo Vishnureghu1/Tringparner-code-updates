@@ -17,6 +17,7 @@
 										</v-row>
 											<v-expansion-panels accordion flat >
 												<v-expansion-panel v-for="(details) in realdata" :key="details.text">
+													<!-- {{details}} -->
 													<v-expansion-panel-header expand-icon="">
 														<div>
 														<v-row>
@@ -383,9 +384,28 @@ import { Icon } from '@iconify/vue2';
 							var timestamp = this.calldetails.dateTime
 							var date = new Date(timestamp);
 							console.log("full time",date)
+							console.log("Time: ",date.getTime())
+							
+			
+							var myCurrentDate=new Date();
+							var missedTresholdDate=new Date(myCurrentDate);
+							missedTresholdDate.setDate(missedTresholdDate.getDate()- 2	);//2 days before
+							console.log(missedTresholdDate);
+
+							console.log(timestamp); //missed call date
+							console.log(missedTresholdDate.getTime()); //addon date
+							console.log(myCurrentDate.getTime()); //today's date
+
+							if(timestamp <= missedTresholdDate.getTime()){
+							call_time = moment(date).format('D MMM Y hh:mm a')
+							
+							}else{
+							
 							var call_time = moment(date).format('hh:mm a')
 							call_time = moment(date).fromNow();
-							console.log("converted time",call_time)
+
+							}
+
 							var note = ''
 							if(this.calldetails.Notes) {
 								note = this.calldetails.Notes
