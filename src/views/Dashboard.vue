@@ -13,8 +13,10 @@
 												<h2 class="page_title mt-6 mb-5">Dashboard</h2>
 											</v-col>
 											<v-col cols="12" sm="2" align="end">
-												<span ><v-icon  class="mt-6 mb-5 mr-7" color="black" >mdi-menu</v-icon> </span>
+												<span ><v-icon  class="mt-6 mb-5 mr-7" color="black" >mdi-filter-variant</v-icon> </span>
 											</v-col>
+
+											
 										</v-row>
 										
 
@@ -22,22 +24,20 @@
 											<v-col cols="6">
 												<h4 class="heading mt-4 mb-5"> 
 													<Icon class="mr-3" :inline="true" color="red" icon="mdi:call-missed" width="24" height="24">	</Icon>
-														Today's Missed Calls
+														Today's Missed Open Calls
 												</h4>
-
 
 
 												<v-expansion-panels accordion flat  v-model="missedCallPanel">
 
-	
-													<v-expansion-panel v-for="(agentId, index) in missedCalls" :key="index" >
+											<v-expansion-panel v-for="(agentId, index) in missedCalls" :key="index" >
 														<v-expansion-panel-header >
 															<div>
-															
+														
 																<v-row no-gutters>
 																		
 																	<v-col cols="2" flex >
-																		<h4 class="name_heading font-weight-light mt-2"> {{ agentId }}</h4>
+																		<h4 class="name_heading font-weight-light mt-2">{{getAgentName(agentId)}}</h4>
 																		<br>
 																	</v-col>
 																	<v-spacer></v-spacer>
@@ -61,34 +61,9 @@
 													</v-expansion-panel>
 												</v-expansion-panels>
 
-
-											
-											</v-col>
-
-										
-											<v-col cols="6" align="center">
-											
-												<h4 class="heading"><v-icon class="mt-4 mb-5 mr-3" color="black">mdi-alarm</v-icon> Upcoming Reminders </h4>
-												<v-row>
-													<!-- {{remiderCalls}} -->
-													<v-col cols="12" align="center">
-														<div v-for="(reminder, index) in remiderCalls" :key="index" class="mb-3 mt-5">
-															<h4 class="number_heading font-weight-light mr-15">{{reminder.callerNumber}}</h4>
-															<div class="mr-16">
-																<h5 class="comment_heading font-weight-light mr-16 mt-1" >{{reminder.ReminderAt}}</h5>
-															</div>
-														</div>
-													</v-col>
-												</v-row>
-											</v-col>
-										</v-row>
-										<v-row>
-											<v-col cols="6">
-												
-												<h4 class="heading  mb-5"> <v-icon color="black" class="mr-3">mdi-call-split</v-icon> Team Skipped Calls</h4>
+<h4 class="heading  mb-5 mt-5"> <v-icon color="black" class="mr-3">mdi-call-split</v-icon> Team Skipped Calls</h4>
 											<v-expansion-panels accordion flat  v-model="skippedCallPanel" >
 
-	
 													<v-expansion-panel v-for="(agentId, index) in skippedCalls" :key="index" >
 														<v-expansion-panel-header >
 															<div>
@@ -96,7 +71,7 @@
 																<v-row no-gutters>
 																		
 																	<v-col cols="2" flex >
-																		<h4 class="name_heading font-weight-light mt-2"> {{ agentId }}</h4>
+																		<h4 class="name_heading font-weight-light mt-2">{{getAgentName(agentId)}}</h4>
 																		<br>
 																	</v-col>
 																	<v-spacer></v-spacer>
@@ -119,8 +94,27 @@
 																</v-expansion-panel-content>
 													</v-expansion-panel>
 												</v-expansion-panels>
+											
 											</v-col>
+
+																			<v-col cols="6" align="center">
+											
+<h4 class="heading"><v-icon class="mt-4 mb-5 mr-3" color="black">mdi-alarm</v-icon> Upcoming Reminders </h4>
+<v-row>
+    <!-- {{remiderCalls}} -->
+    <v-col cols="12" align="center">
+        <div v-for="(reminder, index) in remiderCalls" :key="index" class="mb-3 mt-5">
+            <h4 class="number_heading font-weight-light mr-15">{{reminder.callerNumber}}</h4>
+            <div class="mr-16">
+                <h5 class="comment_heading font-weight-light mr-16 mt-1" >{{reminder.ReminderAt}}</h5>
+            </div>
+        </div>
+    </v-col>
+</v-row>
+</v-col>	
+										
 										</v-row>
+									
 									</div>
 								</v-col>
 							</v-row>
@@ -153,6 +147,7 @@ import firebase from 'firebase'
 			missedCallPanel:[],
 			skippedCallPanel: [],
 			remiderCalls:[],
+			agentNames: {}
 
 		}),
 		
@@ -185,7 +180,12 @@ import firebase from 'firebase'
         return this.skippedCallPanel
             .filter(skipped => skipped.agentId === agentId);
     },
-
+	//get agent name
+	getAgentName(agentId) {
+            var valObj = this.agentNames[agentId];
+            return valObj;
+			
+        },
 
 		async GetMissedCall(){
 			
@@ -214,14 +214,19 @@ import firebase from 'firebase'
 						var agentID = agentData.AgentUid;
 						var agentName = agentData.Name;
 						var callerNumber = '+91 '+logs.data().callerNumber.slice(0, 5) + ' ' + logs.data().callerNumber.slice(5, 7) + ' ' + logs.data().callerNumber.slice(7, 11);
-							console.log(callerNumber);
+							// console.log(callerNumber);
 
 							var timestamp = logs.data().dateTime
 							var date = new Date(timestamp);
 						var call_time = moment(date).format('hh:mm a')
 							call_time = moment(date).fromNow();
+						// 
+if(agentName!=''){
 
-							this.agentPanel.indexOf(agentID) === -1 ? this.agentPanel.push(agentID) :  this.missedCallPanel.push({
+
+		
+						// this.agentPanel.push(agentID)
+							this.agentPanel.indexOf(agentID) === -1 ?  this.agentPanel.push(agentID)  :  this.missedCallPanel.push({
 								id: this.nextTodoId++,
 								callTime: call_time,
 								callerNumber:callerNumber,
@@ -229,11 +234,14 @@ import firebase from 'firebase'
 								agentId:agentID,
 								agentName:agentName,
 						});
+}
+						this.$set(this.agentNames, agentID, agentName)
 						});
 						})
 					}).catch((error) => {
 						console.log("Error getting logs: ", error);
 					})
+					
 				}})
 			}
 		},
@@ -268,7 +276,7 @@ import firebase from 'firebase'
 						var agentID = agentData.AgentUid;
 						var agentName = agentData.Name;
 							var callerNumber = '+91 '+logs.data().callerNumber.slice(0, 5) + ' ' + logs.data().callerNumber.slice(5, 7) + ' ' + logs.data().callerNumber.slice(7, 11);
-							console.log(callerNumber);
+							// console.log(callerNumber);
 							// var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
 var timestamp = logs.data().dateTime
 							var date = new Date(timestamp);
@@ -311,7 +319,7 @@ var timestamp = logs.data().dateTime
         .get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
-										console.log(logs.data());
+										// console.log(logs.data());
 							
 				
 var callerNumber = '+91 '+logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);

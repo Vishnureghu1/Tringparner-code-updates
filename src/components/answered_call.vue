@@ -12,7 +12,7 @@
 												<h2 class="mt-6 mb-5">Answered Call</h2>
 											</v-col>
 											<v-col cols="12" sm="2" align="end">
-												<span ><v-icon  class="mt-6 mb-5 mr-4 " color="black" >mdi-magnify</v-icon> <v-icon  class="mt-6 mb-5 mr-7" color="black" >mdi-menu</v-icon> </span>
+												<span ><v-icon  class="mt-6 mb-5 mr-4 " color="black" >mdi-magnify</v-icon> <v-icon  class="mt-6 mb-5 mr-7" color="black" >mdi-filter-variant</v-icon> </span>
 											</v-col>
 										</v-row>
 											<v-expansion-panels accordion flat >
