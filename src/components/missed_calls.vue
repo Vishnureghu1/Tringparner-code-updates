@@ -133,7 +133,7 @@ import moment from 'moment'
 			items: [
         { title: 'Add Note' ,color: 'black--text'},
         { title: 'Add Reminder',color: 'black--text' },
-        { title: 'Call This Number',color: 'black--text' },
+        // { title: 'Call This Number',color: 'black--text' },
         { title: 'Block This Number',color: 'red--text' },
       ],
       uid : '',

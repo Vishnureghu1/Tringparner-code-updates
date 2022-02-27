@@ -256,7 +256,7 @@ import { Icon } from '@iconify/vue2';
 			items: [
         { title: 'Add Note' ,color: 'black--text', url: 'add_note'},
         { title: 'Add Reminder',color: 'black--text' , url: 'add_number'},
-        { title: 'Call This Number',color: 'black--text' , url: 'call_this_number'},
+        // { title: 'Call This Number',color: 'black--text' , url: 'call_this_number'},
         { title: 'Block This Number',color: 'red--text' , url: 'block_number'},
       ],
       uid : '',
