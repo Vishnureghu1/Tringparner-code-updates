@@ -23,7 +23,7 @@
 														<div>
 														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
-																<h3  class="font-weight-light"> <v-icon v-if="details.callstatus == 'Answered'" class="mr-3" color="green" >mdi-arrow-bottom-left</v-icon> <Icon v-else class="mr-3"  :inline="true" color="red" icon="mdi:call-missed" width="24" height="24"/>+91 {{ details.callerNumber }}  </h3>
+																<h3  class="font-weight-light"> <v-icon v-if="details.callstatus == 'Answered'" class="mr-3" color="green" >mdi-arrow-bottom-left</v-icon> <Icon v-else class="mr-3 icon_adjustment"   color="red" icon="mdi:call-missed" width="24" height="24"/>+91 {{ details.callerNumber }}  </h3>
 																<br>
 															</v-col>
 															<v-spacer></v-spacer>

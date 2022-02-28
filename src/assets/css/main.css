@@ -153,3 +153,9 @@ body {
     font-size: 14px;
     color: #808080;
 }
+
+.icon_adjustment {
+    display: inline-block;
+    float: left;
+    margin-top: -5px;
+}

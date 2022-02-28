@@ -16,13 +16,13 @@
 											</v-col>
 										</v-row>
 											<v-expansion-panels accordion flat >
-												<v-expansion-panel v-for="(details) in realdata" :key="details.text">
+												<v-expansion-panel v-for="(details) in realdata" :key="details.text" v-model="openedPanel">
 													<v-expansion-panel-header expand-icon="">
 														<div>
 														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
 														
-																<h3  class="font-weight-light"> <v-icon  class="mr-3" color="red" >mdi-arrow-bottom-right</v-icon> +91 {{ details.callerNumber }}    </h3>
+																<h3  class="font-weight-light"> <Icon class="mr-3 icon_adjustment"  :inline="true" color="red" icon="mdi:call-missed" width="24" height="24"/> +91 {{ details.callerNumber }}    </h3>
 																<br>
 															</v-col>
 															<v-spacer></v-spacer>
@@ -65,12 +65,7 @@
 																		</div>
 																	</div>
 																</v-col>
-																<v-col cols="12" sm="6">
-																	<audio controls>
-																		<source src="details.recordingUrl" type="audio/mpeg">
-																		Your browser does not support the audio tag.
-																	</audio>
-																</v-col>
+														
 														</v-row>
 														</div>
 
@@ -126,9 +121,11 @@
 import firebase from 'firebase';
 import { db } from '@/main.js';
 import moment from 'moment'
-
+import { Icon } from '@iconify/vue2';
   export default {
-
+components: {
+			Icon,
+		},
     data: () => ({
 			items: [
         { title: 'Add Note' ,color: 'black--text'},
@@ -155,9 +152,17 @@ import moment from 'moment'
 			password: 'Password',
       show: false,
       marker: true,
+    openedPanel: null,
 
     }),
 		methods: {
+
+closeAllPanels () {
+    this.openedPanel = null
+  },
+  openPanel (index) {
+    this.openedPanel = index
+  },
       sendMessage (unique_id, message) {
 				const user_data = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',
