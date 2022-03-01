@@ -159,3 +159,56 @@ body {
     float: left;
     margin-top: -5px;
 }
+
+.billing_information .v-card--reveal {
+    bottom: 0;
+    opacity: 1 !important;
+    position: absolute;
+    width: 100%;
+}
+
+.billing_information .v-card {
+    font-family: 'Nunito', sans-serif;
+}
+
+.membership_heading {
+    font-weight: 700;
+    font-size: 14x;
+    color: #3B3B3B;
+}
+
+.membership_subheading {
+    font-weight: 500;
+    font-size: 12x;
+    color: #3B3B3B;
+}
+
+.membership_price {
+    color: #3B3B3B;
+    font-size: 40px;
+    display: inline-block;
+    width: 100%;
+    margin: 10px 0 0;
+}
+
+.currency_symbol {
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.redtext {
+    font-size: 12x;
+    color: #EE1C25;
+}
+
+.membership_details {
+    font-size: 14px;
+}
+
+.red_button {
+    background-color: #EE1C25;
+}
+
+.red_button_outline {
+    border: 1px solid #EE1C25;
+}
