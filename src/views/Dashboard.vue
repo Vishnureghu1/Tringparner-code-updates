@@ -1,7 +1,9 @@
 <template>
 	<v-app >
+		
 		<div>
 			<v-container  fluid>
+
 				<v-layout >
 					<v-flex xs12 sm12 md12>
 							<v-row no-gutters>
@@ -99,14 +101,14 @@
 
 																			<v-col cols="6" align="center">
 											
-<h4 class="heading"><v-icon class="mt-4 mb-5 mr-3" color="black">mdi-alarm</v-icon> Upcoming Reminders </h4>
+<h4 class="heading"><v-icon class="mt-4 mb-5 mr-3" color="black">mdi-alarm</v-icon> Today's Reminders </h4>
 <v-row>
     <!-- {{remiderCalls}} -->
-    <v-col cols="12" align="center">
-        <div v-for="(reminder, index) in remiderCalls" :key="index" class="mb-3 mt-5">
-            <h4 class="number_heading font-weight-light mr-15">{{reminder.callerNumber}}</h4>
+    <v-col cols="12" align="left">
+        <div v-for="(reminder, index) in remiderCalls" :key="index" class="mb-3 mt-5 pl-5 ml-5">
+            <h4 class="number_heading font-weight-light mr-15">Agent name</h4>
             <div class="mr-16">
-                <h5 class="comment_heading font-weight-light mr-16 mt-1" >{{reminder.ReminderAt}}</h5>
+                <h5 class="comment_heading font-weight-light mr-16 mt-1" >{{reminder.callerNumber}} at {{reminder.ReminderAt}} </h5>
             </div>
         </div>
     </v-col>

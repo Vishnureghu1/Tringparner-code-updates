@@ -5,6 +5,7 @@
 			<v-row justify="center">
 				<v-col sm="12" md="4">
 					<v-card class="mx-auto" height="100%">
+						
 						<v-overlay :value="overlay"></v-overlay>
 						<v-row no-gutters>
 							<v-col cols="12">

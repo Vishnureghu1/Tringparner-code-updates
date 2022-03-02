@@ -1,5 +1,6 @@
 <template>
-    <v-app>
+  <v-app>
+
         <v-navigation-drawer v-if="['login', 'Login'].indexOf(this.$route.name) != 0 && ['ChooseNumbers', 'ChooseNumbers'].indexOf(this.$route.name) != 0 && ['SelectPlan', 'SelectPlan'].indexOf(this.$route.name) != 0 && ['Billing', 'Billing'].indexOf(this.$route.name) != 0 && ['Review', 'Review'].indexOf(this.$route.name) != 0" v-model="drawer" clipped app class="white"  width="280px" permanent>
             <!-- <v-list flat>
                 <v-list-item active-class="red--text">
@@ -237,10 +238,28 @@
 
                     </div>
                   </v-app-bar>
+                  
         </v-app-bar>
+        
         <v-content>
+          
             <v-row align="center">
               <v-col cols="12">
+                <v-alert
+    prominent
+    type="error"  color="red darken-3
+"
+    >
+      <v-row align="center">
+        <v-col class="grow">
+         <h3>Email Verification</h3>
+         <p>Please verify your email address by clicking on the link we have shared with you on email.</p>
+        </v-col>
+        <v-col class="shrink">
+          <v-btn>Resend Email</v-btn>
+        </v-col>
+      </v-row>
+  </v-alert>
                 <router-view></router-view>
               </v-col>
             </v-row>

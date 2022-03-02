@@ -212,3 +212,258 @@ body {
 .red_button_outline {
     border: 1px solid #EE1C25;
 }
+
+.page-title {
+    text-align: left;
+    /*font: normal normal bold 23px/28px Lato;*/
+    /*font-weight: bold;*/
+    font-size: 23px;
+    line-height: 28px;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+    opacity: 1;
+}
+
+.breadcrumbs {
+    /*font: normal normal bold 10px/12px Lato;*/
+    /*font-weight: bold;*/
+    font-size: 10px;
+    line-height: 12px;
+    text-align: left;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+    opacity: 1;
+}
+
+.breadcrumbs a {
+    color: #c62828;
+}
+
+.font-Nunito {
+    font-family: 'Nunito', bold;
+}
+
+.subheading {
+    font-family: 'Nunito', bold;
+    font-size: 16px;
+    color: #3B3B3B;
+    font-weight: bold;
+}
+
+.heading {
+    /*font-family: 'lato', Bold;*/
+    text-align: left;
+    /*font: normal normal bold 24px/29px Lato;*/
+    font-size: 24px;
+    line-height: 29px;
+    font-weight: bold;
+    font-family: Lato, !important;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+    opacity: 1;
+}
+
+.sub_heading {
+    /*font-family: 'lato', Regular;*/
+    font-size: 16px;
+    line-height: 22px;
+    font-family: Nunito, !important;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+    opacity: 1;
+}
+
+.stepper_active {
+    text-align: left;
+    /* font: normal normal medium 14px/16px Ubuntu; */
+    font-weight: medium;
+    font-size: 14px;
+    line-height: 16px;
+    font-family: Ubuntu, !important;
+    letter-spacing: 0px;
+    color: #EE1C25;
+    opacity: 1;
+}
+
+.stepper_inactive {
+    text-align: left;
+    /* font: normal normal normal 14px/16px Ubuntu; */
+    font-family: Ubuntu, !important;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0px;
+    color: #808080;
+    opacity: 1;
+}
+
+.dashed_border {
+    border: 1px dashed #EE1C25;
+    opacity: 1;
+}
+
+.section_title {
+    text-align: left;
+    /* font: normal normal bold 16px/19px Lato; */
+    font-family: Lato, !important;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+    opacity: 1;
+}
+
+.section_sub_title {
+    text-align: left;
+    font-family: Nunito, !important;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0px;
+    color: #808080;
+    opacity: 1;
+}
+
+.add_agent {
+    /* text-align: left; */
+    text-decoration: underline;
+    font-family: Nunito, !important;
+    font-weight: 16px;
+    line-height: 22px;
+    letter-spacing: 0px;
+    color: #EE1C25;
+    opacity: 1;
+}
+
+.agent_name {
+    text-align: left;
+    font-family: Nunito, !important;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+}
+
+.agent_role {
+    text-align: left;
+    font-family: Nunito, !important;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+}
+
+.agent_number {
+    text-align: left;
+    font-family: Nunito, !important;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+}
+
+.skip_button {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #EE1C25;
+    border-radius: 34px;
+    opacity: 1;
+}
+
+.next_button {
+    background: #EE1C25 0% 0% no-repeat padding-box;
+    border-radius: 34px;
+    opacity: 1;
+}
+
+.number_heading {
+    /*font-family: 'Nunito', bold;*/
+    font-weight: bold;
+    font-size: 16px;
+    color: #3B3B3B;
+}
+
+.comment_heading {
+    /*font-family: 'lato', Regular;*/
+    font-size: 12px;
+    color: #808080;
+}
+
+.link_style {
+    /*font-family: 'lato', Regular;*/
+    font-size: 16px;
+    color: #EE1C25;
+}
+
+.nunito-title {
+    text-align: left;
+    /*font: normal normal bold 16px/22px Nunito;*/
+    /*font-weight: bold;*/
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0px;
+    color: #3B3B3B;
+    opacity: 1;
+}
+
+
+/*red letter square button*/
+
+.red_letter_rnd_button {
+    width: 140px;
+    height: 39px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #EE1C25;
+    border-radius: 34px;
+    opacity: 1;
+    margin-left: 20px;
+    margin-top: 20px;
+    text-align: center;
+    font-family: Nunito, !important;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 19px;
+    letter-spacing: 0px;
+    color: #EE1C25;
+    opacity: 1;
+}
+
+
+/*white letter square button*/
+
+.white_letter_rnd_button {
+    width: 140px;
+    height: 39px;
+    background: #EE1C25 0% 0% no-repeat padding-box;
+    border-radius: 34px;
+    opacity: 1;
+}
+
+
+/*red letter round button*/
+
+.wlr_button {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 34px;
+    color: #FFFFFF !important;
+    background-color: #EE1C25 !important;
+    opacity: 1;
+    width: 140px;
+    height: 39px;
+}
+
+
+/*red letter round button*/
+
+.rlr_button {
+    background: #EE1C25 0% 0% no-repeat padding-box;
+    border-radius: 34px;
+    color: #EE1C25 !important;
+    background-color: #FFFFFF !important;
+    opacity: 1;
+    width: 140px;
+    height: 39px;
+}
