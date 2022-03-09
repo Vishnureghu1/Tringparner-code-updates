@@ -30,6 +30,13 @@
 												</h4>
 
 
+<v-row v-if="!missedCallPanel.length">
+    <v-col cols="12" align="left" class="pl-15">
+		Nothing to show
+		
+	</v-col>
+	</v-row>
+
 												<v-expansion-panels accordion flat  v-model="missedCallPanel">
 
 											<v-expansion-panel v-for="(agentId, index) in missedCalls" :key="index" >
@@ -64,6 +71,12 @@
 												</v-expansion-panels>
 
 <h4 class="heading  mb-5 mt-5"> <v-icon color="black" class="mr-3">mdi-call-split</v-icon> Team Skipped Calls</h4>
+<v-row v-if="!skippedCallPanel.length">
+    <v-col cols="12" align="left" class="pl-15">
+		Nothing to show
+		
+	</v-col>
+	</v-row>
 											<v-expansion-panels accordion flat  v-model="skippedCallPanel" >
 
 													<v-expansion-panel v-for="(agentId, index) in skippedCalls" :key="index" >
@@ -101,18 +114,26 @@
 
 																			<v-col cols="6" align="center">
 											
-<h4 class="heading"><v-icon class="mt-4 mb-5 mr-3" color="black">mdi-alarm</v-icon> Today's Reminders </h4>
-<v-row>
-    <!-- {{remiderCalls}} -->
-    <v-col cols="12" align="left">
+<h4 class="heading"><v-icon class="mt-4 mb-5 mr-3 pl-10" color="black">mdi-alarm</v-icon> Today's Reminders </h4>
+
+<v-row class="" v-if="remiderCalls.length">
+    <v-col cols="12" align="left" class="pl-15">
         <div v-for="(reminder, index) in remiderCalls" :key="index" class="mb-3 mt-5 pl-5 ml-5">
-            <h4 class="number_heading font-weight-light mr-15">Agent name</h4>
+
+            <h4 class="number_heading font-weight-light mr-15">{{reminder.AgentName}}</h4>
             <div class="mr-16">
                 <h5 class="comment_heading font-weight-light mr-16 mt-1" >{{reminder.callerNumber}} at {{reminder.ReminderAt}} </h5>
             </div>
         </div>
     </v-col>
 </v-row>
+
+<v-row v-if="!remiderCalls.length">
+    <v-col cols="12" align="left" class="pl-15">
+		<div class="mb-3 mt-0 pl-5 ml-5">Nothing to show</div>
+		
+	</v-col>
+	</v-row>
 </v-col>	
 										
 										</v-row>
@@ -207,7 +228,7 @@ import firebase from 'firebase'
 							.where("callstatus", "==", "Missed")
 							.where("owneruid", "==", this.uid )
 							.orderBy('dateTime', "asc")
-							// .where("date", "==", new Date().getTime() )
+							.where("date", "==", new Date().getTime() )
 							.get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
@@ -265,7 +286,7 @@ if(agentName!=''){
 							db.collection('callLogs')
 							.where("callstatus", "==", "Answered")
 							.where("owneruid", "==", this.uid )
-							// .where("date", "==", new Date().getTime() )
+							.where("date", "==", new Date().getTime() )
 							.orderBy('dateTime', "asc")
 							.get()
 							.then((querySnapshot) => {
@@ -318,12 +339,12 @@ var timestamp = logs.data().dateTime
 						this.uid = user.uid;
 			db.collection('Reminders')
         .where('OwnerUid', '==',  this.uid)
-		// .where('ReminderAt',"==", new Date().getTime())
+		.where('ReminderAt',"==", new Date().getTime())
         .get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
 										// console.log(logs.data());
-							
+							// console.log(logs.data());
 				
 var callerNumber = '+91 '+logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);
 var timestamp = logs.data().ReminderAt
@@ -335,7 +356,7 @@ var timestamp = logs.data().ReminderAt
 				
 								ReminderAt: call_time,
 								callerNumber: callerNumber,
-	
+								AgentName:logs.data().Name,
 						
 						});
 						})
@@ -348,7 +369,7 @@ var timestamp = logs.data().ReminderAt
 						this.uid = user.uid;
 			db.collection('Reminders')
         .where('AgentUid', '==',  this.uid)
-			// .where('ReminderAt',"==", new Date().getTime())
+			.where('ReminderAt',"==", new Date().getTime())
         .get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
@@ -365,11 +386,13 @@ var timestamp = logs.data().ReminderAt
 				
 								ReminderAt: call_time,
 								callerNumber: callerNumber,
+								AgentName:logs.data().Name,
 	
 						
 						});
 						})
 					}).catch((error) => {
+						
 						console.log("Error getting logs: ", error);
 					})
 

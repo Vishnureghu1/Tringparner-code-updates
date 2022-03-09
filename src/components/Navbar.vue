@@ -63,9 +63,9 @@
                     <v-list-item
                         v-if="!link.subLinks"
                         :to="link.to"
-                        active-class="tpred--text"
+                        active-class="tpred--text medium"
                         avatar
-                        class="grey--text"
+                        class="grey--text ubuntu-font medium"
                     >
                         <v-list-item-icon>
                             <v-icon>{{ link.icon }}</v-icon>
@@ -80,22 +80,22 @@
                         no-action
                         :prepend-icon="link.icon"
                         :value="false"
-                        class="grey--text"
-                        active-class="grey--text"
+                        class="grey--text ubuntu-font medium"
+                        active-class="grey--text ubuntu-font "
                     >
                         <template v-slot:activator>
-                          <v-list-item-title class="menu-text grey--text" active-class="tpred--text" >{{ link.text }}</v-list-item-title>
+                          <v-list-item-title class="menu-text grey--text ubuntu-font" active-class="tpred--text ubuntu-font medium" >{{ link.text }}</v-list-item-title>
                          </template>
 
                         <v-list-item
                             v-for="sublink in link.subLinks"
                             :to="sublink.to"
                             :key="sublink.text"
-                            class="grey--text"
-                            active-class="tpred--text"
+                            class="grey--text ubuntu-font"
+                            active-class="tpred--text ubuntu-font"
                         >
                             <v-list-item-title class="menu-text ml-2">{{ sublink.text }}</v-list-item-title>
-                            <v-list-item-icon class="grey--text">
+                            <v-list-item-icon class="grey--text ubuntu-font">
                               <v-icon>{{ sublink.icon }}</v-icon>
                             </v-list-item-icon>
 
@@ -245,21 +245,7 @@
           
             <v-row align="center">
               <v-col cols="12">
-                <v-alert
-    prominent
-    type="error"  color="red darken-3
-"
-    >
-      <v-row align="center">
-        <v-col class="grow">
-         <h3>Email Verification</h3>
-         <p>Please verify your email address by clicking on the link we have shared with you on email.</p>
-        </v-col>
-        <v-col class="shrink">
-          <v-btn>Resend Email</v-btn>
-        </v-col>
-      </v-row>
-  </v-alert>
+               
                 <router-view></router-view>
               </v-col>
             </v-row>
