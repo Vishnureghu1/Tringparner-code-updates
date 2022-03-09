@@ -2,6 +2,12 @@
 	<v-app >
 		<div>
 			<v-container  fluid>
+			
+	    <v-snackbar   :timeout="timeout" v-model="notes_added" :bottom="bottom" :right="right" color="green" text>Notes added successfully!</v-snackbar>
+					
+	    <v-snackbar   :timeout="timeout" v-model="notes_removed" :bottom="bottom" :right="right" color="red" text>Notes removed successfully!</v-snackbar>
+			
+
 				<v-layout >
 					<v-flex xs12 sm12 md12>
 							<v-row no-gutters>
@@ -19,7 +25,7 @@
 											<v-expansion-panels accordion flat >
 												<v-expansion-panel v-for="(details) in realdata" :key="details.text">
 													
-													<v-expansion-panel-header expand-icon="">
+													<v-expansion-panel-header >
 														<div>
 														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
@@ -33,8 +39,10 @@
 																		<v-icon v-bind="attrs" v-on="on" color="black" >mdi-dots-vertical</v-icon>
 																	</template>
 																	<v-list>
-																		<v-list-item v-for="(item, index) in items" :key="index">
-																			<v-list-item-title :class="item.color" :link="items.url">{{ item.title }}</v-list-item-title>
+																		<v-list-item v-for="(item, index) in items" :key="index" active-class="pink--text">
+																			<v-list-item-title :class="item.color" 
+																			@click="blockCall(item.url, details.virtualnumber)"
+																				>{{ item.title }}</v-list-item-title>
 																		</v-list-item>
 																	</v-list>
 																</v-menu>
@@ -60,17 +68,20 @@
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
 																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules" counter maxlength="75" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" class="black--text" ></v-text-field>
 																		</div>
+																			
 																		<br>
+																	
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
 																			<v-text-field v-model="Reminder" clear-icon="mdi-close-circle" clearable label="Reminder"  append-icon="mdi-pencil" type="text" @click="dialog = true" ></v-text-field>
-																		</div>
+																		
+																	</div>
 																	</div>
 																</v-col>
 																<!-- {{details}} -->
 																<v-col cols="12" sm="6" v-if="details.callstatus!='Missed'">
 																
 																	<audio controls >
-																		<source src="details.recordingUrl" type="audio/mpeg">
+																		<source :src="details.recordingUrl" type="audio/mpeg">
 																		Your browser does not support the audio tag.
 																	</audio>
 																</v-col>
@@ -259,59 +270,118 @@ import { Icon } from '@iconify/vue2';
         // { title: 'Call This Number',color: 'black--text' , url: 'call_this_number'},
         { title: 'Block This Number',color: 'red--text' , url: 'block_number'},
       ],
-      uid : '',
-			phno : '',
-			called_name : '',
-			role : '',
-			detail: {},
-			calldetails : [],
-			realdata : [],
-			click_details : {},
-			clicked_array : [],
-			selected :  false,
-			note : [],
-			show_notes : false,
-			dialog : false,
-			add_note : true,
-			callback_uid : '',
-			rules: [v => v.length <= 75 || 'Max 75 characters'],
-			password: 'Password',
-      show: false,
-      marker: true,
-      column: null,
-			menu2: false,
-			menu1: false,
-			radio : 'radio-1', 
-			Reminder:'',
-			reminderMessage : '',
-			date : '',
-			time : '',
+    uid : '',
+	phno : '',
+	called_name : '',
+	role : '',
+	detail: {},
+	calldetails : [],
+	realdata : [],
+	click_details : {},
+	clicked_array : [],
+	selected :  false,
+	note : [],
+	show_notes : false,
+	show_remind : false,
+	dialog : false,
+	add_note : true,
+
+	callback_uid : '',
+	rules: [v => v.length <= 75 || 'Max 75 characters'],
+	password: 'Password',
+    show: false,
+    marker: true,
+    column: null,
+	menu2: false,
+	menu1: false,
+	radio : 'radio-1', 
+	Reminder:'',
+	reminderMessage : '',
+	date : '',
+	time : '',
+// success snackbar
+ 	notes_added: false,
+	 notes_removed:false,
+      timeout: 2500,
+      bottom: true,
+      right: false
 
     }),
 		methods: {
+		blockCall(type,number)
+		{
+		// var token = localStorage.getItem('token');
+		
+		// console.log(type,number);
+		// add_note
+		// add_number
+		// block_number
+		if(type=='block_number'){
+			var token = localStorage.getItem('token');
+				const blockNumber = {
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/blockcall',
+					method: 'POST',
+					data: {
+						number: number,
+						owner_uid: this.uid,
+						status: true,
+						UpdatedBy:'',
+						AccountId:'',
 
-      sendMessage (unique_id,message) {
+
+					},
+						headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
+				}
+				console.log(blockNumber)
+				this.$axios(blockNumber)
+					.then((response) => {
+						console.log(response)
+
+					})
+					.catch((error) => {
+						console.log("Error getting: ", error);
+					})
+
+		}else if(type=='add_note'){
+		this.show_notes=true;
+		}else{
+			this.show_remind=true;
+		}
+		} ,   sendMessage (unique_id,message) {
+		var token = localStorage.getItem('token');
 	
-		console.log(unique_id);
 				const user_data = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',
 					method: 'POST',
 					data: {
-						uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+						uid: this.uid,
+						// uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
 						unique_id: unique_id,
 						note : message
 					},
+						headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
 				}
 				console.log(user_data)
 				this.$axios(user_data)
 					.then((response) => {
-						console.log(response)
+						// console.log(response.data.status)
+						if(response.data.status==true){
+
+							this.notes_added=true;
+						}
 					})
 					.catch((error) => {
 						console.log("Error getting documents: ", error);
 					})
       },
       sendReminder(date , time , unique_id, message) {
+		var token = localStorage.getItem('token');
 				console.log(date)
 				console.log(time)
 				
@@ -319,7 +389,8 @@ import { Icon } from '@iconify/vue2';
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder',
 					method: 'POST',
 					data: {
-						owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+						// owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+						owner_uid: this.uid,
 						call_id: unique_id,
 						message : message,
 						updated_by: '',
@@ -329,31 +400,44 @@ import { Icon } from '@iconify/vue2';
 						reminder_at : '',
 
 					},
+						headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
 				}
 				console.log(user_data)
 				this.$axios(user_data)
 					.then((response) => {
 						console.log(response)
+						
 					})
 					.catch((error) => {
 						console.log("Error getting documents: ", error);
 					})
       },
       clearMessage (unique_id, message) {
+		  var token = localStorage.getItem('token');
         message = ''
         const user_data = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',
 					method: 'POST',
 					data: {
-						uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+						uid: this.uid,
 						unique_id: unique_id,
 						note : message
-					},
+					},	headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
 				}
 				console.log(user_data)
 				this.$axios(user_data)
 					.then((response) => {
 						console.log(response)
+						if(response.data.status==true){
+
+							this.notes_removed=true;
+						}
 					})
 					.catch((error) => {
 						console.log("Error getting documents: ", error);

@@ -24,12 +24,10 @@
 
 										<v-row>
 											<v-col cols="6">
-												<h4 class="heading mt-4 mb-5"> 
+												<h4 class="heading mt-4 mb-2"> 
 													<Icon class="mr-3" :inline="true" color="red" icon="mdi:call-missed" width="24" height="24">	</Icon>
 														Today's Missed Open Calls
 												</h4>
-
-
 <v-row v-if="!missedCallPanel.length">
     <v-col cols="12" align="left" class="pl-15">
 		Nothing to show
@@ -70,7 +68,7 @@
 													</v-expansion-panel>
 												</v-expansion-panels>
 
-<h4 class="heading  mb-5 mt-5"> <v-icon color="black" class="mr-3">mdi-call-split</v-icon> Team Skipped Calls</h4>
+<h4 class="heading  mb-2 mt-5"> <v-icon color="black" class="mr-3">mdi-call-split</v-icon> Team Skipped Calls</h4>
 <v-row v-if="!skippedCallPanel.length">
     <v-col cols="12" align="left" class="pl-15">
 		Nothing to show
@@ -114,9 +112,15 @@
 
 																			<v-col cols="6" align="center">
 											
-<h4 class="heading"><v-icon class="mt-4 mb-5 mr-3 pl-10" color="black">mdi-alarm</v-icon> Today's Reminders </h4>
-
-<v-row class="" v-if="remiderCalls.length">
+<h4 class="heading"><v-icon class="mt-3 mb-2 mr-3 pl-10" color="black">mdi-alarm</v-icon> Today's Reminders </h4>
+<v-row v-if="!remiderCalls.length">
+    <v-col cols="12" align="left" class="pl-15">
+		<div class="mb-3 mt-0 pl-5 ml-5">Nothing to show</div>
+		
+	</v-col>
+	</v-row>
+<v-row class="">
+    <!-- {{remiderCalls}} -->
     <v-col cols="12" align="left" class="pl-15">
         <div v-for="(reminder, index) in remiderCalls" :key="index" class="mb-3 mt-5 pl-5 ml-5">
 
@@ -127,13 +131,6 @@
         </div>
     </v-col>
 </v-row>
-
-<v-row v-if="!remiderCalls.length">
-    <v-col cols="12" align="left" class="pl-15">
-		<div class="mb-3 mt-0 pl-5 ml-5">Nothing to show</div>
-		
-	</v-col>
-	</v-row>
 </v-col>	
 										
 										</v-row>
@@ -369,7 +366,7 @@ var timestamp = logs.data().ReminderAt
 						this.uid = user.uid;
 			db.collection('Reminders')
         .where('AgentUid', '==',  this.uid)
-			.where('ReminderAt',"==", new Date().getTime())
+			// .where('ReminderAt',"==", new Date().getTime())
         .get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
@@ -392,7 +389,6 @@ var timestamp = logs.data().ReminderAt
 						});
 						})
 					}).catch((error) => {
-						
 						console.log("Error getting logs: ", error);
 					})
 

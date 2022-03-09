@@ -17,7 +17,7 @@
 										</v-row>
 											<v-expansion-panels accordion flat >
 												<v-expansion-panel v-for="(details) in realdata" :key="details.text" v-model="openedPanel">
-													<v-expansion-panel-header expand-icon="">
+													<v-expansion-panel-header >
 														<div>
 														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
@@ -33,7 +33,7 @@
 																	</template>
 																	<v-list>
 																		<v-list-item v-for="(item, index) in items" :key="index">
-																			<v-list-item-title :class="item.color">{{ item.title }}</v-list-item-title>
+																			<v-list-item-title :class="item.color"  @click="blockCall(e)" >{{ item.title }} </v-list-item-title>
 																		</v-list-item>
 																	</v-list>
 																</v-menu>
@@ -75,37 +75,153 @@
 									</div>
 								</v-col>
 							</v-row>
-							<v-dialog
+	<v-dialog
 								v-model="dialog"
-								max-width="300px"
+								max-width="400px"
+								persistent
+								
 							>
-							<v-card>
+							<v-card max-height>
 								<v-card-title class="text-h5">
-									Use Google's location service?
+									Reminder
 								</v-card-title>
 
 								<v-card-text>
-									Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+									<v-text-field
+										label="Remind About"
+										v-model="reminderMessage"
+										outlined
+									></v-text-field>
+									<v-radio-group
+										v-model="radio"
+										column
+									>
+										<v-radio
+											label="10 minutes"
+											value="radio-1"
+											color="red"
+										></v-radio>
+										<v-radio
+											label="30 minutes"
+											value="radio-2"
+											color="red"
+										></v-radio>
+										<v-radio
+											label="1 hour"
+											value="radio-3"
+											color="red"
+										></v-radio>
+										<v-radio
+											label="Custom"
+											value="radio-4"
+											color="red"
+										></v-radio>
+									</v-radio-group>
+									<div v-if="radio == 'radio-4'">
+										<v-menu
+											ref="menu1"
+											v-model="menu1"
+											:close-on-content-click="false"
+											:return-value.sync="date"
+											transition="scale-transition"
+											offset-y
+											min-width="auto"
+										>
+											<template v-slot:activator="{ on, attrs }">
+												<v-text-field
+													v-model="date"
+													label="Select Date"
+													prepend-icon="mdi-calendar"
+													readonly
+													v-bind="attrs"
+													v-on="on"
+												></v-text-field>
+											</template>
+											<v-date-picker
+												v-model="date"
+												no-title
+												scrollable
+											>
+											<v-spacer></v-spacer>
+											<v-btn
+												text
+												color="primary"
+												@click="menu1 = false"
+											>
+												Cancel
+											</v-btn>
+											<v-btn
+												text
+												color="primary"
+												@click="$refs.menu1.save(date)"
+											>
+												OK
+											</v-btn>
+										</v-date-picker>
+									</v-menu>
+
+
+
+										<v-menu
+											ref="menu"
+											v-model="menu2"
+											:close-on-content-click="false"
+											:nudge-right="40"
+											:return-value.sync="time"
+											transition="scale-transition"
+											offset-y
+											max-width="290px"
+											min-width="290px"
+										>
+											<template v-slot:activator="{ on, attrs }">
+												<v-text-field
+													v-model="time"
+													label="Select Time"
+													prepend-icon="mdi-clock-time-four-outline"
+													readonly
+													v-bind="attrs"
+													v-on="on"
+												></v-text-field>
+											</template>
+											<v-time-picker
+												v-if="menu2"
+												v-model="time"
+												full-width
+												color="red"
+												@click:minute="$refs.menu.save(time)"
+											></v-time-picker>
+										</v-menu>
+									</div>
 								</v-card-text>
 
 									<v-card-actions>
-										<v-spacer></v-spacer>
-
+										
+									<v-row no-gutters>
+										<v-col cols="12" sm="6">
 											<v-btn
-												color="green darken-1"
-												text
+												rounded
+												width="100%"
+												color="white"
+												dark
+												class="red--text	"
 												@click="dialog = false"
 											>
-												Disagree
+												Cancel
 											</v-btn>
-
+										</v-col>
+										<v-col cols="12" sm="6">
 											<v-btn
-												color="green darken-1"
-												text
-												@click="dialog = false"
+												width="100%"
+												rounded
+												color="red"
+												dark
+												@click="sendReminder(date , time)"
 											>
-													Agree
-												</v-btn>
+												Save
+											</v-btn>
+										</v-col>
+									</v-row>
+
 									</v-card-actions>
 							</v-card>
 						</v-dialog>
@@ -127,13 +243,13 @@ components: {
 			Icon,
 		},
     data: () => ({
-			items: [
+		items: [
         { title: 'Add Note' ,color: 'black--text'},
         { title: 'Add Reminder',color: 'black--text' },
         // { title: 'Call This Number',color: 'black--text' },
-        { title: 'Block This Number',color: 'red--text' },
-      ],
-      uid : '',
+        { title: 'Block This Number', color: 'red--text' },],
+		
+		uid:'',
 			phno : '',
 			called_name : '',
 			role : '',
@@ -150,13 +266,27 @@ components: {
 			callback_uid : '',
 			rules: [v => v.length <= 75 || 'Max 75 characters'],
 			password: 'Password',
-      show: false,
-      marker: true,
+    show: false,
+    marker: true,
     openedPanel: null,
+		radio : 'radio-1', 
+			Reminder:'',
+			reminderMessage : '',
+			date : '',
+			time : '',
 
     }),
 		methods: {
+ blockCall(e) {
+     
+           
+          
+                console.log("Section: " + e);
+              
+            
+        },
 
+		
 closeAllPanels () {
     this.openedPanel = null
   },
@@ -164,6 +294,7 @@ closeAllPanels () {
     this.openedPanel = index
   },
       sendMessage (unique_id, message) {
+		var token = localStorage.getItem('token');
 				const user_data = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',
 					method: 'POST',
@@ -172,6 +303,44 @@ closeAllPanels () {
 						unique_id: unique_id,
 						note : message
 					},
+					headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
+				}
+				console.log(user_data)
+				this.$axios(user_data)
+					.then((response) => {
+						console.log(response)
+					})
+					.catch((error) => {
+						console.log("Error getting documents: ", error);
+					})
+      },
+	sendReminder(date , time , unique_id, message) {
+		var token = localStorage.getItem('token');
+				console.log(date)
+				console.log(time)
+				
+				const user_data = {
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder',
+					method: 'POST',
+					data: {
+						// owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+						owner_uid: this.uid,
+						call_id: unique_id,
+						message : message,
+						updated_by: '',
+						Accountid : '',
+						agent_uid : '',
+						name : '',
+						reminder_at : '',
+
+					},
+						headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
 				}
 				console.log(user_data)
 				this.$axios(user_data)
@@ -184,6 +353,7 @@ closeAllPanels () {
       },
       clearMessage (unique_id, message) {
         message = ''
+			var token = localStorage.getItem('token');
         const user_data = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',
 					method: 'POST',
@@ -192,6 +362,10 @@ closeAllPanels () {
 						unique_id: unique_id,
 						note : message
 					},
+					headers: { 
+							'token': token,
+							'Content-Type': 'application/json'
+						},
 				}
 				console.log(user_data)
 				this.$axios(user_data)
@@ -326,7 +500,7 @@ closeAllPanels () {
 .v-expansion-panel {
 	border-bottom: 1px solid #ddd;
 	border-bottom-spacing : 15px;
-	: 100px;
+
 }
 .v-expansion-panel-header {
 	line-height: 0.5 !important;

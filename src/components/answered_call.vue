@@ -4,6 +4,9 @@
 			<v-container  fluid>
 				<v-layout >
 					<v-flex xs12 sm12 md12>
+						<v-alert
+  type="success"
+></v-alert>
 							<v-row no-gutters>
 								<v-col cols="12">
 									<div class="ml-3">
@@ -17,7 +20,7 @@
 										</v-row>
 											<v-expansion-panels accordion flat>
 												<v-expansion-panel v-for="(details) in realdata" :key="details.text">
-													<v-expansion-panel-header expand-icon="">
+													<v-expansion-panel-header >
 														<div>
 														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
@@ -65,8 +68,8 @@
 																	</div>
 																</v-col>
 																<v-col cols="12" sm="6">
-																	<audio controls>
-																		<source src="details.recordingUrl" type="audio/mpeg">
+																	<audio controls >
+																		<source :src="details.recordingUrl" type="audio/mpeg">
 																		Your browser does not support the audio tag.
 																	</audio>
 																</v-col>
