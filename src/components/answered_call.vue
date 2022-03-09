@@ -4,9 +4,7 @@
 			<v-container  fluid>
 				<v-layout >
 					<v-flex xs12 sm12 md12>
-						<v-alert
-  type="success"
-></v-alert>
+
 							<v-row no-gutters>
 								<v-col cols="12">
 									<div class="ml-3">
@@ -42,7 +40,7 @@
 
 															</v-col>
 														</v-row>
-															<div class="ml-10 font-weight-thin date_time">{{details.dateTime}}, {{details.name}} </div> 
+															<div class="ml-10 font-weight-thin date_time"><span v-if="details.conversationduration!=0">{{details.conversationduration}} Sec, </span>{{details.dateTime}}, {{details.name}} </div> 
 															<div class="ml-10 mt-3 font-weight-thin" v-for="getNotes in details.Note " :key="getNotes.text" >
 																<div> <span v-if="getNotes.Note != ''" class="mdi mdi-note grey--text"> </span> {{ getNotes.Note }}</div>
 															</div>

@@ -225,7 +225,6 @@ import firebase from 'firebase'
 							.where("callstatus", "==", "Missed")
 							.where("owneruid", "==", this.uid )
 							.orderBy('dateTime', "asc")
-							.where("date", "==", new Date().getTime() )
 							.get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
@@ -283,7 +282,7 @@ if(agentName!=''){
 							db.collection('callLogs')
 							.where("callstatus", "==", "Answered")
 							.where("owneruid", "==", this.uid )
-							.where("date", "==", new Date().getTime() )
+							// .where("date", "==", new Date().getTime() )
 							.orderBy('dateTime', "asc")
 							.get()
 							.then((querySnapshot) => {
@@ -336,7 +335,7 @@ var timestamp = logs.data().dateTime
 						this.uid = user.uid;
 			db.collection('Reminders')
         .where('OwnerUid', '==',  this.uid)
-		.where('ReminderAt',"==", new Date().getTime())
+		// .where('ReminderAt',"==", new Date().getTime())
         .get()
 							.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {

@@ -49,7 +49,7 @@
 
 															</v-col>
 														</v-row>
-															<div class="ml-10 font-weight-thin date_time">{{details.dateTime}}, {{details.name}} </div> 
+															<div class="ml-10 font-weight-thin date_time"><span v-if="details.conversationduration!=0">{{details.conversationduration}} Sec, </span> {{details.dateTime}}, {{details.name}} </div> 
 															<!-- {{detail}} -->
 															<div class="ml-10 mt-3 font-weight-thin" v-for="getNotes in details.Note " :key="getNotes.text" >
 																<div> <span v-if="getNotes.Note != ''" class="mdi mdi-note grey--text"> </span> {{ getNotes.Note }}</div>
