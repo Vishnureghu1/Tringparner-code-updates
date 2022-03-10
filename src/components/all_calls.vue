@@ -1,11 +1,8 @@
 <template>
 	<v-app >
 		<div>
-			<v-container  fluid>
-			
-	    <v-snackbar   :timeout="timeout" v-model="notes_added" :bottom="bottom" :right="right" color="green" text>Notes added successfully!</v-snackbar>
-					
-	    <v-snackbar   :timeout="timeout" v-model="notes_removed" :bottom="bottom" :right="right" color="red" text>Notes removed successfully!</v-snackbar>
+		<v-container  fluid>
+			<v-snackbar :timeout="timeout" v-model="notes_added" :bottom="bottom" :right="right" color="green" text>Notes added successfully!</v-snackbar><v-snackbar :timeout="timeout" v-model="notes_removed" :bottom="bottom" :right="right" color="red" text>Notes removed successfully!</v-snackbar>
 			
 
 				<v-layout >
@@ -49,6 +46,7 @@
 
 															</v-col>
 														</v-row>
+													
 															<div class="ml-10 font-weight-thin date_time"><span v-if="details.conversationduration!=0">{{details.conversationduration}} Sec, </span> {{details.dateTime}}, {{details.name}} </div> 
 															<!-- {{detail}} -->
 															<div class="ml-10 mt-3 font-weight-thin" v-for="getNotes in details.Note " :key="getNotes.text" >
@@ -62,6 +60,7 @@
 																<v-col cols="12" sm="6">
 																	<div class="ml-10">
 																		<h6  class="font-weight-thin"> Source </h6>
+																		
 																		<h5 class="font-weight-light"> {{details.source}} No: (+91 {{ details.virtualnumber }}) </h5>
 																		<br>
 																		
@@ -297,14 +296,13 @@ import { Icon } from '@iconify/vue2';
 	radio : 'radio-1', 
 	Reminder:'',
 	reminderMessage : '',
-	date : '',
-	time : '',
-// success snackbar
- 	notes_added: false,
-	 notes_removed:false,
-      timeout: 2500,
-      bottom: true,
-      right: false
+	date: '',
+	time: '',
+	notes_added:false,
+	notes_removed:false,
+    timeout: 2500,
+    bottom:true,
+    right:false
 
     }),
 		methods: {
@@ -416,7 +414,7 @@ import { Icon } from '@iconify/vue2';
 					})
       },
       clearMessage (unique_id, message) {
-		  var token = localStorage.getItem('token');
+		var token = localStorage.getItem('token');
         message = ''
         const user_data = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',

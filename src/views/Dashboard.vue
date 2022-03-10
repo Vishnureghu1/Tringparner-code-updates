@@ -345,8 +345,8 @@ var timestamp = logs.data().dateTime
 var callerNumber = '+91 '+logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);
 var timestamp = logs.data().ReminderAt
 							var date = new Date(timestamp);
-						var call_time = moment(date).format('hh:mm a')
-							call_time = moment(date).fromNow();
+						var call_time = moment(date).format('DD-MM-YYYY hh:mm a')
+							// call_time = moment(date).fromNow();
 
 						this.remiderCalls.push({
 				
