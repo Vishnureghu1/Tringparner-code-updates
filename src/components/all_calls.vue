@@ -26,25 +26,23 @@
 														<div>
 														<v-row class="calls_list">
 															<v-col cols="12" sm="10">
-																<h3  class="font-weight-light"> <v-icon v-if="details.callstatus == 'Answered'" class="mr-3" color="green" >mdi-arrow-bottom-left</v-icon> <Icon v-else class="mr-3 icon_adjustment"   color="red" icon="mdi:call-missed" width="24" height="24"/>+91 {{ details.callerNumber }}  </h3>
-																<br>
-															</v-col>
-															<v-spacer></v-spacer>
-															<v-col cols="12" sm="2" align="end">
-																<v-menu offset-y>
+																<!-- {{details}} -->
+																<h3  class="font-weight-light"> <v-icon v-if="details.callstatus == 'Answered'" class="mr-3" color="green" >mdi-arrow-bottom-left</v-icon> <Icon v-else class="mr-3 icon_adjustment"   color="red" icon="mdi:call-missed" width="24" height="24"/>+91 {{ details.callerNumber }}  <v-icon  color="gray" class="mr-5">mdi-shield-lock-outline</v-icon> <v-menu offset-y>
 																	<template v-slot:activator="{ on, attrs }">
-																		<v-icon v-bind="attrs" v-on="on" color="black" >mdi-dots-vertical</v-icon>
+																		<v-icon v-bind="attrs" v-on="on" color="black">mdi-dots-vertical</v-icon>
 																	</template>
 																	<v-list>
 																		<v-list-item v-for="(item, index) in items" :key="index" active-class="pink--text">
 																			<v-list-item-title :class="item.color" 
-																			@click="blockCall(item.url, details.virtualnumber)"
+																			@click="blockCall(item.url, details.virtualnumber, details.uniqueid)"
 																				>{{ item.title }}</v-list-item-title>
 																		</v-list-item>
 																	</v-list>
-																</v-menu>
-
+																</v-menu></h3>
+																<br>
 															</v-col>
+															<v-spacer></v-spacer>
+														
 														</v-row>
 													
 															<div class="ml-10 font-weight-thin date_time"><span v-if="details.conversationduration!=0">{{details.conversationduration}} Sec, </span> {{details.dateTime}}, {{details.name}} </div> 
@@ -316,17 +314,18 @@ import { Icon } from '@iconify/vue2';
 		// block_number
 		if(type=='block_number'){
 			var token = localStorage.getItem('token');
+			var tpu = localStorage.getItem('tpu');
+			var Id = JSON.parse(tpu);
+			console.log(Id);
 				const blockNumber = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/blockcall',
 					method: 'POST',
 					data: {
 						number: number,
-						owner_uid: this.uid,
+						owner_uid: this.uid, //
 						status: true,
-						UpdatedBy:'',
-						AccountId:'',
-
-
+						UpdatedBy:this.uid, // owner uid
+						AccountId:Id.AccountId,
 					},
 						headers: { 
 							'token': token,
@@ -378,7 +377,7 @@ import { Icon } from '@iconify/vue2';
 						console.log("Error getting documents: ", error);
 					})
       },
-      sendReminder(date , time , unique_id, message) {
+      sendReminder(date , time ) {
 		var token = localStorage.getItem('token');
 				console.log(date)
 				console.log(time)
@@ -388,14 +387,17 @@ import { Icon } from '@iconify/vue2';
 					method: 'POST',
 					data: {
 						// owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
-						owner_uid: this.uid,
-						call_id: unique_id,
-						message : message,
-						updated_by: '',
-						Accountid : '',
-						agent_uid : '',
-						name : '',
-						reminder_at : '',
+						
+						call_id:"", // uniqueid
+						agent_uid:this.uid,
+						owner_uid:this.uid,
+						reminder_at:"",  // time in milliseconds
+						name:"",
+						type:"", //custom or p
+						Number:"", //caller number
+						Message:"test",
+						AccountId:"",
+						UpdatedBy:"",
 
 					},
 						headers: { 
