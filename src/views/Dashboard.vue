@@ -12,7 +12,7 @@
 									<div class="ml-8">
 										<v-row>
 											<v-col cols="12" sm="10">
-												<h2 class="page_title mt-6 mb-5">Dashboard</h2>
+												<h2 class="page_title mt-6 mb-0">Dashboard</h2>
 											</v-col>
 											<v-col cols="12" sm="2" align="end">
 												<span ><v-icon  class="mt-6 mb-5 mr-7" color="black" >mdi-filter-variant</v-icon> </span>
@@ -24,9 +24,17 @@
 
 										<v-row>
 											<v-col cols="6">
-												<h4 class="heading mt-4 mb-2"> 
-													<Icon class="mr-3" :inline="true" color="red" icon="mdi:call-missed" width="24" height="24">	</Icon>
-														Today's Missed Open Calls
+
+												<v-row  class="heading mt-0 mb-2 pl-4" 
+    align="center"
+  
+  >
+    <Icon class="mr-0" :inline="true" color="red" icon="mdi:call-missed" width="24" height="24">	</Icon>
+    <div class="mx-2">Today's Missed Open Calls</div>
+												</v-row>
+												<h4 class="heading mt-0 mb-2" > 
+													
+														
 												</h4>
 <v-row v-if="!missedCallPanel.length">
     <v-col cols="12" align="left" class="pl-15">
@@ -68,7 +76,7 @@
 													</v-expansion-panel>
 												</v-expansion-panels>
 
-<h4 class="heading  mb-2 mt-5"> <v-icon color="black" class="mr-3">mdi-call-split</v-icon> Team Skipped Calls</h4>
+<h4 class="heading  mb-2 mt-5"> <v-icon color="black" class="mr-2">mdi-call-split</v-icon> Team Skipped Calls</h4>
 <v-row v-if="!skippedCallPanel.length">
     <v-col cols="12" align="left" class="pl-15">
 		Nothing to show

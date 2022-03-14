@@ -209,18 +209,18 @@
                                 step="2"
                               >
                               
-                                Call Routing Setting
-                                <small class="pt-2 pb-0"
+                                Call Routing 
+                                <!-- <small class="pt-2 pb-0"
                                   >Select how incoming calls are distributed
                                   among your users. <br />Distributions rules
                                   will happen based on these settings</small
-                                >
+                                > -->
                               </v-stepper-step>
 
                               <v-stepper-content step="2" class="font-Nunito">
                                 <v-card class="mb-0" :elevation="0">
                                    <div class="subheading">
-                                     Call Routing Settings (LinkedIn Number)
+                                     Call Routing (LinkedIn Number)
                                     </div>
                                     <small class="grey--text light-3">Select how incoming calls are distributed amongst your users. Distributions rules will happen based on these settings</small>
                                   

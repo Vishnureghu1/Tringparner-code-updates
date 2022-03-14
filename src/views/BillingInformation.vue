@@ -207,6 +207,7 @@
   </v-app>
 </template>
          <script>
+         
 export default {
   components: {},
   data: () => ({
@@ -223,8 +224,79 @@ computed:{
      return this.discount ? this.price * this.discountedPrice : this.price
    }
  },
-  async created() {},
-  methods: {},
+  async created() {
+     this.getBill()
+     this.getOrderIdforPayment()
+  },
+
+ methods:{
+			getBill(){
+			var token = localStorage.getItem("token");
+        var tpu = localStorage.getItem("tpu");
+        var Id = JSON.parse(tpu);
+        console.log(Id);
+					const details = {
+						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/bill',
+						method: 'POST',
+						data: {
+							uid: Id.uid,
+              PlanId:Id.PlanId
+				
+						},
+            headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+					}
+					
+					this.$axios(details)
+						.then((response) => {
+							console.log(response)
+						
+							
+							
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+					
+				},
+
+
+
+      getOrderIdforPayment(){
+			var token = localStorage.getItem("token");
+        var tpu = localStorage.getItem("tpu");
+        var Id = JSON.parse(tpu);
+        console.log(Id);
+					const details = {
+						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/bill',
+						method: 'POST',
+						data: {
+							uid: Id.uid,
+              PlanId:Id.PlanId
+				
+						},
+            headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+					}
+					
+					this.$axios(details)
+						.then((response) => {
+							console.log(response)
+						
+							
+							
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+					
+				},
+
+  },
 };
 
 </script>

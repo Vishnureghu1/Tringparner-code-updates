@@ -57,7 +57,7 @@
 																		<br>
 																		
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
-																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules" counter maxlength="75" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" ></v-text-field>
+																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules" counter maxlength="120" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" ></v-text-field>
 																		</div>
 																		<br>
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
@@ -264,7 +264,7 @@ components: {
 			dialog : false,
 			add_note : true,
 			callback_uid : '',
-			rules: [v => v.length <= 75 || 'Max 75 characters'],
+			rules: [v => v.length <= 120 || 'Max 120 characters'],
 			password: 'Password',
     show: false,
     marker: true,

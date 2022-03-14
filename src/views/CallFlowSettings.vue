@@ -9,7 +9,7 @@
 									<div class="ml-8">
 										<v-row>
 											<v-col cols="12" sm="11">
-												<span ><h2 class="page_title mt-6"> <v-icon  class="mr-2" color="black" @click="goBack()">mdi-arrow-left</v-icon>  Advanced Options</h2> </span>
+												<span ><h2 class="page_title mt-6"> <v-icon  class="mr-2" color="black" @click="goBack()">mdi-arrow-left</v-icon>  Call Flow Settings</h2> </span>
 												<v-breadcrumbs :items="items">
 													<template v-slot:divider>
 														<v-icon>mdi-chevron-right</v-icon>
@@ -27,7 +27,7 @@
 											</v-col>
 										</v-row>
 										<v-divider></v-divider>
-										<v-row>
+										<!-- <v-row>
 											<v-col cols="6">
 												<h2 class="name_heading mt-4  mr-7  ">Call Routing Settings</h2>
 												<h2 class="comment_heading mt-1 mb-5 mr-7 ">Configure how incoming calls are redirected between your agents.</h2>
@@ -37,7 +37,7 @@
 												<span ><v-icon  class="mt-6 mb-5 mr-7" color="#EE1C25" >mdi-arrow-right</v-icon> </span>
 												</router-link>
 											</v-col>
-										</v-row>
+										</v-row> -->
 										<v-divider></v-divider>
 										<v-row>
 											<v-col cols="6">
@@ -123,8 +123,8 @@
       items: [
         {
           text: 'More',
-          disabled: true,
-          to: { name: 'BusinessNumber'},
+          disabled: false,
+         href: 'Dashbaord',
         },
         {
           text: 'Business Numbers',
@@ -150,27 +150,7 @@
   </script>
 
 <style scoped>
-.page_title {
-	font-family: 'Lato', Bold;
-  font-size: 23px 
+.v-application a{
+	text-decoration: none;
 }
-.heading {
-	font-family: 'lato', Bold;
-  font-size: 16px 
-}
-.name_heading {
-	font-family: 'lato', Regular;
-  font-size: 16px 	
-}
-.number_heading {
-	font-family: 'Nunito', bold;
-  font-size: 16px; 	
-  color: #3B3B3B;
-}
-.comment_heading {
-	font-family: 'lato', Regular;
-  font-size: 12px;
-  color: #808080;
-}
-
 </style>

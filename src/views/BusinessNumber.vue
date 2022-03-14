@@ -11,7 +11,7 @@
 											<v-col cols="12" sm="10">
 												<h2 class="page_title mt-6 ml-5">Business Numbers</h2>
 												<v-breadcrumbs class="breadcrumbs" :items="items">
-													<template class="breadcrumbs" v-slot:divider>
+													<template class="breadcrumbs" v-slot:divider >
 														<v-icon>mdi-chevron-right</v-icon>
 													</template>
 												</v-breadcrumbs>
@@ -64,14 +64,15 @@
       items: [
         {
           text: 'More',
-          disabled: true,
-          href: 'breadcrumbs_dashboard',
+          disabled: false,
+          href: 'Dashbaord',
           color: 'Black'
         },
         {
-          text: 'Business Numbers',
+        text: 'Business Numbers',
           disabled: false,
           to: { name: 'BusinessNumber'},
+		color: 'red',
         },
       ],
     }),

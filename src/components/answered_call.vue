@@ -41,7 +41,9 @@
 
 															</v-col>
 														</v-row>
-															<div class="ml-10 font-weight-thin date_time">{{details.dateTime}}, {{details.name}} </div> 
+															<div class="ml-10 font-weight-thin date_time"> <span v-if="details.conversationduration != 0"
+                              >{{ details.conversationduration }} Sec,
+                            </span> {{details.dateTime}}, {{details.name}} </div> 
 															<div class="ml-10 mt-3 font-weight-thin" v-for="getNotes in details.Note " :key="getNotes.text" >
 																<div> <span v-if="getNotes.Note != ''" class="mdi mdi-note grey--text"> </span> {{ getNotes.Note }}</div>
 															</div>
@@ -60,7 +62,7 @@
 																		<br>
 																		
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
-																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules" counter maxlength="75" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" class="black--text" ></v-text-field>
+																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules" counter maxlength="120" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" class="black--text" ></v-text-field>
 																		</div>
 																			
 																		<br>
@@ -274,7 +276,7 @@ import moment from 'moment'
 			dialog2 : false,
 			add_note : true,
 			callback_uid : '',
-			rules: [v => v.length <= 75 || 'Max 75 characters'],
+			rules: [v => v.length <= 120 || 'Max 120 characters'],
 			password: 'Password',
       show: false,
     marker: true,

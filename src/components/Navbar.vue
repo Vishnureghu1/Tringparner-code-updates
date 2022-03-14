@@ -241,7 +241,7 @@
                   
         </v-app-bar>
         
-        <v-content>
+        <v-main>
           
             <v-row align="center">
               <v-col cols="12">
@@ -249,7 +249,7 @@
                 <router-view></router-view>
               </v-col>
             </v-row>
-        </v-content>
+        </v-main>
     </v-app>
 
 </template>
