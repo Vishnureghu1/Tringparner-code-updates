@@ -260,7 +260,8 @@ export default {
 					PlanId = 1
 				}
 				const bill = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/bill',
+					//    https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill',
 					method: 'POST',
 
 					data: {

@@ -458,7 +458,7 @@ export default {
         data: {
           uid: this.uid,
           // uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
-          unique_id: unique_id,
+          unique_id: unique_id,  //call id
           note: message,
         },
         headers: {
@@ -489,23 +489,23 @@ export default {
         var todayDateMillisecond = new Date(myCurrentDate).getTime();
             console.log(todayDateMillisecond); 
             // var RemindmeAt = todayDateMillisecond + hours;    
-            var RemindmeAt ='1847244627217';
+            var RemindmeAt =1847244627217;
       const user_data = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder",
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
 
-          call_id: "", // uniqueid
-          agent_uid: this.uid,
-          owner_uid: this.uid,
+          call_id: "1646813903.152737", // uniqueid
+          agent_uid: this.uid, 
+          owner_uid: this.uid, //logged in ownere
           reminder_at: RemindmeAt, // time in milliseconds
-          name: "",
-          type: "custom", //custom or p
-          Number: "General", //caller number
+          name: "Akhil",
+          type: "General", //custom or p // after 10 mins // after 10
+          Number: "99521 83 859", //caller number
           Message: "test",
           AccountId: Id.AccountId,
-          UpdatedBy: "",
+          UpdatedBy: "", //logged in user id
         },
         headers: {
           token: token,

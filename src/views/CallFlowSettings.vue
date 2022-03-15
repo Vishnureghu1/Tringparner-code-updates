@@ -27,9 +27,9 @@
 											</v-col>
 										</v-row>
 										<v-divider></v-divider>
-										<!-- <v-row>
+										<v-row>
 											<v-col cols="6">
-												<h2 class="name_heading mt-4  mr-7  ">Call Routing Settings</h2>
+												<h2 class="name_heading mt-4  mr-7  ">Call Routing</h2>
 												<h2 class="comment_heading mt-1 mb-5 mr-7 ">Configure how incoming calls are redirected between your agents.</h2>
 											</v-col>
 											<v-col cols="6" align="end">
@@ -37,7 +37,7 @@
 												<span ><v-icon  class="mt-6 mb-5 mr-7" color="#EE1C25" >mdi-arrow-right</v-icon> </span>
 												</router-link>
 											</v-col>
-										</v-row> -->
+										</v-row>
 										<v-divider></v-divider>
 										<v-row>
 											<v-col cols="6">

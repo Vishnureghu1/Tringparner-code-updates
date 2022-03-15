@@ -225,8 +225,8 @@ computed:{
    }
  },
   async created() {
-     this.getBill()
-     this.getOrderIdforPayment()
+    await this.getBill()
+    //  this.getOrderIdforPayment()
   },
 
  methods:{
@@ -234,9 +234,12 @@ computed:{
 			var token = localStorage.getItem("token");
         var tpu = localStorage.getItem("tpu");
         var Id = JSON.parse(tpu);
+
+        console.log(Id.uid+'-----------'+Id.PlanId);
         console.log(Id);
 					const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/bill',
+                  // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill/',
 						method: 'POST',
 						data: {
 							uid: Id.uid,
@@ -245,7 +248,7 @@ computed:{
 						},
             headers: {
           token: token,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
 					}
 					
@@ -264,37 +267,37 @@ computed:{
 
 
 
-      getOrderIdforPayment(){
-			var token = localStorage.getItem("token");
-        var tpu = localStorage.getItem("tpu");
-        var Id = JSON.parse(tpu);
-        console.log(Id);
-					const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/bill',
-						method: 'POST',
-						data: {
-							uid: Id.uid,
-              PlanId:Id.PlanId
+      // getOrderIdforPayment(){
+			// var token = localStorage.getItem("token");
+      //   var tpu = localStorage.getItem("tpu");
+      //   var Id = JSON.parse(tpu);
+      //   console.log(Id);
+			// 		const details = {
+			// 			url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill',
+			// 			method: 'POST',
+			// 			data: {
+			// 				uid: this.uid,
+      //         PlanId:Id.PlanId
 				
-						},
-            headers: {
-          token: token,
-          "Content-Type": "application/json",
-        },
-					}
+			// 			},
+      //       headers: {
+      //     token: token,
+      //     "Content-Type": "application/json",
+      //   },
+			// 		}
 					
-					this.$axios(details)
-						.then((response) => {
-							console.log(response)
+			// 		this.$axios(details)
+			// 			.then((response) => {
+			// 				console.log(response)
 						
 							
 							
-						})
-						.catch((error) => {
-							console.error(error);
-						})
+			// 			})
+			// 			.catch((error) => {
+			// 				console.error(error);
+			// 			})
 					
-				},
+			// 	},
 
   },
 };
