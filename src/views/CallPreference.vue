@@ -9,7 +9,8 @@
                 <div class="ml-8">
                   <v-row>
                     <v-col cols="12" sm="10">
-                      <h2 class="page_title mt-6 ml-5">Call Preference</h2>
+                     <h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack()">mdi-arrow-left</v-icon>  Call Preference</h2>
+                  
                       <v-breadcrumbs class="breadcrumbs" :items="items">
                         <template class="breadcrumbs" v-slot:divider>
                           <v-icon>mdi-chevron-right</v-icon>
@@ -446,8 +447,8 @@ export default {
     items: [
       {
         text: "More",
-        disabled: true,
-        href: "breadcrumbs_dashboard",
+        disabled: false,
+        href: "Dashbaord",
         color: "Black",
       },
       {
@@ -469,6 +470,9 @@ export default {
   }),
 
   methods: {
+    goBack(){
+				this.$router.push("/CallFlowSettings")
+			},
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
     },

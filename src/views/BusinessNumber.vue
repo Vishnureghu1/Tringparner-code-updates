@@ -9,7 +9,8 @@
 									<div class="ml-8">
 										<v-row>
 											<v-col cols="12" sm="10">
-												<h2 class="page_title mt-6 ml-5">Business Numbers</h2>
+												<h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack()">mdi-arrow-left</v-icon>  Business Numbers</h2>
+												
 												<v-breadcrumbs class="breadcrumbs" :items="items">
 													<template class="breadcrumbs" v-slot:divider >
 														<v-icon>mdi-chevron-right</v-icon>
@@ -25,7 +26,30 @@
 													<div class="number_heading mt-2 ml-5">+91 8891978085 </div>
 												</v-col>
 												<v-col cols="12" sm='6' align="end">
-													<v-icon v-bind="attrs" v-on="on" color="black" >mdi-dots-vertical</v-icon>
+													
+													<v-menu offset-y>
+                                  <template v-slot:activator="{ on, attrs }">
+                                    <v-icon
+                                      v-bind="attrs"
+                                      v-on="on"
+                                      color="black"
+                                      >mdi-dots-vertical</v-icon
+                                    >
+                                  </template>
+                                  <v-list>
+                                    <v-list-item
+                                      v-for="(item, index) in options"
+                                      :key="index"
+                                      active-class="pink--text"
+                                    >
+                                      <v-list-item-title
+                                        :class="item.color"
+                                        @click="blockCall()"
+                                        >{{ item.title }}</v-list-item-title
+                                      >
+                                    </v-list-item>
+                                  </v-list>
+                                </v-menu>
 												</v-col>
 												<v-col cols="12" sm='6'>
 													<div class="link_style mt-1 ml-5">Manage Agents </div>
@@ -61,6 +85,10 @@
 
     },
     data: () => ({
+	options: [
+      { title: "Edit Title", color: "black--text", url: "add_note" },
+     
+    ],
       items: [
         {
           text: 'More',
@@ -78,6 +106,9 @@
     }),
 
     methods:{
+			goBack(){
+				this.$router.push("/Dashboard")
+			},
 			CallFlowSettings(){
 				this.$router.push("/CallFlowSettings")
 			}
@@ -85,61 +116,3 @@
   }
   </script>
 
-<style type="text/css">
-.page-title {
-	text-align: left;
-	/*font: normal normal bold 23px/28px Lato;*/
-	/*font-weight: bold;*/
-	font-size: 23px;
-	line-height: 28px;
-  letter-spacing: 0px;
-  color: #3B3B3B;
-	opacity: 1;
-}
-.breadcrumbs {
-	/*font: normal normal bold 10px/12px Lato;*/
-	/*font-weight: bold;*/
-	font-size: 10px;
-	line-height: 12px;
-	text-align: left;
-	letter-spacing: 0px;
-	color: #3B3B3B;
-	opacity: 1;
-}
-
-.heading {
-	/*font-family: 'lato', Bold;*/
-  font-size: 16px 
-}
-.name_heading {
-	/*font-family: 'lato', Regular;*/
-  font-size: 16px 	
-}
-.number_heading {
-	/*font-family: 'Nunito', bold;*/
-	font-weight: bold;
-  font-size: 16px; 	
-  color: #3B3B3B;
-}
-.comment_heading {
-	/*font-family: 'lato', Regular;*/
-  font-size: 12px;
-  color: #808080;
-}
-.link_style{
-	/*font-family: 'lato', Regular;*/
-  font-size: 16px;	
-	color: #EE1C25;
-}
-.nunito-title {
-	text-align: left;
-	/*font: normal normal bold 16px/22px Nunito;*/
-	/*font-weight: bold;*/
-	font-size: 16px;
-	line-height: 22px;
-	letter-spacing: 0px;
-	color: #3B3B3B;
-	opacity: 1;
-}
-
-</style>
