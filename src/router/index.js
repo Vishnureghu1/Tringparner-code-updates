@@ -153,11 +153,95 @@ const routes = [{
     },
 
 
+
+
+    // CallRouting
+    {
+        path: '/CallRouting',
+        name: 'CallRouting',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/CallRouting.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    // PrioritizeConfiguration
+
+    {
+        path: '/PrioritizeConfiguration',
+        name: 'PrioritizeConfiguration',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/PrioritizeConfiguration.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
     {
         path: '/NotificationSettings',
         name: 'NotificationSettings',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/NotificationSettings.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    // MissedCallDistribution
+
+    {
+        path: '/MissedCallDistribution',
+        name: 'MissedCallDistribution',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/MissedCallDistribution.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    // SelectSpecificAgent
+    {
+        path: '/SelectSpecificAgent',
+        name: 'SelectSpecificAgent',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/SelectSpecificAgent.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    // BlockedNumbers
+    {
+        path: '/BlockedNumbers',
+        name: 'BlockedNumbers',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/BlockedNumbers.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    // GreetingMessage.vue
+    {
+        path: '/GreetingMessage',
+        name: 'GreetingMessage',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/GreetingMessage.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    // CallerTune.vue
+    {
+        path: '/CallerTune',
+        name: 'CallerTune',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/CallerTune.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    // SetWorkingHours.vue
+    {
+        path: '/WorkingHours',
+        name: 'WorkingHours',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/SetWorkingHours.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    // OfflineMesssage
+    {
+        path: '/OfflineMesssage',
+        name: 'OfflineMesssage',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/OfflineMesssage.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
 ]

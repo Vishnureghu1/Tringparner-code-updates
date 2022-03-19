@@ -70,7 +70,7 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'CallPreference' }">
+                                <router-link :to="{ name: 'CallRouting' }">
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
@@ -93,33 +93,39 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <span
-                                  ><v-icon
-                                    class="mt-6 mb-5 mr-7"
-                                    color="#EE1C25"
-                                    >mdi-arrow-right</v-icon
-                                  >
-                                </span>
+                                <router-link
+                                  :to="{ name: 'MissedCallDistribution' }"
+                                >
+                                  <span
+                                    ><v-icon
+                                      class="mt-6 mb-5 mr-7"
+                                      color="#EE1C25"
+                                      >mdi-arrow-right</v-icon
+                                    >
+                                  </span>
+                                </router-link>
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
                             <v-row>
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7">
-                                  Block Numbers
+                                  Blocked Numbers
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
                                   Block unwanted incoming and spam callers.
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <span
-                                  ><v-icon
-                                    class="mt-6 mb-5 mr-7"
-                                    color="#EE1C25"
-                                    >mdi-arrow-right</v-icon
-                                  >
-                                </span>
+                                <router-link :to="{ name: 'BlockedNumbers' }">
+                                  <span
+                                    ><v-icon
+                                      class="mt-6 mb-5 mr-7"
+                                      color="#EE1C25"
+                                      >mdi-arrow-right</v-icon
+                                    >
+                                  </span>
+                                </router-link>
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
@@ -133,13 +139,15 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <span
-                                  ><v-icon
-                                    class="mt-6 mb-5 mr-7"
-                                    color="#EE1C25"
-                                    >mdi-arrow-right</v-icon
-                                  >
-                                </span>
+                                <router-link :to="{ name: 'GreetingMessage' }">
+                                  <span
+                                    ><v-icon
+                                      class="mt-6 mb-5 mr-7"
+                                      color="#EE1C25"
+                                      >mdi-arrow-right</v-icon
+                                    >
+                                  </span>
+                                </router-link>
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
@@ -154,13 +162,15 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <span
-                                  ><v-icon
-                                    class="mt-6 mb-5 mr-7"
-                                    color="#EE1C25"
-                                    >mdi-arrow-right</v-icon
-                                  >
-                                </span>
+                                <router-link :to="{ name: 'CallerTune' }">
+                                  <span
+                                    ><v-icon
+                                      class="mt-6 mb-5 mr-7"
+                                      color="#EE1C25"
+                                      >mdi-arrow-right</v-icon
+                                    >
+                                  </span>
+                                </router-link>
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
@@ -175,13 +185,15 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <span
-                                  ><v-icon
-                                    class="mt-6 mb-5 mr-7"
-                                    color="#EE1C25"
-                                    >mdi-arrow-right</v-icon
-                                  >
-                                </span>
+                                <router-link :to="{ name: 'WorkingHours' }">
+                                  <span
+                                    ><v-icon
+                                      class="mt-6 mb-5 mr-7"
+                                      color="#EE1C25"
+                                      >mdi-arrow-right</v-icon
+                                    >
+                                  </span>
+                                </router-link>
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
