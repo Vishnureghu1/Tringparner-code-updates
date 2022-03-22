@@ -136,7 +136,14 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/CallFlowSettings.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
+    // ManageAgents
     {
+        path: '/ManageAgents',
+        name: 'ManageAgents',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/ManageAgents.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    }, {
         path: '/PauseNumber',
         name: 'PauseNumber',
         component: () =>

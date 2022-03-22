@@ -251,7 +251,7 @@ export default {
       {
         text: "More",
         disabled: false,
-        href: "Dashbaord",
+        href: "Dashboard",
       },
       {
         text: "Business Numbers",
