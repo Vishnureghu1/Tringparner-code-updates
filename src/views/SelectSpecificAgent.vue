@@ -44,8 +44,15 @@
                                 draggable
                                 @dragstart="startDrag($event, item1)"
                               >
-                                {{ item1.title }}
+                                              <v-checkbox
+              v-model="ex4"
+              :label="item1.title"
+              color="red darken-3"
+              :value="item1.id"
+              hide-details
+            ></v-checkbox>
                               </div>
+               
                             </v-card>
                           </v-col>
                         </v-row>
