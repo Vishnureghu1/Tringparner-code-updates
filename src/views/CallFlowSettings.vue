@@ -70,15 +70,16 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'CallRouting' }">
+                                <!-- <router-link :to="{ name: 'CallRouting' }"> -->
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
+                                      color="#EE1C25" 
+                                      @click="callRouting()"
                                       >mdi-arrow-right</v-icon
                                     >
                                   </span>
-                                </router-link>
+                                <!-- </router-link> -->
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
@@ -272,6 +273,10 @@ export default {
     callPauseNumber() {
       this.$router.push("/PauseNumber");
     },
+    callRouting() {
+       const getNumber =  Object.keys(this.$route.query)[0]
+       this.$router.push("/CallRouting?"+getNumber);
+    }
   },
 };
 </script>

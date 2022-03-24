@@ -19,11 +19,11 @@
 											</v-col>
 										</v-row>
 										<div class="comment_heading mt-6 ml-5">Configure your business number according to your needs</div>		
-										<v-card color="transparent" outlined class="mt-5" max-width="1069" v-for="(item,i) in 2" :key="i">
+										<v-card color="transparent" outlined class="mt-5" max-width="1069" v-for="item in virtualnumber" :key="item">
 											<v-row>
 												<v-col cols="12" sm='6'>
-													<div class="name_heading mt-1 ml-5">Name {{i+1}} </div>
-													<div class="number_heading mt-2 ml-5">+91 8891978085 </div>
+													<div class="name_heading mt-1 ml-5">{{item.Source}} </div>
+													<div class="number_heading mt-2 ml-5">{{item.VirtualNumber}}</div>
 												</v-col>
 												<v-col cols="12" sm='6' align="end">
 													
@@ -61,7 +61,7 @@
 													<div class="link_style mt-1 ml-5 mb-5" @click="CallFlowSettings()">Call Flow Settings </div>
 												</v-col>
 												<v-col cols="12" sm='6' align="end">
-													<v-icon v-bind="attrs" v-on="on" color="#EE1C25" @click="CallFlowSettings()" >mdi-arrow-right</v-icon>
+													<v-icon v-bind="attrs" v-on="on" color="#EE1C25" @click="CallFlowSettings(item.VirtualNumber)" >mdi-arrow-right</v-icon>
 												</v-col>
 											</v-row>
 										</v-card>
@@ -77,18 +77,19 @@
 </template>
 
 <script>
+// import firebase from "firebase";
+import { db } from "@/main.js";
   export default {
 
 		components: {
 		},
-		created() {
-
-    },
+		
     data: () => ({
 	options: [
       { title: "Edit Title", color: "black--text", url: "add_note" },
      
     ],
+	virtualnumber:[],
       items: [
         {
           text: 'More',
@@ -104,15 +105,32 @@
         },
       ],
     }),
+    created() {
+        let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
 
+        db.collection("uservirtualNumber").where("Uid","==",owneruid).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+			snap.docs.forEach((element)=> {
+				// console.log(element.data())
+				this.virtualnumber.push(element.data());
+			});
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    },
     methods:{
+		// console.log(this.uid)
 			goBack(){
 				this.$router.push("/Dashboard")
 			},
-			CallFlowSettings(){
-				this.$router.push("/CallFlowSettings")
+			CallFlowSettings(vn){
+				this.$router.push("/CallFlowSettings?"+vn)
 			}
-    }
+
+    },
+	
   }
   </script>
 
