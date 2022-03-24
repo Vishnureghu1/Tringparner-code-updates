@@ -37,15 +37,51 @@
                         <v-row no-gutters>
                           <v-col cols="12" sm="12" class="pl-5">
                             <v-card class="mb-0 mt-0" :elevation="0">
-                              <div
-                                class="drag-el"
-                                v-for="item1 in items1"
-                                :key="item1.title"
-                                draggable
-                                @dragstart="startDrag($event, item1)"
+                              <draggable
+                                v-model="items1"
+                                :list="items1"
+                                :disabled="!enabled"
+                                class="list-group"
+                                ghost-class="ghost"
+                                :move="checkMove"
+                                @start="dragging = true"
+                                @end="dragging = false"
                               >
-                                {{ item1.title }}
-                              </div>
+                                <transition-group>
+                                  <v-card
+                                    v-for="element in items1"
+                                    :key="element.id"
+                                    class="mb-5 row-pointer"
+                                    max-width="520"
+                                    elevation="1"
+                                    tile
+                                  >
+                                    <v-row
+                                      no-gutters
+                                      justify="center"
+                                      align="center"
+                                    >
+                                      <v-col cols="12" sm="10">
+                                        <v-card-text>
+                                          <p class="text-h6  mb-1">
+                                            {{ element.title }}
+                                          </p>
+                                          <p>{{ element.subtitle }}</p>
+                                        </v-card-text>
+                                      </v-col>
+                                      <v-col cols="12" align="right" sm="1">
+                                        <v-list-item-avatar>
+                                          <v-icon
+                                            class="mr-2 row-pointer"
+                                            color="black"
+                                            >mdi-drag-vertical</v-icon
+                                          >
+                                        </v-list-item-avatar>
+                                      </v-col>
+                                    </v-row>
+                                  </v-card>
+                                </transition-group>
+                              </draggable>
                             </v-card>
                           </v-col>
                         </v-row>
@@ -63,10 +99,14 @@
 </template>
 
 <script>
+import draggable from "vuedraggable";
+
 export default {
-  components: {},
+  components: { draggable },
   created() {},
   data: () => ({
+    enabled: true,
+    dragging: false,
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
@@ -126,13 +166,22 @@ export default {
       },
     ],
   }),
-
+  computed: {
+    draggingInfo() {
+      return this.dragging ? "under drag" : "";
+    },
+  },
   methods: {
+    checkMove: function (e) {
+      window.console.log("Future index: " + e.draggedContext.futureIndex);
+    },
     startDrag(evt, item) {
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("itemID", item.id);
     },
+    add: function () {},
+    replace: function () {},
     onDrop(evt, list) {
       const itemID = evt.dataTransfer.getData("itemID");
       const item = this.items.find((item) => item.id == itemID);
@@ -166,3 +215,21 @@ export default {
 };
 </script>
 
+<style scoped>
+.ghost {
+  opacity: 0.5;
+  background: #ffd4d4;
+  transition: all 0.5s;
+}
+.row-pointer {
+  transition: all 0.5s;
+  cursor: pointer;
+ 
+}
+.row-pointer:hover {
+  cursor: pointer;
+  transition: all 0.5s;
+   background: #c62828;
+   color: #fff;
+}
+</style>

@@ -40,25 +40,26 @@
                       >
                         + Upload Media
                       </v-btn>
-  <v-file-input
-    :rules="rules"
-    accept=".mp3, .wav"
-    placeholder="Choose file"
-    prepend-icon="mdi-camera"
-    label="Upload File"
-  ></v-file-input>
+                      <v-file-input
+                        :rules="rules"
+                        accept=".mp3, .wav"
+                        placeholder="Choose file"
+                        prepend-icon="mdi-camera"
+                        label="Upload File"
+                      ></v-file-input>
                       <v-progress-linear
-      color="red darken-1 "  buffer-value="0"
-      height="35"
-      value="20"
-      striped
-    ></v-progress-linear>
-    <v-progress-linear
-      color="red"
-      buffer-value="0"
-      value="20"
-      stream
-    ></v-progress-linear>
+                        color="red darken-1 "
+                        buffer-value="0"
+                        height="35"
+                        value="20"
+                        striped
+                      ></v-progress-linear>
+                      <v-progress-linear
+                        color="red"
+                        buffer-value="0"
+                        value="20"
+                        stream
+                      ></v-progress-linear>
                     </v-col>
                   </v-row>
                   <v-card
@@ -99,65 +100,65 @@
                                   </h2>
                                 </v-col>
                               </v-row>
-                               <v-radio-group v-model="radioGroup">
-                              <v-card
-                                color="transparent"
-                                outlined
-                                class="mt-0 pl-6"
-                                max-width="1069"
-                                v-for="greeting in Greetings"
-                                :key="greeting.id"
-                              >
-                                <v-row align="center" justify="center">
-                                  <v-col cols="12" sm="4">
-                                    <v-radio :value="greeting.id">
-                                      <span
-                                        slot="label"
-                                        class="black--text ml-3"
-                                        >{{ greeting.title }}</span
-                                      >
-                                    </v-radio>
-                                  </v-col>
-                                  <v-col cols="12" sm="5">
-                                    <audio controls>
-                                      <source
-                                        :src="greeting.Audio"
-                                        type="audio/mpeg"
-                                      />
-                                      Your browser does not support the audio
-                                      tag.
-                                    </audio>
-                                  </v-col>
-                                  <v-col cols="12" sm="3" align="end">
-                                    <v-menu offset-y>
-                                      <template
-                                        v-slot:activator="{ on, attrs }"
-                                      >
-                                        <v-icon
-                                          v-bind="attrs"
-                                          v-on="on"
-                                          color="black"
-                                          >mdi-dots-vertical</v-icon
+                              <v-radio-group v-model="radioGroup">
+                                <v-card
+                                  color="transparent"
+                                  outlined
+                                  class="mt-0 pl-6"
+                                  max-width="1069"
+                                  v-for="greeting in Greetings"
+                                  :key="greeting.id"
+                                >
+                                  <v-row align="center" justify="center">
+                                    <v-col cols="12" sm="4">
+                                      <v-radio :value="greeting.id">
+                                        <span
+                                          slot="label"
+                                          class="black--text ml-3"
+                                          >{{ greeting.title }}</span
                                         >
-                                      </template>
-                                      <v-list>
-                                        <v-list-item
-                                          v-for="(m, index) in more"
-                                          :key="index"
-                                          active-class="pink--text"
+                                      </v-radio>
+                                    </v-col>
+                                    <v-col cols="12" sm="5">
+                                      <audio controls>
+                                        <source
+                                          :src="greeting.Audio"
+                                          type="audio/mpeg"
+                                        />
+                                        Your browser does not support the audio
+                                        tag.
+                                      </audio>
+                                    </v-col>
+                                    <v-col cols="12" sm="3" align="end">
+                                      <v-menu offset-y>
+                                        <template
+                                          v-slot:activator="{ on, attrs }"
                                         >
-                                          <v-list-item-title
-                                            :class="m.color"
-                                            @click="dialog2 = true"
-                                            >{{ m.text }}</v-list-item-title
+                                          <v-icon
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            color="black"
+                                            >mdi-dots-vertical</v-icon
                                           >
-                                        </v-list-item>
-                                      </v-list>
-                                    </v-menu>
-                                  </v-col>
-                                </v-row>
-                              </v-card>
-                               </v-radio-group>
+                                        </template>
+                                        <v-list>
+                                          <v-list-item
+                                            v-for="(m, index) in more"
+                                            :key="index"
+                                            active-class="pink--text"
+                                          >
+                                            <v-list-item-title
+                                              :class="m.color"
+                                              @click="dialog2 = true"
+                                              >{{ m.text }}</v-list-item-title
+                                            >
+                                          </v-list-item>
+                                        </v-list>
+                                      </v-menu>
+                                    </v-col>
+                                  </v-row>
+                                </v-card>
+                              </v-radio-group>
                             </v-card>
                           </v-col>
                         </v-row>
@@ -170,44 +171,38 @@
           </v-flex>
         </v-layout>
 
-        <v-dialog   
-        v-model="dialog2" 
-        max-width="332px"
-      >
-        <v-card class="rounded-lg pt-7 pb-7">
-          <v-card-title class="d-flex justify-center ">
-           <h3 class="center">Rename Media</h3>
-          
-          </v-card-title>
-          <v-card-text class="pt-0 ">
-            <p align="center"  class=" pb-10">mcwaw.mp3</p>
-          <v-text-field
-            label="Media Title"
-            outlined
-          ></v-text-field>
-          </v-card-text>
-     
+        <v-dialog v-model="dialog2" max-width="332px">
+          <v-card class="rounded-lg pt-7 pb-7">
+            <v-card-title class="d-flex justify-center">
+              <h3 class="center">Rename Media</h3>
+            </v-card-title>
+            <v-card-text class="pt-0">
+              <p align="center" class="pb-10">mcwaw.mp3</p>
+              <v-text-field label="Media Title" outlined></v-text-field>
+            </v-card-text>
 
-          <v-card-actions>
-               <v-btn color="red"
-                          text
-                          class=" ma-2 text-capitalize   rounded-pill p-3 red_button_outline" min-width="140px"
-                           @click="dialog2 = false"
-                        
-                        >
-                          Cancel
-                        </v-btn>
-                        <v-btn
-                          text
-                          class="text-capitalize  ma-3 rounded-pill red_button"  min-width="140px"
-                          color="white"  outlined 
-                        >
-                          Submit
-                        </v-btn>
-                       
-                      </v-card-actions>
-        </v-card>
-      </v-dialog>
+            <v-card-actions>
+              <v-btn
+                color="red"
+                text
+                class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+                min-width="140px"
+                @click="dialog2 = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                class="text-capitalize ma-3 rounded-pill red_button"
+                min-width="140px"
+                color="white"
+                outlined
+              >
+                Submit
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-container>
     </div>
   </v-app>
@@ -241,13 +236,13 @@ export default {
       {
         id: 1,
         title: "Greeting Message 1",
-       
+
         Audio: "uri",
       },
       {
         id: 2,
         title: "Greeting Message 2",
-   
+
         Audio: "uri",
       },
     ],
@@ -258,7 +253,7 @@ export default {
         href: "",
         color: "black--text",
       },
-       {
+      {
         text: "Delete File",
         disabled: false,
         href: "Dashboard",

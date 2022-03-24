@@ -55,7 +55,7 @@
 													<div class="link_style mt-1 ml-5">Manage Agents </div>
 												</v-col>
 												<v-col cols="12" sm='6' align="end">
-													<v-icon v-bind="attrs" v-on="on" color="#EE1C25" >mdi-arrow-right</v-icon>
+													<v-icon v-bind="attrs" v-on="on" color="#EE1C25"  @click="ManageAgents()">mdi-arrow-right</v-icon>
 												</v-col>											
 												<v-col cols="12" sm='6'>
 													<div class="link_style mt-1 ml-5 mb-5" @click="CallFlowSettings()">Call Flow Settings </div>
@@ -68,12 +68,43 @@
 									</div>
 								</v-col>
 							</v-row>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </div>
+    <v-dialog v-model="dialog2" max-width="332px">
+      <v-card class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Change Title</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+          <p align="center" class="pb-10">Name 1</p>
+          <v-text-field label="New Source Title" outlined></v-text-field>
+        </v-card-text>
 
-					</v-flex>
-				</v-layout>
-			</v-container>
-		</div>
-	</v-app>
+        <v-card-actions>
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="dialog2 = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-app>
 </template>
 
 <script>

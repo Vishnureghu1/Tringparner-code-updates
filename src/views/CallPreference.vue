@@ -448,7 +448,7 @@ export default {
       {
         text: "More",
         disabled: false,
-        href: "Dashbaord",
+        href: "Dashboard",
         color: "Black",
       },
       {

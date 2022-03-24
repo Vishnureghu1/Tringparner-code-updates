@@ -136,7 +136,14 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/CallFlowSettings.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
+    // ManageAgents
     {
+        path: '/ManageAgents',
+        name: 'ManageAgents',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/ManageAgents.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    }, {
         path: '/PauseNumber',
         name: 'PauseNumber',
         component: () =>
@@ -242,6 +249,14 @@ const routes = [{
         name: 'OfflineMesssage',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/OfflineMesssage.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    //Basic Information
+    {
+        path: '/BasicInformation',
+        name: 'BasicInformation',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/BasicInformation.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
 ]
