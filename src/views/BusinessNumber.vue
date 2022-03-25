@@ -158,6 +158,9 @@ import { db } from "@/main.js";
 			},
 			CallFlowSettings(vn){
 				this.$router.push("/CallFlowSettings?"+vn)
+			},
+			ManageAgents(){
+			this.$router.push("/ManageAgents")	
 			}
 
     },

@@ -94,17 +94,18 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link
+                                <!-- <router-link
                                   :to="{ name: 'MissedCallDistribution' }"
-                                >
+                                > -->
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
                                       color="#EE1C25"
+                                      @click="MissedCallRouting()"
                                       >mdi-arrow-right</v-icon
                                     >
                                   </span>
-                                </router-link>
+                                <!-- </router-link> -->
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
@@ -276,6 +277,10 @@ export default {
     callRouting() {
        const getNumber =  Object.keys(this.$route.query)[0]
        this.$router.push("/CallRouting?"+getNumber);
+    },
+    MissedCallRouting() {
+      const getNumber =  Object.keys(this.$route.query)[0]
+       this.$router.push("/MissedCallDistribution?"+getNumber);
     }
   },
 };

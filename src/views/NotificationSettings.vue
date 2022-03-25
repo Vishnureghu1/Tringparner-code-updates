@@ -39,10 +39,10 @@
                               </v-col>
                               <v-col cols="6" sm="2" align="end">
                                 <v-switch
-                                  justify-right
-                                  v-model="isActive"
+                                  justify-right                                
+                                  v-model="Answered"
                                   color="red"
-                                  value="isActive"
+                                  @change="changeState(Answered)"
                                 ></v-switch>
                               </v-col>
                             </v-row>
@@ -59,9 +59,9 @@
                               <v-col cols="6" sm="2" align="end">
                                 <v-switch
                                   justify-right
-                                  v-model="isActive"
+                                  v-model="Missed"
                                   color="red"
-                                  value="isActive"
+                                  @change="changeState(Missed)"
                                 ></v-switch>
                               </v-col>
                             </v-row>
@@ -79,9 +79,9 @@
                               <v-col cols="6" sm="2" align="end">
                                 <v-switch
                                   justify-right
-                                  v-model="isActive"
+                                  v-model="TodaySummery"
                                   color="red"
-                                  value="isActive"
+                                  @change="changeState(TodaySummery)"
                                 ></v-switch>
                               </v-col>
                             </v-row>
@@ -98,9 +98,9 @@
                               <v-col cols="6" sm="2" align="end">
                                 <v-switch
                                   justify-right
-                                  v-model="isActive"
+                                  v-model="Payment"
                                   color="red"
-                                  value="isActive"
+                                 @change="changeState(Payment)"
                                 ></v-switch>
                               </v-col>
                             </v-row>
@@ -123,11 +123,36 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
 export default {
   components: {},
-  created() {},
+  created() {
+    // this.Active=false
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+       db.collection("users").where("uid","==",localStorageUserObj.uid).get().then(async(snap) =>{
+			console.log("test.........",snap.docs[0].data().uid);
+			snap.docs.forEach((element)=> {
+				// console.log(element.data())
+         this.Payment=element.data().PaymentNotification,
+         this.TodaySummery=element.data().TodaysActivityNotification,
+         this.Missed=element.data().MissedCallNotification,
+         this.Answered=element.data().ReceivedCallNotification
+				// this.Active = MissedCallNotification,PaymentNotification,ReceivedCallNotification,TodaysActivityNotification
+			});
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+     
+		// const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+  },
+  // watch(){
+  //      Active=true
+  // },
   data: () => ({
-    isActive: true,
+    Payment:true,
+    TodaySummery:true,
+    Missed: true,
+    Answered:true,
     e2: 1,
     repeatCallerSettings: false,
     curr: 1,
@@ -170,8 +195,11 @@ export default {
       },
     ],
   }),
-
+// mounted(){
+//  this.Active=true
+// },
   methods: {
+    changeState(id){console.log(id)},
     goBack() {
       this.$router.push("/CallFlowSettings");
     },

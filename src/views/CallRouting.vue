@@ -40,16 +40,18 @@
                             <v-card class="mb-0 mt-0" :elevation="0">
                              
 
-                              <v-radio-group v-model="ex7">
+                              <v-radio-group v-model="callRouting">
                                 <div class="subheading pt-0 pb-2">
                                   New Incoming Call Routing
                                 </div>
                                 <v-radio
-                                  value="1"
+                                  value = "SIMULTANEOUS"
+                                  v-model = "Simultaneous"
+                                  name="active"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
                                 >
-                                  <template v-slot:label>
+                                  <template v-slot:label v-bind:value="nnl">
                                     <div class="black--text">
                                       Simultaneous<br /><small
                                         class="grey--text light-3"
@@ -62,7 +64,7 @@
                                 </v-radio>
 
                                 <v-radio
-                                  value="2"
+                                  value="ROUNDROBINFLEXIBLE"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
                                 >
@@ -80,7 +82,7 @@
                                   </template>
                                 </v-radio>
                                 <v-radio
-                                  value="3"
+                                  value="ROUNDROBINSTRICT"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
                                 >
@@ -100,7 +102,7 @@
                                 </v-radio>
 
                                 <v-radio
-                                  value="4"
+                                  value="PRIORITY"
                                   color="red"
                                   class="mb-0 ml-5 pl-3"
                                 >
@@ -174,9 +176,9 @@
                                   <div class="subheading mt-5 mb-5 ml-15">
                                     Sticky Agent Type
                                   </div>
-                                  <v-radio-group v-model="ex7" column>
+                                  <v-radio-group v-model="StickyAgentType" column>
                                     <v-radio
-                                      value="1"
+                                      value="FLEXIBLE"
                                       color="red"
                                       class="mb-5 ml-5 pl-15"
                                     >
@@ -192,7 +194,7 @@
                                       </template>
                                     </v-radio>
                                     <v-radio
-                                      value="2"
+                                      value="STRICT"
                                       color="red"
                                       class="mb-0 ml-5 pl-15"
                                     >
@@ -228,13 +230,20 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
 export default {
+
   components: {},
-  created() {},
+  
   data: () => ({
+    // repeatCallerSettings:true,
+    active:"",
+    Simultaneous:true,
+    callRouting:null,
+    checkedValue: "",
     isActive: true,
     e2: 1,
-    repeatCallerSettings: false,
+    repeatCallerSettings: true,
     curr: 1,
     lastStep: 4,
     steps: [
@@ -275,8 +284,24 @@ export default {
       },
     ],
   }),
-
+  created() {
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+       db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+			snap.docs.forEach((element)=> {
+				// console.log(element.data())
+         this.callRouting=element.data().NewActiveCaller,
+         this.repeatCallerSettings=element.data().StickyAgent
+         this.StickyAgentType = element.data().Stickiness
+			});
+		}).catch((err)=>{
+			console.log(err.message);
+		})
+    },
   methods: {
+    onChange(event) {
+              var data = event.target.value;
+              console.log(data);
+          },
     goBack() {
       this.$router.push("/CallFlowSettings");
     },

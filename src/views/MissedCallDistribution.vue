@@ -40,12 +40,12 @@
                             <v-card class="mb-0 mt-0" :elevation="0">
                              
 
-                              <v-radio-group v-model="ex7">
+                              <v-radio-group v-model="MissedCallDistribution">
                                 <div class="subheading pt-0 pb-2">
                                   New Caller Routing
                                 </div>
                                 <v-radio
-                                  value="1"
+                                  value="ALL"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
                                 >
@@ -57,7 +57,7 @@
                                 </v-radio>
 
                                 <v-radio
-                                  value="2"
+                                  value="Round-Robin"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
                                 >
@@ -68,7 +68,7 @@
                                   </template>
                                 </v-radio>
                                 <v-radio
-                                  value="3"
+                                  value="Last-Attempted"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
                                 >
@@ -80,7 +80,7 @@
                                 </v-radio>
 
                                 <v-radio
-                                  value="4"
+                                  value="Specific-Agents"
                                   color="red"
                                   class="mb-0 ml-5 pl-3"
                                 >
@@ -144,7 +144,7 @@
                                   </template></v-checkbox
                                 >
 
-                                <div v-if="repeatCallerSettings">
+                                <!-- <div v-if="repeatCallerSettings">
                                   <v-divider class="ml-15"></v-divider>
                                   <div class="subheading mt-5 mb-5 ml-15">
                                     Sticky Agent Type
@@ -183,7 +183,7 @@
                                       </template>
                                     </v-radio>
                                   </v-radio-group>
-                                </div>
+                                </div> -->
                               </div>
                             </v-card>
                           </v-col>
@@ -203,12 +203,26 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
 export default {
   components: {},
-  created() {},
+  created() {
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+       db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+			snap.docs.forEach((element)=> {
+				// console.log(element.data())
+        //  this.callRouting=element.data().NewActiveCaller,
+         this.repeatCallerSettings=element.data().RepeatedMissedCaller == "Sticky-Disable" ? false : true
+         this.MissedCallDistribution = element.data().NewMissedCaller
+			});
+		}).catch((err)=>{
+			console.log(err.message);
+		})
+  },
   data: () => ({
     isActive: true,
     e2: 1,
+    MissedCallDistribution:"",
     repeatCallerSettings: false,
     curr: 1,
     lastStep: 4,
