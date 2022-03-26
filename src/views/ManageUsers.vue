@@ -24,7 +24,6 @@
                   </v-row>
                   <v-row align="center" justify="center">
                     <v-col cols="12" sm="9">
-                      
                       <h2 class="comment_heading ml-5">
                         Add, Modify or Remove users
                       </h2>
@@ -64,7 +63,7 @@
                                           color="transparent"
                                           class="mb-3"
                                         >
-                                          <div class="agent_name">Shinu</div>
+                                          <div class="agent_name">Shinu <v-icon  class="mr-2" color="gray" >mdi-chess-queen</v-icon></div>
                                           <div class="agent_role">Agent</div>
                                           <div class="agent_number">
                                             +91 989999 9900
@@ -72,29 +71,82 @@
                                         </v-card>
                                       </v-col>
                                       <v-col cols="6" sm="2" align="end">
-                                  	<v-menu offset-y>
-                                  <template v-slot:activator="{ on, attrs }">
-                                    <v-icon
-                                      v-bind="attrs"
-                                      v-on="on"
-                                      color="black"
-                                      >mdi-dots-vertical</v-icon
-                                    >
-                                  </template>
-                                  <v-list>
-                                    <v-list-item
-                                      v-for="(item, index) in options"
-                                      :key="index"
-                                      active-class="pink--text"
-                                    >
-                                      <v-list-item-title
-                                        :class="item.color"
-                                        @click="blockCall()"
-                                        >{{ item.title }}</v-list-item-title
-                                      >
-                                    </v-list-item>
-                                  </v-list>
-                                </v-menu>
+                                        <v-menu offset-y>
+                                          <template
+                                            v-slot:activator="{ on, attrs }"
+                                          >
+                                            <v-icon
+                                              v-bind="attrs"
+                                              v-on="on"
+                                              color="black"
+                                              >mdi-dots-vertical</v-icon
+                                            >
+                                          </template>
+                                          <v-list>
+                                            <v-list-item
+                                              v-for="(item, index) in options"
+                                              :key="index"
+                                              active-class="pink--text"
+                                            >
+                                              <v-list-item-title
+                                                :class="item.color"
+                                                @click="blockCall()"
+                                                >{{
+                                                  item.title
+                                                }}</v-list-item-title
+                                              >
+                                            </v-list-item>
+                                          </v-list>
+                                        </v-menu>
+                                      </v-col>
+                                    </v-row>
+                                    <v-divider></v-divider>
+                                  </v-col>
+                                </v-row>
+                                <v-row>
+                                  <v-col cols="12" sm="12" align="center">
+                                    <v-row justify="space-between">
+                                      <v-col cols="6" sm="6" align="left">
+                                        <v-card
+                                          outlined
+                                          color="transparent"
+                                          class="mb-3"
+                                        >
+                                          <div class="agent_name">Shinu  </div>
+                                          <div class="agent_role">Agent</div>
+                                          <div class="agent_number">
+                                            +91 989999 9900
+                                          </div>
+                                        </v-card>
+                                      </v-col>
+                                      <v-col cols="6" sm="2" align="end">
+                                        <v-menu offset-y>
+                                          <template
+                                            v-slot:activator="{ on, attrs }"
+                                          >
+                                            <v-icon
+                                              v-bind="attrs"
+                                              v-on="on"
+                                              color="black"
+                                              >mdi-dots-vertical</v-icon
+                                            >
+                                          </template>
+                                          <v-list>
+                                            <v-list-item
+                                              v-for="(item, index) in options"
+                                              :key="index"
+                                              active-class="pink--text"
+                                            >
+                                              <v-list-item-title
+                                                :class="item.color"
+                                                @click="blockCall()"
+                                                >{{
+                                                  item.title
+                                                }}</v-list-item-title
+                                              >
+                                            </v-list-item>
+                                          </v-list>
+                                        </v-menu>
                                       </v-col>
                                     </v-row>
                                     <v-divider></v-divider>
@@ -117,74 +169,33 @@
                                         </v-card>
                                       </v-col>
                                       <v-col cols="6" sm="2" align="end">
-                                           	<v-menu offset-y>
-                                  <template v-slot:activator="{ on, attrs }">
-                                    <v-icon
-                                      v-bind="attrs"
-                                      v-on="on"
-                                      color="black"
-                                      >mdi-dots-vertical</v-icon
-                                    >
-                                  </template>
-                                  <v-list>
-                                    <v-list-item
-                                      v-for="(item, index) in options"
-                                      :key="index"
-                                      active-class="pink--text"
-                                    >
-                                      <v-list-item-title
-                                        :class="item.color"
-                                        @click="blockCall()"
-                                        >{{ item.title }}</v-list-item-title
-                                      >
-                                    </v-list-item>
-                                  </v-list>
-                                </v-menu>
-                                      </v-col>
-                                    </v-row>
-                                    <v-divider></v-divider>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12" sm="12" align="center">
-                                    <v-row justify="space-between">
-                                      <v-col cols="6" sm="6" align="left">
-                                        <v-card
-                                          outlined
-                                          color="transparent"
-                                          class="mb-3"
-                                        >
-                                          <div class="agent_name">Shinu</div>
-                                          <div class="agent_role">Agent</div>
-                                          <div class="agent_number">
-                                            +91 989999 9900
-                                          </div>
-                                        </v-card>
-                                      </v-col>
-                                      <v-col cols="6" sm="2" align="end">
-                                             	<v-menu offset-y>
-                                  <template v-slot:activator="{ on, attrs }">
-                                    <v-icon
-                                      v-bind="attrs"
-                                      v-on="on"
-                                      color="black"
-                                      >mdi-dots-vertical</v-icon
-                                    >
-                                  </template>
-                                  <v-list>
-                                    <v-list-item
-                                      v-for="(item, index) in options"
-                                      :key="index"
-                                      active-class="pink--text"
-                                    >
-                                      <v-list-item-title
-                                        :class="item.color"
-                                        @click="blockCall()"
-                                        >{{ item.title }}</v-list-item-title
-                                      >
-                                    </v-list-item>
-                                  </v-list>
-                                </v-menu>
+                                        <v-menu offset-y>
+                                          <template
+                                            v-slot:activator="{ on, attrs }"
+                                          >
+                                            <v-icon
+                                              v-bind="attrs"
+                                              v-on="on"
+                                              color="black"
+                                              >mdi-dots-vertical</v-icon
+                                            >
+                                          </template>
+                                          <v-list>
+                                            <v-list-item
+                                              v-for="(item, index) in options"
+                                              :key="index"
+                                              active-class="pink--text"
+                                            >
+                                              <v-list-item-title
+                                                :class="item.color"
+                                                @click="blockCall()"
+                                                >{{
+                                                  item.title
+                                                }}</v-list-item-title
+                                              >
+                                            </v-list-item>
+                                          </v-list>
+                                        </v-menu>
                                       </v-col>
                                     </v-row>
                                     <v-divider></v-divider>
@@ -206,44 +217,38 @@
       </v-container>
     </div>
     <v-dialog v-model="dialog2" max-width="332px">
-          <v-card class="rounded-lg pt-7 pb-7">
-            <v-card-title class="d-flex justify-center">
-              <h3 class="center">Add New User</h3>
-            </v-card-title>
-            <v-card-text class="pt-0">
-            
-              <v-text-field label="Name" outlined></v-text-field>
-                 <v-select
-          :items="types"
-          label="Role"
-          outlined
-        ></v-select>
-           
-           
-            <v-text-field label="Mobile Numebr*" outlined></v-text-field>
-             </v-card-text>
-            <v-card-actions>
-              <v-btn
-                color="red"
-                text
-                class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-                min-width="140px"
-                @click="dialog2 = false"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                text
-                class="text-capitalize ma-3 rounded-pill red_button"
-                min-width="140px"
-                color="white"
-                outlined
-              >
-                Submit
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+      <v-card class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Add New User</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+          <v-text-field label="Name" outlined></v-text-field>
+          <v-select :items="types" label="Role" outlined></v-select>
+
+          <v-text-field label="Mobile Numebr*" outlined></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="dialog2 = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -252,47 +257,34 @@ export default {
   components: {},
   created() {},
   data: () => ({
-     dialog2: false,
+    dialog2: false,
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
-    curr: 1,
-    lastStep: 4,
-    steps: [
-      { name: "Manage User", rules: [(v) => !!v || "Required."], valid: true },
-      {
-        name: "Call Routing Setting",
-        rules: [(v) => !!v || "Required."],
-        valid: true,
-      },
 
-    ],
-    	options: [
+    options: [
       { title: "Edit Title", color: "black--text", url: "edit" },
       { title: "Send Invite", color: "black--text", url: "send" },
       { title: "Remove User", color: "red--text", url: "remove" },
-     
     ],
     valid: false,
     stepForm: [],
-types:[
-    {
-
+    types: [
+      {
         text: "Agent",
-    },
-     {
-
+      },
+      {
         text: "Admin",
-    }
-],
+      },
+    ],
     items: [
-     {
+      {
         text: "More",
         disabled: false,
         href: "Dashboard",
         color: "Black",
       },
-   
+
       {
         text: "Manage Users",
         disabled: true,
