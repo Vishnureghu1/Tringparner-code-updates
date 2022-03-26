@@ -24,6 +24,7 @@
                   </v-row>
                   <v-row align="center" justify="center">
                     <v-col cols="12" sm="9">
+                        <h4 class="ml-5">Business Number 8657510921</h4>
                       <h2 class="comment_heading ml-5">
                         Select which all Users (Call Agents) are linked to this
                         number. Distributions will happen amongst them.
@@ -34,7 +35,7 @@
                         :disabled="dialog"
                         :loading="dialog"
                         @click="dialog2 = true"
-                        class="ma-2"
+                        class="ma-0"
                         color="red darken-1"
                         dark
                       >
@@ -53,7 +54,7 @@
                       <v-flex xs12 sm12 md12>
                         <v-row no-gutters>
                           <v-col cols="12">
-                            <v-card :elevation="0" class="mb-0">
+                            <v-card :elevation="0" class="ml-5">
                               <v-col cols="12" sm="10" align="center">
                                 <v-row>
                                   <v-col cols="12" sm="12" align="center">
