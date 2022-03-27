@@ -327,7 +327,7 @@ export default {
         to: { name: "Addons" },
       },
       {
-        text: "Manage Add-On Number",
+        text: "Manage Add-On Users",
         disabled: true,
         to: { name: "CallPreference" },
       },
