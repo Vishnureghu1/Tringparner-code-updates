@@ -60,10 +60,10 @@ const routes = [{
         meta: { requiresAuth: true, role: 'OWNER' }
     },
     {
-        path: '/manageAddonNumebrs',
-        name: 'manageAddonNumebrs',
+        path: '/manageAddonNumbers',
+        name: 'manageAddonNumbers',
         component: () =>
-            import ( /* webpackChunkName: "missed_call" */ '../views/manageAddonNumebrs.vue'),
+            import ( /* webpackChunkName: "missed_call" */ '../views/manageAddonNumbers.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
     {

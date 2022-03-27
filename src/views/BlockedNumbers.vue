@@ -13,7 +13,7 @@
                         <v-icon class="mr-2" color="black" @click="goBack()"
                           >mdi-arrow-left</v-icon
                         >
-                        Blocked Numebrs
+                        Blocked Numbers
                       </h2>
                       <v-breadcrumbs class="breadcrumbs" :items="items">
                         <template class="breadcrumbs" v-slot:divider>
@@ -35,13 +35,13 @@
                           <v-col cols="12" sm="12">
                             <v-card class="mb-0 mt-0" :elevation="0">
                              <div class="comment_heading mt-6 ml-5">
-                    No Blocked Numebrs
+                    No Blocked Numbers
                   </div>
 
            
 
                               <v-list-item
-        v-for="bnumebr in blockedNumebrs"
+        v-for="bnumebr in blockedNumbers"
         :key="bnumebr.title"
       >
         <v-list-item-avatar>
@@ -103,7 +103,7 @@ export default {
     ],
     valid: false,
     stepForm: [],
-    blockedNumebrs: [
+    blockedNumbers: [
       {
         id: 1,
         title: "Sree",

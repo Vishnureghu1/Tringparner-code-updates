@@ -41,7 +41,7 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'manageAddonNumebrs' }">
+                                <router-link :to="{ name: 'manageAddonNumbers' }">
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"

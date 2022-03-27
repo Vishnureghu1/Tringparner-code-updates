@@ -225,7 +225,7 @@
           <v-text-field label="Name" outlined></v-text-field>
           <v-select :items="types" label="Role" outlined></v-select>
 
-          <v-text-field label="Mobile Numebr*" outlined></v-text-field>
+          <v-text-field label="Mobile Number*" outlined></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn

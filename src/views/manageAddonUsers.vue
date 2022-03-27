@@ -63,7 +63,7 @@
                                           color="transparent"
                                           class="mb-3"
                                         >
-                                          <div class="agent_name">Sree </div>
+                                          <div class="agent_name">Sree</div>
                                           <div class="agent_role">Admin</div>
                                           <div class="agent_number">
                                             +91 989999 9900
@@ -90,57 +90,8 @@
                                             >
                                               <v-list-item-title
                                                 :class="item.color"
-                                                @click="showPopup(item.id,item.url)"
+                                                @click="showPopup(item.url)"
                                                 :id="item.url"
-                                                >{{
-                                                  item.title
-                                                }}</v-list-item-title
-                                              >
-                                            </v-list-item>
-                                          </v-list>
-                                        </v-menu>
-                                      </v-col>
-                                    </v-row>
-                                    <v-divider></v-divider>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12" sm="12" align="center">
-                                    <v-row justify="space-between">
-                                      <v-col cols="6" sm="6" align="left">
-                                        <v-card
-                                          outlined
-                                          color="transparent"
-                                          class="mb-3"
-                                        >
-                                          <div class="agent_name">Shinu  </div>
-                                          <div class="agent_role">Agent</div>
-                                          <div class="agent_number">
-                                            +91 989999 9900
-                                          </div>
-                                        </v-card>
-                                      </v-col>
-                                      <v-col cols="6" sm="2" align="end">
-                                        <v-menu offset-y>
-                                          <template
-                                            v-slot:activator="{ on, attrs }"
-                                          >
-                                            <v-icon
-                                              v-bind="attrs"
-                                              v-on="on"
-                                              color="black"
-                                              >mdi-dots-vertical</v-icon
-                                            >
-                                          </template>
-                                          <v-list>
-                                            <v-list-item
-                                              v-for="(item, index) in options"
-                                              :key="index"
-                                              active-class="pink--text"
-                                            >
-                                              <v-list-item-title
-                                                :class="item.color"
-                                                @click="showPopup(item.id,item.url)"
                                                 >{{
                                                   item.title
                                                 }}</v-list-item-title
@@ -189,7 +140,56 @@
                                             >
                                               <v-list-item-title
                                                 :class="item.color"
-                                                @click="showPopup(item.id,item.url)"
+                                                @click="showPopup(item.url)"
+                                                >{{
+                                                  item.title
+                                                }}</v-list-item-title
+                                              >
+                                            </v-list-item>
+                                          </v-list>
+                                        </v-menu>
+                                      </v-col>
+                                    </v-row>
+                                    <v-divider></v-divider>
+                                  </v-col>
+                                </v-row>
+                                <v-row>
+                                  <v-col cols="12" sm="12" align="center">
+                                    <v-row justify="space-between">
+                                      <v-col cols="6" sm="6" align="left">
+                                        <v-card
+                                          outlined
+                                          color="transparent"
+                                          class="mb-3"
+                                        >
+                                          <div class="agent_name">Shinu</div>
+                                          <div class="agent_role">Agent</div>
+                                          <div class="agent_number">
+                                            +91 989999 9900
+                                          </div>
+                                        </v-card>
+                                      </v-col>
+                                      <v-col cols="6" sm="2" align="end">
+                                        <v-menu offset-y>
+                                          <template
+                                            v-slot:activator="{ on, attrs }"
+                                          >
+                                            <v-icon
+                                              v-bind="attrs"
+                                              v-on="on"
+                                              color="black"
+                                              >mdi-dots-vertical</v-icon
+                                            >
+                                          </template>
+                                          <v-list>
+                                            <v-list-item
+                                              v-for="(item, index) in options"
+                                              :key="index"
+                                              active-class="pink--text"
+                                            >
+                                              <v-list-item-title
+                                                :class="item.color"
+                                                @click="showPopup(item.url)"
                                                 >{{
                                                   item.title
                                                 }}</v-list-item-title
@@ -226,7 +226,7 @@
           <v-text-field label="Name" outlined></v-text-field>
           <v-select :items="types" label="Role" outlined></v-select>
 
-          <v-text-field label="Mobile Numebr*" outlined></v-text-field>
+          <v-text-field label="Mobile Number*" outlined></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -250,39 +250,40 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    
-          <v-dialog v-model="removeNumber" max-width="332px">
-          <v-card class="rounded-lg pt-7 pb-7">
-            <v-card-title class="d-flex justify-center">
-              <h3 class="center">Remove User</h3>
-            </v-card-title>
-            <v-card-text class="pt-0">
-              <p align="center" class="pb-10">mcwaw.mp3</p>
-              <v-text-field label="Media Title" outlined></v-text-field>
-            </v-card-text>
 
-            <v-card-actions>
-              <v-btn
-                color="red"
-                text
-                class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-                min-width="140px"
-                @click="removeNumber = false"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                text
-                class="text-capitalize ma-3 rounded-pill red_button"
-                min-width="140px"
-                color="white"
-                outlined
-              >
-                Submit
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+    <v-dialog v-model="removeNumber" max-width="332px">
+      <v-card class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Remove User</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+          <p align="center" class="pb-0 mb-0">
+            Are you sure want to remove this user Sree [9526287163] ?
+          </p>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="removeNumber = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+          >
+            Remove
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -292,13 +293,13 @@ export default {
   created() {},
   data: () => ({
     dialog2: false,
-    dialog:false,
-    removeNumber:false,
+    dialog: false,
+    removeNumber: false,
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
 
-   options: [
+    options: [
       { title: "Edit", color: "black--text", url: "Edit" },
       { title: "Send Invite", color: "black--text", url: "sendInvite" },
       { title: "Remove Slot", color: "red--text", url: "removeSlot" },
@@ -313,26 +314,26 @@ export default {
         text: "Admin",
       },
     ],
-     items: [
+    items: [
       {
         text: "More",
         disabled: false,
         href: "Dashboard",
         color: "Black",
       },
-{
+      {
         text: "Add-Ons",
         disabled: false,
         to: { name: "Addons" },
       },
       {
-        text: "Manage Add-On Numebr",
+        text: "Manage Add-On Number",
         disabled: true,
         to: { name: "CallPreference" },
       },
     ],
   }),
-watch: {
+  watch: {
     dialog(val) {
       if (!val) return;
 
@@ -340,11 +341,14 @@ watch: {
     },
   },
   methods: {
-      showPopup(type,id) {
-          if(type=='Edit'){
-removeNumber=true
-          }
-      },
+    showPopup(type) {
+      if (type == "Edit") {
+        this.dialog2 = true;
+      }
+      if (type == "removeSlot") {
+        this.removeNumber = true;
+      }
+    },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
     },

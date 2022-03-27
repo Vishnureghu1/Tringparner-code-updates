@@ -77,7 +77,7 @@
                           Play Offline Message
                         </h2>
                         <h2 class="comment_heading mt-1 ml-15 mr-7">
-                          Play an audio message to customers who call your business numebr duiring offline hours.
+                          Play an audio message to customers who call your business number duiring offline hours.
                         </h2>
                       </v-col>
                       <v-col cols="12" sm="2" align="end">
