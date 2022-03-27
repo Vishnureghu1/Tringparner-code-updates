@@ -81,42 +81,38 @@
                     <v-spacer></v-spacer>
                     <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent" class="">
-                        <h3 class="number_heading" align="start">100</h3>
-                        <h6 class="comment_heading" align="start">
+                        <h3 class="number_heading nunito-font light3" align="center">100</h3>
+                        <h6 class="comment_heading" align="center">
                           Total Calls
                         </h6>
                       </v-card>
                     </v-col>
                     <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent">
-                        <h3 class="number_heading" align="start">90</h3>
-                        <h6 class="comment_heading" align="start">Answered</h6>
+                        <h3 class="number_heading nunito-font light3" align="center">90</h3>
+                        <h6 class="comment_heading" align="center">Answered</h6>
                       </v-card>
                     </v-col>
                     <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent">
-                        <h3 class="number_heading" align="start">10</h3>
-                        <h6 class="comment_heading" align="start">
+                        <h3 class="number_heading nunito-font light3" align="center">10</h3>
+                        <h6 class="comment_heading" align="center">
                           Not Answered
                         </h6>
                       </v-card>
                     </v-col>
                     <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent">
-                        <h3 class="number_heading" align="start">1</h3>
-                        <h6 class="comment_heading" align="start">Offline</h6>
+                        <h3 class="number_heading nunito-font light3" align="center">1</h3>
+                        <h6 class="comment_heading" align="center">Offline</h6>
                       </v-card>
                     </v-col>
                   </v-row>
                   <br />
                   <br />
                   <v-row no-gutters>
-					  {{chartData}}
-					  <GChart
-    type="ColumnChart"
-    :data="chartData"
-    :options="chartOptions"
-  />
+				
+
                     <v-col cols="12" sm="6" v-for="n in 3" :key="n">
                       <v-expansion-panels accordion flat>
                         <v-expansion-panel>
@@ -144,6 +140,39 @@
                               :data="chartData"
                               :options="chartOptions"
                             />
+							<v-row no-gutters>
+           
+						<v-col cols="6" sm="3" align="center" >
+                      <v-card outlined color="transparent" class="nunito-font">
+                        <h2  align="center"  class=" nunito-font light3">100</h2>
+                        <h6 class="comment_heading" align="center">
+                          Total Calls
+                        </h6>
+                      </v-card>
+					
+                    </v-col>
+                    <v-col cols="6" sm="3" align="center">
+                      <v-card outlined color="transparent" class="nunito-font">
+                        <h2 align="center"  class=" nunito-font light3">90</h2>
+                        <h6 class="comment_heading" align="center">Answered</h6>
+                      </v-card>
+                    </v-col>
+                    <v-col cols="6" sm="3" align="center">
+                      <v-card outlined color="transparent" class="nunito-font">
+                       <h2 align="center"  class=" nunito-font light3">10</h2>
+                        <h6 class="comment_heading" align="center">
+                          Not Answered
+                        </h6>
+                      </v-card>
+                    </v-col>
+                    <v-col cols="6" sm="3" align="center">
+                      <v-card outlined color="transparent" class="nunito-font">
+                        <h2 align="center"  class=" nunito-font light3">02</h2>
+                        <h6 class="comment_heading" align="center">Offline</h6>
+                      </v-card>
+                    </v-col>
+			 
+                  </v-row>
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>
@@ -168,16 +197,16 @@ export default {
 
   chartData: [
         ['Date', 'No Calls',{ role: "style" }, 'Answered Calls',{ role: "style" }, 'Missed Calls', { role: "style" }],
-        ['01', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
-        ['02', 1,"#ff9a9a",0, "#ff9a9a", 10, "#ff9a9a"],
-        ['03', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
-        ['04', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
-        ['05', 0,"#ff9a9a", 0, "#ff9a9a", 10, "#ff9a9a"], 
-        ['06', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
-        ['07', 0, "#c8c8c8",1,"#1dca98",  7, "#ff9a9a"],
-        ['08', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
-        ['09', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
-        ['10', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
+        ['01', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
+        ['02', 1,"#FAB4B7",0, "#FAB4B7", 10, "#FAB4B7"],
+        ['03', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
+        ['04', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
+        ['05', 0,"#FAB4B7", 0, "#FAB4B7", 10, "#FAB4B7"], 
+        ['06', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
+        ['07', 0, "#E0E0E0",1,"#13B9A8",  7, "#FAB4B7"],
+        ['08', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
+        ['09', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
+        ['10', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
 
       ],
 
@@ -229,13 +258,13 @@ width: 600,
   font-size: 14px;
 }
 .number_heading {
-  font-family: "Nunito", light;
+
   font-size: 37px;
-  color: #3b3b3b;
+  color: #3B3B3B;
 }
 .comment_heading {
-  font-family: "Nunito", Regular;
+
   font-size: 10px;
-  color: #808080;
+  color: #3B3B3B;
 }
 </style>

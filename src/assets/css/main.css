@@ -16,8 +16,28 @@ body {
     font-family: 'Nunito', sans-serif;
 }
 
+.bold {
+    font-weight: 500;
+}
+
 .medium {
     font-weight: 500;
+}
+
+.light4 {
+    font-weight: 400;
+}
+
+.light3 {
+    font-weight: 300;
+}
+
+.light2 {
+    font-weight: 200;
+}
+
+.light1 {
+    font-weight: 100;
 }
 
 .page_title {
@@ -400,8 +420,6 @@ body {
 }
 
 .number_heading {
-    /*font-family: 'Nunito', bold;*/
-    font-weight: bold;
     font-size: 16px;
     color: #3B3B3B;
 }
