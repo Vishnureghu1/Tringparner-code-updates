@@ -168,34 +168,35 @@ export default {
 
   chartData: [
         ['Date', 'No Calls',{ role: "style" }, 'Answered Calls',{ role: "style" }, 'Missed Calls', { role: "style" }],
-        ['01', 0,"#c8c8c8", 10,"#1dca98",  15, "#c8c8c8"],
-        ['02', 0,"#c8c8c8", 2, "#1dca98", 23, "#c8c8c8"],
-        ['03', 0, "#c8c8c8",12,"#1dca98",  10, "#ff9a9a"],
-        ['04', 0, "#c8c8c8",12,"#1dca98",  0, "#c8c8c8"], // green full
-        ['05', 0, "#c8c8c8",0,"#1dca98",  10, "#ff9a9a"], // missed calls
-        ['06', 0, "#c8c8c8",25,"#1dca98",  10, "#ff9a9a"],
-        ['07', 0, "#c8c8c8",10,"#1dca98",  5, "#ff9a9a"],
-        ['08', 0, "#c8c8c8",12,"#1dca98",  10, "#ff9a9a"],
-        ['09', 0,"#c8c8c8", 7, "#1dca98", 2,"#c8c8c8"],
-        ['10', 0,"#c8c8c8", 4, "#1dca98", 5,"#c8c8c8"],
-        // ['11', 50,"#c8c8c8", 4, "#1dca98", 5,"##ff9a9a"],
-        // ['12', 50,"#c8c8c8", 4, "#1dca98", 5,"##ff9a9a"],
-        // ['13', 50,"#c8c8c8", 4, "#1dca98", 5,"##ff9a9a"],
-        // ['14', 50,"#c8c8c8", 4, "#1dca98", 5,"##ff9a9a"],
+        ['01', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
+        ['02', 1,"#ff9a9a",0, "#ff9a9a", 10, "#ff9a9a"],
+        ['03', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
+        ['04', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
+        ['05', 0,"#ff9a9a", 0, "#ff9a9a", 10, "#ff9a9a"], 
+        ['06', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
+        ['07', 0, "#c8c8c8",1,"#1dca98",  7, "#ff9a9a"],
+        ['08', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
+        ['09', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
+        ['10', 1,"#c8c8c8", 0,"#c8c8c8",  0, "#c8c8c8"],
+
       ],
-	//   chartArea:{left:20,top:0,width:'50%',height:'75%'},
+
       chartOptions: {
 		 
+width: 600,
+        height: 400,
+        legend: { position: 'top', maxLines: 3 },
 
-		     isStacked: 'relative',
-			//   isStacked: 'percent',
+        // isStacked: true,
+		    //  isStacked: 'relative',
+			  isStacked: 'percent',
 			 width: 600,
         height: 400,
         bar: {groupWidth: "85%", groupHeight: "100%"},legend: { position: "none" },
-        chart: {
-          title: 'Calls log',
-          subtitle: 'Answered Calls',
-        },
+       
+          title: 'Reports',
+         
+       
 
       }
   }),
