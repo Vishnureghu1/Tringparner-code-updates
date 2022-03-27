@@ -60,6 +60,42 @@ const routes = [{
         meta: { requiresAuth: true, role: 'OWNER' }
     },
     {
+        path: '/manageAddonNumebrs',
+        name: 'manageAddonNumebrs',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/manageAddonNumebrs.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    {
+        path: '/manageAddonUsers',
+        name: 'manageAddonUsers',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/manageAddonUsers.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    {
+        path: '/buyNewNumber',
+        name: 'buyNewNumber',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/buyNewNumber.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    {
+        path: '/buyNewAddOnUser',
+        name: 'buyNewAddOnUser',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/buyNewAddOnUser.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    {
+        path: '/fancyNumberPurchase',
+        name: 'fancyNumberPurchase',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/fancyNumberPurchase.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    {
         path: '/BillingInformation',
         name: 'BillingInformation',
         component: () =>

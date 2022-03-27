@@ -12,10 +12,31 @@
                       <h2 class="page_heading mt-6 mb-5">Report</h2>
                     </v-col>
                     <v-col cols="12" sm="2" align="end">
-                      <span
-                        ><v-icon class="mt-6 mb-5 mr-4" color="black"
-                          >mdi-download</v-icon
-                        >
+                      <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon
+                            class="mt-6 mb-5 mr-4"
+                            v-bind="attrs"
+                            v-on="on"
+                            color="black"
+                            >mdi-download</v-icon
+                          >
+                        </template>
+                        <v-list>
+                          <v-list-item
+                            v-for="(item, index) in options"
+                            :key="index"
+                            active-class="pink--text"
+                          >
+                            <v-list-item-title
+                              :class="item.color"
+                              
+                              >{{ item.title }}</v-list-item-title
+                            >
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                      <span>
                         <v-icon class="mt-6 mb-5 mr-7" color="black"
                           >mdi-dots-vertical</v-icon
                         >
@@ -81,7 +102,12 @@
                     <v-spacer></v-spacer>
                     <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent" class="">
-                        <h3 class="number_heading nunito-font light3" align="center">100</h3>
+                        <h3
+                          class="number_heading nunito-font light3"
+                          align="center"
+                        >
+                          100
+                        </h3>
                         <h6 class="comment_heading" align="center">
                           Total Calls
                         </h6>
@@ -89,13 +115,23 @@
                     </v-col>
                     <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent">
-                        <h3 class="number_heading nunito-font light3" align="center">90</h3>
+                        <h3
+                          class="number_heading nunito-font light3"
+                          align="center"
+                        >
+                          90
+                        </h3>
                         <h6 class="comment_heading" align="center">Answered</h6>
                       </v-card>
                     </v-col>
                     <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent">
-                        <h3 class="number_heading nunito-font light3" align="center">10</h3>
+                        <h3
+                          class="number_heading nunito-font light3"
+                          align="center"
+                        >
+                          10
+                        </h3>
                         <h6 class="comment_heading" align="center">
                           Not Answered
                         </h6>
@@ -103,7 +139,12 @@
                     </v-col>
                     <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent">
-                        <h3 class="number_heading nunito-font light3" align="center">1</h3>
+                        <h3
+                          class="number_heading nunito-font light3"
+                          align="center"
+                        >
+                          1
+                        </h3>
                         <h6 class="comment_heading" align="center">Offline</h6>
                       </v-card>
                     </v-col>
@@ -111,8 +152,6 @@
                   <br />
                   <br />
                   <v-row no-gutters>
-				
-
                     <v-col cols="12" sm="6" v-for="n in 3" :key="n">
                       <v-expansion-panels accordion flat>
                         <v-expansion-panel>
@@ -140,39 +179,64 @@
                               :data="chartData"
                               :options="chartOptions"
                             />
-							<v-row no-gutters>
-           
-						<v-col cols="6" sm="3" align="center" >
-                      <v-card outlined color="transparent" class="nunito-font">
-                        <h2  align="center"  class=" nunito-font light3">100</h2>
-                        <h6 class="comment_heading" align="center">
-                          Total Calls
-                        </h6>
-                      </v-card>
-					
-                    </v-col>
-                    <v-col cols="6" sm="3" align="center">
-                      <v-card outlined color="transparent" class="nunito-font">
-                        <h2 align="center"  class=" nunito-font light3">90</h2>
-                        <h6 class="comment_heading" align="center">Answered</h6>
-                      </v-card>
-                    </v-col>
-                    <v-col cols="6" sm="3" align="center">
-                      <v-card outlined color="transparent" class="nunito-font">
-                       <h2 align="center"  class=" nunito-font light3">10</h2>
-                        <h6 class="comment_heading" align="center">
-                          Not Answered
-                        </h6>
-                      </v-card>
-                    </v-col>
-                    <v-col cols="6" sm="3" align="center">
-                      <v-card outlined color="transparent" class="nunito-font">
-                        <h2 align="center"  class=" nunito-font light3">02</h2>
-                        <h6 class="comment_heading" align="center">Offline</h6>
-                      </v-card>
-                    </v-col>
-			 
-                  </v-row>
+                            <v-row no-gutters>
+                              <v-col cols="6" sm="3" align="center">
+                                <v-card
+                                  outlined
+                                  color="transparent"
+                                  class="nunito-font"
+                                >
+                                  <h2 align="center" class="nunito-font light3">
+                                    100
+                                  </h2>
+                                  <h6 class="comment_heading" align="center">
+                                    Total Calls
+                                  </h6>
+                                </v-card>
+                              </v-col>
+                              <v-col cols="6" sm="3" align="center">
+                                <v-card
+                                  outlined
+                                  color="transparent"
+                                  class="nunito-font"
+                                >
+                                  <h2 align="center" class="nunito-font light3">
+                                    90
+                                  </h2>
+                                  <h6 class="comment_heading" align="center">
+                                    Answered
+                                  </h6>
+                                </v-card>
+                              </v-col>
+                              <v-col cols="6" sm="3" align="center">
+                                <v-card
+                                  outlined
+                                  color="transparent"
+                                  class="nunito-font"
+                                >
+                                  <h2 align="center" class="nunito-font light3">
+                                    10
+                                  </h2>
+                                  <h6 class="comment_heading" align="center">
+                                    Not Answered
+                                  </h6>
+                                </v-card>
+                              </v-col>
+                              <v-col cols="6" sm="3" align="center">
+                                <v-card
+                                  outlined
+                                  color="transparent"
+                                  class="nunito-font"
+                                >
+                                  <h2 align="center" class="nunito-font light3">
+                                    02
+                                  </h2>
+                                  <h6 class="comment_heading" align="center">
+                                    Offline
+                                  </h6>
+                                </v-card>
+                              </v-col>
+                            </v-row>
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>
@@ -193,45 +257,58 @@
 import { GChart } from "vue-google-charts";
 export default {
   data: () => ({
+    options: [
+      { title: "Download as XML", color: "gray--text", url: "exportxml" },
+      { title: "Download as PDF", color: "gtay--text", url: "send" },
+    ],
+	//  filters: [
+    //   { title: "Download as XML", color: "gray--text", url: "edit" },
+    //   { title: "Download as PDF", color: "gtay--text", url: "send" },
+    // ],
     dates: ["2021-12-22", "2021-12-25"],
 
-  chartData: [
-        ['Date', 'No Calls',{ role: "style" }, 'Answered Calls',{ role: "style" }, 'Missed Calls', { role: "style" }],
-        ['01', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
-        ['02', 0,"#FAB4B7",0, "#FAB4B7", 10, "#FAB4B7"],
-        ['03', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
-        ['04', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
-        ['05', 0,"#FAB4B7", 0, "#FAB4B7", 10, "#FAB4B7"], 
-        ['06', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
-        ['07', 0, "#E0E0E0",1,"#13B9A8",  7, "#FAB4B7"],
-        ['08', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
-        ['09', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
-        ['10', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
-
+    chartData: [
+      [
+        "Date",
+        "No Calls",
+        { role: "style" },
+        "Answered Calls",
+        { role: "style" },
+        "Missed Calls",
+        { role: "style" },
       ],
+      ["01", 1, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
+      ["02", 0, "#FAB4B7", 0, "#FAB4B7", 10, "#FAB4B7"],
+      ["03", 1, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
+      ["04", 1, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
+      ["05", 0, "#FAB4B7", 0, "#FAB4B7", 10, "#FAB4B7"],
+      ["06", 1, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
+      ["07", 0, "#E0E0E0", 1, "#13B9A8", 7, "#FAB4B7"],
+      ["08", 1, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
+      ["09", 1, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
+      ["10", 1, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
+    ],
 
-      chartOptions: {
-		 
-width: 600,
-        height: 400,
-        legend: { position: 'top', maxLines: 3 },
+    chartOptions: {
+      width: 600,
+      height: 400,
+      legend: { position: "top", maxLines: 3 },
 
-        // isStacked: true,
-		    //  isStacked: 'relative',
-			  isStacked: 'percent',
-			 width: 600,
-        height: 400,
-        bar: {groupWidth: "85%", groupHeight: "100%"},legend: { position: "none" },
-       
-          title: 'Reports',
-         
-       
+      // isStacked: true,
+      //  isStacked: 'relative',
+      isStacked: "percent",
+      width: 600,
+      height: 400,
+      bar: { groupWidth: "85%", groupHeight: "100%" },
+      legend: { position: "none" },
 
-      }
+      title: "Reports",
+    },
   }),
   components: {
     GChart,
   },
+
   computed: {
     dateRangeText() {
       if (this.dates.includes(",")) {
@@ -258,13 +335,11 @@ width: 600,
   font-size: 14px;
 }
 .number_heading {
-
   font-size: 37px;
-  color: #3B3B3B;
+  color: #3b3b3b;
 }
 .comment_heading {
-
   font-size: 10px;
-  color: #3B3B3B;
+  color: #3b3b3b;
 }
 </style>
