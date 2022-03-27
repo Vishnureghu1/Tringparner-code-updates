@@ -198,7 +198,7 @@ export default {
   chartData: [
         ['Date', 'No Calls',{ role: "style" }, 'Answered Calls',{ role: "style" }, 'Missed Calls', { role: "style" }],
         ['01', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
-        ['02', 1,"#FAB4B7",0, "#FAB4B7", 10, "#FAB4B7"],
+        ['02', 0,"#FAB4B7",0, "#FAB4B7", 10, "#FAB4B7"],
         ['03', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
         ['04', 1,"#E0E0E0", 0,"#E0E0E0",  0, "#E0E0E0"],
         ['05', 0,"#FAB4B7", 0, "#FAB4B7", 10, "#FAB4B7"], 
