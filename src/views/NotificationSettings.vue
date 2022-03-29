@@ -129,8 +129,9 @@ export default {
   created() {
     // this.Active=false
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-       db.collection("users").where("uid","==",localStorageUserObj.uid).get().then(async(snap) =>{
-			console.log("test.........",snap.docs[0].data().uid);
+      // db.collection("UserAudio").where("Uid","==",localStorageUserObj.uid).get().then(async(snap) =>{
+      db.collection("users").where("uid","==",localStorageUserObj.uid).get().then(async(snap) =>{
+			console.log("test.........",snap.docs[0].data());
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
          this.Payment=element.data().PaymentNotification,
