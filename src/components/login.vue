@@ -182,7 +182,7 @@ import { db } from '@/main.js';
 											} else {
 												if (this.currentPage == "onboarding_listing") {
 													this.overlay = false
-													this.$router.push("/ChooseNumbers").catch(() => {});
+													this.$router.push("/ChooseNumbers").catch((err) => {console.log(err)});
 												} else if (this.currentPage == "onboarding_plan_details") {
 													this.overlay = false
 													this.$router.push("/SelectPlan").catch(() => {});

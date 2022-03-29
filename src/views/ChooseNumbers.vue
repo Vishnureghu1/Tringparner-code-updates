@@ -137,7 +137,8 @@ import { db } from '@/main.js';
 								this.currentPage = this.Udata.currentPage
 								console.log(this.currentPage)
 								if (this.currentPage == "onboarding_listing") {
-									this.$router.push("/ChooseNumbers")
+									// this.$router.push("/ChooseNumbers")
+									this.getNumbersList()
 								}
 								else if (this.currentPage == "onboarding_plan_details") {
 									this.$router.push("/SelectPlan")
@@ -155,7 +156,7 @@ import { db } from '@/main.js';
 						}).catch((error) => {
 							console.log("Error getting documents: ", error);
 						})
-						this.getNumbersList()
+						// this.getNumbersList()
 				}
 			})
 
@@ -211,8 +212,9 @@ import { db } from '@/main.js';
 					console.log(details)
 					this.$axios(details)
 					.then((response) => {
-						this.listingId = response.data.listingId
+						this.listingId = response.data.listing_id
 						if(this.listingId){
+							console.log("1")
 							this.overlay = false
 							this.V_numbers = response.data.numbers
 							this.timerCount = response.data.Seconds
@@ -223,6 +225,7 @@ import { db } from '@/main.js';
 							console.log(response.data.Seconds)
 							this.progressbarTimer(this.value)
 							if(this.V_numbers.length === 0){
+								console.log("2")
 								this.dialog = true
 								this.overlay = false
 								this.value = 0
@@ -239,7 +242,11 @@ import { db } from '@/main.js';
 					})
 				}
 			},
-			reserveNumber() {
+			reserveNumber() {			
+				if(this.virtualnumber == ""){
+					console.log("select number")
+					return 
+				}
 				this.overlay = true
 				this.reserve = true
 				const reserve = {
