@@ -290,10 +290,8 @@ export default {
     ],
 
     chartOptions: {
-      width: 600,
-      height: 400,
-      legend: { position: "top", maxLines: 3 },
-
+    
+     
       // isStacked: true,
       //  isStacked: 'relative',
       isStacked: "percent",

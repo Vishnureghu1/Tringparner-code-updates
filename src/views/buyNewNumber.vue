@@ -25,14 +25,13 @@
                   <v-row align="center" justify="center">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
-                      Choose any new Virtual Numebr or tap refresh to get new list of numbers
+                        Choose any new Virtual Numebr or tap refresh to get new
+                        list of numbers
                       </h2>
                     </v-col>
                     <v-col cols="10" sm="3">
                       <v-btn
                         
-                      
-                        @click="dialog2 = true"
                         class="ma-0"
                         color="red darken-1"
                         dark
@@ -52,51 +51,119 @@
                       <v-flex xs12 sm12 md12>
                         <v-row no-gutters>
                           <v-col cols="12">
+                            <div v-if="numberList">
+                              <h4 class="mt-6 text-center">
+                                Choose your business number
+                              </h4>
+
+                              <p
+                                class="mt-6 text-center"
+                                v-if="timerCount % 60 != -1"
+                              >
+                                Time Remaining :
+                                {{ Math.floor(timerCount / 60) }} mins
+                                {{ timerCount % 60 }} sec
+                              </p>
+                              <p class="mt-6 text-center" v-else>
+                                Timed Out !!!
+                              </p>
+                              <div class="ml-5 mr-5">
+                                <v-progress-linear
+                                  color="deep-orange"
+                                  height="14"
+                                  :value="value"
+                                  striped
+                                ></v-progress-linear>
+                              </div>
+                              <v-btn-toggle v-model="toggle_none">
+                                <div class="ml-3 mt-5 text-center">
+                                  <v-btn
+                                    v-for="item in V_numbers"
+                                    :key="item"
+                                    class="ml-1 mr-4 mb-5 red--text"
+                                    outlined
+                                    color="white"
+                                    width="44%"
+                                    >{{ item }}</v-btn
+                                  >
+                                </div>
+                              </v-btn-toggle>
+                              <div class="text-center">
+                                <v-btn
+                                  v-if="toggle_none != null"
+                                  class="mr-4 mb-6 white--text text-center"
+                                  width="40%"
+                                  @click.prevent="reserveNumber()"
+                                  color="light-blue darken-1"
+                                >
+                                  Next
+                                </v-btn>
+                              </div>
+                            </div>
+
                             <v-card :elevation="0" class="ml-5">
-                             <v-list two-line>
-      <v-list-item-group
-        v-model="selected"
-        active-class="pink--text"
-        multiple
-      >
-        <template v-for="(item, index) in Numbers">
-          <v-list-item :key="item.title">
-            <template v-slot:default="{ active }">
-              <v-list-item-content>
-                <v-list-item-title v-text="item.title"></v-list-item-title>
+                              <v-list two-line>
+                                 <!-- <v-radio-group v-model="radioGroup">
+      <v-radio class="border-1"
+        v-for="n in 3"
+        :key="n"
+        :label="`Radio ${n}`"
+        :value="n"
+      ></v-radio>
+      
+    </v-radio-group> -->
+                                <v-list-item-group
+                                  v-model="selected"
+                                  active-class="pink--text"
+                                  multiple
+                                >
+                                  <template v-for="(item, index) in Numbers">
+                                  
+                                    <v-list-item :key="index">
+                                      <template v-slot:default="{ active }">
+                                           
 
-                <v-list-item-subtitle
-                  class="text--primary"
-                  v-text="item.headline"
-                ></v-list-item-subtitle>
+                                        <v-list-item-content>
+                                          <v-list-item-title
+                                            v-text="item.title"
+                                          ></v-list-item-title>
 
-                <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
-              </v-list-item-content>
+                                          <v-list-item-subtitle
+                                            class="text--primary"
+                                            v-text="item.headline"
+                                          ></v-list-item-subtitle>
 
-              <v-list-item-action>
-                <v-list-item-action-text v-text="item.action"></v-list-item-action-text>
+                                          <v-list-item-subtitle
+                                            v-text="item.subtitle"
+                                          ></v-list-item-subtitle>
+                                        </v-list-item-content>
 
-                <v-icon class="pb-3"
-                  v-if="!active"
-                  color="grey lighten-1"
-                >
-                  mdi-check-circle-outline
-                </v-icon>
+                                        <v-list-item-action>
+                                          <v-list-item-action-text
+                                            v-text="item.action"
+                                          ></v-list-item-action-text>
 
-                <v-icon class="pb-3"
-                  v-else
-                  color="red darken-3"
-                >
-                  mdi-check-decagram
-                </v-icon>
-              </v-list-item-action>
-            </template>
-          </v-list-item>
+                                          <v-icon
+                                            class="pb-3"
+                                            v-if="!active"
+                                            color="grey lighten-1"
+                                          >
+                                            mdi-check-circle-outline
+                                          </v-icon>
 
-   
-        </template>
-      </v-list-item-group>
-    </v-list>
+                                          <v-icon
+                                            class="pb-3"
+                                            v-else
+                                            color="red darken-3"
+                                          >
+                                            mdi-check-decagram
+                                          </v-icon>
+                                        </v-list-item-action>
+                                      </template>
+                                    </v-list-item>
+                                  </template>
+                                </v-list-item-group>
+                              </v-list>
                             </v-card>
                           </v-col>
                         </v-row>
@@ -111,7 +178,7 @@
         </v-layout>
       </v-container>
     </div>
-    <v-dialog v-model="dialog2" max-width="332px">
+    <!-- <v-dialog v-model="dialog2" max-width="332px">
       <v-card class="rounded-lg pt-7 pb-7">
         <v-card-title class="d-flex justify-center">
           <h3 class="center">Add New User</h3>
@@ -143,8 +210,28 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
-
+    </v-dialog> -->
+      <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        max-width="400"
+      >
+        <template v-slot:default="dialog">
+          <v-card outlined shaped elevation="8">
+            <v-card-text>
+              <div class="text-h6 mt-4 red--text">No numbers Available </div>
+              <div class="text-h6 mt-2 red--text">Try after sometime !! </div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                color="danger"
+                @click="dialog.value = false"
+              >Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
     <v-dialog v-model="removeNumber" max-width="332px">
       <v-card class="rounded-lg pt-7 pb-7">
         <v-card-title class="d-flex justify-center">
@@ -184,14 +271,23 @@
 <script>
 export default {
   components: {},
-  created() {},
+
   data: () => ({
     dialog2: false,
     dialog: false,
     removeNumber: false,
     isActive: true,
+    toggle_none: null,
+    changecolor: false,
     e2: 1,
     repeatCallerSettings: false,
+    V_numbers: "",
+    timerCount: "",
+    listingId: "",
+    overlay: true,
+    reserve: false,
+    NoNumbers: false,
+    value: "",
 
     options: [
       { title: "Edit", color: "black--text", url: "Edit" },
@@ -201,32 +297,24 @@ export default {
     valid: false,
     stepForm: [],
     selected: [2],
-      Numbers: [
-        {
-
-          headline: '+91 919526281234',
- 
-        },
-        {
-  
-          headline: '+91 919526287163',
-
-        },
-        {
-
-          headline: '+91 919526287163',
-
-        },
-        {
-  
-          headline: '+91 919526287163',
-        },
-        {
-        
-          headline: '+91 123459789012',
-      
-        },
-      ],
+    numberList: true,
+    Numbers: [
+      {
+        headline: "+91 919526281234",
+      },
+      {
+        headline: "+91 919526287163",
+      },
+      {
+        headline: "+91 919526287163",
+      },
+      {
+        headline: "+91 919526287163",
+      },
+      {
+        headline: "+91 123459789012",
+      },
+    ],
     types: [
       {
         text: "Agent",
@@ -261,6 +349,7 @@ export default {
       setTimeout(() => (this.dialog = false), 4000);
     },
   },
+
   methods: {
     showPopup(type) {
       if (type == "Edit") {
@@ -291,6 +380,132 @@ export default {
     done() {
       this.curr = 5;
     },
+
+    getNumbersList() {
+      var token = localStorage.getItem("token");
+      if (!this.reserve) {
+        this.timerCount = 180;
+        this.value = 100;
+        this.overlay = true;
+        const details = {
+          // url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/list",
+          url: "https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list",
+          method: "POST",
+          data: {
+            uid: this.uid,
+            phoneNumber: this.phno,
+          },
+          headers: {
+            token: token,
+            "Content-Type": "application/json",
+          },
+        };
+        console.log(details);
+        this.$axios(details)
+          .then((response) => {
+            this.overlay = false;
+            this.V_numbers = response.data.numbers;
+            this.timerCount = response.data.Seconds;
+            this.listingId = response.data.listingId;
+            this.value = 100 - 0.55 * (180 - this.timerCount);
+            console.log(this.value);
+            console.log(response);
+            console.log(response.data.numbers);
+            console.log(response.data.Seconds);
+            this.progressbarTimer(this.value);
+            if (this.V_numbers.length === 0) {
+              // alert('Numbers not available , please try later!!')
+              this.dialog = true;
+              this.overlay = false;
+              this.value = 0;
+              this.timerCount = 0;
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    },
+    reserveNumber() {
+      var token = localStorage.getItem("token");
+      this.reserve = true;
+      let virtualNumber = this.V_numbers[this.toggle_none];
+      console.log(virtualNumber);
+      const reserve = {
+        url: "https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/reserve",
+        method: "POST",
+
+        data: {
+          uid: this.uid,
+          phoneNumber: this.phno,
+          virtualNumber: virtualNumber,
+          listingId: this.listingId,
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(reserve);
+      this.$axios(reserve)
+        .then((response) => {
+          console.log(response);
+          this.$analytics.logEvent("Web Number reserved");
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          const user_stage = {
+            url: "https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage",
+            method: "POST",
+
+            data: {
+              uid: this.uid,
+              phoneNumber: this.phno,
+              currentPage: "onboarding_plan_details",
+            },
+          };
+          console.log(user_stage);
+          this.$axios(user_stage)
+            .then((response) => {
+              console.log(response);
+              this.$analytics.logEvent("Web Pricing plan");
+              this.$router.push("/pricing");
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        });
+    },
+    // user stage current page onbording_testing_complete
+
+    progressbarTimer(value) {
+      // console.log(value)
+      if (value > 0) {
+        var myVar = setInterval(() => {
+          if (this.value > 1) {
+            // console.log('before',this.value)
+            this.value = this.value - 0.55;
+            // this.value2 = this.value2 - 10
+            this.timerCount--;
+            // console.log('after',this.timerCount)
+          } else {
+            if (!this.reserve) {
+              this.overlay = true;
+              this.$router.go();
+            }
+          }
+        }, 1000);
+      } else {
+        clearInterval(myVar);
+        this.value = 0;
+        this.timerCount = 0;
+      }
+    },
+  },
+  created() {
+    this.getNumbersList();
   },
 };
 </script>
