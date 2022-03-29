@@ -55,7 +55,7 @@
 													<div class="link_style mt-1 ml-5">Manage Agents </div>
 												</v-col>
 												<v-col cols="12" sm='6' align="end">
-													<v-icon v-bind="attrs" v-on="on" color="#EE1C25"  @click="ManageAgents()">mdi-arrow-right</v-icon>
+													<v-icon v-bind="attrs" v-on="on" color="#EE1C25"  @click="ManageAgents(item.VirtualNumber)">mdi-arrow-right</v-icon>
 												</v-col>											
 												<v-col cols="12" sm='6'>
 													<div class="link_style mt-1 ml-5 mb-5" @click="CallFlowSettings()">Call Flow Settings </div>
@@ -159,8 +159,8 @@ import { db } from "@/main.js";
 			CallFlowSettings(vn){
 				this.$router.push("/CallFlowSettings?"+vn)
 			},
-			ManageAgents(){
-			this.$router.push("/ManageAgents")	
+			ManageAgents(vn){
+			this.$router.push("/ManageAgents?"+vn)	
 			}
 
     },

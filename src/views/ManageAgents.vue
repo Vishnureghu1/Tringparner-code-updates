@@ -48,7 +48,7 @@
                     color="transparent"
                     outlined
                     class="mt-5"
-                    max-width="1069"
+                    max-width="1069" v-for="user in users" v-bind:key="user"
                   >
                     <v-layout>
                       <v-flex xs12 sm12 md12>
@@ -65,26 +65,26 @@
                                           color="transparent"
                                           class="mb-3"
                                         >
-                                          <div class="agent_name">Shinu</div>
-                                          <div class="agent_role">Agent</div>
+                                          <div class="agent_name">{{user.Name}}</div>
+                                          <div class="agent_role">{{user.role}}</div>
                                           <div class="agent_number">
-                                            +91 989999 9900
+                                           {{user.PhoneNumber}}
                                           </div>
                                         </v-card>
                                       </v-col>
                                       <v-col cols="6" sm="2" align="end">
                                         <v-switch
                                           justify-right
-                                          v-model="isActive"
+                                          v-model="user.PhoneNumber"
                                           color="red"
-                                          value="isActive"
+                                          value=isActive
                                         ></v-switch>
                                       </v-col>
                                     </v-row>
                                     <v-divider></v-divider>
                                   </v-col>
                                 </v-row>
-                                <v-row>
+                                <!-- <v-row>
                                   <v-col cols="12" sm="12" align="center">
                                     <v-row justify="space-between">
                                       <v-col cols="6" sm="6" align="left">
@@ -139,7 +139,7 @@
                                     </v-row>
                                     <v-divider></v-divider>
                                   </v-col>
-                                </v-row>
+                                </v-row> -->
                               </v-col>
                             </v-card>
                           </v-col>
@@ -198,11 +198,58 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
 export default {
   components: {},
-  created() {},
+  created() {
+        let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+			snap.docs.forEach((element)=> {
+				// console.log(element.data())
+				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
+			});
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    db.collection("users").where("OwnerUid","==",owneruid).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+			snap.docs.forEach((element)=> {
+				// console.log(element.data())
+				this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
+			});
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+      console.log(snap.docs[0].data().VirtualNumber)
+			// console.log("test.........",this.response);
+      console.log(this.users)
+      // form
+    //  const h ="9526287163";
+  
+      // ""
+      // this.form[] ==
+      // const vn = snap.docs[0].data();
+			// vn.Participants.forEach((element)=> {
+			// 	console.log(element.data())
+      //   element.
+      //   element.data().pa
+			// this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
+			// });
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    },
   data: () => ({
-     dialog2: false,
+    // "7306109553":true,
+    dialog2: false,
+    form:{},
+    response:{},
+    users:[],
+    usermodel:[],
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
