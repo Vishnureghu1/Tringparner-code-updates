@@ -137,7 +137,7 @@ import { db } from '@/main.js';
 								this.currentPage = this.Udata.currentPage
 								console.log(this.currentPage)
 								if (this.currentPage == "onboarding_listing") {
-									// this.$router.push("/ChooseNumbers")
+									// this.$router.push("/ChooseNumbers") deleted
 									this.getNumbersList()
 								}
 								else if (this.currentPage == "onboarding_plan_details") {
