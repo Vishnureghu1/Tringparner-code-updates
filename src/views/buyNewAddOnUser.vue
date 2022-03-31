@@ -23,23 +23,12 @@
                     </v-col>
                   </v-row>
                   <v-row align="center" justify="center">
-                    <v-col cols="12" sm="9">
-                      <h2 class="comment_heading ml-5">
+                    <v-col cols="12" sm="12">
+                      <h2 class="comment_heading ml-5 text-left">
                         Deactivate or modify source of your Business Number
                       </h2>
                     </v-col>
-                    <v-col cols="10" sm="3">
-                      <v-btn
-                        :disabled="dialog"
-                        :loading="dialog"
-                        @click="dialog2 = true"
-                        class="ma-0"
-                        color="red darken-1"
-                        dark
-                      >
-                        + Buy New Number
-                      </v-btn>
-                    </v-col>
+                 
                   </v-row>
 
                   <v-card
