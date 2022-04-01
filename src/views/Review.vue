@@ -112,7 +112,7 @@ import { db } from '@/main.js';
 								this.$router.push("/Billing")
 							}
 							else if (this.currentPage == "onboarding_review") {
-								this.$router.push("/Review")
+								// this.$router.push("/Review")
 							}
 							else if (this.currentPage == "onboarding_dashboard") {
 								this.$router.push("/Dashboard")
@@ -147,16 +147,38 @@ import { db } from '@/main.js';
 			})
 		},
 		methods: {
-
 			Paynow(){
+					const details = {
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/payment',
+					method: 'POST',
+					headers: {"token":localStorage.getItem("token")},
+					data: {
+								uid: this.uid,
+								owner_uid:this.uid,
+								phoneNumber: this.phno,
+								virtual_number: this.virtualnumber,
+								FirstName: this.businessName,
+								Email: this.email,
+								Address: this.address,
+								City: this.city,
+								State: this.state,
+								Gstin: this.gst,
+								CompanyName: this.businessName,
+								Pincode: this.pincode,
+								PlanId : this.planId,
+								payment_mode : 'WEB',
+								type:"BASIC"
+							},
+						};
+             this.$axios(details).then(async(responsevalue) => {	
+			console.log(responsevalue)
+ if(responsevalue.data.status == true){
 				var options = {
-					key: "rzp_test_ThdwdEPh3QCHbo",
-					
-					order_id: this.orderId,
+					key: "rzp_test_ThdwdEPh3QCHbo",					
+					order_id: responsevalue.data.OrderId,
 					name: this.name,
 					currency: "INR", // Optional. Same as the Order currency
 					description: "Purchase Description",
-
 					handler:  (response) =>{
 						console.log(response);
 						this.overlay = true
@@ -194,12 +216,16 @@ import { db } from '@/main.js';
 						}
 					},
 				};
-				console.log(options)
-				var rzp1 = new Razorpay(options);
+				// console.log(options)
+				const rzp1 = new Razorpay(options);
 				this.overlay = false
 				rzp1.open();
+		}else{
+			console.log("wrong value")
+		}
+});
 				}
-
+               
 		}
   }
 </script>

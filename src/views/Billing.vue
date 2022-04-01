@@ -46,6 +46,7 @@ import { db } from '@/main.js';
 import pincodeDB from "../components/pincodes.json"
   export default {
     data: () => ({
+		billingName:"",
 			radio1 : true,
 			radio2 : false,
 			radio3 : false,
