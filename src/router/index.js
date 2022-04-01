@@ -80,7 +80,6 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/buyNewNumber.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
-<<<<<<< HEAD
     {
         path: '/buyNewAddOnUser',
         name: 'buyNewAddOnUser',
@@ -88,15 +87,6 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/buyNewAddOnUser.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
-=======
-    // {
-    //     path: '/buyNewAddOnUser',
-    //     name: 'buyNewAddOnUser',
-    //     component: () =>
-    //         import ( /* webpackChunkName: "missed_call" */ '../views/buyNewAddOnUser.vue'),
-    //     meta: { requiresAuth: true, role: 'OWNER' }
-    // },
->>>>>>> bb612354fe815aeef96accc028a5e34a4b7fead4
     // {
     //     path: '/fancyNumberPurchase',
     //     name: 'fancyNumberPurchase',

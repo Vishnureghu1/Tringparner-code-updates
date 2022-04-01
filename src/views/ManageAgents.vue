@@ -48,7 +48,7 @@
                     color="transparent"
                     outlined
                     class="mt-5"
-                    max-width="1069" v-for="user in users" v-bind:key="user"
+                    max-width="1069" v-for="(agent,agentIndex) in agents" :key="agent.id"
                   >
                     <v-layout>
                       <v-flex xs12 sm12 md12>
@@ -65,20 +65,22 @@
                                           color="transparent"
                                           class="mb-3"
                                         >
-                                          <div class="agent_name">{{user.Name}}</div>
-                                          <div class="agent_role">{{user.role}}</div>
+                                          <div class="agent_name">{{agent.Name}}</div>
+                                          <div class="agent_role">{{agent.role}}</div>
                                           <div class="agent_number">
-                                           {{user.PhoneNumber}}
+                                           {{agent.PhoneNumber}}
                                           </div>
                                         </v-card>
                                       </v-col>
                                       <v-col cols="6" sm="2" align="end">
                                         <v-switch
                                           justify-right
-                                          v-model="user.PhoneNumber"
+                                          :input-value="agent.active"
                                           color="red"
-                                          value=isActive
-                                        ></v-switch>
+                                          :value="true"
+                                          @change="toggleUserSwitch(agentIndex, $event !== null, $event, agent)"
+                                          >
+                                          </v-switch>
                                       </v-col>
                                     </v-row>
                                     <v-divider></v-divider>
@@ -209,7 +211,7 @@ export default {
 			// console.log("test.........",snap.docs.data());
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
-				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
+				this.agents.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:true});
 			});
 		}).catch((err)=>{
 			console.log(err.message)
@@ -218,15 +220,27 @@ export default {
 			// console.log("test.........",snap.docs.data());
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
-				this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
+				this.agents.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:false});
 			});
 		}).catch((err)=>{
 			console.log(err.message)
 		})
     db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
       console.log(snap.docs[0].data().VirtualNumber)
+      const participants = snap.docs[0].data().Participants
 			// console.log("test.........",this.response);
-      console.log(this.users)
+      this.agents.forEach((element,index) =>{
+         const value = participants.find(({Number}) =>Number === element.PhoneNumber)
+         if(value){
+            console.log("valuew",value,index)
+            this.agents[index] = Object.assign(element,{active:true});
+         }else{
+           this.agents[index] = Object.assign(element,{active:false});
+         }
+      })
+      console.log(this.agents,"ddd")
+      // console.log(this.users)
+      // this.agents.forEach((element))
       // form
     //  const h ="9526287163";
   
@@ -249,6 +263,7 @@ export default {
     form:{},
     response:{},
     users:[],
+    agents:[],
     usermodel:[],
     isActive: true,
     e2: 1,
@@ -299,6 +314,9 @@ types:[
   }),
 
   methods: {
+     toggleUserSwitch(index, value, event, agent) {
+      console.log(`toggleUserSwitch --> ${index} ${value} ${event} ${JSON.stringify(agent)}`);
+    },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
     },
