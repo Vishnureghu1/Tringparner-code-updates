@@ -255,7 +255,9 @@
 <script>
 export default {
   components: {},
-  created() {},
+  created() {
+    this.$root.vtoast.show({message: 'Hello there!', color: 'red', timer: 5000})
+  },
   data: () => ({
     dialog2: false,
     isActive: true,
