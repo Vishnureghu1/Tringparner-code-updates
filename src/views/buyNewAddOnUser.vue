@@ -28,7 +28,6 @@
                         Deactivate or modify source of your Business Number
                       </h2>
                     </v-col>
-                 
                   </v-row>
 
                   <v-card
@@ -54,7 +53,7 @@
                                           rounded-b-lg
                                           transition-fast-in-fast-out
                                         "
-                                        min-width="475"
+                                        min-width="520"
                                       >
                                         <v-row justify="center" class="d-block">
                                           <v-col cols="auto">
@@ -145,18 +144,18 @@
                                           </v-list-item-group>
                                           Users
                                           <span class="dark bold nunito-font"
-                                            >x1</span
+                                            >x{{usersCount}}</span
                                           >
                                           <div class="text-center">
-                                            <v-btn elevation="0" icon
+                                            <v-btn elevation="0" icon v-on:click="RemoveUserCount(1)"
                                               ><v-icon color="red"
                                                 >mdi-minus-circle-outline</v-icon
                                               ></v-btn
                                             >
                                             <v-btn elevation="0" icon
-                                              ><span class="p15">1</span></v-btn
+                                              ><span class="p15">{{usersCount}}</span></v-btn
                                             >
-                                            <v-btn elevation="0" icon>
+                                            <v-btn elevation="0" icon v-on:click="AddUserCount(1)">
                                               <v-icon color="red"
                                                 >mdi-plus-circle-outline</v-icon
                                               ></v-btn
@@ -190,73 +189,92 @@
                                           <v-card
                                             v-if="reveal"
                                             class="
-                                              transition-fast-in-fast-out text-left
+                                              transition-fast-in-fast-out
+                                              text-left
                                               v-card--reveal
                                             "
                                             style="height: 100%"
                                           >
                                             <v-card-text class="pb-0">
-                                              <p class="text-h6 text--primary ">
+                                              <p class="text-h6 text--primary">
                                                 Billing Information
                                               </p>
-                                              <p class="f12 mb-1"> Business Number: +91 9995233009 </p>
-                                              <p class="f12 mb-1"> Business Address: Name, Street, Pin: 136666 </p>
-                                              <p class="f12 mb-3 "> Business Email Address: test@test.com </p>
-                                               <p class="bold black--text">Number of Users: 1</p>
-                                               <p><span class="bold red--text pb-0">Due On: 06-Jun-2022</span><br><span class="f14 light5">(Billable Duration 2 Month(s) 7Day(s))</span></p>
-                                               
-     <v-simple-table dense>
-    <template v-slot:default>
-      <tbody>
-        <tr
-          v-for="d in sublist"
-          :key="d.name"
-        >
-          <td>{{ d.name }}</td>
-          <td>{{ d.calories }}</td>
-        </tr>
-      </tbody>
-    </template></v-simple-table>
+                                              <p class="f12 mb-1">
+                                                Business Number: +91 9995233009
+                                              </p>
+                                              <p class="f12 mb-1">
+                                                Business Address: Name, Street,
+                                                Pin: 136666
+                                              </p>
+                                              <p class="f12 mb-3">
+                                                Business Email Address:
+                                                test@test.com
+                                              </p>
+                                              <p class="bold black--text">
+                                                Number of Users: 1
+                                              </p>
+                                              <p>
+                                                <span
+                                                  class="bold red--text pb-0"
+                                                  >Due On: 06-Jun-2022</span
+                                                ><br /><span class="f14 light5"
+                                                  >(Billable Duration 2 Month(s)
+                                                  7Day(s))</span
+                                                >
+                                              </p>
+
+                                              <v-simple-table dense >
+                                                <template v-slot:default>
+                                                  <tbody class="ma-0 pa-0">
+                                                    <tr
+                                                      v-for="d in sublist"
+                                                      :key="d.name"
+                                                    >
+                                                      <td  class="ma-0 pa-0" :class="d.class">{{ d.name }}</td>
+                                                      <td :class="d.class">{{ d.amount }}</td>
+                                                    </tr>
+                                                  </tbody>
+                                                </template></v-simple-table
+                                              >
                                             </v-card-text>
-                                            <v-card-actions class="pt-0 center d-flex"  align="center">
-                                        
-                                               <v-btn
-                          color="red"
-                          text
-                          class="
-                            ma-2
-                            text-capitalize
-                            rounded-pill
-                            p-3
-                            red_button_outline
-                          "
-                          min-width="140px"
-                           @click="reveal = false"
-                        >
-                          Cancel
-                        </v-btn>
-                                                     
-                                          
-                                            <v-btn
-                                              text
-                                              class="
-                                                text-sentence
-                                                ma-3
-                                                rounded-pill
-                                                red_button
-                                                light3
-                                                normal
-                                              "
-                                              min-width="140px"
-                                              color="white"
-                                              outlined
-                                              @click="reveal = true"
+                                            <v-card-actions
+                                              class="pt-0 center d-flex"
+                                              align="center"
                                             >
-                                              Pay Rs 234.71 Now
-                                            </v-btn>
-                                       
-                                        </v-card-actions>
-                                           
+                                              <v-btn
+                                                color="red"
+                                                text
+                                                class="
+                                                  ma-2
+                                                  text-capitalize
+                                                  rounded-pill
+                                                  p-3
+                                                  red_button_outline
+                                                "
+                                                min-width="140px"
+                                                @click="reveal = false"
+                                              >
+                                                Cancel
+                                              </v-btn>
+
+                                              <v-btn
+                                                text
+                                                class="
+                                                  text-sentence
+                                                  ma-3
+                                                  rounded-pill
+                                                  red_button
+                                                  light3
+                                                  normal
+                                                "
+                                                min-width="140px"
+                                                color="white"
+                                                outlined
+                                                @click="reveal = true"
+                                              >
+                                                Pay Rs 234.71 Now
+                                              </v-btn>
+                                            </v-card-actions>
                                           </v-card>
                                         </v-expand-transition>
                                       </v-card>
@@ -293,6 +311,8 @@ export default {
     dialog: false,
     isActive: true,
     e2: 1,
+        usersCount: 1,
+
     repeatCallerSettings: false,
 
     valid: false,
@@ -319,30 +339,29 @@ export default {
         headline: "Call Management Dashnoard",
       },
     ],
-  sublist: [
-          {
-            name: 'Charges',
-            calories: 159,
-            class:'light5'
-          },
-          {
-            name: 'Discount',
-            calories: 237,
-           class:'light5'
-          },
-          {
-            name: 'GST(18%)',
-            calories: 262,
-            class:'light5'
-          },
-          {
-            name: 'Total Charges',
-            calories: 305,
-            class:'regular'
-          },
-       
-     
-  ],    items: [
+    sublist: [
+      {
+        name: "Charges",
+        amount: 159,
+        class: "light5",
+      },
+      {
+        name: "Discount",
+        amount: 237,
+        class: "light5",
+      },
+      {
+        name: "GST(18%)",
+        amount: 262,
+        class: "light5",
+      },
+      {
+        name: "Total Charges",
+        amount: 305,
+        class: "regular",
+      },
+    ],
+    items: [
       {
         text: "More",
         disabled: false,
@@ -363,6 +382,14 @@ export default {
   }),
 
   methods: {
+    AddUserCount: function(incre) {
+      this.usersCount += incre;
+    },
+     RemoveUserCount: function(incre) {
+       if(this.usersCount>1){
+         this.usersCount -= incre;
+       }
+    },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
     },
