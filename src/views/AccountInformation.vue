@@ -158,7 +158,8 @@ export default {
       },
       {
         text: "Account Information",
-        disabled: true
+        disabled: false,
+        to: { name: "AccountInformation" },
       }
     ],
   }),
