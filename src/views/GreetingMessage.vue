@@ -31,9 +31,9 @@
                     </v-col>
                     <v-col cols="10" sm="3">
                       <v-btn
-                        :disabled="dialog"
+                        :disabled="isActiveUploadBtn"
                         :loading="dialog"
-                        @click="dialog = true"
+                        @click="uploadGreetingMessage()"
                         class="ma-2"
                         color="red darken-1"
                         dark
@@ -46,19 +46,24 @@
                         placeholder="Choose file"
                         prepend-icon="mdi-camera"
                         label="Upload File"
+                        show-size
+                        ref="myfile" 
+                        v-model="file"
                       ></v-file-input>
                       <v-progress-linear
                         color="red darken-1 "
                         buffer-value="0"
                         height="35"
-                        value="20"
+                        :value="uploadedValue"
                         striped
+                        v-show="isProgressing"
                       ></v-progress-linear>
                       <v-progress-linear
                         color="red"
                         buffer-value="0"
-                        value="20"
+                        :value="uploadedValue"
                         stream
+                        v-show="isProgressing"
                       ></v-progress-linear>
                     </v-col>
                   </v-row>
@@ -100,7 +105,9 @@
                                   </h2>
                                 </v-col>
                               </v-row>
-                              <v-radio-group v-model="radioGroup">
+                              <v-radio-group v-model="radioGroup" 
+                              :mandatory="false" 
+                              v-on:change="$emit('greeting_message_changed', $event)">
                                 <v-card
                                   color="transparent"
                                   outlined
@@ -209,9 +216,22 @@
 </template>
 
 <script>
+
+import { db } from "@/main.js";
+import firebase from 'firebase';
+
 export default {
   components: {},
-  created() {},
+  created() {
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.ownerUid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+
+    this.$on('greeting_message_changed', function(id){
+      console.log('Event from parent component emitted', id)
+    });
+
+    this.getAllUserGreetingMessages(); //get all user audios
+  },
   data: () => ({
     dialog: false,
     dialog2: false,
@@ -233,18 +253,6 @@ export default {
     valid: false,
     stepForm: [],
     Greetings: [
-      {
-        id: 1,
-        title: "Greeting Message 1",
-
-        Audio: "uri",
-      },
-      {
-        id: 2,
-        title: "Greeting Message 2",
-
-        Audio: "uri",
-      },
     ],
     more: [
       {
@@ -278,6 +286,16 @@ export default {
         to: { name: "GreetingMessage" },
       },
     ],
+
+    uploadedValue:0, //uploaded content %
+    file:null, //uploaded file ref
+    radioGroup: null, //radiogroup def state
+    rules: [
+      value => !value || value.size < 5000000 || 'Audio size should be less than 5 MB!', //upload file rules
+    ],
+    isProgressing: false, //upload progressbar
+    isActiveUploadBtn: false, //upload button default state
+    ownerUid: '', //OWNER UID
   }),
   watch: {
     dialog(val) {
@@ -303,6 +321,71 @@ export default {
     done() {
       this.curr = 5;
     },
+    getAllUserGreetingMessages() {
+
+      // this.Greetings = [];
+
+      db.collection("UserAudio")
+      .where("Uid", "==", this.ownerUid)
+      .orderBy("CreatedAt", "asc")
+      .get()
+      .then(async(snapshot) => {
+
+        if (!snapshot.empty) {
+
+          snapshot.docs.forEach((element)=> {
+            this.Greetings.push({
+              id: element.id,
+              title: element.data().DisplayName,
+              Audio: element.data().AudioUrl
+            })
+          })
+        } else {
+          console.log('snapshot empty');
+        }
+
+      })
+    },
+    uploadGreetingMessage() {
+      
+        if(this.file) {
+
+          this.dialog = true;
+          this.isProgressing = true;
+
+          console.log('about to upload file');
+          console.log(this.file);
+
+          this.onUpload(this.file.name, this.file);
+        } else {
+          console.log('Select a file');
+          this.$root.vtoast.show({message: 'Please select a file for upload!', color: 'red', timer: 2000})
+          console.log('ownerUid', this.ownerUid);
+        }
+    },
+    onUpload(filename, file) {
+
+      const storageRef = firebase.storage().ref(`${this.ownerUid}-2-${filename.split('.')[0]}`).put(file);
+      // const storageRef = firebase.storage().ref('File-name').put('xyz');
+
+      storageRef.on('state_changed', snapshot => {
+        this.uploadedValue=(snapshot.bytesTransferred/snapshot.totalBytes)*100;
+      }, error => {
+        console.log(error.message);
+      },
+      () => {
+        this.uploadedValue=100;
+        storageRef.snapshot.ref.getDownloadURL().then((url) => {
+          console.log('uploaded file URL', url);
+          this.isProgressing = false;
+          this.file = null;
+          this.$root.vtoast.show({message: 'File upload successful!', color: 'green', timer: 2000})
+        })
+      }
+
+      );
+
+    }
   },
 };
 </script>
