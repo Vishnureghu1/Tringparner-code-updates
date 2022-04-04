@@ -24,7 +24,7 @@
                 </v-row>
                 <v-row>
                   <v-flex xs12 sm12 md12>
-                    <v-row no-gutters>
+                    <v-row no-gutters >
                       <v-card class="mx-auto" min-width="500">
                         <v-card-text class="pb-0">
                           <p class="redtext bold">
@@ -176,7 +176,7 @@
                     </v-row>
                   </v-flex>
 
-                  <v-flex xs12 sm12 md12 class="mt-15">
+                  <v-flex xs12 sm12 md12 class="mt-15  ml-7">
                     <v-row no-gutters>
                       <v-col cols="12">
                         <v-row>
@@ -187,7 +187,7 @@
                             </h2>
                           </v-col>
                           <v-col cols="6" align="end">
-                            <router-link :to="{ name: 'BasicInformation' }">
+                            <router-link :to="{ name: 'BillingAddress' }">
                               <span
                                 ><v-icon class="mt-6 mb-5 mr-7" color="#EE1C25"
                                   >mdi-arrow-right</v-icon
@@ -207,11 +207,13 @@
                             </h2>
                           </v-col>
                           <v-col cols="6" align="end">
-                            <span
-                              ><v-icon class="mt-6 mb-5 mr-7" color="#EE1C25"
-                                >mdi-arrow-right</v-icon
-                              >
-                            </span>
+                            <router-link :to="{ name: 'PaymentHistory' }">
+                              <span
+                                ><v-icon class="mt-6 mb-5 mr-7" color="#EE1C25"
+                                  >mdi-arrow-right</v-icon
+                                >
+                              </span>
+                            </router-link>
                           </v-col>
                         </v-row>
                       </v-col>

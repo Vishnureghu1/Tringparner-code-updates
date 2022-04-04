@@ -102,6 +102,14 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/BillingInformation.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
+
+    {
+        path: '/BillingAddress',
+        name: 'BillingAddress',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/BillingAddress.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
     {
         path: '/BusinessNumber',
         name: 'BusinessNumber',
