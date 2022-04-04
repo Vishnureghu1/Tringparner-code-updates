@@ -89,7 +89,7 @@
                                <v-row>
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7">
-                                  Change Login Numebr
+                                  Change Login Number
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
                                   Configure how missed calls are managed between

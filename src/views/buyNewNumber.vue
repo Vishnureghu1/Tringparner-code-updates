@@ -25,7 +25,7 @@
                   <v-row align="center" justify="center">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
-                        Choose any new Virtual Numebr or tap refresh to get new
+                        Choose any new Virtual Number or tap refresh to get new
                         list of numbers
                       </h2>
                     </v-col>

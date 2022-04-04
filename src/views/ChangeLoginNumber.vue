@@ -13,7 +13,7 @@
                         <v-icon class="mr-2" color="black" @click="goBack()"
                           >mdi-arrow-left</v-icon
                         >
-                        Bussiness Information
+                        Change Login Number
                       </h2>
                       <v-breadcrumbs class="breadcrumbs" :items="items">
                         <template class="breadcrumbs" v-slot:divider>
@@ -35,18 +35,32 @@
                           <v-col cols="12" sm="12">
                             <v-card class="mb-0 mt-0" :elevation="0">
                              <div class="comment_heading mt-6 ml-5">
-                   Review your business information like business address
+                   Current Login Number
                   </div>
 
-   <v-card class="mb-0 mt-10 pl-5" :elevation="0">
+   <v-card class="mb-0 mt-0 pl-5" :elevation="0">
                           
-        <p>Owner Name: <span class="f12 ">Name of Owner here</span></p>
-        <p>Business Address: <span class="f12 ">Address here</span></p>
-        <p>Business Phone Numebr: <span class="f12 ">+91 9995233009</span></p>
-        <p>Business Email Address: <span class="f12 ">test@test.com</span></p>
+        <p>+91 7306109553</p>
+       <v-checkbox
+              v-model="ex4"
+              label="I agree that I will not be able to access Tring Partner from my current login number after changing it."
+              color="red"
+              value="agreeNumebrChange"
+              change-number
+            ></v-checkbox>
                     
    </v-card>
-
+    <v-card-actions>
+<v-btn
+                            text
+                            class="text-capitalize ma-3 rounded-pill "
+                            min-width="140px" disabled
+                            color="white"
+                            outlined
+                          >
+                            Change login Number
+                          </v-btn>
+    </v-card-actions>
 
                             </v-card>
                           </v-col>

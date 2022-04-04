@@ -41,8 +41,8 @@
            
 
                               <v-list-item
-        v-for="bnumebr in blockedNumbers"
-        :key="bnumebr.title"
+        v-for="bnumber in blockedNumbers"
+        :key="bnumber.title"
       >
         <v-list-item-avatar>
         
@@ -52,7 +52,7 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title v-text="bnumebr.Number"></v-list-item-title>
+          <v-list-item-title v-text="bnumber.Number"></v-list-item-title>
 
          
         </v-list-item-content>

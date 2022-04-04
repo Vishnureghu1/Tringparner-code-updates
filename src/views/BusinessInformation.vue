@@ -42,7 +42,7 @@
                           
         <p>Owner Name: <span class="f12 ">Name of Owner here</span></p>
         <p>Business Address: <span class="f12 ">Address here</span></p>
-        <p>Business Phone Numebr: <span class="f12 ">+91 9995233009</span></p>
+        <p>Business Phone Number: <span class="f12 ">+91 9995233009</span></p>
         <p>Business Email Address: <span class="f12 ">test@test.com</span></p>
                     
    </v-card>
