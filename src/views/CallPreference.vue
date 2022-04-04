@@ -73,7 +73,39 @@
                                         </v-card>
                                       </v-col>
                                     </v-row>
-                                    <v-row>
+                                    <!-- <v-row> -->
+                                      <v-card v-for="(agent,agentIndex) in agents" :key="agent.id">
+                                      <v-col cols="12" sm="12" align="center">
+                                        <v-row justify="space-between">
+                                          <v-col cols="6" sm="6" align="left">
+                                            <v-card
+                                              outlined
+                                              color="transparent"
+                                              class="mb-3"
+                                            >
+                                             <div class="agent_name">{{agent.Name}}</div>
+                                          <div class="agent_role">{{agent.role}}</div>
+                                          <div class="agent_number">
+                                           {{agent.PhoneNumber}}
+                                          </div>
+                                            </v-card>
+                                          </v-col>
+                                          <v-col cols="6" sm="2" align="end">
+                                           <v-switch
+                                          justify-right
+                                          :input-value="agent.active"
+                                          color="red"
+                                          :value="true"
+                                          @change="toggleUserSwitch(agentIndex, $event !== null, $event, agent)"
+                                          >
+                                          </v-switch>
+                                          </v-col>
+                                        </v-row>
+                                        <v-divider></v-divider>
+                                      </v-col>
+                                      </v-card>
+                                    <!-- </v-row> -->
+                                    <!-- <v-row>
                                       <v-col cols="12" sm="12" align="center">
                                         <v-row justify="space-between">
                                           <v-col cols="6" sm="6" align="left">
@@ -136,39 +168,7 @@
                                         </v-row>
                                         <v-divider></v-divider>
                                       </v-col>
-                                    </v-row>
-                                    <v-row>
-                                      <v-col cols="12" sm="12" align="center">
-                                        <v-row justify="space-between">
-                                          <v-col cols="6" sm="6" align="left">
-                                            <v-card
-                                              outlined
-                                              color="transparent"
-                                              class="mb-3"
-                                            >
-                                              <div class="agent_name">
-                                                Shinu
-                                              </div>
-                                              <div class="agent_role">
-                                                Agent
-                                              </div>
-                                              <div class="agent_number">
-                                                +91 989999 9900
-                                              </div>
-                                            </v-card>
-                                          </v-col>
-                                          <v-col cols="6" sm="2" align="end">
-                                            <v-switch
-                                              justify-right
-                                              v-model="isActive"
-                                              color="red"
-                                              value="isActive"
-                                            ></v-switch>
-                                          </v-col>
-                                        </v-row>
-                                        <v-divider></v-divider>
-                                      </v-col>
-                                    </v-row>
+                                    </v-row> -->
                                   </v-col>
                                 </v-card>
                                 <v-btn
@@ -204,8 +204,7 @@
                               </v-stepper-content>
 
                               <v-stepper-step
-                                color="red darken-3
-"
+                                color="red darken-3"
                                 :complete="e2 > 2"
                                 step="2"
                               >
@@ -224,16 +223,16 @@
                                      Call Routing (LinkedIn Number)
                                     </div>
                                     <small class="grey--text light-3">Select how incoming calls are distributed amongst your users. Distributions rules will happen based on these settings</small>
-                                  
-
-                                  <v-radio-group v-model="ex7">
+                                  <v-radio-group v-model="callRouting">
                                     <div class="subheading pt-3 pb-2">
                                       New Incoming Call Routing
                                     </div>
                                     <v-radio
-                                      value="1"
-                                      color="red"
-                                      class="mb-5 ml-5 pl-3"
+                                  value = "SIMULTANEOUS"
+                                  v-model = "Simultaneous"
+                                  name="active"
+                                  color="red"
+                                  class="mb-5 ml-5 pl-3"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -248,9 +247,9 @@
                                     </v-radio>
 
                                     <v-radio
-                                      value="2"
-                                      color="red"
-                                      class="mb-5 ml-5 pl-3"
+                                       value="ROUNDROBINFLEXIBLE"
+                                  color="red"
+                                  class="mb-5 ml-5 pl-3"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -267,9 +266,9 @@
                                       </template>
                                     </v-radio>
                                     <v-radio
-                                      value="3"
-                                      color="red"
-                                      class="mb-5 ml-5 pl-3"
+                                      value="ROUNDROBINSTRICT"
+                                  color="red"
+                                  class="mb-5 ml-5 pl-3"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -287,9 +286,9 @@
                                     </v-radio>
 
                                     <v-radio
-                                      value="4"
-                                      color="red"
-                                      class="mb-0 ml-5 pl-3"
+                                     value="PRIORITY"
+                                  color="red"
+                                  class="mb-0 ml-5 pl-3"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -319,34 +318,54 @@
                         </div>
                         </v-col>
                                     <v-col cols="2" sm='2' align="end">
-													<v-icon v-bind="attrs" v-on="on" color="#EE1C25" @click="CallFlowSettings()" class="pt-10" >mdi-arrow-right</v-icon>
+													<v-icon 
+                           v-bind="attrs"
+                                    v-on="on"
+                                    color="#EE1C25"
+                                    @click="PrioritizeConfiguration()"
+                                    class="pt-10"
+                                    >mdi-arrow-right</v-icon>
+    
 												</v-col>
                                      </v-row>
                                      <v-divider></v-divider>
 
-        <div class="membership_details">
-
-            <div class="subheading mt-5 mb-5">Repeat Caller Settings</div>
-							<v-checkbox
-              v-model="repeatCallerSettings" class="ml-10"
-             
-              color="red darken-3"
-            
-               
-            ><template v-slot:label>
-        <div class="gray--text"><small>How incoming calls are distributed amongst your users. Distributions rules will happen based on these settings</small></div>
-        </template></v-checkbox>
+       <div class="membership_details">
+                                <div class="subheading mt-5 mb-5">
+                                  Routing Method - Repeated Caller
+                                </div>
+                                <v-checkbox
+                                  v-model="repeatCallerSettings"
+                                  class="ml-10"
+                                  color="red darken-3"
+                                  ><template v-slot:label>
+                                    <div class="gray--text">
+                                      <div class="subheading">
+                                        Sticky Agent<br />
+                                      </div>
+                                      <small
+                                        >How incoming calls are distributed
+                                        amongst your users. Distributions rules
+                                        will happen based on these
+                                        settings</small
+                                      >
+                                    </div>
+                                  </template></v-checkbox
+                                >
         
-			<div v-if="repeatCallerSettings">
-         <v-divider class="ml-15"></v-divider>
-         <div class="subheading mt-5 mb-5 ml-15">Sticky Agent Type</div>
-                         <v-radio-group
-              v-model="ex7"
-              column
-            >
-			<v-radio value="1"  color="red" class="mb-5 ml-5 pl-15">
-        <template v-slot:label>
-         <div class="black--text">
+ <div v-if="repeatCallerSettings">
+                                  <v-divider class="ml-15"></v-divider>
+                                  <div class="subheading mt-5 mb-5 ml-15">
+                                    Sticky Agent Type
+                                  </div>
+                                  <v-radio-group v-model="StickyAgentType" column>
+                                    <v-radio
+                                      value="FLEXIBLE"
+                                      color="red"
+                                      class="mb-5 ml-5 pl-15"
+                                    >
+                                      <template v-slot:label>
+                                        <div class="black--text">
                                           Flexible<br /><small
                                             class="grey--text light-3"
                                             >Your call will ring Simultaneously
@@ -354,11 +373,15 @@
                                             missing calls.</small
                                           >
                                         </div>
-        </template>
-      </v-radio>
-	<v-radio value="2"  color="red"  class="mb-0 ml-5 pl-15">
-        <template v-slot:label>
-         <div class="black--text">
+                                      </template>
+                                    </v-radio>
+                                    <v-radio
+                                      value="STRICT"
+                                      color="red"
+                                      class="mb-0 ml-5 pl-15"
+                                    >
+                                      <template v-slot:label>
+                                        <div class="black--text">
                                           Strict<br /><small
                                             class="grey--text light-3"
                                             >Your call will ring Simultaneously
@@ -366,11 +389,10 @@
                                             missing calls.</small
                                           >
                                         </div>
-        </template>
-      </v-radio>
-     
-						</v-radio-group>
-			</div>
+                                      </template>
+                                    </v-radio>
+                                  </v-radio-group>
+                                </div>
                         </div>
                                 </v-card>
                                 <v-btn
@@ -422,12 +444,81 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
 export default {
   components: {},
-  created() {},
+  created() {
+        let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+			snap.docs.forEach((element)=> {
+				// console.log(element.data())
+				this.agents.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:true});
+			});
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    db.collection("users").where("OwnerUid","==",owneruid).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+			snap.docs.forEach((element)=> {
+				// console.log(element.data())
+				this.agents.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:false});
+			});
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+      console.log(snap.docs[0].data().VirtualNumber)
+      const participants = snap.docs[0].data().Participants
+			// console.log("test.........",this.response);
+      this.agents.forEach((element,index) =>{
+         const value = participants.find(({Number}) =>Number === element.PhoneNumber)
+         if(value){
+            // console.log("valuew",value,index)
+            this.agents[index] = Object.assign(element,{active:true});
+         }else{
+           this.agents[index] = Object.assign(element,{active:false});
+         }
+      })
+      snap.docs.forEach((element)=> {
+				// console.log(element.data())
+         this.callRouting=element.data().NewActiveCaller,
+         this.repeatCallerSettings=element.data().StickyAgent
+         this.StickyAgentType = element.data().Stickiness
+			});
+      // console.log(this.agents,"ddd")
+      // console.log(this.users)
+      // this.agents.forEach((element))
+      // form
+    //  const h ="9526287163";
+  
+      // ""
+      // this.form[] ==
+      // const vn = snap.docs[0].data();
+			// vn.Participants.forEach((element)=> {
+			// 	console.log(element.data())
+      //   element.
+      //   element.data().pa
+			// this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
+			// });
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    },
   data: () => ({
+     form:{},
+    response:{},
+    users:[],
+    agents:[],
+    usermodel:[],
     isActive: true,
     e2: 1,
+    active:"",
+    Simultaneous:true,
+    callRouting:null,
+    checkedValue: "",
 	repeatCallerSettings:false,
     curr: 1,
     lastStep: 4,
@@ -470,6 +561,47 @@ export default {
   }),
 
   methods: {
+    c(){
+      console.log("test..........")
+    //   let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    //  db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+    //   // console.log(snap.docs[0].data().VirtualNumber)
+    //   // const participants = snap.docs[0].data().Participants
+		// 	// // console.log("test.........",this.response);
+    //   // this.agents.forEach((element,index) =>{
+    //   //    const value = participants.find(({Number}) =>Number === element.PhoneNumber)
+    //   //    if(value){
+    //   //       // console.log("valuew",value,index)
+    //   //       this.agents[index] = Object.assign(element,{active:true});
+    //   //    }else{
+    //   //      this.agents[index] = Object.assign(element,{active:false});
+    //   //    }
+    //   // })
+    //   snap.docs.forEach((element)=> {
+		// 		// console.log(element.data())
+    //      this.callRouting=element.data().NewActiveCaller,
+    //      this.repeatCallerSettings=element.data().StickyAgent
+    //      this.StickyAgentType = element.data().Stickiness
+		// 	});
+    //   // console.log(this.agents,"ddd")
+    //   // console.log(this.users)
+    //   // this.agents.forEach((element))
+    //   // form
+    // //  const h ="9526287163";
+  
+    //   // ""
+    //   // this.form[] ==
+    //   // const vn = snap.docs[0].data();
+		// 	// vn.Participants.forEach((element)=> {
+		// 	// 	console.log(element.data())
+    //   //   element.
+    //   //   element.data().pa
+		// 	// this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
+		// 	// });
+		// }).catch((err)=>{
+		// 	console.log(err.message)
+		// })
+    },
     goBack(){
 				this.$router.push("/CallFlowSettings")
 			},

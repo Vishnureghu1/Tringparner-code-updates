@@ -276,7 +276,7 @@ export default {
     },
     callRouting() {
        const getNumber =  Object.keys(this.$route.query)[0]
-       this.$router.push("/CallRouting?"+getNumber);
+       this.$router.push("/CallPreference?"+getNumber);
     },
     MissedCallRouting() {
       const getNumber =  Object.keys(this.$route.query)[0]

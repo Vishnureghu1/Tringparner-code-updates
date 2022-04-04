@@ -270,7 +270,7 @@ export default {
 			snap.docs.forEach((element)=> {
 				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,option:[{"title":"edit title"}]});
 			});
-      this.p = [{"title":"p"}];
+      // this.p = [{"title":"p"}];
       // for(let i=0;i<snap.docs[0].data().PlanNumberOfUsers;i++){
       //   if(i < snap.docs[0].data().PlanBaseUsers){
       //   this.users.push({Name:"unassigned",cron:true});
