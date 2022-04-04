@@ -232,7 +232,7 @@ export default {
       this.agents.forEach((element,index) =>{
          const value = participants.find(({Number}) =>Number === element.PhoneNumber)
          if(value){
-            console.log("valuew",value,index)
+            // console.log("valuew",value,index)
             this.agents[index] = Object.assign(element,{active:true});
          }else{
            this.agents[index] = Object.assign(element,{active:false});

@@ -602,8 +602,13 @@ export default {
 		// 	console.log(err.message)
 		// })
     },
+     PrioritizeConfiguration() {
+        const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/PrioritizeConfiguration?"+getNumber);
+    },
     goBack(){
-				this.$router.push("/CallFlowSettings")
+       const getNumber =  Object.keys(this.$route.query)[0]
+				this.$router.push("/CallFlowSettings?"+getNumber)
 			},
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");

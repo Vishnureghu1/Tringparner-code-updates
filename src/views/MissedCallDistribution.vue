@@ -267,7 +267,8 @@ export default {
 
   methods: {
     goBack() {
-      this.$router.push("/CallFlowSettings");
+      const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/CallFlowSettings?"+getNumber);
     },
     SelectSpecificAgent() {
       this.$router.push("/SelectSpecificAgent");

@@ -38,8 +38,8 @@
                           <v-col cols="12" sm="12" class="pl-5">
                             <v-card class="mb-0 mt-0" :elevation="0">
                               <draggable
-                                v-model="items1"
-                                :list="items1"
+                                v-model="participant"
+                                :list="participant"
                                 :disabled="!enabled"
                                 class="list-group"
                                 ghost-class="ghost"
@@ -49,8 +49,8 @@
                               >
                                 <transition-group>
                                   <v-card
-                                    v-for="element in items1"
-                                    :key="element.id"
+                                    v-for="element in participant"
+                                    :key="element.AgentUid"
                                     class="mb-5 row-pointer"
                                     max-width="520"
                                     elevation="1"
@@ -64,9 +64,9 @@
                                       <v-col cols="12" sm="10">
                                         <v-card-text>
                                           <p class="text-h6  mb-1">
-                                            {{ element.title }}
+                                            {{ element.Name }}
                                           </p>
-                                          <p>{{ element.subtitle }}</p>
+                                          <p>{{ element.Number }}</p>
                                         </v-card-text>
                                       </v-col>
                                       <v-col cols="12" align="right" sm="1">
@@ -100,11 +100,35 @@
 
 <script>
 import draggable from "vuedraggable";
-
+import { db } from "@/main.js";
 export default {
   components: { draggable },
-  created() {},
+  created() {
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+      console.log(snap.docs[0].data().VirtualNumber)
+      const participants = snap.docs[0].data().Participants;
+      console.log(participants)
+      participants.forEach(element => {
+        this.participant.push(element)
+        // this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
+      });
+      // console.log("............",this.participant)
+			// console.log("test.........",this.response);
+    //   this.agents.forEach((element,index) =>{
+    //      const value = participants.find(({Number}) =>Number === element.PhoneNumber)
+    //      if(value){
+    //         // console.log("valuew",value,index)
+    //         this.agents[index] = Object.assign(element,{active:true});
+    //      }else{
+    //        this.agents[index] = Object.assign(element,{active:false});
+    //      }
+    //   })
+    })
+  },
   data: () => ({
+    participant:[{Name:"element.Name",Number:"element.Number",AgentUid:"element.AgentUid"}],
     enabled: true,
     dragging: false,
     isActive: true,
@@ -174,6 +198,7 @@ export default {
   methods: {
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
+      console.log(this.participant[0].AgentUid)
     },
     startDrag(evt, item) {
       evt.dataTransfer.dropEffect = "move";
@@ -188,10 +213,12 @@ export default {
       item.list = list;
     },
     goBack() {
-      this.$router.push("/CallFlowSettings");
+      const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/CallFlowSettings?"+getNumber);
     },
     CallFlowSettings() {
-      this.$router.push("/CallFlowSettings");
+      const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/CallFlowSettings?"+getNumber);
     },
     stepComplete(step) {
       return this.curr > step;
