@@ -111,6 +111,13 @@ const routes = [{
         meta: { requiresAuth: true, role: 'OWNER' }
     },
     {
+        path: '/PaymentHistory',
+        name: 'PaymentHistory',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/PaymentHistory.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    {
         path: '/BusinessNumber',
         name: 'BusinessNumber',
         component: () =>

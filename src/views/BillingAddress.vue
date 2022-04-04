@@ -274,11 +274,17 @@ export default {
           disabled: false,
           href: "Dashbaord",
         },
-        {
-          text: "Billing Information",
-          disabled: true,
+			{
+          text: " Billing Information",
+          disabled: false,
           to: { name: "BillingInformation" },
         },
+        {
+          text: "Billing Address",
+          disabled: true,
+          to: { name: "BillingAddress" },
+        },
+	
       ],
       detail: {},
       Udata: [],
