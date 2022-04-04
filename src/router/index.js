@@ -145,6 +145,32 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/AccountInformation.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
+    //Basic Information
+    {
+        path: '/BasicInformation',
+        name: 'BasicInformation',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/BasicInformation.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    //Basic Information
+    {
+        path: '/BusinessInformation',
+        name: 'BusinessInformation',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/BusinessInformation.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
+    // ChangeLoginNumber
+    {
+        path: '/ChangeLoginNumber',
+        name: 'ChangeLoginNumber',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/ChangeLoginNumber.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+
     {
         path: '/GetSupport',
         name: 'GetSupport',
@@ -302,14 +328,7 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/OfflineMesssage.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
-    //Basic Information
-    {
-        path: '/BasicInformation',
-        name: 'BasicInformation',
-        component: () =>
-            import ( /* webpackChunkName: "missed_call" */ '../views/BasicInformation.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
-    },
+
 ]
 
 const router = new VueRouter({

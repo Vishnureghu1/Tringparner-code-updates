@@ -76,22 +76,22 @@ export default {
           {
             name: '10/04/2022',
             amount:'1500 INR',
-            invoice:'yes'
+            invoice:'Pending'
           },
              {
             name: '10/03/2022',
             amount:'1500 INR',
-            invoice:'yes'
+            invoice:'Paid'
           },
              {
             name: '10/02/2022',
             amount:'1500 INR',
-            invoice:'yes'
+            invoice:'Paid'
           },
              {
             name: '10/01/2022',
             amount:'500 INR',
-            invoice:'yes'
+            invoice:'Paid'
           },
          
         ],
