@@ -35,7 +35,7 @@
                           <v-col cols="12" sm="12">
                             <v-card class="mb-0 mt-0 pb-10" :elevation="0">
                               <div class="comment_heading mt-6 ml-5 mb-10">
-                                Current Login Number
+                                You'll see one of these numbers as Caller Id whie receiving calls from Tring Partner Business Number. Please save this number to your contact book for easlily identifying calls from your Business Number
                               </div>
                               <v-row no-gutters>
                                 <v-col cols="4" sm="4">
