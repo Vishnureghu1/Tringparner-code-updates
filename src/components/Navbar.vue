@@ -135,7 +135,10 @@
                         <v-card-title class="black--text white darken-4">
                           Notification Center
                           <v-spacer></v-spacer>
-                          <div align="center" class="notif-mark">View all</div>
+                         <router-link
+                                  :to="{ name: 'notifications' }"
+                                > <div align="center" class="notif-mark"  >View all</div>
+                         </router-link>
                           <span fab small>
                             <v-icon>mdi-close</v-icon>
                           </span>
@@ -158,15 +161,7 @@
                                   <div class="notif-time mb-2" >Today, 12:01pm</div>
                                 </v-col>
                               </v-row>
-                              <!-- <v-list-item-action>
-                                <v-btn depressed small>
-                                  View User
-                                  <v-icon color="orange darken-4" right>
-                                    mdi-open-in-new
-                                  </v-icon>
-                                </v-btn>
-                              </v-list-item-action> -->
-
+          
                             </v-list-item>
                             <v-divider></v-divider>
                           </template>

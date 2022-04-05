@@ -24,6 +24,14 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../components/answered_call.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
+
+    {
+        path: '/notifications',
+        name: 'notifications',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/ViewAllNotifications.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
     {
         path: '/missed_calls',
         name: 'missed_calls',

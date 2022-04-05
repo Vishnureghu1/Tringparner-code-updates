@@ -351,7 +351,7 @@ export default {
     },
   },
      watch: {
-      dialog (val) {
+      sendInviteLoader (val) {
         if (!val) return
 
         setTimeout(() => (this.sendInviteLoader = false), 4000)
