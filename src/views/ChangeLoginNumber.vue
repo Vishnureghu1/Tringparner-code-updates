@@ -22,7 +22,7 @@
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
-                 
+
                   <v-card
                     color="transparent"
                     outlined
@@ -34,34 +34,33 @@
                         <v-row no-gutters>
                           <v-col cols="12" sm="12">
                             <v-card class="mb-0 mt-0" :elevation="0">
-                             <div class="comment_heading mt-6 ml-5">
-                   Current Login Number
-                  </div>
+                              <div class="comment_heading mt-6 ml-5">
+                                Current Login Number
+                              </div>
 
-   <v-card class="mb-0 mt-0 pl-5" :elevation="0">
-                          
-        <p>+91 7306109553</p>
-       <v-checkbox
-              v-model="ex4"
-              label="I agree that I will not be able to access Tring Partner from my current login number after changing it."
-              color="red"
-              value="agreeNumebrChange"
-              change-number
-            ></v-checkbox>
-                    
-   </v-card>
-    <v-card-actions>
-<v-btn
-                            text
-                            class="text-capitalize ma-3 rounded-pill "
-                            min-width="140px" :class="{'selected': isDisabled}" :disabled='!isDisabled'
-                            color="white"
-                            outlined
-                          >
-                            Change login Number
-                          </v-btn>
-    </v-card-actions>
-
+                              <v-card class="mb-0 mt-0 pl-5" :elevation="0">
+                                <p>+91 7306109553</p>
+                                <v-checkbox
+                                  v-model="ex4"
+                                  label="I agree that I will not be able to access Tring Partner from my current login number after changing it."
+                                  color="red"
+                                  value="agreeNumebrChange"
+                                  change-number
+                                ></v-checkbox>
+                              </v-card>
+                              <v-card-actions>
+                                <v-btn
+                                  class="text-capitalize ma-3 rounded-pill"
+                                  min-width="140px"
+                                  :class="{ selected: isDisabled }"
+                                  :disabled="!isDisabled"
+                                  color="red"
+                                  dark
+                                  rounded-pill
+                                >
+                                  Change login Number
+                                </v-btn>
+                              </v-card-actions>
                             </v-card>
                           </v-col>
                         </v-row>
@@ -82,7 +81,9 @@
 export default {
   components: {},
   created() {},
+
   data: () => ({
+    ex4: false,
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
@@ -118,12 +119,14 @@ export default {
         disabled: true,
         to: { name: "CallFlowSettings" },
       },
-
     ],
   }),
-
+  computed: {
+    isDisabled: function () {
+      return this.ex4;
+    },
+  },
   methods: {
-
     goBack() {
       this.$router.push("/CallFlowSettings");
     },
