@@ -88,7 +88,7 @@
                                               :key="index"
                                               active-class="pink--text"
                                             >
-                                              <v-list-item-title
+                                              <v-list-item-title  @click="showPopup(item.type)"
                                                 :class="item.color"
                                                 @change="toggleUserSwitch(userIndex, $event !== null, $event, user)"
                                                 >{{
@@ -103,104 +103,7 @@
                                     <v-divider></v-divider>
                                   </v-col>
                                 </v-row>
-                                <!-- <v-row>
-                                  <v-col cols="12" sm="12" align="center">
-                                    <v-row justify="space-between">
-                                      <v-col cols="6" sm="6" align="left">
-                                        <v-card
-                                          outlined
-                                          color="transparent"
-                                          class="mb-3"
-                                        >
-                                          <div class="agent_name">Shinu  </div>
-                                          <div class="agent_role">Agent</div>
-                                          <div class="agent_number">
-                                            +91 989999 9900
-                                          </div>
-                                        </v-card>
-                                      </v-col>
-                                      <v-col cols="6" sm="2" align="end">
-                                        <v-menu offset-y>
-                                          <template
-                                            v-slot:activator="{ on, attrs }"
-                                          >
-                                            <v-icon
-                                              v-bind="attrs"
-                                              v-on="on"
-                                              color="black"
-                                              >mdi-dots-vertical</v-icon
-                                            >
-                                          </template>
-                                          <v-list>
-                                            <v-list-item
-                                              v-for="(item, index) in options"
-                                              :key="index"
-                                              active-class="pink--text"
-                                            >
-                                              <v-list-item-title
-                                                :class="item.color"
-                                                @click="blockCall()"
-                                                >{{
-                                                  item.title
-                                                }}</v-list-item-title
-                                              >
-                                            </v-list-item>
-                                          </v-list>
-                                        </v-menu>
-                                      </v-col>
-                                    </v-row>
-                                    <v-divider></v-divider>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12" sm="12" align="center">
-                                    <v-row justify="space-between">
-                                      <v-col cols="6" sm="6" align="left">
-                                        <v-card
-                                          outlined
-                                          color="transparent"
-                                          class="mb-3"
-                                        >
-                                          <div class="agent_name">Shinu</div>
-                                          <div class="agent_role">Agent</div>
-                                          <div class="agent_number">
-                                            +91 989999 9900
-                                          </div>
-                                        </v-card>
-                                      </v-col>
-                                      <v-col cols="6" sm="2" align="end">
-                                        <v-menu offset-y>
-                                          <template
-                                            v-slot:activator="{ on, attrs }"
-                                          >
-                                            <v-icon
-                                              v-bind="attrs"
-                                              v-on="on"
-                                              color="black"
-                                              >mdi-dots-vertical</v-icon
-                                            >
-                                          </template>
-                                          <v-list>
-                                            <v-list-item
-                                              v-for="(item, index) in options"
-                                              :key="index"
-                                              active-class="pink--text"
-                                            >
-                                              <v-list-item-title
-                                                :class="item.color"
-                                                @click="blockCall()"
-                                                >{{
-                                                  item.title
-                                                }}</v-list-item-title
-                                              >
-                                            </v-list-item>
-                                          </v-list>
-                                        </v-menu>
-                                      </v-col>
-                                    </v-row>
-                                    <v-divider></v-divider>
-                                  </v-col>
-                                </v-row> -->
+          
                               </v-col>
                             </v-card>
                           </v-col>
@@ -219,7 +122,8 @@
     <v-dialog v-model="dialog2" max-width="332px">
       <v-card class="rounded-lg pt-7 pb-7">
         <v-card-title class="d-flex justify-center">
-          <h3 class="center">Add New User</h3>
+          
+          <h3 class="center">{{headlinePopup}} </h3>
         </v-card-title>
         <v-card-text class="pt-0">
           <v-text-field label="Name" outlined></v-text-field>
@@ -249,6 +153,26 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+     <v-dialog
+      v-model="sendInviteLoader"
+      hide-overlay
+      persistent
+      width="300"
+    >
+      <v-card
+        color="red"
+        dark
+      >
+        <v-card-text>
+          Sending invite...
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -268,16 +192,9 @@ export default {
       this.baseusers = snap.docs[0].data().PlanBaseUsers;
       this.totalusers = snap.docs[0].data().PlanNumberOfUsers;
 			snap.docs.forEach((element)=> {
-				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,option:[{"title":"edit title"}]});
+				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,option:[{title:"Edit Title",type:"Edit",headline:"Edit User"}]});
 			});
-      // this.p = [{"title":"p"}];
-      // for(let i=0;i<snap.docs[0].data().PlanNumberOfUsers;i++){
-      //   if(i < snap.docs[0].data().PlanBaseUsers){
-      //   this.users.push({Name:"unassigned",cron:true});
-      //   } else {
-      //       this.users.push({Name:"unassigned",cron:false});
-      //   }
-      // }
+    
 		}).catch((err)=>{
 			console.log(err.message)
 		})
@@ -293,9 +210,10 @@ export default {
                if(element.data().IsAddon == true){
           assignedaddoncount= assignedaddoncount+1;
              }
-				this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:(element.data().IsAddon===false)?true:false,option:[ { title: "Edit Title", color: "black--text", url: "edit" },
-      { title: "Send Invite", color: "black--text", url: "send" },
-      { title: "Remove User", color: "red--text", url: "remove" },]});
+				this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:(element.data().IsAddon===false)?true:false,option:[ 
+        { title:"Edit Title", type:"Edit", headline:"Edit User", color: "black--text", url: "edit" },
+      { title: "Send Invite", type:"Send", headline:"Send Invite", color: "black--text", url: "send" },
+      { title: "Remove User",  type:"Edit", headline:"Remove User", color: "red--text", url: "remove" },]});
 			});
 
      const reminingprimary = this.baseusers-assignedprimarycount;
@@ -357,18 +275,18 @@ export default {
     },
   data: () => ({
     users:[],
+    headlinePopup:'Add New User',
     baseusers:0,
     totalusers:0,
-    dialog2: false,
+    sendInviteLoader:false,
+      dialog2: false,
+    dialog: false,
+    removeNumber: false,
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
     p:[],
-    options: [
-      { title: "Edit Title", color: "black--text", url: "edit" },
-      { title: "Send Invite", color: "black--text", url: "send" },
-      { title: "Remove User", color: "red--text", url: "remove" },
-    ],
+
     valid: false,
     stepForm: [],
     types: [
@@ -396,6 +314,20 @@ export default {
   }),
 
   methods: {
+       showPopup(type) {
+      if (type == "Edit") {
+        this.dialog2 = true;
+        this.headlinePopup="Edit User";
+      }
+      if (type == "Send") {
+    this.sendInviteLoader=true,
+        this.removeNumber = true;
+      }
+        if (type == "Remove") {
+    this.sendInviteLoader=true,
+        this.removeNumber = true;
+      }
+    },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
     },
@@ -418,6 +350,13 @@ export default {
       this.curr = 5;
     },
   },
+     watch: {
+      dialog (val) {
+        if (!val) return
+
+        setTimeout(() => (this.sendInviteLoader = false), 4000)
+      },
+    },
 };
 </script>
 
