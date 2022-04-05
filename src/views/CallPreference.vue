@@ -74,7 +74,7 @@
                                       </v-col>
                                     </v-row>
                                     <!-- <v-row> -->
-                                      <v-card v-for="(agent,agentIndex) in agents" :key="agent.id">
+                                      <v-card v-for="(agent,agentIndex) in agents" :key="agent.id" elevation="0" class="pl-0">
                                       <v-col cols="12" sm="12" align="center">
                                         <v-row justify="space-between">
                                           <v-col cols="6" sm="6" align="left">
