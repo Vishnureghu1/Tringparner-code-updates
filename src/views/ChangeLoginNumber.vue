@@ -49,7 +49,7 @@
                                 ></v-checkbox>
                               </v-card>
                               <v-card-actions>
-                                <v-btn
+                                <v-btn    @click="popup()"
                                   class="text-capitalize ma-3 rounded-pill"
                                   min-width="140px"
                                   :class="{ selected: isDisabled }"
@@ -74,6 +74,41 @@
         </v-layout>
       </v-container>
     </div>
+            <v-dialog v-model="dialog2" max-width="332px">
+      <v-card class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          
+          <h3 class="center">Change Login Number</h3>
+        </v-card-title>
+        <v-card-text class="pt-5">
+        
+          <v-text-field label="New Number" outlined value="+91 ">
+
+          </v-text-field>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="dialog2 = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+          >
+            Next
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -83,6 +118,7 @@ export default {
   created() {},
 
   data: () => ({
+      dialog2: false,
     ex4: false,
     isActive: true,
     e2: 1,
@@ -115,9 +151,9 @@ export default {
         to: { name: "AccountInformation" },
       },
       {
-        text: "Bussiness Information",
+        text: "Change Login Number",
         disabled: true,
-        to: { name: "CallFlowSettings" },
+        to: { name: "" },
       },
     ],
   }),
@@ -127,6 +163,12 @@ export default {
     },
   },
   methods: {
+        popup() {
+      
+        this.dialog2 = true;
+   
+      
+    },
     goBack() {
       this.$router.push("/CallFlowSettings");
     },

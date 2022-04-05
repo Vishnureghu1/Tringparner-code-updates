@@ -327,6 +327,13 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/SetWorkingHours.vue'),
         meta: { requiresAuth: true, role: 'OWNER' }
     },
+    {
+        path: '/CallerID',
+        name: 'CallerID',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/CallerID.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
 
     // OfflineMesssage
     {

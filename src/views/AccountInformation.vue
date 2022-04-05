@@ -125,6 +125,9 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
+                                 <router-link
+                                  :to="{ name: 'CallerID' }"
+                                >
                                 <span
                                   ><v-icon
                                     class="mt-6 mb-5 mr-7"
@@ -132,6 +135,7 @@
                                     >mdi-arrow-right</v-icon
                                   >
                                 </span>
+                                 </router-link>
                               </v-col>
                             </v-row>
                             
@@ -149,7 +153,7 @@
                               </v-col>
                               <v-col cols="6" align="end">
                                 <span
-                                  ><v-icon
+                                  ><v-icon @click="logout"
                                     class="mt-6 mb-5 mr-7"
                                     color="#EE1C25"
                                     >mdi-arrow-right</v-icon
@@ -176,6 +180,7 @@
 </template>
 
 <script>
+  import firebase from 'firebase'
 export default {
   components: {},
   created() {
@@ -203,6 +208,14 @@ export default {
     callPauseNumber() {
       this.$router.push("/PauseNumber");
     },
+     logout: function() {
+            console.log('clicked logout');
+            // firebase.auth()
+            firebase.auth().signOut();
+            localStorage.removeItem('tpu');
+            this.rerenderKey += 1;
+            this.$router.push("login").catch(()=>{});
+        },
   },
 };
 </script>
