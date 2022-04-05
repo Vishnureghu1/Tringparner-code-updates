@@ -25,7 +25,7 @@
                 <v-row>
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters >
-                      <v-card class="mx-auto" min-width="500">
+                      <v-card class="mx-auto" min-width="700">
                         <v-card-text class="pb-0">
                           <p class="redtext bold">
                             Next Recharge Due on 05-Jun-2022
@@ -104,14 +104,15 @@
                                 <div class="col-4 membership_heading">
                                   ₹ 9558.0 for 6 Months
                                 </div>
-                                <p class="redtext center f12" align="center">
+                              
+                              </v-row>
+                                <p class="redtext center f16 bold" align="center">
                                   (Your Total Saving ₹900.0)
                                 </p>
-                              </v-row>
                             </div>
                           </div>
                         </v-card-text>
-                        <v-card-actions>
+                        <v-card-actions align="center" class="center">
                           <v-btn
                             text
                             class="text-capitalize ma-3 rounded-pill red_button"
@@ -152,7 +153,7 @@
                                                       v-for="d in sublist"
                                                       :key="d.name"
                                                     >
-                                                      <td  class="ma-0 pa-0" :class="d.class">{{ d.name }}</td>
+                                                      <td  class="ma-0 pa-0" :class="d.class">{{ d.title }}</td>
                                                       <td :class="d.class">{{ d.qty }}</td>
                                                       <td :class="d.class">₹ {{ d.amount }}</td>
                                                     </tr>
@@ -234,26 +235,26 @@ export default {
   data: () => ({
         sublist: [
       {
-        item: "Charges",
+        title: "Charges",
         qty: "Quantity",
         amount: "Price",
-        class: "Bold",
+        class: "bold",
       },
     
       {
-        name: "Tringpartner_6M_3000",
+        title: "Tringpartner_6M_3000",
         qty: 1,
         amount: 3000.00,
         class: "light3",
       },  
       {
-        name: "Business Numbers",
+        title: "Business Numbers",
         qty:2,
         amount: 3600.00,
         class: "light3",
       },  
       {
-        name: "Users",
+        title: "Users",
         qty: 4,
         amount: 2400.00,
         class: "light3",
