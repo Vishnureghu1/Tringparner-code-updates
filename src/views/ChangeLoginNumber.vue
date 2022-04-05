@@ -54,7 +54,7 @@
 <v-btn
                             text
                             class="text-capitalize ma-3 rounded-pill "
-                            min-width="140px" disabled
+                            min-width="140px" :class="{'selected': isDisabled}" :disabled='!isDisabled'
                             color="white"
                             outlined
                           >
