@@ -327,7 +327,7 @@ import moment from 'moment'
 
       sendMessage (unique_id, message) {
 				const user_data = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/note',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',
 					method: 'POST',
 					data: {
 						uid: this.uid,
@@ -348,7 +348,7 @@ import moment from 'moment'
       clearMessage (unique_id, message) {
         message = ''
         const user_data = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/note',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note',
 					method: 'POST',
 					data: {
 						uid: this.uid,

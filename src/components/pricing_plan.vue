@@ -167,7 +167,7 @@ import { db } from '@/main.js';
 		methods: {
 			nextPage(){
 				const user_stage = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',
 					method: 'POST',
 
 					data: {

@@ -269,10 +269,12 @@ export default {
 
   methods: {
     goBack() {
-      this.$router.push("/BusinessNumber");
+       const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/BusinessNumber?"+getNumber);
     },
     callPauseNumber() {
-      this.$router.push("/PauseNumber");
+       const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/PauseNumber?"+getNumber);
     },
     callRouting() {
        const getNumber =  Object.keys(this.$route.query)[0]

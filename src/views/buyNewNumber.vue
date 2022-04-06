@@ -389,7 +389,7 @@ export default {
         this.overlay = true;
         const details = {
           // url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/list",
-          url: "https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list",
+          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/list",
           method: "POST",
           data: {
             uid: this.uid,
@@ -432,7 +432,7 @@ export default {
       let virtualNumber = this.V_numbers[this.toggle_none];
       console.log(virtualNumber);
       const reserve = {
-        url: "https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/reserve",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/reserve",
         method: "POST",
 
         data: {
@@ -457,7 +457,7 @@ export default {
         })
         .finally(() => {
           const user_stage = {
-            url: "https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage",
+            url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage",
             method: "POST",
 
             data: {

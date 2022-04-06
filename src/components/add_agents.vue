@@ -237,7 +237,7 @@ import { db } from '@/main.js';
 			},
 			updateUser() {
 					const user_data = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/callDistribution/addparticipant',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/addparticipant',
 						method: 'POST',
 						data: {
 							owner_uid: this.uid,

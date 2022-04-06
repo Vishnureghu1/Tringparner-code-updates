@@ -154,6 +154,7 @@
             min-width="140px"
             color="white"
             outlined
+            @click="submit()"
           >
             Submit
           </v-btn>
@@ -164,10 +165,50 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
 export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+     db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+      // console.log(snap.docs[0].data().VirtualNumber)
+      this.switch1 = snap.docs[0].data().IsPaused
+			// console.log("test.........",this.response);
+      // this.agents.forEach((element,index) =>{
+      //    const value = participants.find(({Number}) =>Number === element.PhoneNumber)
+      //    if(value){
+      //       // console.log("valuew",value,index)
+      //       this.agents[index] = Object.assign(element,{active:true});
+      //    }else{
+      //      this.agents[index] = Object.assign(element,{active:false});
+      //    }
+      // })
+      // snap.docs.forEach((element)=> {
+			// 	// console.log(element.data())
+      //    this.callRouting=element.data().NewActiveCaller,
+      //    this.repeatCallerSettings=element.data().StickyAgent
+      //    this.StickyAgentType = element.data().Stickiness
+			// });
+      // console.log(this.agents,"ddd")
+      // console.log(this.users)
+      // this.agents.forEach((element))
+      // form
+    //  const h ="9526287163";
+  
+      // ""
+      // this.form[] ==
+      // const vn = snap.docs[0].data();
+			// vn.Participants.forEach((element)=> {
+			// 	console.log(element.data())
+      //   element.
+      //   element.data().pa
+			// this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
+			// });
+		}).catch((err)=>{
+			console.log(err.message)
+		})
   },
   data: () => ({
     dialog2: false,
@@ -199,7 +240,27 @@ export default {
 
   methods: {
     goBack() {
-      this.$router.push("/CallFlowSettings");
+      const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/CallFlowSettings?"+getNumber);
+    },
+    submit(){
+      const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/pausenumber',
+						method: 'POST',
+						data: {
+						owner_uid:"",
+            updated_by:"",
+            virtual_number:""
+						},
+					}
+					console.log(details)
+					this.$axios(details)
+						.then((response) => {
+						console.log(response)
+						})
+						.catch((error) => {
+							console.error(error);
+						})
     },
         popup() {
       

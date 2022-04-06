@@ -145,7 +145,7 @@ import { db } from '@/main.js';
 					this.radios2 = null
 				}
 				const user_data = {
-				url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/callDistribution/activecall',
+				url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/activecall',
 				method: 'POST',
 				data: {
 					owner_uid: this.uid,
