@@ -292,14 +292,51 @@ export default {
     this.ownerUid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.AccountId = localStorageUserObj.AccountId;
 
+    this.bussinessNumber = this.$route.query.bn;
 
     this.$on('greeting_message_changed', function(id){
-      console.log('Event from parent component emitted', id)
+      console.log(`Event from parent component emitted ${this.bussinessNumber}`, id);
+
+      console.log({
+        owner_uid: this.ownerUid,
+        updated_by: this.ownerUid,
+        virtual_number: this.bussinessNumber,
+        prompt_type:"WelcomeMessage",
+        prompt: id,
+        AccountId: this.AccountId
+      });
+
+      const options = {
+        url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/prompt',
+        method: 'POST',
+        headers: {
+          'token': localStorage.getItem("token"),
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        data: {
+          owner_uid: this.ownerUid,
+          updated_by: this.ownerUid,
+          virtual_number: this.bussinessNumber,
+          prompt_type: "WelcomeMessage",
+          prompt: id,
+          AccountId: this.AccountId
+        }
+      }
+      console.log(options);
+      this.$axios(options)
+        .then((response) => {
+          console.log(response.data)
+          // this.newPopupAudioName = '';
+          // this.greetingMessageAddedSnapshot();
+          this.$root.vtoast.show({message: 'Audio Updated Successfully!', color: '#07C421', timer: 2000})
+        }).catch((error) => {
+          console.error(error);
+        })
+
     });
 
     this.getAllUserGreetingMessages(); //get all user audios
 
-    this.bussinessNumber = this.$route.query.bn;
 
     db.collection("uservirtualNumber")
       .where("Uid", "==", this.ownerUid)
