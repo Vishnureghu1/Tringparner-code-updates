@@ -82,9 +82,34 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
+// import axios from "axios";
 export default {
   components: {},
-  created() {},
+  created() {
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+     db.collection("blockCalls").where("Uid","==",owneruid).get().then(async(snap) =>{
+       if(snap){
+         snap.docs.forEach(element => {
+           this.blockedNumbers.push({id: 1,title:element.data().Number,Number:element.data().Number,
+      },)
+         });
+       }
+      // console.log(snap.docs[0].data().VirtualNumber)
+      // this.switch1 = snap.docs[0].data().WorkingHoursStatus;
+      // this.time = snap.docs[0].data().StartTime?snap.docs[0].data().StartTime.substring(0, 2) + ":" + snap.docs[0].data().StartTime.substring(1, 3):"10:00";
+      // this.time2 = snap.docs[0].data().EndTime?snap.docs[0].data().EndTime.substring(0, 2) + ":" + snap.docs[0].data().EndTime.substring(1, 3):"10:00";
+      // console.log(moment().add(1, 'day').format('YYYY-MM-DD'))
+      // this.pauseupto = new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
+      // this.pauseupto = snap.docs[0].data().WorkingHoursStatus?new Date(snap.docs[0].data().PauseUpto).toISOString() : new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime() - 1000*60).toISOString();
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+  },
   data: () => ({
     isActive: true,
     e2: 1,
