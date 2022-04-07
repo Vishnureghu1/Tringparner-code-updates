@@ -57,8 +57,25 @@
   </v-app>
 </template>
          <script>
+         import { db } from "@/main.js";
 export default {
   components: {},
+  created(){
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+     db.collection("paymentTransaction").where("Uid","==",owneruid).where("Status","==",true).get().then(async(snap) =>{
+       if(snap){
+         snap.docs.forEach(element => {this.paymentHistory.push({name: new Date(element.data().HookDate.seconds *1000).toLocaleString(),amount:element.data().InvoiceAmount,invoice:element.data().Status})});
+         }else{
+             this.noblock ="No Blocked Numbers"
+         }
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+  },
   data: () => ({
        search: '',
         headers: [
@@ -72,29 +89,7 @@ export default {
           { text: 'Invoices', value: 'invoice' },
 
         ],
-        paymentHistory: [
-          {
-            name: '10/04/2022',
-            amount:'1500 INR',
-            invoice:'Pending'
-          },
-             {
-            name: '10/03/2022',
-            amount:'1500 INR',
-            invoice:'Paid'
-          },
-             {
-            name: '10/02/2022',
-            amount:'1500 INR',
-            invoice:'Paid'
-          },
-             {
-            name: '10/01/2022',
-            amount:'500 INR',
-            invoice:'Paid'
-          },
-         
-        ],
+        paymentHistory: [],
     
         sublist: [
       {
@@ -154,10 +149,10 @@ export default {
       return this.discount ? this.price * this.discountedPrice : this.price;
     },
   },
-  async created() {
-    await this.getBill();
-    //  this.getOrderIdforPayment()
-  },
+  // async created() {
+  //   await this.getBill();
+  //   //  this.getOrderIdforPayment()
+  // },
 
   methods: {
     getBill() {
