@@ -264,7 +264,6 @@ export default {
       this.$router.push("/CallFlowSettings?"+getNumber);
     },
     submit(status,button){
-
       // dateFormat(today, "yyyy-mm-dd");
        const pausevalue = (button == "toggle") ?(new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60): this.select;
       //  console.log(button,pausevalue)
@@ -295,6 +294,7 @@ export default {
 					axios(details)
 						.then((response) => {
 						console.log(response)
+              this.dialog2 = false
 						})
 						.catch((error) => {
 							console.error(error);

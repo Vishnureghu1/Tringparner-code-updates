@@ -296,6 +296,7 @@ export default {
 					axios(details)
 						.then((response) => {
 						console.log(response)
+            this.dialog2 = false;
 						})
 						.catch((error) => {
 							console.error(error);
