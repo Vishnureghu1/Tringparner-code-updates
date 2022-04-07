@@ -283,14 +283,7 @@ export default {
             PauseUpto:pausevalue
 						},
 					}
-          // const d ={
-					// 	owner_uid:this.owneruid,
-          //   updated_by:this.uid,
-          //   virtual_number:Object.keys(this.$route.query)[0],
-          //   AccountId:this.AccountId,
-          //   IsPaused:status,
-          //   PauseUpto:pausevalue
-					// 	};			 	// console.log(details)
+          
 					axios(details)
 						.then((response) => {
 						console.log(response)

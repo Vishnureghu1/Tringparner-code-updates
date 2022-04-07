@@ -35,7 +35,7 @@
                           <v-col cols="12" sm="12">
                             <v-card class="mb-0 mt-0" :elevation="0">
                              <div class="comment_heading mt-6 ml-5">
-                    No Blocked Numbers
+                   {{noblock}}
                   </div>
 
            
@@ -59,7 +59,7 @@
 
         <v-list-item-action>
           <v-btn icon>
-            <v-icon color="grey lighten-1">mdi-information</v-icon>
+            <v-icon color="grey lighten-1" @click="unblock(bnumber.Number)">mdi-information</v-icon>
           </v-btn>
         </v-list-item-action>
       </v-list-item>
@@ -83,7 +83,7 @@
 
 <script>
 import { db } from "@/main.js";
-// import axios from "axios";
+import axios from "axios";
 export default {
   components: {},
   created() {
@@ -94,23 +94,19 @@ export default {
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
      db.collection("blockCalls").where("Uid","==",owneruid).get().then(async(snap) =>{
        if(snap){
-         snap.docs.forEach(element => {
-           this.blockedNumbers.push({id: 1,title:element.data().Number,Number:element.data().Number,
-      },)
-         });
-       }
-      // console.log(snap.docs[0].data().VirtualNumber)
-      // this.switch1 = snap.docs[0].data().WorkingHoursStatus;
-      // this.time = snap.docs[0].data().StartTime?snap.docs[0].data().StartTime.substring(0, 2) + ":" + snap.docs[0].data().StartTime.substring(1, 3):"10:00";
-      // this.time2 = snap.docs[0].data().EndTime?snap.docs[0].data().EndTime.substring(0, 2) + ":" + snap.docs[0].data().EndTime.substring(1, 3):"10:00";
-      // console.log(moment().add(1, 'day').format('YYYY-MM-DD'))
-      // this.pauseupto = new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
-      // this.pauseupto = snap.docs[0].data().WorkingHoursStatus?new Date(snap.docs[0].data().PauseUpto).toISOString() : new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime() - 1000*60).toISOString();
+         snap.docs.forEach(element => {this.blockedNumbers.push({id: 1,title:element.data().Number,Number:element.data().Number})});
+         }else{
+             this.noblock ="No Blocked Numbers"
+         }
 		}).catch((err)=>{
 			console.log(err.message)
 		})
   },
   data: () => ({
+    owneruid:"",
+    uid:"",
+    AccountId:"",
+    noblock:"",
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
@@ -128,18 +124,7 @@ export default {
     ],
     valid: false,
     stepForm: [],
-    blockedNumbers: [
-      {
-        id: 1,
-        title: "Sree",
-        Number: "+919526287163",
-      },
-      {
-        id: 2,
-        title: "Akhil",
-        Number: "+919526287163",
-      },
-    ],
+    blockedNumbers: [],
     items: [
       {
         text: "More",
@@ -168,6 +153,45 @@ export default {
   }),
 
   methods: {
+    unblock(number){
+      console.log("sfvs",number)
+       const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/blockcall',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {	
+        number:number,
+        status:false,
+        owner_uid:this.owneruid,
+        UpdatedBy:this.uid,
+        AccountId:this.AccountId
+						},
+					}
+          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+              // this.dialog2 = false
+               this.$root.vtoast.show({message: 'unblocked successfully', color: 'green', timer: 5000})
+              this.getblocknumbers()
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+    },
+    getblocknumbers(){
+    db.collection("blockCalls").where("Uid","==",this.owneruid).get().then(async(snap) =>{
+      this.blockedNumbers=[];
+       if(snap){
+         snap.docs.forEach(element => {this.blockedNumbers.push({id: 1,title:element.data().Number,Number:element.data().Number})});
+         }else{
+             this.noblock ="No Blocked Numbers"
+         }
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    },
     startDrag(evt, item) {
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
