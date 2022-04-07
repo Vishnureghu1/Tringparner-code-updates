@@ -43,6 +43,7 @@
                         v-model="switch1"
                         flat
                         color="#EE1C25"
+                        @click="submit(switch1)"
                       ></v-switch>
                     </v-col>
                   </v-row>
@@ -57,7 +58,7 @@
                       <v-col cols="6" sm="10">
                         <h2 class="sub_heading ml-15 mr-7">Working Hours</h2>
                         <h2 class="number_heading ml-15 mt-2 mr-7">
-                          10:00 AM - 05:00 PM
+                          {{time+" AM"+" - "+time2+" PM"}}
                         </h2>
                       </v-col>
                       <v-col cols="12" sm="2" align="end">
@@ -182,6 +183,7 @@
             min-width="140px"
             color="white"
             outlined
+            @click="submit(true)"
           >
             Submit
           </v-btn>
@@ -192,15 +194,37 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
+// import dateFormat from "dateformat";
+// import moment from "moment";
+import axios from "axios";
 export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+     db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+      // console.log(snap.docs[0].data().VirtualNumber)
+      this.switch1 = snap.docs[0].data().WorkingHoursStatus;
+      this.time = snap.docs[0].data().StartTime?snap.docs[0].data().StartTime.substring(0, 2) + ":" + snap.docs[0].data().StartTime.substring(1, 3):"10:00";
+      this.time2 = snap.docs[0].data().EndTime?snap.docs[0].data().EndTime.substring(0, 2) + ":" + snap.docs[0].data().EndTime.substring(1, 3):"10:00";
+      // console.log(moment().add(1, 'day').format('YYYY-MM-DD'))
+      // this.pauseupto = new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
+      // this.pauseupto = snap.docs[0].data().WorkingHoursStatus?new Date(snap.docs[0].data().PauseUpto).toISOString() : new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime() - 1000*60).toISOString();
+		}).catch((err)=>{
+			console.log(err.message)
+		})
   },
   data: () => ({
     time: null,
     menu2: false,
-
+    uid:"",
+    owneruid:"",
+    AccountId:"",
     endTime: false,
     startTime: false,
     dialog2: false,
@@ -233,10 +257,49 @@ export default {
 
   methods: {
     goBack() {
-      this.$router.push("/CallFlowSettings");
+      const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/CallFlowSettings?"+getNumber);
     },
     popup() {
       this.dialog2 = true;
+    },
+       submit(status){
+
+      // dateFormat(today, "yyyy-mm-dd");
+      //  const pausevalue = (button == "toggle") ?(new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60): this.select;
+      //  console.log(button,pausevalue)
+      // this.pauseupto = new Date(pausevalue).toISOString()
+      //  console.log("ddddddd",this.select,status,new Date(dateFormat(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}),"yyyy-mm-dd")).getTime());
+      const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/workinghours',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            virtual_number:Object.keys(this.$route.query)[0],
+            AccountId:this.AccountId,
+            WorkingHoursStatus:status,
+            start_time:this.time.replace(":", ""),
+            end_time:this.time2.replace(":","")
+						},
+					}
+          // const d ={
+					// 	owner_uid:this.owneruid,
+          //   updated_by:this.uid,
+          //   virtual_number:Object.keys(this.$route.query)[0],
+          //   AccountId:this.AccountId,
+          //   IsPaused:status,
+          //   PauseUpto:pausevalue
+					// 	};			 	// console.log(details)
+					axios(details)
+						.then((response) => {
+						console.log(response)
+						})
+						.catch((error) => {
+							console.error(error);
+						})
     },
   },
 };

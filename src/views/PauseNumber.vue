@@ -41,6 +41,7 @@
                         v-model="switch1"
                         flat
                         color="#EE1C25"
+                        @click="submit(switch1,'toggle')"
                       ></v-switch>
                     </v-col>
                   </v-row>
@@ -57,12 +58,12 @@
                           Marked as Offline Till
                         </h2>
                         <h2 class="number_heading ml-15 mt-2 mr-7">
-                          10 Jan 2022 11:59pm
+                            {{pauseupto}}
                         </h2>
                       </v-col>
                       <v-col cols="12" sm="2" align="end">
                         <v-icon
-                          v-bind="attrs"
+            
                           v-on="on"
                           color="black"
                           @click="popup()"
@@ -77,6 +78,7 @@
                           class="name_heading ml-14"
                           color="#EE1C25"
                           label="Play Audio Message"
+                          @click="submit(selected)"
                         >
                         </v-checkbox>
                         <h2 class="comment_heading ml-16">
@@ -132,9 +134,9 @@
           <h3 class="center">Pause Virtual Number</h3>
         </v-card-title>
         <v-card-text class="pt-5">
-        
-          <v-select label="Pause Till" outlined  :items="pauseTill">
-
+             <!-- v-model =pauseTill -->
+          <v-select v-model ="select" label="Pause Till" outlined  :items="pauseTill" item-text="date" item-value="time">
+       
           </v-select>
 
         </v-card-text>
@@ -154,7 +156,7 @@
             min-width="140px"
             color="white"
             outlined
-            @click="submit()"
+            @click="submit(true,'dropdown')"
           >
             Submit
           </v-btn>
@@ -166,15 +168,24 @@
 
 <script>
 import { db } from "@/main.js";
+// import dateFormat from "dateformat";
+import moment from "moment";
+import axios from "axios";
 export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
      db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
       // console.log(snap.docs[0].data().VirtualNumber)
       this.switch1 = snap.docs[0].data().IsPaused
+      // console.log(moment().add(1, 'day').format('YYYY-MM-DD'))
+      // this.pauseupto = new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
+      this.pauseupto = snap.docs[0].data().IsPaused?new Date(snap.docs[0].data().PauseUpto).toISOString() : new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime() - 1000*60).toISOString();
 			// console.log("test.........",this.response);
       // this.agents.forEach((element,index) =>{
       //    const value = participants.find(({Number}) =>Number === element.PhoneNumber)
@@ -209,10 +220,19 @@ export default {
 		}).catch((err)=>{
 			console.log(err.message)
 		})
+   
   },
   data: () => ({
+    pauseupto:"ndbjsh",
+    select:"",
+    uid:"",
+    owneruid:"",
+    AccountId:"",
     dialog2: false,
-      pauseTill: ['Today', 'Tommrrow', 'Day after tommrrow'],
+    pauseTill: [
+      {date:"Today",time:(new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60)},
+                {date:"Tomorrow",time:(new Date(new Date(moment().add(2, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60)},
+    {date:"Day after Tommrrow",time:(new Date(new Date(moment().add(3, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60)}],
     items: [
       {
         text: "More",
@@ -243,18 +263,36 @@ export default {
       const getNumber =  Object.keys(this.$route.query)[0]
       this.$router.push("/CallFlowSettings?"+getNumber);
     },
-    submit(){
+    submit(status,button){
+
+      // dateFormat(today, "yyyy-mm-dd");
+       const pausevalue = (button == "toggle") ?(new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60): this.select;
+      //  console.log(button,pausevalue)
+      this.pauseupto = new Date(pausevalue).toISOString()
+      //  console.log("ddddddd",this.select,status,new Date(dateFormat(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}),"yyyy-mm-dd")).getTime());
       const details = {
 						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/pausenumber',
+            // url:"http://localhost:3000/jp",
 						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
 						data: {
-						owner_uid:"",
-            updated_by:"",
-            virtual_number:""
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            virtual_number:Object.keys(this.$route.query)[0],
+            AccountId:this.AccountId,
+            IsPaused:status,
+            PauseUpto:pausevalue
 						},
 					}
-					console.log(details)
-					this.$axios(details)
+          // const d ={
+					// 	owner_uid:this.owneruid,
+          //   updated_by:this.uid,
+          //   virtual_number:Object.keys(this.$route.query)[0],
+          //   AccountId:this.AccountId,
+          //   IsPaused:status,
+          //   PauseUpto:pausevalue
+					// 	};			 	// console.log(details)
+					axios(details)
 						.then((response) => {
 						console.log(response)
 						})

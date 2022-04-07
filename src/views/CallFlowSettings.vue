@@ -187,15 +187,16 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'WorkingHours' }">
+                                <!-- <router-link :to="{ name: 'WorkingHours' }"> -->
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
                                       color="#EE1C25"
+                                       @click="WorkingHours()"
                                       >mdi-arrow-right</v-icon
                                     >
                                   </span>
-                                </router-link>
+                                <!-- </router-link> -->
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
@@ -283,6 +284,10 @@ export default {
     MissedCallRouting() {
       const getNumber =  Object.keys(this.$route.query)[0]
        this.$router.push("/MissedCallDistribution?"+getNumber);
+    },
+    WorkingHours(){
+       const getNumber =  Object.keys(this.$route.query)[0]
+       this.$router.push("/WorkingHours?"+getNumber);
     }
   },
 };
