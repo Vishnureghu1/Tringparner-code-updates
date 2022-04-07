@@ -80,7 +80,7 @@
                             <v-card class="mb-0 mt-0" :elevation="0">
                               <div class="text-center">
                                 <v-dialog
-                                  v-model="dialog"
+                                  v-model="isProgressing"
                                   hide-overlay
                                   persistent
                                   width="300"
@@ -118,7 +118,7 @@
                                 >
                                   <v-row align="center" justify="center">
                                     <v-col cols="12" sm="4">
-                                      <v-radio :value="greeting.id">
+                                      <v-radio :value="greeting.AudioAccountId">
                                         <span
                                           slot="label"
                                           class="black--text ml-3"
@@ -156,7 +156,7 @@
                                           >
                                             <v-list-item-title
                                               :class="m.color"
-                                              @click="dialog2 = true"
+                                              @click="threeDotAction(m, greeting.id)"
                                               >{{ m.text }}</v-list-item-title
                                             >
                                           </v-list-item>
@@ -178,14 +178,15 @@
           </v-flex>
         </v-layout>
 
-        <v-dialog v-model="dialog2" max-width="332px">
-          <v-card class="rounded-lg pt-7 pb-7">
+        <!-- RENAME MEDIA SECTION -->
+        <v-dialog v-model="renameDialog" max-width="332px">
+          <v-card v-model="renameDialog" class="rounded-lg pt-7 pb-7">
             <v-card-title class="d-flex justify-center">
               <h3 class="center">Rename Media</h3>
             </v-card-title>
             <v-card-text class="pt-0">
-              <p align="center" class="pb-10">mcwaw.mp3</p>
-              <v-text-field label="Media Title" outlined></v-text-field>
+              <p align="center" class="pb-10">{{ popupAudioName }}</p>
+              <v-text-field v-model="newPopupAudioName" label="Media Title" :rules="audioNameRules" outlined></v-text-field>
             </v-card-text>
 
             <v-card-actions>
@@ -194,7 +195,7 @@
                 text
                 class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
                 min-width="140px"
-                @click="dialog2 = false"
+                @click="renameDialog = false"
               >
                 Cancel
               </v-btn>
@@ -204,12 +205,76 @@
                 min-width="140px"
                 color="white"
                 outlined
+                @click="renameAudio(popupAudioId)"
               >
                 Submit
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- RENAME MEDIA SECTION -->
+
+        <!-- DELETE MEDIA SECTION -->
+        <v-dialog v-model="deleteDialog" max-width="332px">
+          <v-card v-model="deleteDialog" class="rounded-lg pt-7 pb-7">
+            <v-card-title class="d-flex justify-center">
+              <h3 class="center">Delete Media</h3>
+            </v-card-title>
+            <v-card-text class="pt-0">
+              <p align="center" class="pb-10">{{ popupAudioName }}</p>
+              <!-- <v-text-field label="Media Title" outlined></v-text-field> -->
+            </v-card-text>
+
+            <!-- <v-card-text class="pt-0">
+              <div class="text-center">
+               <v-progress-circular
+                  :size="70"
+                  :width="7"
+                  color="purple"
+                  indeterminate
+                ></v-progress-circular>
+              </div>
+            </v-card-text> -->
+
+            <v-card-actions>
+              <v-btn
+                color="red"
+                text
+                class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+                min-width="140px"
+                @click="deleteDialog = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                class="text-capitalize ma-3 rounded-pill red_button"
+                min-width="140px"
+                color="white"
+                outlined
+                @click="deleteAudio(popupAudioId)"
+              >
+                Submit
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- DELETE MEDIA SECTION -->
+
+        <!-- <v-dialog v-model="deleteDialog" max-width="332px">
+          <v-card>
+            <v-card-text>
+              <div v-model="deleteDialog" class="text-center">
+               <v-progress-circular
+                  :size="70"
+                  :width="7"
+                  color="purple"
+                  indeterminate
+                ></v-progress-circular>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-dialog> -->
       </v-container>
     </div>
   </v-app>
@@ -225,12 +290,33 @@ export default {
   created() {
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.ownerUid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId = localStorageUserObj.AccountId;
+
 
     this.$on('greeting_message_changed', function(id){
       console.log('Event from parent component emitted', id)
     });
 
     this.getAllUserGreetingMessages(); //get all user audios
+
+    this.bussinessNumber = this.$route.query.bn;
+
+    db.collection("uservirtualNumber")
+      .where("Uid", "==", this.ownerUid)
+      .where("VirtualNumber", "==", parseInt(this.bussinessNumber))
+      .get()
+      .then(async(snapshot) => {
+        if (!snapshot.empty) {
+          snapshot.docs.forEach((element)=> {
+            // console.log('element.data()', element.data().WelcomeMessage);
+            this.radioGroup = element.data().WelcomeMessage;
+          })
+        } else {
+          console.log('uservirtualNumber empty');
+        }
+      })
+    // this.radioGroup = 'tp_624b2713aa959.sln44';
+
   },
   data: () => ({
     dialog: false,
@@ -260,12 +346,14 @@ export default {
         disabled: false,
         href: "",
         color: "black--text",
+        actionSlug: "RENAME_FILE",
       },
       {
         text: "Delete File",
         disabled: false,
         href: "Dashboard",
         color: "red--text",
+        actionSlug: "DELETE_FILE",
       },
     ],
     items: [
@@ -277,7 +365,8 @@ export default {
       {
         text: "Call Flow Settings",
         disabled: false,
-        to: { name: "CallFlowSettings" },
+        // to: { name: "CallFlowSettings" },
+        href: `CallFlowSettings?bn=`,
       },
 
       {
@@ -289,13 +378,25 @@ export default {
 
     uploadedValue:0, //uploaded content %
     file:null, //uploaded file ref
-    radioGroup: null, //radiogroup def state
+    radioGroup: '', //radiogroup def state
     rules: [
       value => !value || value.size < 5000000 || 'Audio size should be less than 5 MB!', //upload file rules
     ],
     isProgressing: false, //upload progressbar
     isActiveUploadBtn: false, //upload button default state
     ownerUid: '', //OWNER UID
+    AccountId:'',
+    uploadCount: 0, //number of uploaded files
+    deleteDialog: false,
+    renameDialog: false,
+    popupAudioName: '',
+    popupAudioId: '',
+    newPopupAudioName: '',
+    audioNameRules: [
+        v => !!v || 'Name is required',
+        v => v.length > 3 || 'Name must be greate than 3 characters',
+      ],
+    bussinessNumber: '',
   }),
   watch: {
     dialog(val) {
@@ -337,14 +438,20 @@ export default {
             this.Greetings.push({
               id: element.id,
               title: element.data().DisplayName,
-              Audio: element.data().AudioUrl
+              Audio: element.data().AudioUrl,
+              AudioAccountId: element.data().AudioAccountId,
+              DisplayName: element.data().DisplayName,
+              RefName: element.data().RefName,
+              Uid: element.data().Uid,
             })
+            this.uploadCount++;
           })
         } else {
           console.log('snapshot empty');
         }
 
       })
+
     },
     uploadGreetingMessage() {
       
@@ -365,7 +472,7 @@ export default {
     },
     onUpload(filename, file) {
 
-      const storageRef = firebase.storage().ref(`${this.ownerUid}-2-${filename.split('.')[0]}`).put(file);
+      const storageRef = firebase.storage().ref(`${this.ownerUid}-${this.uploadCount+1}-${filename.split('.')[0]}`).put(file);
       // const storageRef = firebase.storage().ref('File-name').put('xyz');
 
       storageRef.on('state_changed', snapshot => {
@@ -380,11 +487,176 @@ export default {
           this.isProgressing = false;
           this.file = null;
           this.$root.vtoast.show({message: 'File upload successful!', color: 'green', timer: 2000})
+
+          //snapshot listening for updates
+          this.greetingMessageModifiedSnapshot();
+          //snapshot listening for updates
+
         })
       }
 
       );
 
+    },
+    threeDotAction(m, greetingsId) {
+
+      console.log('m.actionSlug', m.actionSlug);
+      console.log('greetingsId', greetingsId);
+
+      var audioObj = this.Greetings.filter(function(elem) {
+        if (elem.id === greetingsId) return elem;
+      });
+      console.log(JSON.stringify(audioObj[0]));
+      this.popupAudioId = audioObj[0].id;
+      this.popupAudioName = audioObj[0].title;
+
+      if(m.actionSlug == 'RENAME_FILE') {
+        console.log('trigger Rename');
+        this.renameDialog = true; 
+      }
+
+      if(m.actionSlug == 'DELETE_FILE') {
+        console.log('trigger Delete file');
+        this.deleteDialog = true; 
+      }
+      this.dialog2 = true;
+    },
+    async renameAudio(popupAudioId) {
+
+      var audioObj = this.Greetings.filter(function(elem) {
+        if (elem.id === popupAudioId) return elem;
+      });
+      console.log('audioObj', JSON.stringify(audioObj[0]));
+      console.log('Greetings', this.Greetings);
+      let audio = audioObj[0];
+      console.log('audio', audio);
+
+      console.log(`renaming audio ${popupAudioId}`);
+      console.log(`renaming new Popup Audio Name ${this.newPopupAudioName}`);
+      console.log(`renaming new Popup AudioAccountId ${audio.AudioAccountId}`);
+      if(this.newPopupAudioName !== '') {
+        this.renameDialog = false; 
+        // DisplayName
+        
+        // URL: https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/audio
+        // METHOD: PUT
+        // PAYLOAD: {updated_by:"" ,uid:"" ,AccountId:"",AudioAccountId:"",DisplayName:""}
+
+        const options = {
+          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio',
+          method: 'PUT',
+          data: {
+            updated_by: this.ownerUid,
+            uid: this.ownerUid,
+            AccountId: this.AccountId,
+            AudioAccountId: audio.AudioAccountId,
+            DisplayName: this.newPopupAudioName
+          }
+        }
+        console.log(options);
+        this.$axios(options)
+          .then((response) => {
+            console.log(response.data)
+            this.newPopupAudioName = '';
+            this.greetingMessageAddedSnapshot();
+          }).catch((error) => {
+            console.error(error);
+          })
+      }
+
+    },
+    deleteAudio(popupAudioId) {
+
+      var audioObj = this.Greetings.filter(function(elem) {
+        if (elem.id === popupAudioId) return elem;
+      });
+      console.log('audioObj', JSON.stringify(audioObj[0]));
+      console.log('Greetings', this.Greetings);
+      let audio = audioObj[0];
+      console.log('audio', audio);
+      
+      console.log(`deleting audio ${popupAudioId}`);
+      this.deleteDialog = false; 
+
+      // URL: https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/audio
+      // METHOD: DELETE
+      // PAYLOAD: {updated_by:"" ,uid:"" ,AccountId:"",AudioAccountId:""}
+
+      const options = {
+          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio',
+          method: 'DELETE',
+          data: {
+            updated_by: this.ownerUid,
+            uid: this.ownerUid,
+            AccountId: this.AccountId,
+            AudioAccountId: audio.AudioAccountId
+          }
+        }
+        console.log(options);
+        this.$axios(options)
+          .then((response) => {
+            console.log(response.data)
+            this.newPopupAudioName = '';
+            this.greetingMessageAddedSnapshot();
+          }).catch((error) => {
+            console.error(error);
+          })
+
+    },
+    greetingMessageModifiedSnapshot() {
+
+      console.log('CALLING modified SNAPSHOT-------------------->');
+      db.collection("UserAudio")
+            .where("Uid", "==", this.ownerUid)
+            // .orderBy("CreatedAt", "asc")
+            // .get()
+            // .then(async(snapshot) => {
+            .onSnapshot(async(snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                  console.log('change', change.type);
+                  if(change.type == 'modified') {
+                    console.log("New Audio: ", change.doc.data());
+                    this.Greetings.push({
+                      id: change.doc.id,
+                      title: change.doc.data().DisplayName,
+                      Audio: change.doc.data().AudioUrl,
+                      AudioAccountId: change.doc.data().AudioAccountId,
+                      DisplayName: change.doc.data().DisplayName,
+                      RefName: change.doc.data().RefName,
+                      Uid: change.doc.data().Uid,
+                    })
+                    this.uploadCount++;
+                  }
+                })
+            })
+    },
+    greetingMessageAddedSnapshot() {
+
+      console.log('CALLING added SNAPSHOT-------------------->');
+      this.Greetings = [];
+      db.collection("UserAudio")
+            .where("Uid", "==", this.ownerUid)
+            .orderBy("CreatedAt", "asc")
+            // .get()
+            // .then(async(snapshot) => {
+            .onSnapshot(async(snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                  console.log('change', change.type);
+                  if(change.type == 'added') {
+                    console.log("New Audio: ", change.doc.data());
+                    this.Greetings.push({
+                      id: change.doc.id,
+                      title: change.doc.data().DisplayName,
+                      Audio: change.doc.data().AudioUrl,
+                      AudioAccountId: change.doc.data().AudioAccountId,
+                      DisplayName: change.doc.data().DisplayName,
+                      RefName: change.doc.data().RefName,
+                      Uid: change.doc.data().Uid,
+                    })
+                    this.uploadCount++;
+                  }
+                })
+            })
     }
   },
 };

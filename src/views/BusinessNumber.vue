@@ -157,10 +157,10 @@ import { db } from "@/main.js";
 				this.$router.push("/Dashboard")
 			},
 			CallFlowSettings(vn){
-				this.$router.push("/CallFlowSettings?"+vn)
+				this.$router.push("/CallFlowSettings?bn="+vn)
 			},
 			ManageAgents(vn){
-			this.$router.push("/ManageAgents?"+vn)	
+			this.$router.push("/ManageAgents?bn="+vn)	
 			}
 
     },

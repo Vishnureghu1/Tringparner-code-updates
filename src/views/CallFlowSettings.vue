@@ -46,7 +46,7 @@
                               </v-col>
                               <v-col cols="6" align="end">
                                 <router-link
-                                  :to="{ name: 'NotificationSettings' }"
+                                  :to="{ name: 'NotificationSettings', params: { bn: this.bussinessNumber }  }"
                                 >
                                   <span
                                     ><v-icon
@@ -119,7 +119,7 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'BlockedNumbers' }">
+                                <router-link :to="{ name: 'BlockedNumbers', query: { bn: this.bussinessNumber } }">
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
@@ -141,7 +141,7 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'GreetingMessage' }">
+                                <router-link :to="{ name: 'GreetingMessage', query: { bn: this.bussinessNumber } }">
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
@@ -164,7 +164,7 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'CallerTune' }">
+                                <router-link :to="{ name: 'CallerTune', query: { bn: this.bussinessNumber } }">
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
@@ -187,16 +187,16 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <!-- <router-link :to="{ name: 'WorkingHours' }"> -->
+
+                                <router-link :to="{ name: 'WorkingHours', query: { bn: this.bussinessNumber } }">
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
                                       color="#EE1C25"
-                                       @click="WorkingHours()"
                                       >mdi-arrow-right</v-icon
                                     >
                                   </span>
-                                <!-- </router-link> -->
+                                </router-link>
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
@@ -248,6 +248,7 @@ export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
+    this.bussinessNumber = this.$route.query.bn;
   },
   data: () => ({
     items: [
@@ -266,28 +267,30 @@ export default {
         disabled: true,
       },
     ],
+    bussinessNumber:''
+
   }),
 
   methods: {
     goBack() {
-       const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/BusinessNumber?"+getNumber);
+       // const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/BusinessNumber?bn="+this.bussinessNumber);
     },
     callPauseNumber() {
-       const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/PauseNumber?"+getNumber);
+       // const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/PauseNumber?bn="+this.bussinessNumber);
     },
     callRouting() {
-       const getNumber =  Object.keys(this.$route.query)[0]
-       this.$router.push("/CallPreference?"+getNumber);
+       // const getNumber =  Object.keys(this.$route.query)[0]
+       this.$router.push("/CallPreference?bn="+this.bussinessNumber);
     },
     MissedCallRouting() {
       const getNumber =  Object.keys(this.$route.query)[0]
        this.$router.push("/MissedCallDistribution?"+getNumber);
     },
     WorkingHours(){
-       const getNumber =  Object.keys(this.$route.query)[0]
-       this.$router.push("/WorkingHours?"+getNumber);
+      // const getNumber =  Object.keys(this.$route.query)[0]
+       this.$router.push("/MissedCallDistribution?bn="+this.bussinessNumber);
     }
   },
 };
