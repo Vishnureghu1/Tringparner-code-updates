@@ -285,8 +285,8 @@ export default {
        this.$router.push("/CallPreference?bn="+this.bussinessNumber);
     },
     MissedCallRouting() {
-      const getNumber =  Object.keys(this.$route.query)[0]
-       this.$router.push("/MissedCallDistribution?"+getNumber);
+      // const getNumber =  Object.keys(this.$route.query)[0]
+       this.$router.push("/MissedCallDistribution?bn="+this.bussinessNumber);
     },
     WorkingHours(){
       // const getNumber =  Object.keys(this.$route.query)[0]

@@ -467,7 +467,7 @@ export default {
           PlanId: this.PlanId,
         },
       };
-      console.log(user_details);
+      // console.log(user_details);
       this.$axios(user_details)
         .then((response) => {
           console.log(response);
@@ -476,7 +476,6 @@ export default {
           this.order_id = response.data.order_id;
           var options = {
             key: "rzp_test_ThdwdEPh3QCHbo",
-
             order_id: this.order_id,
             name: this.name,
             currency: "INR", // Optional. Same as the Order currency

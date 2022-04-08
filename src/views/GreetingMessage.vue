@@ -10,28 +10,15 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 pl-5">
-                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber)"
+                        <v-icon class="mr-2" color="black" @click="goBack()"
                           >mdi-arrow-left</v-icon
                         >
                         Greeting Message
                       </h2>
                       <v-breadcrumbs class="breadcrumbs" :items="items">
-
-                        <template v-slot:item="{ item }">
-                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
-                            <v-breadcrumbs-item :disabled="item.disabled">
-                              {{ item.text }}
-                            </v-breadcrumbs-item>
-                          </router-link>
-
-                          <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
-                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
-                              {{ item.text }}
-                            </v-breadcrumbs-item>
-                          <!-- </router-link> -->
-
+                        <template class="breadcrumbs" v-slot:divider>
+                          <v-icon>mdi-chevron-right</v-icon>
                         </template>
-
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
@@ -301,17 +288,24 @@ import firebase from 'firebase';
 export default {
   components: {},
   created() {
-
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.ownerUid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.AccountId = localStorageUserObj.AccountId;
 
     this.bussinessNumber = this.$route.query.bn;
 
-    this.setBreadcrumbs(this.bussinessNumber);
-
     this.$on('greeting_message_changed', function(id){
       console.log(`Event from parent component emitted ${this.bussinessNumber}`, id);
+
+      console.log({
+        owner_uid: this.ownerUid,
+        updated_by: this.ownerUid,
+        virtual_number: this.bussinessNumber,
+        prompt_type:"WelcomeMessage",
+        prompt: id,
+        AccountId: this.AccountId
+      });
+
       const options = {
         url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/prompt',
         method: 'POST',
@@ -343,6 +337,7 @@ export default {
 
     this.getAllUserGreetingMessages(); //get all user audios
 
+
     db.collection("uservirtualNumber")
       .where("Uid", "==", this.ownerUid)
       .where("VirtualNumber", "==", parseInt(this.bussinessNumber))
@@ -357,6 +352,7 @@ export default {
           console.log('uservirtualNumber empty');
         }
       })
+    // this.radioGroup = 'tp_624b2713aa959.sln44';
 
   },
   data: () => ({
@@ -398,7 +394,23 @@ export default {
       },
     ],
     items: [
+      {
+        text: "Business Numbers",
+        disabled: false,
+        to: { name: "BusinessNumber" },
+      },
+      {
+        text: "Call Flow Settings",
+        disabled: false,
+        // to: { name: "CallFlowSettings" },
+        href: `CallFlowSettings?bn=`,
+      },
 
+      {
+        text: "Greeting Message",
+        disabled: true,
+        to: { name: "GreetingMessage" },
+      },
     ],
 
     uploadedValue:0, //uploaded content %
@@ -431,39 +443,8 @@ export default {
     },
   },
   methods: {
-    setBreadcrumbs(bussinessNumber) {
-
-      this.items = [
-        {
-          text: "Business Numbers",
-          disabled: false,
-          to: { name: "BusinessNumber" },
-          href: `BusinessNumber?bn=`,
-          route: { name: 'BusinessNumber', query: { }  }
-        },
-        {
-          text: "Call Flow Settings",
-          disabled: false,
-          to: { name: "CallFlowSettings", query: { ...{bn: 1111111}} },
-          href: `CallFlowSettings?bn=`,
-          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
-        },
-
-        {
-          text: "Greeting Message",
-          disabled: true,
-          to: { name: "GreetingMessage" },
-          href: `GreetingMessage`,
-          route: { name: 'GreetingMessage', query: { bn: [bussinessNumber]}  }
-        },
-      ]
-    },
-    goBack(bussinessNumber) {
-
-      // this.$router.push("/CallFlowSettings?bn=" + bussinessNumber);
-      // alert(bussinessNumber);
-      let newQuery = {bn: bussinessNumber};
-      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+    goBack() {
+      this.$router.push("/CallFlowSettings");
     },
 
     validate(n) {

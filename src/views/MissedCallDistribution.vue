@@ -48,6 +48,7 @@
                                   value="ALL"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
+                                  @click="missedcall('ALL')"
                                 >
                                   <template v-slot:label>
                                     <div class="black--text">
@@ -60,6 +61,7 @@
                                   value="Round-Robin"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
+                                  @click="missedcall('Round-Robin')"
                                 >
                                   <template v-slot:label>
                                     <div class="black--text">
@@ -71,6 +73,7 @@
                                   value="Last-Attempted"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
+                                  @click="missedcall('Last-Attempted')"
                                 >
                                   <template v-slot:label>
                                    <div class="black--text">
@@ -83,12 +86,11 @@
                                   value="Specific-Agents"
                                   color="red"
                                   class="mb-0 ml-5 pl-3"
+                                  @click="missedcall('specific_agents')"
                                 >
                                   <template v-slot:label>
                                     <div class="black--text">
-                                      Select Specific Agent(s)
-                                       
-                                    
+                                      Select Specific Agent(s)                                   
                                     </div>
                                   </template>
                                 </v-radio>
@@ -129,6 +131,7 @@
                                   v-model="repeatCallerSettings"
                                   class="ml-10"
                                   color="red darken-3"
+                                  @click="missedcall()"
                                   ><template v-slot:label>
                                     <div class="gray--text">
                                       <div class="subheading">
@@ -204,11 +207,18 @@
 
 <script>
 import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
   created() {
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-       db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+    const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+      this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+       db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
+          this.source = snap.docs[0].data().Source
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
         //  this.callRouting=element.data().NewActiveCaller,
@@ -220,6 +230,12 @@ export default {
 		})
   },
   data: () => ({
+    source:"",
+    // bussinessNumber:this.$route.query.bn,
+    participants:"",
+    owneruid:"",
+    uid:"",
+    AccountId:"",
     isActive: true,
     e2: 1,
     MissedCallDistribution:"",
@@ -266,12 +282,42 @@ export default {
   }),
 
   methods: {
+      missedcall(){
+      console.log("test..........")
+       let sticky = this.repeatCallerSettings?"Sticky-Enable":"Sticky-Disable"
+       const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/missedcall',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            virtual_number:parseInt(this.$route.query.bn),
+            AccountId:this.AccountId,
+            source:this.source,
+            specific_agents:[],
+            new_missed_caller:this.MissedCallDistribution,
+            repeated_missed_caller:sticky
+						},
+					}
+          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+             this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000})
+              // this.dialog2 = false
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+    },
     goBack() {
-      const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/CallFlowSettings?"+getNumber);
+      // const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/CallFlowSettings?bn="+parseInt(this.$route.query.bn));
     },
     SelectSpecificAgent() {
-      this.$router.push("/SelectSpecificAgent");
+      this.$router.push("/SelectSpecificAgent?bn="+parseInt(this.$route.query.bn));
     },
     stepComplete(step) {
       return this.curr > step;

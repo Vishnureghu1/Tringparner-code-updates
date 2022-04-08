@@ -182,7 +182,7 @@ export default {
   components: {},
   // created() {  
      created() {
-        this.$root.vtoast.show({message: 'Hello there!', color: 'red', timer: 5000})
+        // this.$root.vtoast.show({message: 'Hello there!', color: 'red', timer: 5000})
         let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     console.log(owneruid)

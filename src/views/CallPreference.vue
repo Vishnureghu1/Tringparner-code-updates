@@ -96,7 +96,7 @@
                                           :input-value="agent.active"
                                           color="red"
                                           :value="true"
-                                          @change="toggleUserSwitch(agentIndex, $event !== null, $event, agent)"
+                                          @change="toggleUserSwitch(agentIndex, $event, agent.PhoneNumber)"
                                           >
                                           </v-switch>
                                           </v-col>
@@ -229,10 +229,10 @@
                                     </div>
                                     <v-radio
                                   value = "SIMULTANEOUS"
-                                  v-model = "Simultaneous"
                                   name="active"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
+                                  @click="activecall('SIMULTANEOUS')"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -250,6 +250,7 @@
                                        value="ROUNDROBINFLEXIBLE"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
+                                   @click="activecall('ROUNDROBINFLEXIBLE')"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -269,6 +270,7 @@
                                       value="ROUNDROBINSTRICT"
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
+                                   @click="activecall('ROUNDROBINSTRICT')"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -289,6 +291,7 @@
                                      value="PRIORITY"
                                   color="red"
                                   class="mb-0 ml-5 pl-3"
+                                   @click="activecall('PRIORITY')"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -338,6 +341,7 @@
                                   v-model="repeatCallerSettings"
                                   class="ml-10"
                                   color="red darken-3"
+                                  @click="repeatedcall(repeatCallerSettings)"
                                   ><template v-slot:label>
                                     <div class="gray--text">
                                       <div class="subheading">
@@ -363,6 +367,7 @@
                                       value="FLEXIBLE"
                                       color="red"
                                       class="mb-5 ml-5 pl-15"
+                                      @click="repeatedcall(true,'FLEXIBLE')"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -379,6 +384,7 @@
                                       value="STRICT"
                                       color="red"
                                       class="mb-0 ml-5 pl-15"
+                                      @click="repeatedcall(true,'FLEXIBLE')"
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
@@ -445,12 +451,16 @@
 
 <script>
 import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
   created() {
         let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
+      this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
       db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
 			// console.log("test.........",snap.docs.data());
 			snap.docs.forEach((element)=> {
@@ -469,10 +479,12 @@ export default {
 		}).catch((err)=>{
 			console.log(err.message)
 		})
-    db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+    db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
       console.log(snap.docs[0].data().VirtualNumber)
       const participants = snap.docs[0].data().Participants
 			// console.log("test.........",this.response);
+      this.participants = participants
+      this.source = snap.docs[0].data().Source
       this.agents.forEach((element,index) =>{
          const value = participants.find(({Number}) =>Number === element.PhoneNumber)
          if(value){
@@ -500,7 +512,7 @@ export default {
 			// vn.Participants.forEach((element)=> {
 			// 	console.log(element.data())
       //   element.
-      //   element.data().pa
+      //   element.data().
 			// this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
 			// });
 		}).catch((err)=>{
@@ -508,6 +520,12 @@ export default {
 		})
     },
   data: () => ({
+    source:"",
+    // bussinessNumber:this.$route.query.bn,
+    participants:"",
+    owneruid:"",
+    uid:"",
+    AccountId:"",
      form:{},
     response:{},
     users:[],
@@ -561,54 +579,97 @@ export default {
   }),
 
   methods: {
-    c(){
+    activecall(radiovalue){
       console.log("test..........")
-    //   let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-    //  db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
-    //   // console.log(snap.docs[0].data().VirtualNumber)
-    //   // const participants = snap.docs[0].data().Participants
-		// 	// // console.log("test.........",this.response);
-    //   // this.agents.forEach((element,index) =>{
-    //   //    const value = participants.find(({Number}) =>Number === element.PhoneNumber)
-    //   //    if(value){
-    //   //       // console.log("valuew",value,index)
-    //   //       this.agents[index] = Object.assign(element,{active:true});
-    //   //    }else{
-    //   //      this.agents[index] = Object.assign(element,{active:false});
-    //   //    }
-    //   // })
-    //   snap.docs.forEach((element)=> {
-		// 		// console.log(element.data())
-    //      this.callRouting=element.data().NewActiveCaller,
-    //      this.repeatCallerSettings=element.data().StickyAgent
-    //      this.StickyAgentType = element.data().Stickiness
-		// 	});
-    //   // console.log(this.agents,"ddd")
-    //   // console.log(this.users)
-    //   // this.agents.forEach((element))
-    //   // form
-    // //  const h ="9526287163";
-  
-    //   // ""
-    //   // this.form[] ==
-    //   // const vn = snap.docs[0].data();
-		// 	// vn.Participants.forEach((element)=> {
-		// 	// 	console.log(element.data())
-    //   //   element.
-    //   //   element.data().pa
-		// 	// this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber});
-		// 	// });
-		// }).catch((err)=>{
-		// 	console.log(err.message)
-		// })
+       const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/activecall',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            virtual_number:parseInt(this.$route.query.bn),
+            AccountId:this.AccountId,
+            new_active_caller:radiovalue,
+            source:this.source,
+            participants:this.participants
+						},
+					}
+          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+              this.dialog2 = false
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+    },
+    repeatedcall(StickyAgent){
+      console.log("StickAgent..........",StickyAgent)
+       const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/repeatedcall',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            virtual_number:parseInt(this.$route.query.bn),
+            AccountId:this.AccountId,
+            StickyAgent:StickyAgent,
+            Stickiness:this.StickyAgentType,
+            source:this.source,
+            participants:this.participants
+						},
+					}
+          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+            this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000})
+              this.dialog2 = false
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+    
+    },
+    toggleUserSwitch(agentIndex, $event, agent){
+      console.log(agentIndex, $event, agent,this.participants)
+       const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/addparticipant',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            virtual_number:parseInt(this.$route.query.bn),
+            AccountId:this.AccountId,
+            source:this.source,
+            participants:this.participants
+						},
+					}
+          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+            this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000})
+              this.dialog2 = false
+						})
+						.catch((error) => {
+							console.error(error);
+						})
     },
      PrioritizeConfiguration() {
-        const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/PrioritizeConfiguration?"+getNumber);
+        // const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/PrioritizeConfiguration?bn="+this.$route.query.bn);
     },
     goBack(){
        const getNumber =  Object.keys(this.$route.query)[0]
-				this.$router.push("/CallFlowSettings?"+getNumber)
+				this.$router.push("/CallFlowSettings?bn="+getNumber)
 			},
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");

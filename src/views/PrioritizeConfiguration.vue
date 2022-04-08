@@ -100,18 +100,23 @@
 
 <script>
 import draggable from "vuedraggable";
+import axios from "axios";
 import { db } from "@/main.js";
 export default {
   components: { draggable },
   created() {
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
-    db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+     this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
       console.log(snap.docs[0].data().VirtualNumber)
       const participants = snap.docs[0].data().Participants;
+      this.source = snap.docs[0].data().Source
       console.log(participants)
       participants.forEach(element => {
-        this.participant.push(element)
+        this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
         // this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
       });
       // console.log("............",this.participant)
@@ -128,7 +133,11 @@ export default {
     })
   },
   data: () => ({
-    participant:[{Name:"element.Name",Number:"element.Number",AgentUid:"element.AgentUid"}],
+    participant:[],
+    source:"",
+     owneruid:"",
+    uid:"",
+    AccountId:"",
     enabled: true,
     dragging: false,
     isActive: true,
@@ -198,7 +207,34 @@ export default {
   methods: {
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
-      console.log(this.participant[0].AgentUid)
+      console.log(this.participant)
+        // activecall(radiovalue){
+      // console.log("test..........")
+       const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/activecall',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            virtual_number:parseInt(this.$route.query.bn),
+            AccountId:this.AccountId,
+            new_active_caller:"PRIORITY",
+            source:this.source,
+            participants:this.participant
+						},
+					}
+          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+              this.dialog2 = false
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+    // },
     },
     startDrag(evt, item) {
       evt.dataTransfer.dropEffect = "move";
