@@ -5,6 +5,9 @@
         <v-flex xs12 sm12 md12>
           <v-row no-gutters>
             <v-col cols="12">
+              <v-overlay :value="overlay">
+									<v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
+								</v-overlay>
               <div class="ml-8">
                 <v-row>
                   <v-col cols="12" sm="10">
@@ -28,14 +31,14 @@
                       <v-card class="mx-auto" min-width="700">
                         <v-card-text class="pb-0">
                           <p class="redtext bold">
-                            Next Recharge Due on 05-Jun-2022
+                            Next Recharge Due on {{Rechargeday}}
                           </p>
                           <v-row no-gutters>
                             <div class="col-8 membership_heading">
                               Total Cost (Inclusive of GST)
                             </div>
                             <div class="col-4 membership_heading">
-                          ₹ {{invoice_amount}}/Month
+                          ₹ {{permonth}}/Month
                             </div>
                           </v-row>
 
@@ -44,28 +47,47 @@
                           </div>
 
                           <div class="membership_details">
-                            <!-- <v-checkbox
-                              v-model="paymentOptions"
+                            <v-checkbox
+                              v-model="sixmonths"
                               label="red darken-3"
                               color="red darken-3"
                               hide-details
+                              @click="getBill(sixmonths,2)"
                             >
                               <template v-slot:label>
                                 <div class="black--text">
-                                  Upgrade plan for<strong
+                                Pay for <strong
                                     class="black--text darken-4"
                                   >
-                                    20% Discount</strong
+                                    6 months and save 10%</strong
                                   >
                                 </div>
                               </template></v-checkbox
-                            > -->
-                            <div v-if="paymentOptions">
-                              <v-radio-group v-model="ex7" column>
+                            >
+                            <v-checkbox
+                              v-model="twelvemonths"
+                              label="red darken-3"
+                              color="red darken-3"
+                              hide-details
+                              @click="getBill(twelvemonths,3)"
+                            >
+                              <template v-slot:label>
+                                <div class="black--text">
+                                Pay for <strong
+                                    class="black--text darken-4"
+                                  >
+                                    12 months and save 20%</strong
+                                  >
+                                </div>
+                              </template></v-checkbox
+                            >
+                            <div v-if="false">
+                              <v-radio-group v-model="plans" column>
                                 <v-radio
-                                  value="1"
+                                  value=2
                                   color="red"
                                   class="mb-5 ml-5 pl-3"
+                                  @click="getBill('radio',2)"
                                 >
                                   <template v-slot:label>
                                     <div class="black--text">
@@ -80,18 +102,19 @@
                                   </template>
                                 </v-radio>
                                 <v-radio
-                                  value="2"
+                                  value="3"
                                   color="red"
                                   class="mb-0 ml-5 pl-3"
+                                   @click="getBill('radio',3)"
                                 >
                                   <template v-slot:label>
                                     <div class="black--text">
-                                      Pay for 6 Months and<strong
+                                      Pay for 12 Months and<strong
                                         class="black--text darken-4"
                                       >
                                         Save 10%</strong
                                       ><br /><span class="grey--text light-3"
-                                        >Rs 450/month. Save Rs 300</span
+                                        >Rs {{450}}/month. Save Rs 300</span
                                       >
                                     </div>
                                   </template>
@@ -119,6 +142,7 @@
                             min-width="140px"
                             color="white"
                             outlined
+                            @click="paynow()"
                           >
                             Pay Now
                           </v-btn>
@@ -229,14 +253,18 @@
     </v-container>
   </v-app>
 </template>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
          <script>
-        //  import { db } from "@/main.js";
+         import { db } from "@/main.js";
          import axios from "axios";
 export default {
   components: {},
   data: () => ({
+        sixmonths:false,
+        twelvemonths:false,
         invoice_amount:"",
         amount:"",
+        plans:false,
         sublist: [
       {
         title: "Charges",
@@ -283,6 +311,12 @@ export default {
     userEmail: "",
     userRole: "",
     agentName: "",
+    owneruid:"",
+    PlanId:"",
+    permonth:"",
+    Name:"",
+    overlay:false,
+    Rechargeday:""
   }),
   computed: {
     computedPrice() {
@@ -290,25 +324,57 @@ export default {
     },
   },
   async created() {
-  this.getBill();
+  let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+        //  this.bussinessNumber = this.$route.query.bn;
+    // this.setBreadcrumbs(this.bussinessNumber);
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+    this.Rechargeday =localStorageUserObj.LastDay
+     this.Name = localStorageUserObj.FirstName;
+      this.owneruid = owneruid;
+      this.PlanId = (localStorageUserObj.PlanId == 3) ? 3:2
+      this.twelvemonths = this.PlanId == 3 ? true:false
+      this.sixmonths = this.PlanId == 2 ? true:false
+      //  db.collection("plan_details").get().then(async(snap) =>{
+
+      //  })
+    // this.uid = localStorageUserObj.uid;
+
+    // this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    //   db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+		// 	// console.log("test.........",snap.docs.data());
+		// 	snap.docs.forEach((element)=> {
+		// 		// console.log(element.data())
+		// 		this.agents.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:true});
+		// 	});
+		// }).catch((err)=>{
+		// 	console.log(err.message)
+		// })
+  this.getBill("inital",this.PlanId);
     //  this.getOrderIdforPayment()
   },
 
   methods: {
-    getBill() {
-      var token = localStorage.getItem("token");
-      var tpu = localStorage.getItem("tpu");
-      var Id = JSON.parse(tpu);
-
-      // console.log(Id.uid + "-----------" + Id.PlanId);
-      // console.log(Id);
+    getBill(status,planid) {
+      const token = localStorage.getItem("token");
+      if(this.twelvemonths== true && this.sixmonths == true && planid== 3){
+      // this.twelvemonths = (planid == 3)
+      this.sixmonths = false
+      }
+        if(this.twelvemonths== true && this.sixmonths == true && planid== 2){
+      this.twelvemonths = false
+      // this.sixmonths = false
+      }
+      let plan = (this.twelvemonths == false && this.sixmonths == false)?1:(this.twelvemonths == true && this.sixmonths== false)?3:2
+      // this.PlanId = (radio == "inital")?this.PlanId:planid;
+      this.PlanId = plan;
       const details = {
         // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill/",
         method: "POST",
         data: {
-          uid: Id.uid,
-          PlanId: Id.PlanId,
+          uid: this.owneruid,
+          PlanId:plan,
         },
         headers: {
           token: token,
@@ -319,42 +385,87 @@ export default {
       axios(details)
         .then((response) => {
           this.invoice_amount = response.data.invoice_amount
-          console.log(response.data.invoice_amount);
+          const permonthdivison = (plan == 1)?1:(plan==2)?6:12
+          this.permonth = parseInt(response.data.invoice_amount / permonthdivison)
+          // console.log(response.data.invoice_amount);
         })
         .catch((error) => {
           console.error(error);
         });
     },
+    paynow(){
+					const details = {
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/payment',
+					method: 'POST',
+					headers: {"token":localStorage.getItem("token")},
+					data: {
+								uid: this.owneruid,
+								owner_uid:this.owneruid,
+								PlanId : parseInt(this.PlanId),
+								payment_mode : 'WEB',
+								type:"RECHARGE"
+							},
+						};
+      axios(details).then(async(responsevalue) => {	
+			console.log(responsevalue)
+ if(responsevalue.data.status == true){
+				var options = {
+					key: "rzp_test_ThdwdEPh3QCHbo",					
+					order_id: responsevalue.data.order_id,
+					name: this.Name,
+					currency: "INR", // Optional. Same as the Order currency
+					description: "Purchase Description",
+					handler:  (response) =>{
+						console.log(response);
+						this.overlay = true
+						var initial = true
+						if(initial) {
+							db.collection('paymentTransaction').where("OrderId","==",responsevalue.data.order_id).onSnapshot((querySnapshot) => {
+								querySnapshot.forEach((doc) => {
+									console.log(doc.id, " => ", doc.data());
+									let testing_status = doc.data()
+									if((testing_status.Status == true) && initial ) {
+                    initial = false
+										this.overlay = false
+                    db.collection("users").where("uid","==",this.owneruid).get().then((snap)=>{
+                      this.Rechargeday= snap.docs[0].data().LastDay
+                    }).catch(err=>console.log(err))
+										initial = false
+										this.overlay = false
+										// this.$router.push("/Dashboard")
 
-    // getOrderIdforPayment(){
-    // var token = localStorage.getItem("token");
-    //   var tpu = localStorage.getItem("tpu");
-    //   var Id = JSON.parse(tpu);
-    //   console.log(Id);
-    // 		const details = {
-    // 			url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill',
-    // 			method: 'POST',
-    // 			data: {
-    // 				uid: this.uid,
-    //         PlanId:Id.PlanId
+									}
+								})
+							})
+						}
 
-    // 			},
-    //       headers: {
-    //     token: token,
-    //     "Content-Type": "application/json",
-    //   },
-    // 		}
-
-    // 		this.$axios(details)
-    // 			.then((response) => {
-    // 				console.log(response)
-
-    // 			})
-    // 			.catch((error) => {
-    // 				console.error(error);
-    // 			})
-
-    // 	},
+					},
+					prefill: {
+            name: this.Name,
+            email: this.email,
+            contact: this.phno
+					},
+					notes: {
+            address: this.address
+					},
+					theme: {
+            color: "#D32F2F"
+					},
+					modal: {
+						ondismiss: () => {
+							this.dialog2 = true
+						}
+					},
+				};
+				// console.log(options)
+				const rzp1 = new Razorpay(options);
+				this.overlay = false
+				rzp1.open();
+		}else{
+			console.log("wrong value")
+		}
+});
+				}
   },
 };
 </script>
