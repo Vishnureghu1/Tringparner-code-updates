@@ -341,7 +341,7 @@ export default {
       .then(async(snapshot) => {
         if (!snapshot.empty) {
           snapshot.docs.forEach((element)=> {
-            // console.log('element.data()', element.data().WelcomeMessage);
+            console.log('element.data()', element.data());
             this.radioGroup = element.data().WelcomeMessage;
           })
         } else {

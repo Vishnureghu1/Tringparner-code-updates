@@ -17,11 +17,26 @@
                         Set Working Hours
                       </h2>
 
+                      <!-- BREADCRUMBS SECTION -->
                       <v-breadcrumbs class="breadcrumbs" :items="items">
-                        <template class="breadcrumbs" v-slot:divider>
-                          <v-icon>mdi-chevron-right</v-icon>
+
+                        <template v-slot:item="{ item }">
+                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
+                            <v-breadcrumbs-item :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          </router-link>
+
+                          <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
+                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          <!-- </router-link> -->
+
                         </template>
+
                       </v-breadcrumbs>
+                      <!-- BREADCRUMBS SECTION -->
                     </v-col>
                   </v-row>
                   <h2 class="comment_heading ml-5">
@@ -82,7 +97,7 @@
                         </h2>
                       </v-col>
                       <v-col cols="12" sm="2" align="end">
-                        <router-link :to="{ name: 'OfflineMesssage' }">
+                        <router-link :to="{ name: 'OfflineMesssage', query: { bn: this.bussinessNumber } }">
                           <span
                             ><v-icon class="mt-6 mb-5 mr-0" color="#EE1C25"
                               >mdi-arrow-right</v-icon
@@ -202,6 +217,10 @@ export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
+
+    this.bussinessNumber = this.$route.query.bn;
+    this.setBreadcrumbs(this.bussinessNumber);
+
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.owneruid = owneruid;
@@ -253,12 +272,32 @@ export default {
     ],
     switch1: false,
     selected: false,
+    bussinessNumber: ''
   }),
 
   methods: {
+    setBreadcrumbs(bussinessNumber) {
+      this.items = [
+        {
+          text: "Business Numbers",
+          disabled: false,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Call Flow Settings",
+          disabled: false,
+          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+        },
+        {
+          text: "Working Hours",
+          disabled: true,
+          route: { name: 'WorkingHours', query: { bn: [bussinessNumber]}  }
+        },
+      ]
+    },
     goBack() {
-      const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/CallFlowSettings?"+getNumber);
+      // const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/CallFlowSettings?bn="+this.bussinessNumber);
     },
     popup() {
       this.dialog2 = true;

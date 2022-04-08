@@ -10,17 +10,32 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 ml-5">
-                        <v-icon class="mr-2" color="black" @click="goBack()"
+                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber)"
                           >mdi-arrow-left</v-icon
                         >
                         Pause Virtual Numeber
                       </h2>
 
+                      <!-- BREADCRUMBS SECTION -->
                       <v-breadcrumbs class="breadcrumbs" :items="items">
-                        <template class="breadcrumbs" v-slot:divider>
-                          <v-icon>mdi-chevron-right</v-icon>
+
+                        <template v-slot:item="{ item }">
+                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
+                            <v-breadcrumbs-item :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          </router-link>
+
+                          <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
+                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          <!-- </router-link> -->
+
                         </template>
+
                       </v-breadcrumbs>
+                      <!-- BREADCRUMBS SECTION -->
                     </v-col>
                   </v-row>
                   <h2 class="comment_heading ml-5">
@@ -71,6 +86,8 @@
                         >
                       </v-col>
                     </v-row>
+
+
                     <v-row>
                       <v-col cols="6" sm="8">
                         <v-checkbox
@@ -89,10 +106,11 @@
                         <v-btn
                           color="#EE1C25"
                           class="name_heading white--text text-capitalize"
-                          >+ Upload Media</v-btn
-                        >
+                          >+ Upload Media</v-btn>
                       </v-col>
                     </v-row>
+
+
                     <v-card
                       v-if="selected"
                       color="transparent"
@@ -175,12 +193,16 @@ export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
-      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+
+    this.bussinessNumber = this.$route.query.bn;
+    this.setBreadcrumbs(this.bussinessNumber);
+
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.owneruid = owneruid;
     this.uid = localStorageUserObj.uid;
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
-     db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+     db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.bussinessNumber)).get().then(async(snap) =>{
       // console.log(snap.docs[0].data().VirtualNumber)
       this.switch1 = snap.docs[0].data().IsPaused
       // console.log(moment().add(1, 'day').format('YYYY-MM-DD'))
@@ -234,34 +256,41 @@ export default {
                 {date:"Tomorrow",time:(new Date(new Date(moment().add(2, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60)},
     {date:"Day after Tommrrow",time:(new Date(new Date(moment().add(3, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60)}],
     items: [
-      {
-        text: "More",
-        disabled: false,
-        to: { name: "BusinessNumber" },
-      },
-      {
-        text: "Business Numbers",
-        disabled: false,
-        to: { name: "BusinessNumber" },
-      },
-      {
-        text: "Call Flow Settings",
-        disabled: false,
-        to: { name: "CallFlowSettings" },
-      },
-      {
-        text: "Pause Number",
-        disabled: true,
-      },
+      
     ],
     switch1: false,
     selected: false,
   }),
 
   methods: {
-    goBack() {
-      const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/CallFlowSettings?"+getNumber);
+    setBreadcrumbs(bussinessNumber) {
+      this.items = [
+        {
+          text: "More",
+          disabled: false,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Business Numbers",
+          disabled: false,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Call Flow Settings",
+          disabled: false,
+          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+        },
+        {
+          text: "Pause Number",
+          disabled: true,
+          route: { name: 'PauseNumber', query: { bn: [bussinessNumber]}  }
+        },
+      ]
+    },
+    goBack(bussinessNumber) {
+    
+      let newQuery = {bn: bussinessNumber};
+      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
     },
     submit(status,button){
       // dateFormat(today, "yyyy-mm-dd");
@@ -277,7 +306,7 @@ export default {
 						data: {
 						owner_uid:this.owneruid,
             updated_by:this.uid,
-            virtual_number:Object.keys(this.$route.query)[0],
+            virtual_number:this.bussinessNumber,
             AccountId:this.AccountId,
             IsPaused:status,
             PauseUpto:pausevalue
@@ -293,11 +322,10 @@ export default {
 							console.error(error);
 						})
     },
-        popup() {
-      
-        this.dialog2 = true;
-   
-      
+    popup() {
+
+      this.dialog2 = true;
+
     },
   },
 };
