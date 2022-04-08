@@ -10,7 +10,7 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 ml-5">
-                        <v-icon class="mr-2" color="black" @click="goBack()"
+                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber)"
                           >mdi-arrow-left</v-icon
                         >
                         Call Routing
@@ -286,6 +286,8 @@ export default {
   }),
   created() {
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      this.bussinessNumber = this.$route.query.bn;
+    this.setBreadcrumbs(this.bussinessNumber);
        db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
@@ -298,6 +300,31 @@ export default {
 		})
     },
   methods: {
+     setBreadcrumbs(bussinessNumber) {
+      this.items = [
+        {
+          text: "Business Numbers",
+          disabled: false,
+          to: { name: "BusinessNumber" },
+          href: `BusinessNumber?bn=`,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Call Flow Settings",
+          disabled: false,
+          to: { name: "CallFlowSettings", query: { ...{bn: 1111111}} },
+          href: `CallFlowSettings?bn=`,
+          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+        },
+        {
+          text: "Greeting Message",
+          disabled: true,
+          to: { name: "GreetingMessage" },
+          href: `GreetingMessage`,
+          route: { name: 'GreetingMessage', query: { bn: [bussinessNumber]}  }
+        },
+      ]
+    },
     onChange(event) {
               var data = event.target.value;
               console.log(data);

@@ -42,7 +42,7 @@
                                   justify-right                                
                                   v-model="Answered"
                                   color="red"
-                                  @change="changeState(Answered)"
+                                  @change="NotificationSettings(Answered,'ReceivedCallNotification')"
                                 ></v-switch>
                               </v-col>
                             </v-row>
@@ -61,7 +61,7 @@
                                   justify-right
                                   v-model="Missed"
                                   color="red"
-                                  @change="changeState(Missed)"
+                                  @change="NotificationSettings(Missed,'MissedCallNotification')"
                                 ></v-switch>
                               </v-col>
                             </v-row>
@@ -81,7 +81,7 @@
                                   justify-right
                                   v-model="TodaySummery"
                                   color="red"
-                                  @change="changeState(TodaySummery)"
+                                   @change="NotificationSettings(TodaySummery,'TodaysActivityNotification')"
                                 ></v-switch>
                               </v-col>
                             </v-row>
@@ -100,7 +100,7 @@
                                   justify-right
                                   v-model="Payment"
                                   color="red"
-                                 @change="changeState(Payment)"
+                                  @change="NotificationSettings(Payment,'PaymentNotification')"
                                 ></v-switch>
                               </v-col>
                             </v-row>
@@ -124,11 +124,19 @@
 
 <script>
 import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
   created() {
     // this.Active=false
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+        this.bussinessNumber = this.$route.query.bn;
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    this.setBreadcrumbs(this.bussinessNumber);
       // db.collection("UserAudio").where("Uid","==",localStorageUserObj.uid).get().then(async(snap) =>{
       db.collection("users").where("uid","==",localStorageUserObj.uid).get().then(async(snap) =>{
 			console.log("test.........",snap.docs[0].data());
@@ -150,6 +158,10 @@ export default {
   //      Active=true
   // },
   data: () => ({
+    owneruid:"",
+    uid:"",
+    AccountId:"",
+    bussinessNumber:"",
     Payment:true,
     TodaySummery:true,
     Missed: true,
@@ -200,9 +212,64 @@ export default {
 //  this.Active=true
 // },
   methods: {
-    changeState(id){console.log(id)},
-    goBack() {
-      this.$router.push("/CallFlowSettings");
+     NotificationSettings(status,value){
+      console.log("test..........")
+       const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/notification/settings',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            uid:this.uid,
+            AccountId:this.AccountId,
+            notification_type:value,
+            status:status
+						},
+					}
+          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+             this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000})
+              // this.dialog2 = false
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+    },
+    // changeState(id){console.log(id)},
+     setBreadcrumbs(bussinessNumber) {
+      this.items = [
+        {
+          text: "Business Numbers",
+          disabled: false,
+          to: { name: "BusinessNumber" },
+          href: `BusinessNumber?bn=`,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Call Flow Settings",
+          disabled: false,
+          to: { name: "CallFlowSettings", query: { ...{bn: bussinessNumber}} },
+          href: `CallFlowSettings?bn=`,
+          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+        },
+         {
+          text: "Notification Settings",
+          disabled: false,
+          to: { name: "NotificationSettings", query: { ...{bn: bussinessNumber}} },
+          href: `NotificationSettings?bn=`,
+          route: { name: 'NotificationSettings', query: { bn: [bussinessNumber]}  }
+        },
+      ]
+    },
+    goBack(bussinessNumber) {
+      // this.$router.push("/CallFlowSettings?bn=" + bussinessNumber);
+      // alert(bussinessNumber);
+      let newQuery = {bn: bussinessNumber};
+      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
     },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");

@@ -35,16 +35,16 @@
                               Total Cost (Inclusive of GST)
                             </div>
                             <div class="col-4 membership_heading">
-                              ₹ 1593.0/Month
+                          ₹ {{invoice_amount}}/Month
                             </div>
                           </v-row>
 
                           <div class="membership_price">
-                            500.00<span class="currency_symbol">INR</span>
+                            {{invoice_amount}}<span class="currency_symbol">INR</span>
                           </div>
 
                           <div class="membership_details">
-                            <v-checkbox
+                            <!-- <v-checkbox
                               v-model="paymentOptions"
                               label="red darken-3"
                               color="red darken-3"
@@ -59,7 +59,7 @@
                                   >
                                 </div>
                               </template></v-checkbox
-                            >
+                            > -->
                             <div v-if="paymentOptions">
                               <v-radio-group v-model="ex7" column>
                                 <v-radio
@@ -230,9 +230,13 @@
   </v-app>
 </template>
          <script>
+        //  import { db } from "@/main.js";
+         import axios from "axios";
 export default {
   components: {},
   data: () => ({
+        invoice_amount:"",
+        amount:"",
         sublist: [
       {
         title: "Charges",
@@ -274,7 +278,7 @@ export default {
     ],
     facebook_info: false,
     instagram_info: false,
-    paymentOptions: false,
+    paymentOptions: true,
     paymentOptionsInsta: false,
     userEmail: "",
     userRole: "",
@@ -286,7 +290,7 @@ export default {
     },
   },
   async created() {
-    await this.getBill();
+  this.getBill();
     //  this.getOrderIdforPayment()
   },
 
@@ -296,8 +300,8 @@ export default {
       var tpu = localStorage.getItem("tpu");
       var Id = JSON.parse(tpu);
 
-      console.log(Id.uid + "-----------" + Id.PlanId);
-      console.log(Id);
+      // console.log(Id.uid + "-----------" + Id.PlanId);
+      // console.log(Id);
       const details = {
         // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill/",
@@ -312,9 +316,10 @@ export default {
         },
       };
 
-      this.$axios(details)
+      axios(details)
         .then((response) => {
-          console.log(response);
+          this.invoice_amount = response.data.invoice_amount
+          console.log(response.data.invoice_amount);
         })
         .catch((error) => {
           console.error(error);

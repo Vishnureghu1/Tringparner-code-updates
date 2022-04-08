@@ -456,6 +456,8 @@ export default {
   components: {},
   created() {
         let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+         this.bussinessNumber = this.$route.query.bn;
+    this.setBreadcrumbs(this.bussinessNumber);
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
       this.owneruid = owneruid;
@@ -663,14 +665,45 @@ export default {
 							console.error(error);
 						})
     },
+    setBreadcrumbs(bussinessNumber) {
+      this.items = [
+        {
+          text: "Business Numbers",
+          disabled: false,
+          to: { name: "BusinessNumber" },
+          href: `BusinessNumber?bn=`,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Call Flow Settings",
+          disabled: false,
+          to: { name: "CallFlowSettings", query: { ...{bn: bussinessNumber}} },
+          href: `CallFlowSettings?bn=`,
+          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+        },
+         {
+          text: "Call Preference",
+          disabled: false,
+          to: { name: "CallPreference", query: { ...{bn: bussinessNumber}} },
+          href: `CallPreference?bn=`,
+          route: { name: 'CallPreference', query: { bn: [bussinessNumber]}  }
+        },
+      ]
+    },
+    goBack(bussinessNumber) {
+      // this.$router.push("/CallFlowSettings?bn=" + bussinessNumber);
+      // alert(bussinessNumber);
+      let newQuery = {bn: bussinessNumber};
+      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+    },
      PrioritizeConfiguration() {
         // const getNumber =  Object.keys(this.$route.query)[0]
       this.$router.push("/PrioritizeConfiguration?bn="+this.$route.query.bn);
     },
-    goBack(){
-       const getNumber =  Object.keys(this.$route.query)[0]
-				this.$router.push("/CallFlowSettings?bn="+getNumber)
-			},
+    // goBack(){
+    //    const getNumber =  Object.keys(this.$route.query)[0]
+		// 		this.$router.push("/CallFlowSettings?bn="+getNumber)
+		// 	},
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
     },
