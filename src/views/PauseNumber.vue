@@ -105,8 +105,36 @@
                       <v-col cols="6" sm="4" align="end">
                         <v-btn
                           color="#EE1C25"
-                          class="name_heading white--text text-capitalize"
+                          class="name_heading white--text text-capitalize mb-5"
+                          @click="uploadGreetingMessage()"
                           >+ Upload Media</v-btn>
+
+                      <v-file-input
+                        :rules="rules"
+                        accept=".mp3, .wav"
+                        placeholder="Choose file"
+                        prepend-icon="mdi-music"
+                        label="Upload File"
+                        show-size
+                        ref="myfile" 
+                        v-model="file"
+                      ></v-file-input>
+                      <v-progress-linear
+                        color="red darken-1 "
+                        buffer-value="0"
+                        height="35"
+                        :value="uploadedValue"
+                        striped
+                        v-show="isProgressing"
+                      ></v-progress-linear>
+                      <v-progress-linear
+                        color="red"
+                        buffer-value="0"
+                        :value="uploadedValue"
+                        stream
+                        v-show="isProgressing"
+                      ></v-progress-linear>
+
                       </v-col>
                     </v-row>
 
@@ -347,7 +375,7 @@ export default {
           owner_uid: this.ownerUid,
           updated_by: this.ownerUid,
           virtual_number: this.bussinessNumber,
-          prompt_type: "WelcomeMessage",
+          prompt_type: "PausePrompt",
           prompt: id,
           AccountId: this.AccountId,
         },
@@ -369,20 +397,21 @@ export default {
         });
     });
     this.getAllUserGreetingMessages(); //get all user audios
-    db.collection("uservirtualNumber")
-      .where("Uid", "==", this.ownerUid)
-      .where("VirtualNumber", "==", parseInt(this.bussinessNumber))
-      .get()
-      .then(async (snapshot) => {
-        if (!snapshot.empty) {
-          snapshot.docs.forEach((element) => {
-            console.log("element.data()", element.data());
-            this.radioGroup = element.data().WelcomeMessage;
-          });
-        } else {
-          console.log("uservirtualNumber empty");
-        }
-      });
+    // db.collection("uservirtualNumber")
+    //   .where("Uid", "==", this.ownerUid)
+    //   .where("VirtualNumber", "==", parseInt(this.bussinessNumber))
+    //   .get()
+    //   .then(async (snapshot) => {
+    //     if (!snapshot.empty) {
+    //       snapshot.docs.forEach((element) => {
+    //         console.log("element.data()", element.data());
+    //         this.radioGroup = element.data().PausePrompt;
+    //       });
+    //     } else {
+    //       console.log("uservirtualNumber empty");
+    //     }
+    //   });
+    this.setSelectedAudio();
     window.scrollTo(0, 0); //scroll to top
 
     this.bussinessNumber = this.$route.query.bn;
@@ -637,6 +666,7 @@ export default {
             console.log(response.data);
             this.newPopupAudioName = "";
             this.greetingMessageAddedSnapshot();
+            this.setSelectedAudio();
           })
           .catch((error) => {
             console.error(error);
@@ -654,9 +684,7 @@ export default {
 
       console.log(`deleting audio ${popupAudioId}`);
       this.deleteDialog = false;
-      // URL: https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/audio
-      // METHOD: DELETE
-      // PAYLOAD: {updated_by:"" ,uid:"" ,AccountId:"",AudioAccountId:""}
+
       const options = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio",
         method: "DELETE",
@@ -673,6 +701,7 @@ export default {
           console.log(response.data);
           this.newPopupAudioName = "";
           this.greetingMessageAddedSnapshot();
+          this.setSelectedAudio();
         })
         .catch((error) => {
           console.error(error);
@@ -731,7 +760,27 @@ export default {
           });
         });
     },
+    setSelectedAudio() {
+      db.collection("uservirtualNumber")
+      .where("Uid", "==", this.ownerUid)
+      .where("VirtualNumber", "==", parseInt(this.bussinessNumber))
+      .get()
+      .then(async (snapshot) => {
+        if (!snapshot.empty) {
+          snapshot.docs.forEach((element) => {
+            console.log("element.data()", element.data());
+            this.radioGroup = element.data().PausePrompt;
+          });
+        } else {
+          console.log("uservirtualNumber empty");
+        }
+      });
+    },
     submit(status,button){
+      console.log('status', status);
+      console.log('button', button);
+      this.selected = status;
+
       // dateFormat(today, "yyyy-mm-dd");
        const pausevalue = (button == "toggle") ?(new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60): this.select;
       //  console.log(button,pausevalue)

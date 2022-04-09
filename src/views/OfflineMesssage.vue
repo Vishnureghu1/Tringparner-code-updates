@@ -61,7 +61,7 @@
                         :rules="rules"
                         accept=".mp3, .wav"
                         placeholder="Choose file"
-                        prepend-icon="mdi-camera"
+                        prepend-icon="mdi-music"
                         label="Upload File"
                         show-size
                         ref="myfile" 
