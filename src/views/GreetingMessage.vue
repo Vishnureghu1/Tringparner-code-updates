@@ -10,28 +10,35 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 pl-5">
-                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber)"
+                        <v-icon
+                          class="mr-2"
+                          color="black"
+                          @click="goBack(bussinessNumber)"
                           >mdi-arrow-left</v-icon
                         >
                         Greeting Message
                       </h2>
                       <v-breadcrumbs class="breadcrumbs" :items="items">
-
                         <template v-slot:item="{ item }">
-                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
+                          <router-link
+                            style="text-decoration: none"
+                            v-if="!item.disabled"
+                            :to="item.route"
+                          >
                             <v-breadcrumbs-item :disabled="item.disabled">
                               {{ item.text }}
                             </v-breadcrumbs-item>
                           </router-link>
 
                           <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
-                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
-                              {{ item.text }}
-                            </v-breadcrumbs-item>
+                          <v-breadcrumbs-item
+                            v-if="item.disabled"
+                            :disabled="item.disabled"
+                          >
+                            {{ item.text }}
+                          </v-breadcrumbs-item>
                           <!-- </router-link> -->
-
                         </template>
-
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
@@ -60,7 +67,7 @@
                         prepend-icon="mdi-camera"
                         label="Upload File"
                         show-size
-                        ref="myfile" 
+                        ref="myfile"
                         v-model="file"
                       ></v-file-input>
                       <v-progress-linear
@@ -118,9 +125,13 @@
                                   </h2>
                                 </v-col>
                               </v-row>
-                              <v-radio-group v-model="radioGroup" 
-                              :mandatory="false" 
-                              v-on:change="$emit('greeting_message_changed', $event)">
+                              <v-radio-group
+                                v-model="radioGroup"
+                                :mandatory="false"
+                                v-on:change="
+                                  $emit('greeting_message_changed', $event)
+                                "
+                              >
                                 <v-card
                                   color="transparent"
                                   outlined
@@ -169,7 +180,9 @@
                                           >
                                             <v-list-item-title
                                               :class="m.color"
-                                              @click="threeDotAction(m, greeting.id)"
+                                              @click="
+                                                threeDotAction(m, greeting.id)
+                                              "
                                               >{{ m.text }}</v-list-item-title
                                             >
                                           </v-list-item>
@@ -199,7 +212,12 @@
             </v-card-title>
             <v-card-text class="pt-0">
               <p align="center" class="pb-10">{{ popupAudioName }}</p>
-              <v-text-field v-model="newPopupAudioName" label="Media Title" :rules="audioNameRules" outlined></v-text-field>
+              <v-text-field
+                v-model="newPopupAudioName"
+                label="Media Title"
+                :rules="audioNameRules"
+                outlined
+              ></v-text-field>
             </v-card-text>
 
             <v-card-actions>
@@ -235,19 +253,7 @@
             </v-card-title>
             <v-card-text class="pt-0">
               <p align="center" class="pb-10">{{ popupAudioName }}</p>
-              <!-- <v-text-field label="Media Title" outlined></v-text-field> -->
             </v-card-text>
-
-            <!-- <v-card-text class="pt-0">
-              <div class="text-center">
-               <v-progress-circular
-                  :size="70"
-                  :width="7"
-                  color="purple"
-                  indeterminate
-                ></v-progress-circular>
-              </div>
-            </v-card-text> -->
 
             <v-card-actions>
               <v-btn
@@ -273,21 +279,6 @@
           </v-card>
         </v-dialog>
         <!-- DELETE MEDIA SECTION -->
-
-        <!-- <v-dialog v-model="deleteDialog" max-width="332px">
-          <v-card>
-            <v-card-text>
-              <div v-model="deleteDialog" class="text-center">
-               <v-progress-circular
-                  :size="70"
-                  :width="7"
-                  color="purple"
-                  indeterminate
-                ></v-progress-circular>
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-dialog> -->
       </v-container>
     </div>
   </v-app>
@@ -295,23 +286,29 @@
 
 <script>
 import { db } from "@/main.js";
-import firebase from 'firebase';
+import firebase from "firebase";
 export default {
   components: {},
   created() {
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-    this.ownerUid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.ownerUid =
+      localStorageUserObj.role == "OWNER"
+        ? localStorageUserObj.uid
+        : localStorageUserObj.OwnerUid;
     this.AccountId = localStorageUserObj.AccountId;
     this.bussinessNumber = this.$route.query.bn;
     this.setBreadcrumbs(this.bussinessNumber);
-    this.$on('greeting_message_changed', function(id){
-      console.log(`Event from parent component emitted ${this.bussinessNumber}`, id);
+    this.$on("greeting_message_changed", function (id) {
+      console.log(
+        `Event from parent component emitted ${this.bussinessNumber}`,
+        id
+      );
       const options = {
-        url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/prompt',
-        method: 'POST',
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/prompt",
+        method: "POST",
         headers: {
-          'token': localStorage.getItem("token"),
-          'Content-Type': 'application/json;charset=UTF-8'
+          token: localStorage.getItem("token"),
+          "Content-Type": "application/json;charset=UTF-8",
         },
         data: {
           owner_uid: this.ownerUid,
@@ -319,35 +316,40 @@ export default {
           virtual_number: this.bussinessNumber,
           prompt_type: "WelcomeMessage",
           prompt: id,
-          AccountId: this.AccountId
-        }
-      }
+          AccountId: this.AccountId,
+        },
+      };
       console.log(options);
       this.$axios(options)
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
           // this.newPopupAudioName = '';
           // this.greetingMessageAddedSnapshot();
-          this.$root.vtoast.show({message: 'Audio Updated Successfully!', color: '#07C421', timer: 2000})
-        }).catch((error) => {
-          console.error(error);
+          this.$root.vtoast.show({
+            message: "Audio Updated Successfully!",
+            color: "#07C421",
+            timer: 2000,
+          });
         })
+        .catch((error) => {
+          console.error(error);
+        });
     });
     this.getAllUserGreetingMessages(); //get all user audios
     db.collection("uservirtualNumber")
       .where("Uid", "==", this.ownerUid)
       .where("VirtualNumber", "==", parseInt(this.bussinessNumber))
       .get()
-      .then(async(snapshot) => {
+      .then(async (snapshot) => {
         if (!snapshot.empty) {
-          snapshot.docs.forEach((element)=> {
-            console.log('element.data()', element.data());
+          snapshot.docs.forEach((element) => {
+            console.log("element.data()", element.data());
             this.radioGroup = element.data().WelcomeMessage;
-          })
+          });
         } else {
-          console.log('uservirtualNumber empty');
+          console.log("uservirtualNumber empty");
         }
-      })
+      });
   },
   data: () => ({
     dialog: false,
@@ -364,13 +366,11 @@ export default {
         rules: [(v) => !!v || "Required."],
         valid: true,
       },
-      // {name: "Step 3", rules: [v => (v && v.length >= 4) || "Enter at least 4 characters."], valid: true},
-      // {name: "Complete"},
+
     ],
     valid: false,
     stepForm: [],
-    Greetings: [
-    ],
+    Greetings: [],
     more: [
       {
         text: "Rename File",
@@ -387,29 +387,31 @@ export default {
         actionSlug: "DELETE_FILE",
       },
     ],
-    items: [
-    ],
-    uploadedValue:0, //uploaded content %
-    file:null, //uploaded file ref
-    radioGroup: '', //radiogroup def state
+    items: [],
+    uploadedValue: 0, //uploaded content %
+    file: null, //uploaded file ref
+    radioGroup: "", //radiogroup def state
     rules: [
-      value => !value || value.size < 5000000 || 'Audio size should be less than 5 MB!', //upload file rules
+      (value) =>
+        !value ||
+        value.size < 5000000 ||
+        "Audio size should be less than 5 MB!", //upload file rules
     ],
     isProgressing: false, //upload progressbar
     isActiveUploadBtn: false, //upload button default state
-    ownerUid: '', //OWNER UID
-    AccountId:'',
+    ownerUid: "", //OWNER UID
+    AccountId: "",
     uploadCount: 0, //number of uploaded files
     deleteDialog: false,
     renameDialog: false,
-    popupAudioName: '',
-    popupAudioId: '',
-    newPopupAudioName: '',
+    popupAudioName: "",
+    popupAudioId: "",
+    newPopupAudioName: "",
     audioNameRules: [
-        v => !!v || 'Name is required',
-        v => v.length > 3 || 'Name must be greate than 3 characters',
-      ],
-    bussinessNumber: '',
+      (v) => !!v || "Name is required",
+      (v) => v.length > 3 || "Name must be greate than 3 characters",
+    ],
+    bussinessNumber: "",
   }),
   watch: {
     dialog(val) {
@@ -425,29 +427,29 @@ export default {
           disabled: false,
           to: { name: "BusinessNumber" },
           href: `BusinessNumber?bn=`,
-          route: { name: 'BusinessNumber', query: { }  }
+          route: { name: "BusinessNumber", query: {} },
         },
         {
           text: "Call Flow Settings",
           disabled: false,
-          to: { name: "CallFlowSettings", query: { ...{bn: 1111111}} },
+          to: { name: "CallFlowSettings", query: { ...{ bn: 1111111 } } },
           href: `CallFlowSettings?bn=`,
-          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+          route: { name: "CallFlowSettings", query: { bn: [bussinessNumber] } },
         },
         {
           text: "Greeting Message",
           disabled: true,
           to: { name: "GreetingMessage" },
           href: `GreetingMessage`,
-          route: { name: 'GreetingMessage', query: { bn: [bussinessNumber]}  }
+          route: { name: "GreetingMessage", query: { bn: [bussinessNumber] } },
         },
-      ]
+      ];
     },
     goBack(bussinessNumber) {
       // this.$router.push("/CallFlowSettings?bn=" + bussinessNumber);
       // alert(bussinessNumber);
-      let newQuery = {bn: bussinessNumber};
-      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+      let newQuery = { bn: bussinessNumber };
+      this.$router.push({ path: "/CallFlowSettings", query: { ...newQuery } });
     },
     validate(n) {
       this.steps[n].valid = false;
@@ -464,210 +466,228 @@ export default {
     getAllUserGreetingMessages() {
       // this.Greetings = [];
       db.collection("UserAudio")
-      .where("Uid", "==", this.ownerUid)
-      .orderBy("CreatedAt", "asc")
-      .get()
-      .then(async(snapshot) => {
-        if (!snapshot.empty) {
-          snapshot.docs.forEach((element)=> {
-            this.Greetings.push({
-              id: element.id,
-              title: element.data().DisplayName,
-              Audio: element.data().AudioUrl,
-              AudioAccountId: element.data().AudioAccountId,
-              DisplayName: element.data().DisplayName,
-              RefName: element.data().RefName,
-              Uid: element.data().Uid,
-            })
-            this.uploadCount++;
-          })
-        } else {
-          console.log('snapshot empty');
-        }
-      })
+        .where("Uid", "==", this.ownerUid)
+        .orderBy("CreatedAt", "asc")
+        .get()
+        .then(async (snapshot) => {
+          if (!snapshot.empty) {
+            snapshot.docs.forEach((element) => {
+              this.Greetings.push({
+                id: element.id,
+                title: element.data().DisplayName,
+                Audio: element.data().AudioUrl,
+                AudioAccountId: element.data().AudioAccountId,
+                DisplayName: element.data().DisplayName,
+                RefName: element.data().RefName,
+                Uid: element.data().Uid,
+              });
+              this.uploadCount++;
+            });
+          } else {
+            console.log("snapshot empty");
+          }
+        });
     },
     uploadGreetingMessage() {
-      
-        if(this.file) {
-          this.dialog = true;
-          this.isProgressing = true;
-          console.log('about to upload file');
-          console.log(this.file);
-          this.onUpload(this.file.name, this.file);
-        } else {
-          console.log('Select a file');
-          this.$root.vtoast.show({message: 'Please select a file for upload!', color: 'red', timer: 2000})
-          console.log('ownerUid', this.ownerUid);
-        }
+      if (this.file) {
+        this.dialog = true;
+        this.isProgressing = true;
+        console.log("about to upload file");
+        console.log(this.file);
+        this.onUpload(this.file.name, this.file);
+      } else {
+        console.log("Select a file");
+        this.$root.vtoast.show({
+          message: "Please select a file for upload!",
+          color: "red",
+          timer: 2000,
+        });
+        console.log("ownerUid", this.ownerUid);
+      }
     },
     onUpload(filename, file) {
-      const storageRef = firebase.storage().ref(`${this.ownerUid}-${this.uploadCount+1}-${filename.split('.')[0]}`).put(file);
+      const storageRef = firebase
+        .storage()
+        .ref(
+          `${this.ownerUid}-${this.uploadCount + 1}-${filename.split(".")[0]}`
+        )
+        .put(file);
       // const storageRef = firebase.storage().ref('File-name').put('xyz');
-      storageRef.on('state_changed', snapshot => {
-        this.uploadedValue=(snapshot.bytesTransferred/snapshot.totalBytes)*100;
-      }, error => {
-        console.log(error.message);
-      },
-      () => {
-        this.uploadedValue=100;
-        storageRef.snapshot.ref.getDownloadURL().then((url) => {
-          console.log('uploaded file URL', url);
-          this.isProgressing = false;
-          this.file = null;
-          this.$root.vtoast.show({message: 'File upload successful!', color: 'green', timer: 2000})
-          //snapshot listening for updates
-          this.greetingMessageModifiedSnapshot();
-          //snapshot listening for updates
-        })
-      }
+      storageRef.on(
+        "state_changed",
+        (snapshot) => {
+          this.uploadedValue =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        (error) => {
+          console.log(error.message);
+        },
+        () => {
+          this.uploadedValue = 100;
+          storageRef.snapshot.ref.getDownloadURL().then((url) => {
+            console.log("uploaded file URL", url);
+            this.isProgressing = false;
+            this.file = null;
+            this.$root.vtoast.show({
+              message: "File upload successful!",
+              color: "green",
+              timer: 2000,
+            });
+            //snapshot listening for updates
+            this.greetingMessageModifiedSnapshot();
+            //snapshot listening for updates
+          });
+        }
       );
     },
     threeDotAction(m, greetingsId) {
-      console.log('m.actionSlug', m.actionSlug);
-      console.log('greetingsId', greetingsId);
-      var audioObj = this.Greetings.filter(function(elem) {
+      console.log("m.actionSlug", m.actionSlug);
+      console.log("greetingsId", greetingsId);
+      var audioObj = this.Greetings.filter(function (elem) {
         if (elem.id === greetingsId) return elem;
       });
       console.log(JSON.stringify(audioObj[0]));
       this.popupAudioId = audioObj[0].id;
       this.popupAudioName = audioObj[0].title;
-      if(m.actionSlug == 'RENAME_FILE') {
-        console.log('trigger Rename');
-        this.renameDialog = true; 
+      if (m.actionSlug == "RENAME_FILE") {
+        console.log("trigger Rename");
+        this.renameDialog = true;
       }
-      if(m.actionSlug == 'DELETE_FILE') {
-        console.log('trigger Delete file');
-        this.deleteDialog = true; 
+      if (m.actionSlug == "DELETE_FILE") {
+        console.log("trigger Delete file");
+        this.deleteDialog = true;
       }
       this.dialog2 = true;
     },
     async renameAudio(popupAudioId) {
-      var audioObj = this.Greetings.filter(function(elem) {
+      var audioObj = this.Greetings.filter(function (elem) {
         if (elem.id === popupAudioId) return elem;
       });
-      console.log('audioObj', JSON.stringify(audioObj[0]));
-      console.log('Greetings', this.Greetings);
+      console.log("audioObj", JSON.stringify(audioObj[0]));
+      console.log("Greetings", this.Greetings);
       let audio = audioObj[0];
-      console.log('audio', audio);
+      console.log("audio", audio);
       console.log(`renaming audio ${popupAudioId}`);
       console.log(`renaming new Popup Audio Name ${this.newPopupAudioName}`);
       console.log(`renaming new Popup AudioAccountId ${audio.AudioAccountId}`);
-      if(this.newPopupAudioName !== '') {
-        this.renameDialog = false; 
+      if (this.newPopupAudioName !== "") {
+        this.renameDialog = false;
         // DisplayName
-        
+
         // URL: https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/audio
         // METHOD: PUT
         // PAYLOAD: {updated_by:"" ,uid:"" ,AccountId:"",AudioAccountId:"",DisplayName:""}
         const options = {
-          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio',
-          method: 'PUT',
+          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio",
+          method: "PUT",
           data: {
             updated_by: this.ownerUid,
             uid: this.ownerUid,
             AccountId: this.AccountId,
             AudioAccountId: audio.AudioAccountId,
-            DisplayName: this.newPopupAudioName
-          }
-        }
+            DisplayName: this.newPopupAudioName,
+          },
+        };
         console.log(options);
         this.$axios(options)
           .then((response) => {
-            console.log(response.data)
-            this.newPopupAudioName = '';
+            console.log(response.data);
+            this.newPopupAudioName = "";
             this.greetingMessageAddedSnapshot();
-          }).catch((error) => {
-            console.error(error);
           })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     },
     deleteAudio(popupAudioId) {
-      var audioObj = this.Greetings.filter(function(elem) {
+      var audioObj = this.Greetings.filter(function (elem) {
         if (elem.id === popupAudioId) return elem;
       });
-      console.log('audioObj', JSON.stringify(audioObj[0]));
-      console.log('Greetings', this.Greetings);
+      console.log("audioObj", JSON.stringify(audioObj[0]));
+      console.log("Greetings", this.Greetings);
       let audio = audioObj[0];
-      console.log('audio', audio);
-      
+      console.log("audio", audio);
+
       console.log(`deleting audio ${popupAudioId}`);
-      this.deleteDialog = false; 
+      this.deleteDialog = false;
       // URL: https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/audio
       // METHOD: DELETE
       // PAYLOAD: {updated_by:"" ,uid:"" ,AccountId:"",AudioAccountId:""}
       const options = {
-          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio',
-          method: 'DELETE',
-          data: {
-            updated_by: this.ownerUid,
-            uid: this.ownerUid,
-            AccountId: this.AccountId,
-            AudioAccountId: audio.AudioAccountId
-          }
-        }
-        console.log(options);
-        this.$axios(options)
-          .then((response) => {
-            console.log(response.data)
-            this.newPopupAudioName = '';
-            this.greetingMessageAddedSnapshot();
-          }).catch((error) => {
-            console.error(error);
-          })
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio",
+        method: "DELETE",
+        data: {
+          updated_by: this.ownerUid,
+          uid: this.ownerUid,
+          AccountId: this.AccountId,
+          AudioAccountId: audio.AudioAccountId,
+        },
+      };
+      console.log(options);
+      this.$axios(options)
+        .then((response) => {
+          console.log(response.data);
+          this.newPopupAudioName = "";
+          this.greetingMessageAddedSnapshot();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     greetingMessageModifiedSnapshot() {
-      console.log('CALLING modified SNAPSHOT-------------------->');
+      console.log("CALLING modified SNAPSHOT-------------------->");
       db.collection("UserAudio")
-            .where("Uid", "==", this.ownerUid)
-            // .orderBy("CreatedAt", "asc")
-            // .get()
-            // .then(async(snapshot) => {
-            .onSnapshot(async(snapshot) => {
-                snapshot.docChanges().forEach((change) => {
-                  console.log('change', change.type);
-                  if(change.type == 'modified') {
-                    console.log("New Audio: ", change.doc.data());
-                    this.Greetings.push({
-                      id: change.doc.id,
-                      title: change.doc.data().DisplayName,
-                      Audio: change.doc.data().AudioUrl,
-                      AudioAccountId: change.doc.data().AudioAccountId,
-                      DisplayName: change.doc.data().DisplayName,
-                      RefName: change.doc.data().RefName,
-                      Uid: change.doc.data().Uid,
-                    })
-                    this.uploadCount++;
-                  }
-                })
-            })
+        .where("Uid", "==", this.ownerUid)
+        // .orderBy("CreatedAt", "asc")
+        // .get()
+        // .then(async(snapshot) => {
+        .onSnapshot(async (snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            console.log("change", change.type);
+            if (change.type == "modified") {
+              console.log("New Audio: ", change.doc.data());
+              this.Greetings.push({
+                id: change.doc.id,
+                title: change.doc.data().DisplayName,
+                Audio: change.doc.data().AudioUrl,
+                AudioAccountId: change.doc.data().AudioAccountId,
+                DisplayName: change.doc.data().DisplayName,
+                RefName: change.doc.data().RefName,
+                Uid: change.doc.data().Uid,
+              });
+              this.uploadCount++;
+            }
+          });
+        });
     },
     greetingMessageAddedSnapshot() {
-      console.log('CALLING added SNAPSHOT-------------------->');
+      console.log("CALLING added SNAPSHOT-------------------->");
       this.Greetings = [];
       db.collection("UserAudio")
-            .where("Uid", "==", this.ownerUid)
-            .orderBy("CreatedAt", "asc")
-            // .get()
-            // .then(async(snapshot) => {
-            .onSnapshot(async(snapshot) => {
-                snapshot.docChanges().forEach((change) => {
-                  console.log('change', change.type);
-                  if(change.type == 'added') {
-                    console.log("New Audio: ", change.doc.data());
-                    this.Greetings.push({
-                      id: change.doc.id,
-                      title: change.doc.data().DisplayName,
-                      Audio: change.doc.data().AudioUrl,
-                      AudioAccountId: change.doc.data().AudioAccountId,
-                      DisplayName: change.doc.data().DisplayName,
-                      RefName: change.doc.data().RefName,
-                      Uid: change.doc.data().Uid,
-                    })
-                    this.uploadCount++;
-                  }
-                })
-            })
-    }
+        .where("Uid", "==", this.ownerUid)
+        .orderBy("CreatedAt", "asc")
+        // .get()
+        // .then(async(snapshot) => {
+        .onSnapshot(async (snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            console.log("change", change.type);
+            if (change.type == "added") {
+              console.log("New Audio: ", change.doc.data());
+              this.Greetings.push({
+                id: change.doc.id,
+                title: change.doc.data().DisplayName,
+                Audio: change.doc.data().AudioUrl,
+                AudioAccountId: change.doc.data().AudioAccountId,
+                DisplayName: change.doc.data().DisplayName,
+                RefName: change.doc.data().RefName,
+                Uid: change.doc.data().Uid,
+              });
+              this.uploadCount++;
+            }
+          });
+        });
+    },
   },
 };
 </script>
