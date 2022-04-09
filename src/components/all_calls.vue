@@ -23,27 +23,140 @@
         <v-layout>
           <v-flex xs12 sm12 md12>
             <v-row no-gutters>
-              <v-col cols="12" >
+              <v-col cols="12">
                 <div class="ml-3">
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="mt-6 mb-5">Call Log</h2>
                     </v-col>
                     <v-col cols="12" sm="2" align="end">
-                      <span
-                        ><v-icon class="mt-6 mb-5 mr-4" color="black"
-                          >mdi-magnify</v-icon
-                        >
-                        <v-icon class="mt-6 mb-5 mr-7" color="black"
-                          >mdi-filter-variant</v-icon
-                        >
-                      </span>
+                      <v-menu
+                        v-model="filtermenu"
+                        :close-on-content-click="false"
+                        :nudge-width="200"
+                        offset-x
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <span
+                            ><v-icon class="mt-6 mb-5 mr-4" color="black"
+                              >mdi-magnify</v-icon
+                            >
+                            <v-icon
+                              class="mt-6 mb-5 mr-7"
+                              color="black"
+                              v-bind="attrs"
+                              v-on="on"
+                              >mdi-filter-variant</v-icon
+                            >
+                          </span>
+                        </template>
+
+                        <v-card>
+                          <v-list>
+                            <v-list-item>
+                              <h4 class="mb-0">Sort By</h4>
+                            </v-list-item>
+
+                            <v-list-item>
+                              <v-select
+                                :items="timeofCall"
+                                label="Time of Call"
+                                timeofCall
+                              ></v-select>
+                            </v-list-item>
+                            <v-list-item>
+                              <v-select
+                                :items="DurationOfCall"
+                                label="Duration Of Call"
+                                DurationOfCall
+                              ></v-select>
+                            </v-list-item>
+
+                            <v-divider></v-divider>
+
+                            <v-list-item>
+                              <h4 class="mb-0">View By</h4>
+                            </v-list-item>
+
+                            <v-list-item>
+                              <v-select
+                                :items="ViewByType"
+                                label="View By Type"
+                                ViewByType
+                              ></v-select>
+                            </v-list-item>
+
+                            <v-list-item>
+                              <h4 class="mb-0">Filter Calls With</h4>
+                            </v-list-item>
+
+                            <v-list-item>
+                              <v-select
+                                :items="Reminders"
+                                label="Reminders"
+                                Reminders
+                              ></v-select>
+                            </v-list-item>
+                            <v-list-item>
+                              <v-select
+                                :items="Notes"
+                                label="Notes"
+                                Notes
+                              ></v-select>
+                            </v-list-item>
+
+                            <v-divider></v-divider>
+
+                            <v-list-item>
+                              <h4 class="mb-0">Call Answered By</h4>
+                            </v-list-item>
+
+                            <v-list-item>
+                              <v-select
+                                :items="Users"
+                                label="Users"
+                                Users
+                              ></v-select>
+                            </v-list-item>
+
+                            <v-divider></v-divider>
+
+                            <v-list-item>
+                              <h4 class="mb-0">Business Number</h4>
+                            </v-list-item>
+
+                            <v-list-item>
+                              <v-select
+                                :items="Numbers"
+                                label="Number"
+                                Numbers
+                              ></v-select>
+                            </v-list-item>
+
+                            <v-divider></v-divider>
+                          </v-list>
+
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+
+                            <v-btn text @click="filtermenu = false">
+                              Cancel
+                            </v-btn>
+                            <v-btn
+                              color="primary"
+                              text
+                              @click="filtermenu = false"
+                            >
+                              Apply Filter
+                            </v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-menu>
                     </v-col>
                   </v-row>
                   <!-- {{realdata}} -->
                   <v-expansion-panels accordion flat>
                     <v-expansion-panel
-                      
                       v-for="details in realdata"
                       :key="details.text"
                     >
@@ -134,7 +247,7 @@
                             <v-col cols="12" sm="6">
                               <div class="ml-10">
                                 <h6 class="font-weight-thin">Source</h6>
-{{details}}
+                                {{ details }}
                                 <h5 class="font-weight-light">
                                   {{ details.source }} No: (+91
                                   {{ details.virtualnumber }})
@@ -367,6 +480,24 @@ export default {
       // { title: 'Call This Number',color: 'black--text' , url: 'call_this_number'},
       { title: "Block This Number", color: "red--text", url: "block_number" },
     ],
+    timeofCall: ["Ascending", "Descending"],
+    DurationOfCall: [
+      "Not Specified",
+      "< 30 Seconds",
+      "30 Seconds - > 1 minute",
+      "1 minitue - > 2 minutes",
+      "> 2 minutes",
+    ],
+    ViewByType: ["Calls", "Notes", "Reminder"],
+    Reminders: ["Not Specified", "Yes"],
+    Notes: ["Not Specified", "Yes"],
+
+    Users: ["All", "Sree", "Shinu", "Syam", "Divya", "Munasir"],
+    Numbers: ["All", "8657510921", "222222222", "22"],
+    fav: true,
+    filtermenu: false,
+    message: false,
+    hints: true,
     uid: "",
     phno: "",
     called_name: "",
@@ -458,7 +589,7 @@ export default {
         data: {
           uid: this.uid,
           // uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
-          unique_id: unique_id,  //call id
+          unique_id: unique_id, //call id
           note: message,
         },
         headers: {
@@ -480,16 +611,16 @@ export default {
     },
     sendReminder(date, time) {
       var token = localStorage.getItem("token");
-        var tpu = localStorage.getItem("tpu");
-        var Id = JSON.parse(tpu);
-        console.log(Id.AccountId);
+      var tpu = localStorage.getItem("tpu");
+      var Id = JSON.parse(tpu);
+      console.log(Id.AccountId);
       console.log(date);
       console.log(time);
- var myCurrentDate = new Date();
-        var todayDateMillisecond = new Date(myCurrentDate).getTime();
-            console.log(todayDateMillisecond); 
-            // var RemindmeAt = todayDateMillisecond + hours;    
-            var RemindmeAt =1847244627217;
+      var myCurrentDate = new Date();
+      var todayDateMillisecond = new Date(myCurrentDate).getTime();
+      console.log(todayDateMillisecond);
+      // var RemindmeAt = todayDateMillisecond + hours;
+      var RemindmeAt = 1847244627217;
       const user_data = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder",
         method: "POST",
@@ -497,7 +628,7 @@ export default {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
 
           call_id: "1646813903.152737", // uniqueid
-          agent_uid: this.uid, 
+          agent_uid: this.uid,
           owner_uid: this.uid, //logged in ownere
           reminder_at: RemindmeAt, // time in milliseconds
           name: "Akhil",
@@ -568,8 +699,8 @@ export default {
           db.collection("callLogs")
             .where("owneruid", "==", this.uid)
             .orderBy("dateTime", "desc")
-			// .startAt(0)
-      //       .limit(10)
+            // .startAt(0)
+            //       .limit(10)
             .onSnapshot((querySnapshot) => {
               this.realdata = [];
               if (!querySnapshot.empty) {

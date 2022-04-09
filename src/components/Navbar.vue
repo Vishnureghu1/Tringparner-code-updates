@@ -1,8 +1,21 @@
 <template>
   <v-app>
-
-        <v-navigation-drawer v-if="['login', 'Login'].indexOf(this.$route.name) != 0 && ['ChooseNumbers', 'ChooseNumbers'].indexOf(this.$route.name) != 0 && ['SelectPlan', 'SelectPlan'].indexOf(this.$route.name) != 0 && ['Billing', 'Billing'].indexOf(this.$route.name) != 0 && ['Review', 'Review'].indexOf(this.$route.name) != 0" v-model="drawer" clipped app class="white"  width="280px" permanent>
-            <!-- <v-list flat>
+    <v-navigation-drawer
+      v-if="
+        ['login', 'Login'].indexOf(this.$route.name) != 0 &&
+        ['ChooseNumbers', 'ChooseNumbers'].indexOf(this.$route.name) != 0 &&
+        ['SelectPlan', 'SelectPlan'].indexOf(this.$route.name) != 0 &&
+        ['Billing', 'Billing'].indexOf(this.$route.name) != 0 &&
+        ['Review', 'Review'].indexOf(this.$route.name) != 0
+      "
+      v-model="drawer"
+      clipped
+      app
+      class="white"
+      width="280px"
+      permanent
+    >
+      <!-- <v-list flat>
                 <v-list-item active-class="red--text">
                     <v-list-item-content>
                         <v-list-item-title class="grey--text" @click="dashboard()"> <v-icon  class="mr-3" color="grey">mdi-radar</v-icon> Dashboard</v-list-item-title>
@@ -43,9 +56,9 @@
                 </v-list-group> 
 
             </v-list> -->
-            <!-- NEW LINKS -->
-            <v-list flat>
-              <!-- <v-list-item v-for="link in links[userRole]" :key="link.text" router :to="link.route" class="red--text" active-class="border red--text" style="color:green;">
+      <!-- NEW LINKS -->
+      <v-list flat>
+        <!-- <v-list-item v-for="link in links[userRole]" :key="link.text" router :to="link.route" class="red--text" active-class="border red--text" style="color:green;">
                     <template v-if="userRole == link.role" color="green--text" >
 
                         <v-list-item-action>
@@ -58,395 +71,371 @@
                     </template>
                 </v-list-item> -->
 
-                <div v-for="(link, i) in links[userRole]" :key="i">
+        <div v-for="(link, i) in links[userRole]" :key="i">
+          <v-list-item
+            v-if="!link.subLinks"
+            :to="link.to"
+            active-class="tpred--text medium"
+            avatar
+            class="grey--text ubuntu-font medium"
+          >
+            <v-list-item-icon>
+              <v-icon>{{ link.icon }}</v-icon>
+            </v-list-item-icon>
 
-                    <v-list-item
-                        v-if="!link.subLinks"
-                        :to="link.to"
-                        active-class="tpred--text medium"
-                        avatar
-                        class="grey--text ubuntu-font medium"
+            <v-list-item-title class="menu-text" v-text="link.text" />
+          </v-list-item>
+
+          <v-list-group
+            v-else
+            :key="link.text"
+            no-action
+            :prepend-icon="link.icon"
+            :value="false"
+            class="grey--text ubuntu-font medium"
+            active-class="grey--text ubuntu-font "
+          >
+            <template v-slot:activator>
+              <v-list-item-title
+                class="menu-text grey--text ubuntu-font"
+                active-class="tpred--text ubuntu-font medium"
+                >{{ link.text }}</v-list-item-title
+              >
+            </template>
+
+            <v-list-item
+              v-for="sublink in link.subLinks"
+              :to="sublink.to"
+              :key="sublink.text"
+              class="grey--text ubuntu-font"
+              active-class="tpred--text ubuntu-font"
+            >
+              <v-list-item-title class="menu-text ml-2">{{
+                sublink.text
+              }}</v-list-item-title>
+              <v-list-item-icon class="grey--text ubuntu-font">
+                <v-icon>{{ sublink.icon }}</v-icon>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list-group>
+        </div>
+      </v-list>
+      <!-- NEW LINKS -->
+    </v-navigation-drawer>
+    <v-app-bar :key="rerenderKey" class="white" app clipped-left>
+      <v-app-bar color="white" flat>
+        <img
+          class="mt-2 ml-2"
+          :src="require('../../public/tring-logo.png')"
+          height="35"
+        />
+        <v-spacer></v-spacer>
+
+        <div v-if="isLoggedIn">
+          <!-- NOTIFICATION MENU -->
+          <v-menu bottom width="378px" height="504px" rounded offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" icon>
+                <v-icon color="black">mdi-bell-outline</v-icon>
+              </v-btn>
+            </template>
+
+            <v-card class="mx-auto" max-width="500">
+              <v-card-title class="black--text white darken-4">
+                Notification Center
+                <v-spacer></v-spacer>
+                <router-link :to="{ name: 'notifications' }">
+                  <div align="center" class="notif-mark">View all</div>
+                </router-link>
+                <span fab small>
+                  <v-icon>mdi-close</v-icon>
+                </span>
+              </v-card-title>
+
+              <v-divider></v-divider>
+
+              <v-virtual-scroll
+                :items="notificationCenterItems"
+                :item-height="90"
+                height="300"
+                width="500"
+              >
+                <template v-slot:default="{ item }">
+                  <v-list-item>
+                    <v-row>
+                      <v-col cols="12">
+                        <div class="notif-type">Call Notification</div>
+                        <div class="notif-content">{{ item.content }}</div>
+                        <div class="notif-time mb-2">Today, 12:01pm</div>
+                      </v-col>
+                    </v-row>
+                  </v-list-item>
+                  <v-divider></v-divider>
+                </template>
+              </v-virtual-scroll>
+
+              <v-card-text class="pt-4 text-center">
+                <v-row>
+                  <v-col cols="12" align="center" class="notif-mark">
+                    Mark all as read(10)
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-menu>
+          <!-- NOTIFICATION MENU -->
+          <!-- DROP DOWM MENU FROM AVATAR   -->
+          <v-menu bottom max-width="247px" min-height="218px" rounded offset-y>
+            <template v-slot:activator="{ on }">
+              <v-avatar v-on="on" class="ml-5" size="40">
+                <v-img src="/img1.png"></v-img>
+              </v-avatar>
+            </template>
+            <v-card>
+              <v-list-item-content class="align-left">
+                <v-list-item>
+                  <v-list-item-avatar>
+                    <img src="/img1.png" alt="Admin" />
+                  </v-list-item-avatar>
+
+                  <v-list-item-content>
+                    <v-list-item-title>{{ userFirstName }}</v-list-item-title>
+                    <v-list-item-subtitle
+                      >+91 {{ userPhoneNumber }}</v-list-item-subtitle
                     >
-                        <v-list-item-icon>
-                            <v-icon>{{ link.icon }}</v-icon>
-                        </v-list-item-icon>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item-content>
+                  <span class="avatar-menu-item">FAQ</span>
+                </v-list-item-content>
+                <v-list-item-content>
+                  <span class="avatar-menu-item">Contact Us</span>
+                </v-list-item-content>
+                <v-list-item-content>
+                  <span class="avatar-menu-item" @click="logout">Log Out</span>
+                </v-list-item-content>
+              </v-list-item-content>
+            </v-card>
+          </v-menu>
+          <!-- DROP DOWM MENU FROM AVATAR   -->
+        </div>
+      </v-app-bar>
+    </v-app-bar>
 
-                        <v-list-item-title class="menu-text" v-text="link.text" />
-                    </v-list-item>
-
-                    <v-list-group
-                        v-else
-                        :key="link.text"
-                        no-action
-                        :prepend-icon="link.icon"
-                        :value="false"
-                        class="grey--text ubuntu-font medium"
-                        active-class="grey--text ubuntu-font "
-                    >
-                        <template v-slot:activator>
-                          <v-list-item-title class="menu-text grey--text ubuntu-font" active-class="tpred--text ubuntu-font medium" >{{ link.text }}</v-list-item-title>
-                         </template>
-
-                        <v-list-item
-                            v-for="sublink in link.subLinks"
-                            :to="sublink.to"
-                            :key="sublink.text"
-                            class="grey--text ubuntu-font"
-                            active-class="tpred--text ubuntu-font"
-                        >
-                            <v-list-item-title class="menu-text ml-2">{{ sublink.text }}</v-list-item-title>
-                            <v-list-item-icon class="grey--text ubuntu-font">
-                              <v-icon>{{ sublink.icon }}</v-icon>
-                            </v-list-item-icon>
-
-                        </v-list-item>
-
-                    </v-list-group>
-
-                </div>
-            </v-list>
-            <!-- NEW LINKS -->
-        </v-navigation-drawer>
-        <v-app-bar :key="rerenderKey"  class="white" app clipped-left>
-                  <v-app-bar color="white" flat>
-                    <img class="mt-2 ml-2" :src="require('../../public/tring-logo.png')" height="35"/>
-                    <v-spacer></v-spacer>
-
-                    <div v-if="isLoggedIn">
-
-                    <!-- NOTIFICATION MENU -->
-                    <v-menu
-                      bottom
-                      width="378px"
-                      height="504px"
-                      rounded
-                      offset-y
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-btn v-on="on" icon>
-                          <v-icon color="black">mdi-bell-outline</v-icon>
-                        </v-btn>
-                      </template>
-
-                      <v-card
-                        class="mx-auto"
-                        max-width="500"
-                      >
-                        <v-card-title class="black--text white darken-4">
-                          Notification Center
-                          <v-spacer></v-spacer>
-                         <router-link
-                                  :to="{ name: 'notifications' }"
-                                > <div align="center" class="notif-mark"  >View all</div>
-                         </router-link>
-                          <span fab small>
-                            <v-icon>mdi-close</v-icon>
-                          </span>
-                        </v-card-title>
-
-                        <v-divider></v-divider>
-
-                        <v-virtual-scroll
-                          :items="notificationCenterItems"
-                          :item-height="90"
-                          height="300"
-                          width="500"
-                        >
-                          <template v-slot:default="{ item }">
-                            <v-list-item>
-                              <v-row>
-                                <v-col cols="12">
-                                  <div class="notif-type" >Call Notification</div>
-                                  <div class="notif-content" >{{ item.content }}</div>
-                                  <div class="notif-time mb-2" >Today, 12:01pm</div>
-                                </v-col>
-                              </v-row>
-          
-                            </v-list-item>
-                            <v-divider></v-divider>
-                          </template>
-                        </v-virtual-scroll>
-
-                        <v-card-text class="pt-4 text-center">
-                          <v-row>
-                            <v-col cols="12" align="center" class="notif-mark" >
-                              Mark all as read(10)
-                            </v-col>
-                          </v-row>
-                        </v-card-text>
-
-                      </v-card>
-
-                    </v-menu>
-                    <!-- NOTIFICATION MENU -->
-                    <!-- DROP DOWM MENU FROM AVATAR   -->
-                    <v-menu
-                      bottom
-                      min-width="247px"
-                      min-height="218px"
-                      rounded
-                      offset-y
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-avatar v-on="on" class="ml-5" size="40">
-                            <v-img src="/img1.png"></v-img>
-                        </v-avatar>
-                      </template>
-                      <v-card>
-                        <v-list-item-content class="align-left">
-                          <div class="mx-auto pa-1 text-left">
-                            <v-row>
-                              <v-col class="col-4">
-                                <v-avatar class="menu-avatar-pic">
-                                  <v-img src="/img1.png"></v-img>
-                                </v-avatar>
-                              </v-col>
-                              <v-col class="col-8">
-                                <v-row>
-                                  <v-col  align="left">
-                                    <div  class="">
-                                      <h4 class="" style="font: normal normal normal 23px/31px Nunito;">{{ userFirstName }}</h4>
-                                      <div class="">
-                                        <h5 class="comment_heading font-weight-light mt-1" >+91 {{ userPhoneNumber }}</h5>
-                                      </div>
-                                    </div>
-
-                                  </v-col>
-                                </v-row>
-                              </v-col>
-                            </v-row>
-
-                          </div>
-                        </v-list-item-content>
-                        <v-list-item-content>
-                          <span class="avatar-menu-item">FAQ</span>
-                        </v-list-item-content>
-                        <v-list-item-content>
-                          <span class="avatar-menu-item">Contact Us</span>
-                        </v-list-item-content>
-                        <v-list-item-content>
-                          <span class="avatar-menu-item" @click="logout">Log Out</span>
-                        </v-list-item-content>
-                      </v-card>
-                    </v-menu>
-                    <!-- DROP DOWM MENU FROM AVATAR   -->
-
-                    </div>
-                  </v-app-bar>
-                  
-        </v-app-bar>
-        
-        <v-main>
-          
-            <v-row align="center">
-              <v-col cols="12">
-               
-                <router-view></router-view>
-              </v-col>
-            </v-row>
-        </v-main>
-    </v-app>
-
+    <v-main>
+      <v-row align="center">
+        <v-col cols="12">
+          <router-view></router-view>
+        </v-col>
+      </v-row>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-  // import { db } from '@/main.js';
-  import firebase from 'firebase'
-  export default {
-    async created() {
+// import { db } from '@/main.js';
+import firebase from "firebase";
+export default {
+  async created() {
+    let localStorageUserObj = localStorage.getItem("tpu");
 
-      let localStorageUserObj = localStorage.getItem('tpu');
-
-      if (localStorageUserObj) {
-        let parsedUser = JSON.parse(localStorageUserObj);
-        this.userEmail = parsedUser.Email;
-        console.log('Navbar-user-FirstName', parsedUser.FirstName);
-        console.log('Navbar-user-Email', parsedUser.Email);
-        console.log(parsedUser);
-        this.userRole = parsedUser.role;
-        this.isLoggedIn = true;
-        this.userFirstName = parsedUser.FirstName;
-        this.userPhoneNumber = parsedUser.PhoneNumber;
-        this.forceRerenderKey();
-      }
-
-    },
-  data: () => ({
-      drawer: false,
-      isLoggedIn: false,
-      userRole:'',
-      userFirstName: '',
-      userPhoneNumber: '',
-      rerenderKey: 0,
-      group: null,
-      role: '',
-      notificationCenterItems:[
-        {
-          id:1,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:2,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:3,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:4,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:5,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:6,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:7,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:8,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:9,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-        {
-          id:10,
-          type: 'Call Notification',
-          content: 'You have a Missed Call From +91 988809991',
-          time:'Today, 12:01pm'
-        },
-      ],
-
-      links: {
-        'OWNER' : [
-          {
-            to: '/dashboard',
-            icon: 'mdi-radar',
-            text: 'Dashboard',
-          }, 
-          {
-            icon: 'mdi-phone',
-            text: 'Call Logs',
-            subLinks: [{
-              text: 'All Calls',
-              to: '/all_calls',
-              icon: ''
-            }, {
-              text: 'Missed Calls',
-              to: '/missed_calls',
-              icon: ''
-            }, {
-              text: 'Answered Calls',
-              to: '/answered_call',
-              icon: ''
-            } ]
-          }, 
-          {
-            to: '/report',
-            icon: 'mdi-chart-bar',
-            text: 'Report',
-          }, 
-          {
-            icon: 'mdi-dots-horizontal',
-            text: 'More',
-            subLinks: [
-              {
-                icon: '',
-                text: 'Business Number',
-                to: '/BusinessNumber'
-              }, {
-                icon: '',
-                text: 'Manage Users',
-                to: '/ManageUsers'
-              }, {
-                icon: '',
-                text: 'Add-Ons',
-                to: '/Addons'
-              }, {
-                icon: '',
-                text: 'Billing Information',
-                to: '/BillingInformation'
-              }, {
-                icon: '',
-                text: 'Account Info',
-                to: '/AccountInformation'
-              }, {
-                icon: '',
-                text: 'FAQs',
-                to: '/FAQs'
-              }, {
-                icon: '',
-                text: 'Get Support',
-                to: '/GetSupport'
-              }
-            ]
-          }
-      ],
-        'ADMIN' : [
-          {
-            to: '/dashboard',
-            icon: 'mdi-radar',
-            text: 'Dashboard',
-          }, 
-        ],
-        'AGENT' : [
-
-        ],
-      },
-    }),
-    watch: {
-      group () {
-        this.drawer = false
-      },
-      isLoggedIn () {
-        console.log('forceRerenderKey watch');
-        this.forceRerenderKey();
-      }
-    },
-      methods:{
-        forceRerenderKey: function() {
-          this.rerenderKey += 1;
-        },
-        logout: function() {
-            console.log('clicked logout');
-            // firebase.auth()
-            firebase.auth().signOut();
-            localStorage.removeItem('tpu');
-            this.rerenderKey += 1;
-            this.$router.push("login").catch(()=>{});
-        },
-        dashboard(){
-          this.$router.push("/dashboard").catch(()=>{})
-        },
-        report(){
-          this.$router.push("/report").catch(()=>{})
-        },
+    if (localStorageUserObj) {
+      let parsedUser = JSON.parse(localStorageUserObj);
+      this.userEmail = parsedUser.Email;
+      console.log("Navbar-user-FirstName", parsedUser.FirstName);
+      console.log("Navbar-user-Email", parsedUser.Email);
+      console.log(parsedUser);
+      this.userRole = parsedUser.role;
+      this.isLoggedIn = true;
+      this.userFirstName = parsedUser.FirstName;
+      this.userPhoneNumber = parsedUser.PhoneNumber;
+      this.forceRerenderKey();
     }
-  }
-  </script>
+  },
+  data: () => ({
+    drawer: false,
+    isLoggedIn: false,
+    userRole: "",
+    userFirstName: "",
+    userPhoneNumber: "",
+    rerenderKey: 0,
+    group: null,
+    role: "",
+    notificationCenterItems: [
+      {
+        id: 1,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 2,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 3,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 4,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 5,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 6,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 7,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 8,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 9,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+      {
+        id: 10,
+        type: "Call Notification",
+        content: "You have a Missed Call From +91 988809991",
+        time: "Today, 12:01pm",
+      },
+    ],
+
+    links: {
+      OWNER: [
+        {
+          to: "/dashboard",
+          icon: "mdi-radar",
+          text: "Dashboard",
+        },
+        {
+          icon: "mdi-phone",
+          text: "Call Logs",
+          subLinks: [
+            {
+              text: "All Calls",
+              to: "/all_calls",
+              icon: "",
+            },
+            {
+              text: "Missed Calls",
+              to: "/missed_calls",
+              icon: "",
+            },
+            {
+              text: "Answered Calls",
+              to: "/answered_call",
+              icon: "",
+            },
+          ],
+        },
+        {
+          to: "/report",
+          icon: "mdi-chart-bar",
+          text: "Report",
+        },
+        {
+          icon: "mdi-dots-horizontal",
+          text: "More",
+          subLinks: [
+            {
+              icon: "",
+              text: "Business Number",
+              to: "/BusinessNumber",
+            },
+            {
+              icon: "",
+              text: "Manage Users",
+              to: "/ManageUsers",
+            },
+            {
+              icon: "",
+              text: "Add-Ons",
+              to: "/Addons",
+            },
+            {
+              icon: "",
+              text: "Billing Information",
+              to: "/BillingInformation",
+            },
+            {
+              icon: "",
+              text: "Account Info",
+              to: "/AccountInformation",
+            },
+            {
+              icon: "",
+              text: "FAQs",
+              to: "/FAQs",
+            },
+            {
+              icon: "",
+              text: "Get Support",
+              to: "/GetSupport",
+            },
+          ],
+        },
+      ],
+      ADMIN: [
+        {
+          to: "/dashboard",
+          icon: "mdi-radar",
+          text: "Dashboard",
+        },
+      ],
+      AGENT: [],
+    },
+  }),
+  watch: {
+    group() {
+      this.drawer = false;
+    },
+    isLoggedIn() {
+      console.log("forceRerenderKey watch");
+      this.forceRerenderKey();
+    },
+  },
+  methods: {
+    forceRerenderKey: function () {
+      this.rerenderKey += 1;
+    },
+    logout: function () {
+      console.log("clicked logout");
+      // firebase.auth()
+      firebase.auth().signOut();
+      localStorage.removeItem("tpu");
+      this.rerenderKey += 1;
+      this.$router.push("login").catch(() => {});
+    },
+    dashboard() {
+      this.$router.push("/dashboard").catch(() => {});
+    },
+    report() {
+      this.$router.push("/report").catch(() => {});
+    },
+  },
+};
+</script>
