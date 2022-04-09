@@ -48,12 +48,12 @@
                                       <v-card
                                         :loading="loading"
                                         class="
-                                          mx-auto
+                                         ml-0
                                           my-12
                                           rounded-b-lg
                                           transition-fast-in-fast-out
                                         "
-                                        min-width="520"
+                                        min-width="700"
                                       >
                                         <v-row justify="center" class="d-block">
                                           <v-col cols="auto">

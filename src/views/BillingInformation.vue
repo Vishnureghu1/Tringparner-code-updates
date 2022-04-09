@@ -33,7 +33,7 @@
                 <v-row>
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
-                      <v-card class="mx-auto" min-width="700" min-height="400">
+                      <v-card class="ml-8" min-width="700" min-height="400"> 
                         <v-card-text class="pb-0">
                           <p class="redtext bold">
                             Next Recharge Due on {{ Rechargeday }}
