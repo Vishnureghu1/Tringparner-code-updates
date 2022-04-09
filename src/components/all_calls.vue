@@ -51,105 +51,127 @@
                           </span>
                         </template>
 
-                        <v-card>
-                          <v-list>
-                            <v-list-item>
-                              <h4 class="mb-0">Sort By</h4>
-                            </v-list-item>
+                        <v-card min-width="378">
+                          <v-form ref="form" v-model="valid" lazy-validation>
+                            
+                              <v-card-title class="black--text white darken-1">
+                                Filter Content
+                                <v-spacer></v-spacer>
 
-                            <v-list-item>
-                              <v-select
-                                :items="timeofCall"
-                                label="Time of Call"
-                                timeofCall
-                              ></v-select>
-                            </v-list-item>
-                            <v-list-item>
-                              <v-select
-                                :items="DurationOfCall"
-                                label="Duration Of Call"
-                                DurationOfCall
-                              ></v-select>
-                            </v-list-item>
+                                <div
+                                  align="center"
+                                  class="notif-mark"
+                                  @click="resetValidation"
+                                >
+                                  Reset
+                                </div>
 
-                            <v-divider></v-divider>
+                                <span fab small @click="filtermenu = false">
+                                  <v-icon>mdi-close</v-icon>
+                                </span>
+                              </v-card-title>
+   <v-card height="400px" class="scroll">
 
-                            <v-list-item>
-                              <h4 class="mb-0">View By</h4>
-                            </v-list-item>
+                                
+                                <v-list>
+                                <v-list-item>
+                                  <h4 class="mb-0">Sort By</h4>
+                                </v-list-item>
 
-                            <v-list-item>
-                              <v-select
-                                :items="ViewByType"
-                                label="View By Type"
-                                ViewByType
-                              ></v-select>
-                            </v-list-item>
+                                <v-list-item>
+                                  <v-select
+                                    :items="timeofCall"
+                                    label="Time of Call"
+                                    outlined
+                                  ></v-select>
+                                </v-list-item>
+                                <v-list-item>
+                                  <v-select
+                                    :items="DurationOfCall"
+                                    label="Duration Of Call"
+                                    outlined
+                                  ></v-select>
+                                </v-list-item>
 
-                            <v-list-item>
-                              <h4 class="mb-0">Filter Calls With</h4>
-                            </v-list-item>
+                                <v-divider></v-divider>
 
-                            <v-list-item>
-                              <v-select
-                                :items="Reminders"
-                                label="Reminders"
-                                Reminders
-                              ></v-select>
-                            </v-list-item>
-                            <v-list-item>
-                              <v-select
-                                :items="Notes"
-                                label="Notes"
-                                Notes
-                              ></v-select>
-                            </v-list-item>
+                                <v-list-item>
+                                  <h4 class="mb-0">View By</h4>
+                                </v-list-item>
 
-                            <v-divider></v-divider>
+                                <v-list-item>
+                                  <v-select
+                                    :items="ViewByType"
+                                    label="View By Type"
+                                    outlined
+                                  ></v-select>
+                                </v-list-item>
 
-                            <v-list-item>
-                              <h4 class="mb-0">Call Answered By</h4>
-                            </v-list-item>
+                                <v-list-item>
+                                  <h4 class="mb-0">Filter Calls With</h4>
+                                </v-list-item>
 
-                            <v-list-item>
-                              <v-select
-                                :items="Users"
-                                label="Users"
-                                Users
-                              ></v-select>
-                            </v-list-item>
+                                <v-list-item>
+                                  <v-select
+                                    :items="Reminders"
+                                    label="Reminders"
+                                    outlined
+                                  ></v-select>
+                                </v-list-item>
+                                <v-list-item>
+                                  <v-select
+                                    :items="Notes"
+                                    label="Notes"
+                                    outlined
+                                  ></v-select>
+                                </v-list-item>
 
-                            <v-divider></v-divider>
+                                <v-divider></v-divider>
 
-                            <v-list-item>
-                              <h4 class="mb-0">Business Number</h4>
-                            </v-list-item>
+                                <v-list-item>
+                                  <h4 class="mb-0">Call Answered By</h4>
+                                </v-list-item>
 
-                            <v-list-item>
-                              <v-select
-                                :items="Numbers"
-                                label="Number"
-                                Numbers
-                              ></v-select>
-                            </v-list-item>
+                                <v-list-item>
+                                  <v-select
+                                    :items="Users"
+                                    label="Users"
+                                    outlined
+                                  ></v-select>
+                                </v-list-item>
 
-                            <v-divider></v-divider>
-                          </v-list>
+                                <v-divider></v-divider>
 
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
+                                <v-list-item>
+                                  <h4 class="mb-0">Business Number</h4>
+                                </v-list-item>
 
-                            <v-btn text @click="filtermenu = false">
-                              Cancel
-                            </v-btn>
-                            <v-btn
-                              color="primary"
-                              text
-                              @click="filtermenu = false"
-                            >
-                              Apply Filter
-                            </v-btn>
-                          </v-card-actions>
+                                <v-list-item>
+                                  <v-select
+                                    :items="Numbers"
+                                    label="Number"
+                                    outlined
+                                  ></v-select>
+                                </v-list-item>
+                             
+                             
+                            </v-list>
+                                
+                              </v-card>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+
+                              <v-btn
+                                 color="white"  width="100%"
+                                text
+                                :disabled="!valid"
+                                class="mr-0 flex red_button"
+                                @click="validate"
+                              >
+                                Apply Filter
+                              </v-btn>
+                            </v-card-actions>
+                          </v-form>
                         </v-card>
                       </v-menu>
                     </v-col>
@@ -474,6 +496,9 @@ export default {
     Icon,
   },
   data: () => ({
+    valid: true,
+      benched: 0,
+
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_number" },
@@ -533,7 +558,17 @@ export default {
     bottom: true,
     right: false,
   }),
+
   methods: {
+    validate() {
+      this.$refs.form.validate();
+    },
+    reset() {
+      this.$refs.form.reset();
+    },
+    resetValidation() {
+      this.$refs.form.resetValidation();
+    },
     handleScroll: function (e) {
       if (e.target.scrollHeight - 300 <= e.target.scrollTop) {
         alert("oi sou Eduardo Martins");
