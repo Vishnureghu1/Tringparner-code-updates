@@ -288,10 +288,32 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
 export default {
+  
   components: {},
-  created() {},
+  created() {
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    // console.log(owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+		// console.log("vetri",owneruid)
+      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+      this.baseusers = snap.docs[0].data().PlanBaseUsers;
+      this.totalusers = snap.docs[0].data().PlanNumberOfUsers;
+			snap.docs.forEach((element)=> {
+				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,option:[{title:"Edit Title",type:"Edit",headline:"Edit User"}]});
+			});
+    
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+  },
   data: () => ({
+    uid:"",
+    owneruid:"",
     dialog2: false,
     dialog: false,
     removeNumber: false,

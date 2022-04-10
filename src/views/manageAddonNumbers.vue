@@ -47,6 +47,7 @@
                     outlined
                     class="mt-5"
                     max-width="1069"
+                    v-for="(addonNumber) in addonNumbers" :key="addonNumber.id"
                   >
                     <v-layout>
                       <v-flex xs12 sm12 md12>
@@ -63,9 +64,8 @@
                                           color="transparent"
                                           class="mb-3"
                                         >
-                                          <div class="agent_name">Facebook</div>
-                                          <div class="agent_number">
-                                            +91 989999 9900
+                                          <div class="agent_name">{{addonNumber.Source}}<v-icon  class="mr-2" color="gray" v-show="addonNumber.cron">mdi-chess-queen</v-icon></div>
+                                          <div class="agent_number">{{ addonNumber.VirtualNumber}}
                                           </div>
                                         </v-card>
                                       </v-col>
@@ -83,13 +83,13 @@
                                           </template>
                                           <v-list>
                                             <v-list-item
-                                              v-for="(item, index) in options"
+                                              v-for="(item, index) in addonNumber.Options"
                                               :key="index"
                                               active-class="pink--text"
                                             >
                                               <v-list-item-title
                                                 :class="item.color"
-                                                @click="blockCall()"
+                                                @click="option_click(item.function,addonNumber.VirtualNumber,addonNumber.Source)"
                                                 >{{
                                                   item.title
                                                 }}</v-list-item-title
@@ -102,7 +102,7 @@
                                     <v-divider></v-divider>
                                   </v-col>
                                 </v-row>
-                                <v-row>
+                                <!-- <v-row>
                                   <v-col cols="12" sm="12" align="center">
                                     <v-row justify="space-between">
                                       <v-col cols="6" sm="6" align="left">
@@ -150,8 +150,7 @@
                                     </v-row>
                                     <v-divider></v-divider>
                                   </v-col>
-                                </v-row>
-                
+                                </v-row>                 -->
                               </v-col>
                             </v-card>
                           </v-col>
@@ -170,13 +169,13 @@
     <v-dialog v-model="dialog2" max-width="332px">
       <v-card class="rounded-lg pt-7 pb-7">
         <v-card-title class="d-flex justify-center">
-          <h3 class="center">Add New User</h3>
+          <h4 class="center">{{selectedNumber}}</h4>
+          <!-- <h2 class="center">edit source</h3> -->
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field label="Name" outlined></v-text-field>
-          <v-select :items="types" label="Role" outlined></v-select>
-
-          <v-text-field label="Mobile Number*" outlined></v-text-field>
+          <v-text-field label="Edit Source" outlined v-model="source"></v-text-field>
+          <!-- <v-select :items="types" label="Role" outlined></v-select>
+          <v-text-field label="Mobile Number*" outlined></v-text-field> -->
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -194,6 +193,7 @@
             min-width="140px"
             color="white"
             outlined
+            @click="submit()"
           >
             Submit
           </v-btn>
@@ -206,10 +206,20 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
-  created() {},
+  created() {
+     this.initial_value()
+  },
   data: () => ({
+    dialog:"",
+    owneruid:"",
+    uid:"",
+    source:"",
+    selectedNumber:"",
+    addonNumbers:[],
     dialog2: false,
     isActive: true,
     e2: 1,
@@ -250,7 +260,61 @@ export default {
   }),
 
   methods: {
-    CallFlowSettings() {
+    option_click(clicked,VirtualNumber,source){
+      this[clicked](VirtualNumber,source)
+       console.log("block clicked");
+    },
+    edit_source(VirtualNumber,source){
+     console.log("clicked")
+     this.dialog2 = true;
+     this.selectedNumber = VirtualNumber;
+     this.source = source;
+    },
+  
+    submit(){
+      console.log(this.selectedNumber,this.source)
+      const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/rename",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          updated_by: this.uid,
+          owner_uid: this.owneruid,
+          virtual_number: parseInt(this.selectedNumber),
+          source: this.source,
+        },
+      };
+      axios(details).then(async (response) => {
+        console.log(response)
+         this.initial_value();
+         this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
+        //  await this.initial_data();
+         this.dialog2 = false         
+      })
+    },
+    delete_number(VirtualNumber){
+      console.log("delete_number");
+       console.log(this.selectedNumber,this.source)
+      const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/delete",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          updated_by: this.uid,
+          owner_uid: this.owneruid,
+          type:"BUSINESS_NUMBER",
+          virtual_number: parseInt(VirtualNumber),
+        },
+      };
+      axios(details).then(async (response) => {
+        console.log(response)
+         this.initial_value();
+         this.$root.vtoast.show({message: 'deleted successfully', color: 'green', timer: 5000});
+        //  await this.initial_data();
+         this.dialog2 = false         
+      })
+    },
+    CallFlowSettings(){
       this.$router.push("/CallFlowSettings");
     },
     stepComplete(step) {
@@ -258,6 +322,25 @@ export default {
     },
     stepStatus(step) {
       return this.curr > step ? "green" : "blue";
+    },
+     initial_value(){
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    console.log("ndzzb")
+	const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+     this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.addonNumbers=[]
+      db.collection("uservirtualNumber").where("Uid","==",owneruid).orderBy("IsPrimary","asc").get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+			snap.docs.reverse().forEach((element)=> {
+        this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Edit Source", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Edit Source", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]       
+        })
+			});
+      // console.log(this.addonNumbers)
+		}).catch((err)=>{
+			console.log(err.message)
+		});
     },
     validate(n) {
       this.steps[n].valid = false;
