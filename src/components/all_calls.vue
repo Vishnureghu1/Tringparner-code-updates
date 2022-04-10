@@ -26,10 +26,27 @@
               <v-col cols="12">
                 <div class="ml-3">
                   <v-row>
-                    <v-col cols="12" sm="10">
+                    <v-col cols="12" sm="5">
                       <h2 class="mt-6 mb-5">Call Log</h2>
+                        
+                      <v-progress-linear
+                        :active="isUpdating"
+                        :indeterminate="isUpdating"
+                        absolute
+                        bottom
+                        color="deep-purple accent-4"
+                      ></v-progress-linear>
                     </v-col>
-                    <v-col cols="12" sm="2" align="end">
+                      <v-col cols="12" sm="7"  align="end">
+
+                  
+                              <v-text-field v-show="!hidden" absolute transition="slide-y-reverse-transition"
+                                append-icon="mdi-magnify" class="searchForm"
+                                label="Search"
+                                single-line
+                              ></v-text-field>
+                           
+                              
                       <v-menu
                         v-model="filtermenu"
                         :close-on-content-click="false"
@@ -37,8 +54,15 @@
                         offset-x
                       >
                         <template v-slot:activator="{ on, attrs }">
+                    
+                        
+                          
+
                           <span
-                            ><v-icon class="mt-6 mb-5 mr-4" color="black"
+                            ><v-icon
+                              class="mt-6 mb-5 mr-4"
+                              color="black"
+                              @click="hidden = !hidden"
                               >mdi-magnify</v-icon
                             >
                             <v-icon
@@ -50,30 +74,28 @@
                             >
                           </span>
                         </template>
+                      
 
                         <v-card min-width="378">
                           <v-form ref="form" v-model="valid" lazy-validation>
-                            
-                              <v-card-title class="black--text white darken-1">
-                                Filter Content
-                                <v-spacer></v-spacer>
+                            <v-card-title class="black--text white darken-1">
+                              Filter Content
+                              <v-spacer></v-spacer>
 
-                                <div
-                                  align="center"
-                                  class="notif-mark"
-                                  @click="resetValidation"
-                                >
-                                  Reset
-                                </div>
+                              <div
+                                align="center"
+                                class="notif-mark"
+                                @click="resetValidation"
+                              >
+                                Reset
+                              </div>
 
-                                <span fab small @click="filtermenu = false">
-                                  <v-icon>mdi-close</v-icon>
-                                </span>
-                              </v-card-title>
-   <v-card height="400px" class="scroll">
-
-                                
-                                <v-list>
+                              <span fab small @click="filtermenu = false">
+                                <v-icon>mdi-close</v-icon>
+                              </span>
+                            </v-card-title>
+                            <v-card height="400px" class="scroll">
+                              <v-list>
                                 <v-list-item>
                                   <h4 class="mb-0">Sort By</h4>
                                 </v-list-item>
@@ -153,20 +175,20 @@
                                     outlined
                                   ></v-select>
                                 </v-list-item>
-                             
-                             
-                            </v-list>
-                                
-                              </v-card>
+                              </v-list>
+                            </v-card>
                             <v-card-actions>
                               <v-spacer></v-spacer>
 
                               <v-btn
-                                 color="white"  width="100%"
+                                color="white"
+                                width="100%"
                                 text
                                 :disabled="!valid"
                                 class="mr-0 flex red_button"
-                                @click="validate"
+                                :loading="isUpdating"
+                                depressed
+                                @click="isUpdating = true"
                               >
                                 Apply Filter
                               </v-btn>
@@ -176,6 +198,8 @@
                       </v-menu>
                     </v-col>
                   </v-row>
+
+
                   <!-- {{realdata}} -->
                   <v-expansion-panels accordion flat>
                     <v-expansion-panel
@@ -497,7 +521,9 @@ export default {
   },
   data: () => ({
     valid: true,
-      benched: 0,
+    searchForm: false,
+    benched: 0,
+    hidden: false,
 
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
@@ -538,7 +564,7 @@ export default {
     show_remind: false,
     dialog: false,
     add_note: true,
-
+    isUpdating: false,
     callback_uid: "",
     rules: [(v) => v.length <= 120 || "Max 120 characters"],
     password: "Password",
@@ -558,8 +584,18 @@ export default {
     bottom: true,
     right: false,
   }),
-
+  watch: {
+    isUpdating(val) {
+      if (val) {
+        setTimeout(() => (this.isUpdating = false), 3000);
+      }
+    },
+  },
   methods: {
+    openSearchBar() {
+      alert("ss");
+      this.searchForm = true;
+    },
     validate() {
       this.$refs.form.validate();
     },
