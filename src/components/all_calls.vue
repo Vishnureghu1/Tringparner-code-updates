@@ -1,5 +1,19 @@
 <template>
   <v-app>
+      <v-alert
+      prominent color="red darken-1"
+      type="error"
+    >
+      <v-row align="center">
+        <v-col class="grow">
+          <h2 class="f16 regular">Email Verification</h2>
+          <span  class="f14 light3">Please verify your email address by clicking on the link we have shared with you on email.</span>
+        </v-col>
+        <v-col class="shrink">
+          <v-btn>Resend Email</v-btn>
+        </v-col>
+      </v-row>
+    </v-alert>
     <div>
       <v-container fluid>
         <v-snackbar
@@ -523,7 +537,7 @@ export default {
     valid: true,
     searchForm: false,
     benched: 0,
-    hidden: false,
+    hidden: true,
 
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
