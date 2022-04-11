@@ -78,7 +78,7 @@
                                                     >₹</span
                                                   ><span
                                                     class="nunito-font light2"
-                                                    >150<span
+                                                    >{{Amount}}<span
                                                       class="
                                                         nunito-font
                                                         light2
@@ -178,7 +178,7 @@
                                               min-width="140px"
                                               color="white"
                                               outlined
-                                              @click="reveal = true"
+                                              @click="prorate()"
                                             >
                                               Next
                                             </v-btn>
@@ -211,15 +211,15 @@
                                                 test@test.com
                                               </p>
                                               <p class="bold black--text">
-                                                Number of Users: 1
+                                                Number of Users: {{usersCount}}
                                               </p>
                                               <p>
                                                 <span
                                                   class="bold red--text pb-0"
-                                                  >Due On: 06-Jun-2022</span
+                                                  >Due On: {{DueOn}}</span
                                                 ><br /><span class="f14 light5"
-                                                  >(Billable Duration 2 Month(s)
-                                                  7Day(s))</span
+                                                  >Billable Duration  {{ReminingDays}} 
+                                                </span
                                                 >
                                               </p>
 
@@ -270,9 +270,9 @@
                                                 min-width="140px"
                                                 color="white"
                                                 outlined
-                                                @click="reveal = true"
+                                                @click="paynow()"
                                               >
-                                                Pay Rs 234.71 Now
+                                                Pay Rs {{ PayAmount }} Now
                                               </v-btn>
                                             </v-card-actions>
                                           </v-card>
@@ -298,12 +298,32 @@
     </div>
   </v-app>
 </template>
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
-  created() {},
+  created() {
+     db.collection("Addons").where("Id","==",1).get().then(async(snap) =>{
+			console.log("test.........",snap.docs[0].data());
+      this.Amount = snap.docs[0].data().Amount;
+			// snap.docs.forEach((element)=> {
+			// 	// console.log(element.data())
+			// 	// this.agents.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:true});
+			// });
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+  },
   data: () => ({
+    PayAmount:"",
+    DueOn:"",
+    ReminingDays:"",
+    owneruid:"",
+    AccountId:"",
+    uid:"",
+    Amount:"",
     reveal: false,
     settings: false,
     loading: false,
@@ -389,6 +409,161 @@ export default {
        if(this.usersCount>1){
          this.usersCount -= incre;
        }
+    },
+    prorate(){
+       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+        //  this.bussinessNumber = this.$route.query.bn;
+    // this.setBreadcrumbs(this.bussinessNumber);
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+      this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.DueOn = localStorageUserObj.LastDay;
+    this.reveal= true,
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+        const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/prorate',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            type:"USER"
+						},
+					}          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+            this.ReminingDays = response.data.reminingmonths;
+           this.sublist = [
+      {
+        name: "Charges",
+        amount: response.data.amountwithoutgst * this.usersCount,
+        class: "light5",
+      },
+      {
+        name: "Discount",
+        amount: response.data.discountamount * this.usersCount,
+        class: "light5",
+      },
+      {
+        name: "GST(18%)",
+        amount: (response.data.amount - response.data.amountwithoutgst) * this.usersCount,
+        class: "light5",
+      },
+      {
+        name: "Total Charges",
+        amount: (response.data.amount * this.usersCount).toFixed(2),
+        class: "regular",
+      },
+    ];
+    this.PayAmount = (response.data.amount * this.usersCount).toFixed(2);
+            // this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000})
+              // this.dialog2 = false
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+    },
+     paynow() {
+      const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/payment",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          uid: this.owneruid,
+          owner_uid: this.owneruid,
+          qty:this.usersCount,
+          // PlanId: parseInt(this.PlanId),
+          payment_mode: "WEB",
+          type: "USER",
+          AccountId:this.AccountId
+        },
+      };
+      axios(details).then(async (responsevalue) => {
+        console.log(responsevalue);
+        if (responsevalue.data.status == true) {
+          var options = {
+            key: "rzp_test_ThdwdEPh3QCHbo",
+            order_id: responsevalue.data.order_id,
+            name: this.Name,
+            currency: "INR", // Optional. Same as the Order currency
+            description: "Purchase Description",
+            handler: (response) => {
+              console.log(response);
+              this.overlay = true;
+              var initial = true;
+              if (initial) {
+                db.collection("paymentTransaction")
+                  .where("OrderId", "==", responsevalue.data.order_id)
+                  .onSnapshot((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      console.log(doc.id, " => ", doc.data());
+                      let testing_status = doc.data();
+                      if (testing_status.Status == true && initial) {
+                        initial = false;
+                        this.overlay = false;
+                         this.reveal= true,
+                         this.usersCount = 1;
+                          this.$root.vtoast.show({message: 'Paid Successfully', color: 'green', timer: 3000})
+                        // db.collection("users")
+                        //   .where("uid", "==", this.owneruid)
+                        //   .get()
+                        //   .then((snap) => {
+                        //     // this.Rechargeday = snap.docs[0].data().LastDay;
+                        //   })
+                        //   .catch((err) => console.log(err));
+                        initial = false;
+                        this.overlay = false;
+                        // this.$router.push("/Dashboard")
+                      }
+                       if (testing_status.Status == false && initial) {
+                        initial = false;
+                        this.overlay = false;
+                        //  this.reveal= true,
+                         this.usersCount = 1;
+                          this.$root.vtoast.show({message: 'Payment failed', color: 'red', timer: 3000})
+                        // db.collection("users")
+                        //   .where("uid", "==", this.owneruid)
+                        //   .get()
+                        //   .then((snap) => {
+                        //     // this.Rechargeday = snap.docs[0].data().LastDay;
+                        //   })
+                        //   .catch((err) => console.log(err));
+                        initial = false;
+                        this.overlay = false;
+                        // this.$router.push("/Dashboard")
+                      }
+                    });
+                  });
+              }
+            },
+            prefill: {
+              name: this.Name,
+              email: this.email,
+              contact: this.phno,
+            },
+            notes: {
+              address: this.address,
+            },
+            theme: {
+              color: "#D32F2F",
+            },
+            modal: {
+              ondismiss: () => {
+                this.dialog2 = true;
+              },
+            },
+          };
+          // console.log(options)
+          const rzp1 = new Razorpay(options);
+          this.overlay = false;
+          rzp1.open();
+        } else {
+          console.log("wrong value");
+        }
+      });
     },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
