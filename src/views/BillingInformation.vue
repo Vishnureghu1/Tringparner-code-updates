@@ -395,7 +395,8 @@ export default {
     this.Rechargeday = localStorageUserObj.LastDay;
     this.Name = localStorageUserObj.FirstName;
     this.owneruid = owneruid;
-    this.PlanId = localStorageUserObj.PlanId == 3 ? 3 : 2;
+    this.PlanId = localStorageUserObj.PlanId;
+    // this.PlanId = localStorageUserObj.PlanId == 3 ? 3 : 2;
     this.twelvemonths = this.PlanId == 3 ? true : false;
     this.sixmonths = this.PlanId == 2 ? true : false;
     //  db.collection("plan_details").get().then(async(snap) =>{

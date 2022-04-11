@@ -72,7 +72,7 @@
                                                     >₹</span
                                                   ><span
                                                     class="nunito-font light2"
-                                                    >1000<span
+                                                    >{{Amount}}<span
                                                       class="
                                                         nunito-font
                                                         light2
@@ -153,7 +153,7 @@
                                               min-width="140px"
                                               color="white"
                                               outlined
-                                              @click="reveal = true"
+                                              @click="paynow()"
                                             >
                                               Pay Now
                                             </v-btn>
@@ -195,12 +195,49 @@
     </div>
   </v-app>
 </template>
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
-  created() {},
+   created() {
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+        //  this.bussinessNumber = this.$route.query.bn;
+    // this.setBreadcrumbs(this.bussinessNumber);
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+      this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+     db.collection("Addons").where("Id","==",3).get().then(async(snap) =>{
+			console.log("test.........",snap.docs[0].data());
+      this.Amount = snap.docs[0].data().Amount;
+      this.sublist = [
+      {
+        name: "Charges",
+        amount: 1000.00,
+        class: "light5",
+      },
+      {
+        name: "GST(18%)",
+        amount: (snap.docs[0].data().Amount/100)*18,
+        class: "light5",
+      },
+     {
+        name: "Total Amount",
+        amount: ((snap.docs[0].data().Amount/100)*18)+snap.docs[0].data().Amount,
+        class: "light5",
+      },
+    ]
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+  },
   data: () => ({
+    owneruid:"",
+    uid:"",
+    AccountId:"",
+    Amount:"",
     reveal: false,
     settings: false,
     loading: false,
@@ -257,6 +294,105 @@ export default {
   }),
 
   methods: {
+     paynow() {
+      const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/payment",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          uid: this.owneruid,
+          owner_uid: this.owneruid,
+          qty:this.usersCount,
+          // PlanId: parseInt(this.PlanId),
+          payment_mode: "WEB",
+          type: "FANCY_NUMBER",
+          AccountId:this.AccountId
+        },
+      };
+      axios(details).then(async (responsevalue) => {
+        console.log(responsevalue);
+        if (responsevalue.data.status == true) {
+          var options = {
+            key: "rzp_test_ThdwdEPh3QCHbo",
+            order_id: responsevalue.data.OrderId,
+            name: this.Name,
+            currency: "INR", // Optional. Same as the Order currency
+            description: "Purchase Description",
+            handler: (response) => {
+              console.log(response);
+              this.overlay = true;
+              var initial = true;
+              if (initial) {
+                db.collection("paymentTransaction")
+                  .where("OrderId", "==", responsevalue.data.OrderId)
+                  .onSnapshot((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      console.log(doc.id, " => ", doc.data());
+                      let testing_status = doc.data();
+                      if (testing_status.Status == true && initial) {
+                        initial = false;
+                        this.overlay = false;
+                         this.reveal= true,
+                         this.usersCount = 1;
+                          this.$root.vtoast.show({message: 'Paid Successfully', color: 'green', timer: 3000})
+                        // db.collection("users")
+                        //   .where("uid", "==", this.owneruid)
+                        //   .get()
+                        //   .then((snap) => {
+                        //     // this.Rechargeday = snap.docs[0].data().LastDay;
+                        //   })
+                        //   .catch((err) => console.log(err));
+                        initial = false;
+                        this.overlay = false;
+                        // this.$router.push("/Dashboard")
+                      }
+                       if (testing_status.Status == false && initial) {
+                        initial = false;
+                        this.overlay = false;
+                        //  this.reveal= true,
+                         this.usersCount = 1;
+                          this.$root.vtoast.show({message: 'Payment failed', color: 'red', timer: 3000})
+                        // db.collection("users")
+                        //   .where("uid", "==", this.owneruid)
+                        //   .get()
+                        //   .then((snap) => {
+                        //     // this.Rechargeday = snap.docs[0].data().LastDay;
+                        //   })
+                        //   .catch((err) => console.log(err));
+                        initial = false;
+                        this.overlay = false;
+                        // this.$router.push("/Dashboard")
+                      }
+                    });
+                  });
+              }
+            },
+            prefill: {
+              name: this.Name,
+              email: this.email,
+              contact: this.phno,
+            },
+            notes: {
+              address: this.address,
+            },
+            theme: {
+              color: "#D32F2F",
+            },
+            modal: {
+              ondismiss: () => {
+                this.dialog2 = true;
+              },
+            },
+          };
+          // console.log(options)
+          const rzp1 = new Razorpay(options);
+          this.overlay = false;
+          rzp1.open();
+        } else {
+          console.log("wrong value");
+        }
+      });
+    },
         goBack() {
       this.$router.push("/Addons");
     },

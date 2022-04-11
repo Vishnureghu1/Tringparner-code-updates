@@ -602,6 +602,7 @@ export default {
 					axios(details)
 						.then((response) => {
 						console.log(response)
+            this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000})
               this.dialog2 = false
 						})
 						.catch((error) => {
