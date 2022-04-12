@@ -472,7 +472,7 @@ export default {
   created() {
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.bussinessNumber = this.$route.query.bn;
-    
+
     this.setBreadcrumbs(this.bussinessNumber);
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
@@ -700,7 +700,7 @@ export default {
         },
          {
           text: "Call Preference",
-          disabled: false,
+          disabled: true,
           to: { name: "CallPreference", query: { ...{bn: bussinessNumber}} },
           href: `CallPreference?bn=`,
           route: { name: 'CallPreference', query: { bn: [bussinessNumber]}  }
