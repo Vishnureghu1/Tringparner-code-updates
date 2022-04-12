@@ -152,7 +152,8 @@
                   <br />
                   <br />
                   <v-row no-gutters>
-                    <v-col cols="12" sm="6" v-for="n in 3" :key="n">
+                    <!-- <v-col cols="12" sm="6" v-for="n in 3" :key="n"> -->
+                    <v-col cols="12" sm="6" v-for="(item, index) in agentWiseReport[1]" :key="index">
                       <v-expansion-panels accordion flat>
                         <v-expansion-panel>
                           <v-expansion-panel-header>
@@ -162,7 +163,8 @@
                                   <h4
                                     class="name_heading font-weight-light mt-2"
                                   >
-                                    Shinu
+                                    <!-- Shinu -->
+                                    {{ item.agent_name }}
                                   </h4>
                                   <br />
                                 </v-col>
@@ -187,7 +189,8 @@
                                   class="nunito-font"
                                 >
                                   <h2 align="center" class="nunito-font light3">
-                                    100
+
+                                    {{ item.summary.Total }}
                                   </h2>
                                   <h6 class="comment_heading" align="center">
                                     Total Calls
@@ -201,7 +204,7 @@
                                   class="nunito-font"
                                 >
                                   <h2 align="center" class="nunito-font light3">
-                                    90
+                                    {{ item.summary.Answered }}
                                   </h2>
                                   <h6 class="comment_heading" align="center">
                                     Answered
@@ -215,7 +218,7 @@
                                   class="nunito-font"
                                 >
                                   <h2 align="center" class="nunito-font light3">
-                                    10
+                                    {{ item.summary.Missed }}
                                   </h2>
                                   <h6 class="comment_heading" align="center">
                                     Not Answered
@@ -312,6 +315,7 @@ export default {
     agentWiseReport: {},
     agentWiseClickCount: {},
     agentWiseDateWiseSummary: {},
+    agentsObj: {},
   }),
   components: {
     GChart,
@@ -348,6 +352,7 @@ export default {
         'Total' : 0
       };
       let agentWiseReport = {};
+      let agentsObj = {};
       // let agentWiseClickCount = {};
       // let agentWiseDateWiseSummary = {};
 
@@ -364,26 +369,14 @@ export default {
               //   id: element.id,
               //   agentDetails: element.data().agentDetails,
               //   BusyCalleesAccounts: element.data().BusyCalleesAccounts,
-              //   agentstatus_nw: element.data().agentstatus_nw,
-              //   billableduration: element.data().billableduration,
-              //   callerNumber: element.data().callerNumber,
-              //   Notes: element.data().Notes,
               //   ClickCount: element.data().ClickCount,
-              //   callerid: element.data().callerid,
               //   callstatus: element.data().callstatus,
-              //   connectedto: element.data().connectedto,
-              //   conversationduration: element.data().conversationduration,
               //   date: element.data().date,
               //   dateTime: element.data().dateTime,
               //   logDate: element.data().logDate,
               //   name: element.data().name,
-              //   recordingurl: element.data().recordingurl,
-              //   ringduration: element.data().ringduration,
-              //   source: element.data().source,
-              //   totalduration: element.data().totalduration,
               //   uniqueid: element.data().uniqueid,
               //   userid: element.data().userid,
-              //   virtualnumber: element.data().virtualnumber,
               // });
               // console.log(element.data().agentDetails)
 
@@ -393,30 +386,96 @@ export default {
                 console.log('has agentDetails ', call.callstatus);
 
 
-                if(call.callstatus == 'Missed') {
-
+                if (call.callstatus == 'Missed') {
                   callSummary.Missed++;
                   callSummary.Total++;
-
-                } else if(call.callstatus == 'Answered') {
-                  
+                } else if (call.callstatus == 'Answered') {
                   callSummary.Answered++;
                   callSummary.Total++;
-
                 }
 
                 //agent Summary
                 call.agentDetails.forEach(async (doc) => {
-                  console.log(doc);
+                  // console.log(doc);
 
                   // agentWiseDateWiseSummary
-                  if( agentWiseReport.indexOf(doc.AgentUid) > -1) {
-                    console.log('HAS INDEX');
+                  if (!([doc.AgentUid] in agentWiseReport)) {
+
+                    console.log(doc);
+                    // let agents = doc.AgentUid;
+
+                    this.$set(agentWiseReport, [doc.AgentUid], {
+                      agent_name : doc.Name,
+                      agent_uid : doc.AgentUid,
+                      agent_number : doc.Number,
+                      summary: {
+                        Total: 0,
+                        Missed: 0,
+                        Answered: 0
+                      },
+                      agent_report: []
+                    });
+
+
+                    if (call.callstatus == 'Missed') {
+                      agentWiseReport[doc.AgentUid]['summary'].Total++;
+                      agentWiseReport[doc.AgentUid]['summary'].Missed++;
+                    } else if (call.callstatus == 'Answered') {
+                      agentWiseReport[doc.AgentUid]['summary'].Answered++;
+                      agentWiseReport[doc.AgentUid]['summary'].Total++;
+                    }
+
+
+                    if([doc.AgentUid] in agentsObj) {
+                      console.log(`agentsObj has ${doc.AgentUid} related data`);
+                    } else {
+                      this.$set(agentsObj, doc.AgentUid, doc)
+                    }
+
+                    agentWiseReport[doc.AgentUid]["agent_report"].push({
+                      id: element.id,
+                      agentDetails: element.data().agentDetails,
+                      // BusyCalleesAccounts: element.data().BusyCalleesAccounts,
+                      ClickCount: element.data().ClickCount,
+                      callstatus: element.data().callstatus,
+                      date: element.data().date,
+                      dateTime: element.data().dateTime,
+                      logDate: element.data().logDate,
+                      // name: element.data().name,
+                      // uniqueid: element.data().uniqueid,
+                      // userid: element.data().userid,
+                    })
+
+                    console.log('SETTING INDEX');
                   } else {
-                    console.log('DONT HAVE INDEX');
+
+
+                    if (call.callstatus == 'Missed') {
+                      agentWiseReport[doc.AgentUid]['summary'].Total++;
+                      agentWiseReport[doc.AgentUid]['summary'].Missed++;
+                    } else if (call.callstatus == 'Answered') {
+                      agentWiseReport[doc.AgentUid]['summary'].Total++;
+                      agentWiseReport[doc.AgentUid]['summary'].Answered++;
+                    }
+                    agentWiseReport[doc.AgentUid]["agent_report"].push({
+                      id: element.id,
+                      agentDetails: element.data().agentDetails,
+                      // BusyCalleesAccounts: element.data().BusyCalleesAccounts,
+                      ClickCount: element.data().ClickCount,
+                      callstatus: element.data().callstatus,
+                      date: element.data().date,
+                      dateTime: element.data().dateTime,
+                      logDate: element.data().logDate,
+                      // name: element.data().name,
+                      // uniqueid: element.data().uniqueid,
+                      // userid: element.data().userid,
+                    })
+                    
+                    console.log(' HAVE INDEX');
                   }
-                  // this.$set(this.agentWiseDateWiseSummary[doc.AgentUid], "Missed", 1)
+                  // console.log(`agentWiseReport -->  ${doc.AgentUid} --> `, JSON.stringify(agentWiseReport[doc.AgentUid]));
                 })
+
 
               } else  if ("BusyCalleesAccounts" in call) {
                 console.log('has BusyCalleesAccounts ', call.callstatus);
@@ -430,17 +489,14 @@ export default {
 
             });
 
-            console.log('callSummary', callSummary);
+            // console.log('callSummary', callSummary);
             // console.log('this.agentWiseDateWiseSummary', this.agentWiseDateWiseSummary);
-            this.callSummary = callSummary;
+            // console.log(agentsObj);
 
-           //  this.$set(this.mapMatrix[i],g,
-           //     {
-           //         "view" : view,
-           //         "available" : true,
-           //         "active": false
-           //   }
-           // );
+            this.callSummary = callSummary;
+            this.agentsObj = agentsObj;
+
+            this.$set(this.agentWiseReport, 1,agentWiseReport);
             this.forceRerenderKey();
 
           } else {
