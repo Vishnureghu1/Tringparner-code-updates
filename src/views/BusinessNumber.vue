@@ -85,7 +85,7 @@
                       <v-col cols="12" sm="6">
                         <div
                           class="link_style mt-1 ml-5 mb-5"
-                          @click="CallFlowSettings(item.VirtualNumber,'expired')"
+                          @click="CallFlowSettings(item.VirtualNumber,'active')"
                         >
                           Call Flow Settings
                         </div>
@@ -95,7 +95,7 @@
                           v-bind="attrs"
                           v-on="on"
                           color="#EE1C25"
-                          @click="CallFlowSettings(item.VirtualNumber,'expired')"
+                          @click="CallFlowSettings(item.VirtualNumber,'active')"
                           >mdi-arrow-right</v-icon
                         >
                       </v-col>
