@@ -100,13 +100,13 @@
                       </v-menu>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col cols="6" sm="1" align="end">
+                    <v-col :key="rerenderKey" cols="6" sm="1" align="end">
                       <v-card outlined color="transparent" class="">
                         <h3
                           class="number_heading nunito-font light3"
                           align="center"
                         >
-                          100
+                          {{ callSummary.Total }}
                         </h3>
                         <h6 class="comment_heading" align="center">
                           Total Calls
@@ -119,7 +119,7 @@
                           class="number_heading nunito-font light3"
                           align="center"
                         >
-                          90
+                          {{ callSummary.Answered }}
                         </h3>
                         <h6 class="comment_heading" align="center">Answered</h6>
                       </v-card>
@@ -130,7 +130,7 @@
                           class="number_heading nunito-font light3"
                           align="center"
                         >
-                          10
+                          {{ callSummary.Missed }}
                         </h3>
                         <h6 class="comment_heading" align="center">
                           Not Answered
@@ -303,6 +303,15 @@ export default {
 
       title: "Reports",
     },
+    callSummary: {
+      'Answered': 0,
+      'Missed': 0,
+      'Total': 0
+    },
+    rerenderKey: 0,
+    agentWiseReport: {},
+    agentWiseClickCount: {},
+    agentWiseDateWiseSummary: {},
   }),
   components: {
     GChart,
@@ -328,7 +337,20 @@ export default {
     this.getAllCalls();
   },
   methods: {
+    forceRerenderKey() {
+      this.rerenderKey++;
+    },
     getAllCalls() {
+
+      let callSummary = {
+        'Answered' : 0,
+        'Missed' : 0,
+        'Total' : 0
+      };
+      let agentWiseReport = {};
+      // let agentWiseClickCount = {};
+      // let agentWiseDateWiseSummary = {};
+
 
       db.collection("callLogs")
         .where("owneruid", "==", this.ownerUid)
@@ -369,18 +391,64 @@ export default {
 
               if ("agentDetails" in call) {
                 console.log('has agentDetails ', call.callstatus);
+
+
+                if(call.callstatus == 'Missed') {
+
+                  callSummary.Missed++;
+                  callSummary.Total++;
+
+                } else if(call.callstatus == 'Answered') {
+                  
+                  callSummary.Answered++;
+                  callSummary.Total++;
+
+                }
+
+                //agent Summary
+                call.agentDetails.forEach(async (doc) => {
+                  console.log(doc);
+
+                  // agentWiseDateWiseSummary
+                  if( agentWiseReport.indexOf(doc.AgentUid) > -1) {
+                    console.log('HAS INDEX');
+                  } else {
+                    console.log('DONT HAVE INDEX');
+                  }
+                  // this.$set(this.agentWiseDateWiseSummary[doc.AgentUid], "Missed", 1)
+                })
+
               } else  if ("BusyCalleesAccounts" in call) {
                 console.log('has BusyCalleesAccounts ', call.callstatus);
+                call.agentDetails.forEach(async (doc) => {
+                  console.log(doc);
+                })
               } else {
 
                 console.log('----->', call.callstatus);
               }
 
             });
+
+            console.log('callSummary', callSummary);
+            // console.log('this.agentWiseDateWiseSummary', this.agentWiseDateWiseSummary);
+            this.callSummary = callSummary;
+
+           //  this.$set(this.mapMatrix[i],g,
+           //     {
+           //         "view" : view,
+           //         "available" : true,
+           //         "active": false
+           //   }
+           // );
+            this.forceRerenderKey();
+
           } else {
             console.log("snapshot empty");
           }
         });
+
+
     }
   }
 };

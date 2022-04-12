@@ -329,7 +329,7 @@ export default {
         },
          {
           text: "Missed Call Distribution",
-          disabled: false,
+          disabled: true,
           route: { name: 'MissedCallDistribution', query: { bn: [bussinessNumber]}  }
         },
       ]
