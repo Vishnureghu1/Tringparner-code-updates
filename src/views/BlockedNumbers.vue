@@ -10,16 +10,31 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 pl-5">
-                        <v-icon class="mr-2" color="black" @click="goBack()"
+                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber)"
                           >mdi-arrow-left</v-icon
                         >
                         Blocked Numbers
                       </h2>
+                      <!-- BREADCRUMBS SECTION -->
                       <v-breadcrumbs class="breadcrumbs" :items="items">
-                        <template class="breadcrumbs" v-slot:divider>
-                          <v-icon>mdi-chevron-right</v-icon>
+
+                        <template v-slot:item="{ item }">
+                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
+                            <v-breadcrumbs-item :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          </router-link>
+
+                          <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
+                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          <!-- </router-link> -->
+
                         </template>
+
                       </v-breadcrumbs>
+                      <!-- BREADCRUMBS SECTION -->
                     </v-col>
                   </v-row>
                  
@@ -90,6 +105,10 @@ export default {
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.owneruid = owneruid;
+
+    this.bussinessNumber = this.$route.query.bn;    
+    this.setBreadcrumbs(this.bussinessNumber);
+
     this.uid = localStorageUserObj.uid;
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
      db.collection("blockCalls").where("Uid","==",owneruid).get().then(async(snap) =>{
@@ -202,8 +221,33 @@ export default {
       const item = this.items.find((item) => item.id == itemID);
       item.list = list;
     },
-    goBack() {
-      this.$router.push("/CallFlowSettings");
+    setBreadcrumbs(bussinessNumber) {
+      this.items = [
+        {
+          text: "More",
+          disabled: false,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Business Numbers",
+          disabled: false,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Call Flow Settings",
+          disabled: false,
+          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+        },
+         {
+          text: "Blocked Numbers",
+          disabled: true,
+          route: { name: 'selectSpecificAgent', query: { }  }
+        },
+      ]
+    },
+    goBack(bussinessNumber) {
+      let newQuery = {bn: bussinessNumber};
+      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
     },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");

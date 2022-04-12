@@ -10,17 +10,32 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 ml-5">
-                        <v-icon class="mr-2" color="black" @click="goBack()"
+                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber)"
                           >mdi-arrow-left</v-icon
                         >
                        Missed Call Distribution
                       </h2>
 
+                      <!-- BREADCRUMBS SECTION -->
                       <v-breadcrumbs class="breadcrumbs" :items="items">
-                        <template class="breadcrumbs" v-slot:divider>
-                          <v-icon>mdi-chevron-right</v-icon>
+
+                        <template v-slot:item="{ item }">
+                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
+                            <v-breadcrumbs-item :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          </router-link>
+
+                          <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
+                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          <!-- </router-link> -->
+
                         </template>
+
                       </v-breadcrumbs>
+                      <!-- BREADCRUMBS SECTION -->
                     </v-col>
                   </v-row>
  <div class="comment_heading mt-6 ml-5">Select how missed calls are distributed among
@@ -216,6 +231,10 @@ export default {
 		// console.log("vetri",owneruid)
       this.owneruid = owneruid;
     this.uid = localStorageUserObj.uid;
+
+    this.bussinessNumber = this.$route.query.bn;    
+    this.setBreadcrumbs(this.bussinessNumber);
+
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
        db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
           this.source = snap.docs[0].data().Source
@@ -256,28 +275,7 @@ export default {
     stepForm: [],
 
     items: [
-      {
-        text: "More",
-        disabled: false,
-        href: "Dashboard",
-        color: "Black",
-      },
-      {
-        text: "Business Numbers",
-        disabled: false,
-        to: { name: "BusinessNumber" },
-      },
-      {
-        text: "Call Flow Settings",
-        disabled: false,
-        to: { name: "CallFlowSettings" },
-      },
-
-      {
-        text: "Missed Call Distribution",
-        disabled: true,
-        to: { name: "MissedCallDistribution" },
-      },
+      
     ],
   }),
 
@@ -312,9 +310,33 @@ export default {
 							console.error(error);
 						})
     },
-    goBack() {
-      // const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/CallFlowSettings?bn="+parseInt(this.$route.query.bn));
+    setBreadcrumbs(bussinessNumber) {
+      this.items = [
+        {
+          text: "More",
+          disabled: false,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Business Numbers",
+          disabled: false,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Call Flow Settings",
+          disabled: false,
+          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+        },
+         {
+          text: "Missed Call Distribution",
+          disabled: false,
+          route: { name: 'MissedCallDistribution', query: { bn: [bussinessNumber]}  }
+        },
+      ]
+    },
+    goBack(bussinessNumber) {
+      let newQuery = {bn: bussinessNumber};
+      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
     },
     SelectSpecificAgent() {
       this.$router.push("/SelectSpecificAgent?bn="+parseInt(this.$route.query.bn));

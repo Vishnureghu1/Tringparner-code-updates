@@ -137,7 +137,7 @@
                         </h6>
                       </v-card>
                     </v-col>
-                    <v-col cols="6" sm="1" align="end">
+                    <!-- <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -147,7 +147,7 @@
                         </h3>
                         <h6 class="comment_heading" align="center">Offline</h6>
                       </v-card>
-                    </v-col>
+                    </v-col> -->
                   </v-row>
                   <br />
                   <br />
@@ -222,7 +222,7 @@
                                   </h6>
                                 </v-card>
                               </v-col>
-                              <v-col cols="6" sm="3" align="center">
+                             <!--  <v-col cols="6" sm="3" align="center">
                                 <v-card
                                   outlined
                                   color="transparent"
@@ -235,7 +235,7 @@
                                     Offline
                                   </h6>
                                 </v-card>
-                              </v-col>
+                              </v-col> -->
                             </v-row>
                           </v-expansion-panel-content>
                         </v-expansion-panel>
@@ -254,6 +254,7 @@
 
 
 <script>
+import { db } from "@/main.js";
 import { GChart } from "vue-google-charts";
 export default {
   data: () => ({
@@ -316,6 +317,72 @@ export default {
       }
     },
   },
+  created() {
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.ownerUid =
+      localStorageUserObj.role == "OWNER"
+        ? localStorageUserObj.uid
+        : localStorageUserObj.OwnerUid;
+    this.AccountId = localStorageUserObj.AccountId;
+
+    this.getAllCalls();
+  },
+  methods: {
+    getAllCalls() {
+
+      db.collection("callLogs")
+        .where("owneruid", "==", this.ownerUid)
+        .where("callstatus", "in", ['Answered', 'Missed'])
+        .orderBy("dateTime", "desc")
+        .get()
+        .then(async (snapshot) => {
+          if (!snapshot.empty) {
+            snapshot.docs.forEach((element) => {
+              // console.log({
+              //   id: element.id,
+              //   agentDetails: element.data().agentDetails,
+              //   BusyCalleesAccounts: element.data().BusyCalleesAccounts,
+              //   agentstatus_nw: element.data().agentstatus_nw,
+              //   billableduration: element.data().billableduration,
+              //   callerNumber: element.data().callerNumber,
+              //   Notes: element.data().Notes,
+              //   ClickCount: element.data().ClickCount,
+              //   callerid: element.data().callerid,
+              //   callstatus: element.data().callstatus,
+              //   connectedto: element.data().connectedto,
+              //   conversationduration: element.data().conversationduration,
+              //   date: element.data().date,
+              //   dateTime: element.data().dateTime,
+              //   logDate: element.data().logDate,
+              //   name: element.data().name,
+              //   recordingurl: element.data().recordingurl,
+              //   ringduration: element.data().ringduration,
+              //   source: element.data().source,
+              //   totalduration: element.data().totalduration,
+              //   uniqueid: element.data().uniqueid,
+              //   userid: element.data().userid,
+              //   virtualnumber: element.data().virtualnumber,
+              // });
+              // console.log(element.data().agentDetails)
+
+              let call = element.data();
+
+              if ("agentDetails" in call) {
+                console.log('has agentDetails ', call.callstatus);
+              } else  if ("BusyCalleesAccounts" in call) {
+                console.log('has BusyCalleesAccounts ', call.callstatus);
+              } else {
+
+                console.log('----->', call.callstatus);
+              }
+
+            });
+          } else {
+            console.log("snapshot empty");
+          }
+        });
+    }
+  }
 };
 </script>
 

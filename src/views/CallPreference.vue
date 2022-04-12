@@ -9,13 +9,28 @@
                 <div class="ml-8">
                   <v-row>
                     <v-col cols="12" sm="10">
-                     <h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack()">mdi-arrow-left</v-icon>  Call Preference</h2>
+                     <h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack(bussinessNumber)">mdi-arrow-left</v-icon>  Call Preference</h2>
                   
+                      <!-- BREADCRUMBS SECTION -->
                       <v-breadcrumbs class="breadcrumbs" :items="items">
-                        <template class="breadcrumbs" v-slot:divider>
-                          <v-icon>mdi-chevron-right</v-icon>
+
+                        <template v-slot:item="{ item }">
+                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
+                            <v-breadcrumbs-item :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          </router-link>
+
+                          <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
+                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          <!-- </router-link> -->
+
                         </template>
+
                       </v-breadcrumbs>
+                      <!-- BREADCRUMBS SECTION -->
                     </v-col>
                   </v-row>
 
@@ -455,8 +470,9 @@ import axios from "axios";
 export default {
   components: {},
   created() {
-        let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-         this.bussinessNumber = this.$route.query.bn;
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.bussinessNumber = this.$route.query.bn;
+    
     this.setBreadcrumbs(this.bussinessNumber);
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)

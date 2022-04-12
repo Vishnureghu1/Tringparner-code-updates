@@ -300,6 +300,7 @@ export default {
 
     this.$on('greeting_message_changed', function(id){
       console.log(`Event from parent component emitted ${this.bussinessNumber}`, id);
+      // let BN = this.bussinessNumber;
       const options = {
         url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/prompt',
         method: 'POST',
@@ -311,12 +312,13 @@ export default {
           owner_uid: this.ownerUid,
           updated_by: this.ownerUid,
           virtual_number: this.bussinessNumber,
+          // virtual_number: BN[0][0],
           prompt_type: "MohPrompt",
           prompt: id,
           AccountId: this.AccountId
         }
       }
-      console.log(options);
+      console.log(JSON.stringify(options.data));
       this.$axios(options)
         .then((response) => {
           console.log(response.data)
