@@ -323,6 +323,7 @@ export default {
 
   computed: {
     dateRangeText() {
+      console.log('this.dates', this.dates);
       if (this.dates.includes(",")) {
         return this.dates.join(" ~ To ~ ");
       } else {

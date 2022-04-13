@@ -12,7 +12,7 @@
                      <h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack(bussinessNumber)">mdi-arrow-left</v-icon>  Call Preference</h2>
                   
                       <!-- BREADCRUMBS SECTION -->
-                      <v-breadcrumbs class="breadcrumbs" :items="items">
+                      <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
 
                         <template v-slot:item="{ item }">
                           <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">

@@ -18,7 +18,7 @@
                         >
                         Greeting Message
                       </h2>
-                      <v-breadcrumbs class="breadcrumbs" :items="items">
+                      <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
                         <template v-slot:item="{ item }">
                           <router-link
                             style="text-decoration: none"
