@@ -226,7 +226,7 @@ export default {
     this.owneruid = owneruid;
     this.uid = localStorageUserObj.uid;
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
-     db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+     db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.bussinessNumber)).get().then(async(snap) =>{
       // console.log(snap.docs[0].data().VirtualNumber)
       this.switch1 = snap.docs[0].data().WorkingHoursStatus;
       this.time = snap.docs[0].data().StartTime?snap.docs[0].data().StartTime.substring(0, 2) + ":" + snap.docs[0].data().StartTime.substring(1, 3):"10:00";
@@ -317,7 +317,7 @@ export default {
 						data: {
 						owner_uid:this.owneruid,
             updated_by:this.uid,
-            virtual_number:Object.keys(this.$route.query)[0],
+            virtual_number:parseInt(this.bussinessNumber),
             AccountId:this.AccountId,
             WorkingHoursStatus:status,
             start_time:this.time.replace(":", ""),
