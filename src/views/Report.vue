@@ -178,7 +178,7 @@
                           <v-expansion-panel-content>
                             <GChart
                               type="ColumnChart"
-                              :data="chartData"
+                              :data="item.chart_data"
                               :options="chartOptions"
                             />
                             <v-row no-gutters>
@@ -269,7 +269,8 @@ export default {
     //   { title: "Download as XML", color: "gray--text", url: "edit" },
     //   { title: "Download as PDF", color: "gtay--text", url: "send" },
     // ],
-    dates: ["2021-12-22", "2021-12-25"],
+    // dates: ["2021-12-22", "2021-12-25"],
+    dates: [new Date(new Date().getTime()-((24*60*60*1000) * 6)).toISOString().substr(0, 10), new Date().toISOString().substr(0, 10)],
 
     chartData: [
       [
@@ -316,7 +317,16 @@ export default {
     agentWiseClickCount: {},
     agentWiseDateWiseSummary: {},
     agentsObj: {},
+    fromDate: new Date(new Date().getTime()-((24*60*60*1000) * 6)).toISOString().substr(0, 10),
+    toDate: new Date().toISOString().substr(0, 10),
   }),
+  watch: {
+    dates: function(val) {
+      console.log('val', val);
+      this.fromDate = val[0];
+      this.toDate = val[1];
+    }
+  },
   components: {
     GChart,
   },
@@ -357,6 +367,7 @@ export default {
       // let agentWiseClickCount = {};
       // let agentWiseDateWiseSummary = {};
 
+      console.log(`GETTING CALLS with ${this.fromDate} ${this.toDate}`);
 
       db.collection("callLogs")
         .where("owneruid", "==", this.ownerUid)
@@ -384,7 +395,7 @@ export default {
               let call = element.data();
 
               if ("agentDetails" in call) {
-                console.log('has agentDetails ', call.callstatus);
+                // console.log('has agentDetails ', call.callstatus);
 
 
                 if (call.callstatus == 'Missed') {
@@ -402,7 +413,7 @@ export default {
                   // agentWiseDateWiseSummary
                   if (!([doc.AgentUid] in agentWiseReport)) {
 
-                    console.log(doc);
+                    // console.log(doc);
                     // let agents = doc.AgentUid;
 
                     this.$set(agentWiseReport, [doc.AgentUid], {
@@ -433,21 +444,52 @@ export default {
                       this.$set(agentsObj, doc.AgentUid, doc)
                     }
 
-                    agentWiseReport[doc.AgentUid]["agent_report"].push({
-                      id: element.id,
-                      agentDetails: element.data().agentDetails,
-                      // BusyCalleesAccounts: element.data().BusyCalleesAccounts,
-                      ClickCount: element.data().ClickCount,
-                      callstatus: element.data().callstatus,
-                      date: element.data().date,
-                      dateTime: element.data().dateTime,
-                      logDate: element.data().logDate,
-                      // name: element.data().name,
-                      // uniqueid: element.data().uniqueid,
-                      // userid: element.data().userid,
-                    })
+                    let callDayObj = new Date(element.data().logDate)
+                    let callDay = callDayObj.toLocaleString('default', {
+                      // month: 'short',
+                      day: "numeric"
+                    });
+                    // let callDay = element.data().logDate;
 
-                    console.log('SETTING INDEX');
+                    // console.log('logDate', element.data().logDate);
+                    // console.log('logDate', callDay);
+
+                    // element.data().logDate  
+                    if(!([element.data().logDate] in agentWiseReport[doc.AgentUid]["agent_report"])) {
+                      agentWiseReport[doc.AgentUid]["agent_report"][[callDay]] = {
+                        Total: 0,
+                        Missed: 0,
+                        Answered: 0
+                      };
+                      // console.log('setting',agentWiseReport[doc.AgentUid]["agent_report"]);
+                      
+                    }
+
+                    agentWiseReport[doc.AgentUid]["agent_report"][callDay].Total++;
+
+                    if (call.callstatus == 'Missed') {
+                      agentWiseReport[doc.AgentUid]["agent_report"][callDay].Missed++;
+                    } else if (call.callstatus == 'Answered') {
+                      agentWiseReport[doc.AgentUid]["agent_report"][callDay].Answered++;
+                    }
+
+
+                    // agentWiseReport[doc.AgentUid]["agent_report"][element.data().logDate].push({
+                    // // agentWiseReport[doc.AgentUid]["agent_report"].push({
+                    //   // id: element.id,
+                    //   // agentDetails: element.data().agentDetails,
+                    //   // BusyCalleesAccounts: element.data().BusyCalleesAccounts,
+                    //   // ClickCount: element.data().ClickCount,
+                    //   callstatus: element.data().callstatus,
+                    //   date: element.data().date,
+                    //   dateTime: element.data().dateTime,
+                    //   logDate: element.data().logDate,
+                    //   // name: element.data().name,
+                    //   // uniqueid: element.data().uniqueid,
+                    //   // userid: element.data().userid,
+                    // })
+
+                    // console.log('SETTING INDEX');
                   } else {
 
 
@@ -458,21 +500,48 @@ export default {
                       agentWiseReport[doc.AgentUid]['summary'].Total++;
                       agentWiseReport[doc.AgentUid]['summary'].Answered++;
                     }
-                    agentWiseReport[doc.AgentUid]["agent_report"].push({
-                      id: element.id,
-                      agentDetails: element.data().agentDetails,
-                      // BusyCalleesAccounts: element.data().BusyCalleesAccounts,
-                      ClickCount: element.data().ClickCount,
-                      callstatus: element.data().callstatus,
-                      date: element.data().date,
-                      dateTime: element.data().dateTime,
-                      logDate: element.data().logDate,
-                      // name: element.data().name,
-                      // uniqueid: element.data().uniqueid,
-                      // userid: element.data().userid,
-                    })
+
+                    let callDayObj = new Date(element.data().logDate)
+                    let callDay = callDayObj.toLocaleString('default', {
+                      // month: 'short',
+                      day: "numeric"
+                    });
+
+                    // let callDay = element.data().logDate;
+
+                    if(!([callDay] in agentWiseReport[doc.AgentUid]["agent_report"])) {
+                      agentWiseReport[doc.AgentUid]["agent_report"][callDay] = {
+                        Total: 0,
+                        Missed: 0,
+                        Answered: 0
+                      };
+                    }
+
+                    agentWiseReport[doc.AgentUid]["agent_report"][callDay].Total++;
+
+                    if (call.callstatus == 'Missed') {
+                      agentWiseReport[doc.AgentUid]["agent_report"][callDay].Missed++;
+                    } else if (call.callstatus == 'Answered') {
+                      agentWiseReport[doc.AgentUid]["agent_report"][callDay].Answered++;
+                    }
+
+
+                    // agentWiseReport[doc.AgentUid]["agent_report"][element.data().logDate].push({
+                    // // agentWiseReport[doc.AgentUid]["agent_report"].push({
+                    //   id: element.id,
+                    //   agentDetails: element.data().agentDetails,
+                    //   // BusyCalleesAccounts: element.data().BusyCalleesAccounts,
+                    //   ClickCount: element.data().ClickCount,
+                    //   callstatus: element.data().callstatus,
+                    //   date: element.data().date,
+                    //   dateTime: element.data().dateTime,
+                    //   logDate: element.data().logDate,
+                    //   // name: element.data().name,
+                    //   // uniqueid: element.data().uniqueid,
+                    //   // userid: element.data().userid,
+                    // })
                     
-                    console.log(' HAVE INDEX');
+                    // console.log(' HAVE INDEX');
                   }
                   // console.log(`agentWiseReport -->  ${doc.AgentUid} --> `, JSON.stringify(agentWiseReport[doc.AgentUid]));
                 })
@@ -483,10 +552,12 @@ export default {
                 call.agentDetails.forEach(async (doc) => {
                   console.log(doc);
                 })
-              } else {
+              } 
+              // else {
 
-                console.log('----->', call.callstatus);
-              }
+                // console.log('----->', call.callstatus);
+                // console.log('----->', call.callstatus);
+              // }
 
             });
 
@@ -497,7 +568,45 @@ export default {
             this.callSummary = callSummary;
             this.agentsObj = agentsObj;
 
-            this.$set(this.agentWiseReport, 1,agentWiseReport);
+              // console.log(agentWiseReport);
+
+            this.$set(this.agentWiseReport, 1, agentWiseReport);
+
+            var listOfProps = Object.getOwnPropertyNames(agentWiseReport);
+            // console.log('listOfProps', listOfProps);
+            listOfProps.forEach((elementProp) => {
+              // console.log(agentWiseReport[elementProp]['agent_report'])
+
+              var listOfAgentProps = Object.getOwnPropertyNames(agentWiseReport[elementProp]);
+              listOfAgentProps.forEach((ad) => {
+
+                if(ad == 'agent_report') {
+                    // console.log('listOfAgentProps',agentWiseReport[elementProp][ad]);
+                    let chartData = [
+                      // [ "Date", "No Calls", { role: "style" }, "Answered Calls", { role: "style" }, "Missed Calls", { role: "style" }]
+                      [ "Date", "Answered Calls", { role: "style" }, "Missed Calls", { role: "style" }]
+                    ];
+                    var rProps = Object.getOwnPropertyNames(agentWiseReport[elementProp][ad]);
+
+                    rProps.forEach((repObj) => {
+                      if(repObj !== 'length' && repObj !== '__ob__') {
+                        // let Total = agentWiseReport[elementProp][ad][repObj].Total;
+                        let Answered = agentWiseReport[elementProp][ad][repObj].Answered;
+                        let Missed = agentWiseReport[elementProp][ad][repObj].Missed;
+                        // chartData.push([parseInt(repObj), Total, "#E0E0E0", Answered, "#13B9A8", Missed, "#FAB4B7"]);
+                        chartData.push([parseInt(repObj), Answered, "#13B9A8", Missed, "#FAB4B7"]);
+                      }
+                    })
+
+                    agentWiseReport[elementProp]['chart_data'] = chartData;
+                    // console.log('chartData', agentWiseReport[elementProp]['chart_data']);
+                }
+
+              })
+
+
+            });
+
             this.forceRerenderKey();
 
           } else {
