@@ -101,17 +101,13 @@
                               </div>
                             </div>
 
+
+
+                            
+
                             <v-card :elevation="0" class="ml-5">
                               <v-list two-line>
-                                 <!-- <v-radio-group v-model="radioGroup">
-      <v-radio class="border-1"
-        v-for="n in 3"
-        :key="n"
-        :label="`Radio ${n}`"
-        :value="n"
-      ></v-radio>
-      
-    </v-radio-group> -->
+   
                                 <v-list-item-group
                                   v-model="selected"
                                   active-class="pink--text"
@@ -164,6 +160,123 @@
                                   </template>
                                 </v-list-item-group>
                               </v-list>
+                               <v-card-actions align="center" class="center">
+                          <v-btn
+                            text
+                            class="text-capitalize ma-3 rounded-pill red_button"
+                            min-width="140px"
+                            color="white"
+                            outlined
+                           @click="payment_info = true"
+                          >
+                            Pay Now
+                          </v-btn>
+                       
+                        </v-card-actions>
+                              <v-expand-transition>
+                          <v-card  :elevation="0"
+                            v-if="payment_info"
+                            class="transition-fast-in-fast-out v-card--reveal"
+                            style="height: 100%"
+                          >
+                            <v-row>
+                              <v-col cols="12" sm="10">
+                                <h6 class="f16 mt-6 ml-5">
+                                  <v-icon
+                                    class="mr-2"
+                                    color="black"
+                                    @click="payment_info = false"
+                                    >mdi-arrow-left</v-icon
+                                  >
+                                  Details
+                                </h6>
+                              </v-col>
+                            </v-row>
+                            <v-card-text class="pb-0">
+                              <v-simple-table dense>
+                                <template v-slot:default>
+                                  <tbody class="ma-0 pa-0" border="0">
+                                    <tr colspan="2">
+                                       <td class="ma-0 pa-0" colspan="2">
+                                         <p class="light3 mt-5 mb-0">Business Name</p>
+                                        <p class="bold">Lek</p>
+
+                                      
+                                         <p class="light3 mt-5 mb-0">Business Address</p>
+                                        <p class="bold">Waybeo, Kollam, Kerala, 691306</p>
+                                  
+                                   <p class="light3 mt-5 mb-0">Business Email Address</p>
+                                        <p class="bold">lekshmi@gmail.com</p>
+                                         
+                                   <p class="bold mt-5">Selected Number: 999</p>
+  
+                                   <p class="bold red--text mb-0 mt-5">Due On: 06-Jun-2022</p>
+                                        <p class="light4">(Billable Duration 1 Month(s) 7 Day(s))</p>
+
+                                        
+                                      </td>
+
+                                    </tr>
+                                    <tr colspan="3">
+                                      <td class="ma-0 pa-0" colspan="1">
+                                        Charges
+                                      </td>
+
+                                      <td
+                                        class="ma-0 pa-0"
+                                        colspan="2"
+                                        align="right"
+                                      >
+                                        ₹ 525.0
+                                      </td>
+                                    </tr>
+                                    <tr colspan="3">
+                                      <td
+                                        class="ma-0 pa-0 bold red--text"
+                                        colspan="1"
+                                        color="red"
+                                      >
+                                        Discount
+                                      </td>
+
+                                      <td
+                                        class="ma-0 pa-0 bold red--text"
+                                        colspan="2"
+                                        align="right"
+                                      >
+                                        ₹ 52.5
+                                      </td>
+                                    </tr>
+                                    <tr colspan="3">
+                                      <td class="ma-0 pa-0" colspan="1">GST(18%)</td>
+
+                                      <td
+                                        class="ma-0 pa-0"
+                                        colspan="2"
+                                        align="right"
+                                      >
+                                        ₹ 85.05
+                                      </td>
+                                    </tr>
+                                    <tr colspan="3">
+                                      <td class="ma-0 pa-0 bold" colspan="1">
+                                        Total Charges
+                                      </td>
+
+                                      <td
+                                        class="ma-0 pa-0 bold"
+                                        colspan="2"
+                                        align="right"
+                                      >
+                                        ₹ 557.55
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </template></v-simple-table
+                              >
+                            </v-card-text>
+                          </v-card>
+                        </v-expand-transition>
                             </v-card>
                           </v-col>
                         </v-row>
@@ -288,6 +401,7 @@ export default {
     reserve: false,
     NoNumbers: false,
     value: "",
+    payment_info:false,
 
     options: [
       { title: "Edit", color: "black--text", url: "Edit" },

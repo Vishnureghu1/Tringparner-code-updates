@@ -1,16 +1,16 @@
 <template>
   <v-app>
-      <v-alert
-      prominent color="red darken-1"
-      type="error"
-    >
+    <v-alert prominent color="red darken-1" type="error">
       <v-row align="center">
         <v-col class="grow">
           <h2 class="f16 regular">Email Verification</h2>
-          <span  class="f14 light3">Please verify your email address by clicking on the link we have shared with you on email.</span>
+          <span class="f14 light3"
+            >Please verify your email address by clicking on the link we have
+            shared with you on email.</span
+          >
         </v-col>
         <v-col class="shrink">
-          <v-btn>Resend Email</v-btn>
+          <v-btn @click="changeEmailPopup = true">Resend Email</v-btn>
         </v-col>
       </v-row>
     </v-alert>
@@ -42,7 +42,7 @@
                   <v-row>
                     <v-col cols="12" sm="5">
                       <h2 class="mt-6 mb-5">Call Log</h2>
-                        
+
                       <v-progress-linear
                         :active="isUpdating"
                         :indeterminate="isUpdating"
@@ -51,16 +51,17 @@
                         color="deep-purple accent-4"
                       ></v-progress-linear>
                     </v-col>
-                      <v-col cols="12" sm="7"  align="end">
+                    <v-col cols="12" sm="7" align="end">
+                      <v-text-field
+                        v-show="!hidden"
+                        absolute
+                        transition="slide-y-reverse-transition"
+                        append-icon="mdi-magnify"
+                        class="searchForm"
+                        label="Search"
+                        single-line
+                      ></v-text-field>
 
-                  
-                              <v-text-field v-show="!hidden" absolute transition="slide-y-reverse-transition"
-                                append-icon="mdi-magnify" class="searchForm"
-                                label="Search"
-                                single-line
-                              ></v-text-field>
-                           
-                              
                       <v-menu
                         v-model="filtermenu"
                         :close-on-content-click="false"
@@ -68,10 +69,6 @@
                         offset-x
                       >
                         <template v-slot:activator="{ on, attrs }">
-                    
-                        
-                          
-
                           <span
                             ><v-icon
                               class="mt-6 mb-5 mr-4"
@@ -88,7 +85,6 @@
                             >
                           </span>
                         </template>
-                      
 
                         <v-card min-width="378">
                           <v-form ref="form" v-model="valid" lazy-validation>
@@ -212,7 +208,6 @@
                       </v-menu>
                     </v-col>
                   </v-row>
-
 
                   <!-- {{realdata}} -->
                   <v-expansion-panels accordion flat>
@@ -519,8 +514,85 @@
         </v-layout>
       </v-container>
     </div>
+    <v-dialog v-model="changeEmailPopup" max-width="332px">
+      <v-card class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Verify your email address</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+          <v-text-field label="Email Address*" outlined></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="close()"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+            @click="SendVerification()"
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="enterOtpModel" max-width="332px">
+      <v-card class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Enter the OTP</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+          <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation>
+            <v-text-field label="Enter OTP" required></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="close()"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+            @click="verifyOTP()"
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="sendInviteLoader" hide-overlay persistent width="300">
+      <v-card color="red" dark>
+        <v-card-text>
+          Sending OTP to your email id
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
+
 
 
 <script>
@@ -538,6 +610,9 @@ export default {
     searchForm: false,
     benched: 0,
     hidden: true,
+    sendInviteLoader: false,
+    changeEmailPopup: false,
+    enterOtpModel: false,
 
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
@@ -599,13 +674,25 @@ export default {
     right: false,
   }),
   watch: {
-    isUpdating(val) {
+    sendInviteLoader(val) {
       if (val) {
-        setTimeout(() => (this.isUpdating = false), 3000);
+        setTimeout(
+          () => ((this.sendInviteLoader = false), (this.enterOtpModel = true)),
+          3000
+        );
       }
     },
   },
   methods: {
+    SendVerification() {
+      this.changeEmailPopup = false;
+      this.sendInviteLoader = true;
+      // this.enterOtpModel = false
+    },
+    close() {
+      this.changeEmailPopup = false;
+      this.enterOtpModel = false;
+    },
     openSearchBar() {
       alert("ss");
       this.searchForm = true;

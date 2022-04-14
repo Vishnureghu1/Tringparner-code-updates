@@ -33,7 +33,7 @@
                 <v-row>
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
-                      <v-card class="ml-8" min-width="700" min-height="400"> 
+                      <v-card class="ml-8" min-width="700" min-height="400">
                         <v-card-text class="pb-0">
                           <p class="redtext bold">
                             Next Recharge Due on {{ Rechargeday }}
@@ -53,10 +53,8 @@
                           </div>
 
                           <div class="membership_details">
-                            
                             <v-checkbox
                               v-model="sixmonths"
-                              
                               color="red darken-3"
                               hide-details
                               @click="getBill(sixmonths, 2)"
@@ -72,7 +70,6 @@
                             >
                             <v-checkbox
                               v-model="twelvemonths"
-                             
                               color="red darken-3"
                               hide-details
                               @click="getBill(twelvemonths, 3)"
@@ -168,32 +165,45 @@
                         </v-card-actions>
 
                         <v-expand-transition>
-                          <v-card  
+                          <v-card
                             v-if="facebook_info"
                             class="transition-fast-in-fast-out v-card--reveal"
                             style="height: 100%"
                           >
                             <v-row>
-                  <v-col cols="12" sm="10">
-                    <h6 class="f16 mt-6 ml-5">
-                      <v-icon class="mr-2" color="black"   @click="facebook_info = false"
-                        >mdi-arrow-left</v-icon
-                      >
-                     Details
-                    </h6>
-
-                  </v-col>
-                </v-row>
-                            <v-card-text class="pb-0" >
+                              <v-col cols="12" sm="10">
+                                <h6 class="f16 mt-6 ml-5">
+                                  <v-icon
+                                    class="mr-2"
+                                    color="black"
+                                    @click="facebook_info = false"
+                                    >mdi-arrow-left</v-icon
+                                  >
+                                  Details
+                                </h6>
+                              </v-col>
+                            </v-row>
+                            <v-card-text class="pb-0">
                               <v-simple-table dense>
                                 <template v-slot:default>
                                   <tbody class="ma-0 pa-0" border="0">
                                     <tr v-for="d in sublist" :key="d.name">
-                                      <td class="ma-0 pa-0 pr-0 mr-0" :class="d.class">
+                                      <td
+                                        class="ma-0 pa-0 pr-0 mr-0"
+                                        :class="d.class"
+                                      >
                                         {{ d.title }}
                                       </td>
-                                      <td :class="d.class" align="center">{{ d.qty }}</td>
-                                      <td :class="d.class" align="right" class="ma-0 pa-0">₹ {{ d.amount }}</td>
+                                      <td :class="d.class" align="center">
+                                        {{ d.qty }}
+                                      </td>
+                                      <td
+                                        :class="d.class"
+                                        align="right"
+                                        class="ma-0 pa-0"
+                                      >
+                                        ₹ {{ d.amount }}
+                                      </td>
                                     </tr>
 
                                     <tr colspan="3">
@@ -201,43 +211,65 @@
                                         Sub Total
                                       </td>
 
-                                      <td class="ma-0 pa-0" colspan="2" align="right">
+                                      <td
+                                        class="ma-0 pa-0"
+                                        colspan="2"
+                                        align="right"
+                                      >
                                         ₹ 3000.0
                                       </td>
                                     </tr>
-                                      <tr colspan="3">
+                                    <tr colspan="3">
                                       <td class="ma-0 pa-0" colspan="1">
                                         Discount for Half Yearly Plan
                                       </td>
 
-                                      <td class="ma-0 pa-0" colspan="2" align="right">
+                                      <td
+                                        class="ma-0 pa-0"
+                                        colspan="2"
+                                        align="right"
+                                      >
                                         ₹ 900.0
                                       </td>
                                     </tr>
-                                      <tr colspan="3">
-                                      <td class="ma-0 pa-0 bold red--text" colspan="1" color="red">
+                                    <tr colspan="3">
+                                      <td
+                                        class="ma-0 pa-0 bold red--text"
+                                        colspan="1"
+                                        color="red"
+                                      >
                                         Cost after Discount
                                       </td>
 
-                                      <td class="ma-0 pa-0 bold red--text" colspan="2"  align="right">
+                                      <td
+                                        class="ma-0 pa-0 bold red--text"
+                                        colspan="2"
+                                        align="right"
+                                      >
                                         ₹ 8100.0
                                       </td>
                                     </tr>
-                                        <tr colspan="3">
-                                      <td class="ma-0 pa-0" colspan="1" >
-                                        GST
-                                      </td>
+                                    <tr colspan="3">
+                                      <td class="ma-0 pa-0" colspan="1">GST</td>
 
-                                      <td class="ma-0 pa-0" colspan="2" align="right">
+                                      <td
+                                        class="ma-0 pa-0"
+                                        colspan="2"
+                                        align="right"
+                                      >
                                         ₹ 1458.0
                                       </td>
                                     </tr>
-                                        <tr colspan="3">
-                                      <td class="ma-0 pa-0 bold" colspan="1" >
+                                    <tr colspan="3">
+                                      <td class="ma-0 pa-0 bold" colspan="1">
                                         Cost after Discount
                                       </td>
 
-                                      <td class="ma-0 pa-0 bold" colspan="2" align="right" >
+                                      <td
+                                        class="ma-0 pa-0 bold"
+                                        colspan="2"
+                                        align="right"
+                                      >
                                         ₹ 9558.0
                                       </td>
                                     </tr>
@@ -245,7 +277,6 @@
                                 </template></v-simple-table
                               >
                             </v-card-text>
-                          
                           </v-card>
                         </v-expand-transition>
                       </v-card>
@@ -306,11 +337,11 @@
 </template>
 <style scoped>
 table.v-table tbody td {
-    height: 40px;
-    border: none;
+  height: 40px;
+  border: none;
 }
 .theme--light.v-table tbody tr:not(:last-child) {
-    border-bottom: none;
+  border-bottom: none;
 }
 </style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
