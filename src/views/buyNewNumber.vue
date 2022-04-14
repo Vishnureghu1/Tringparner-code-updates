@@ -124,8 +124,8 @@
                                             v-text="item.title"
                                           ></v-list-item-title>
 
-                                          <v-list-item-subtitle
-                                            class="text--primary"
+                                          <v-list-item-subtitle 
+                                            class="text--primary"  @click="payment_info = true"
                                             v-text="item.headline"
                                           ></v-list-item-subtitle>
 
@@ -160,19 +160,7 @@
                                   </template>
                                 </v-list-item-group>
                               </v-list>
-                               <v-card-actions align="center" class="center">
-                          <v-btn
-                            text
-                            class="text-capitalize ma-3 rounded-pill red_button"
-                            min-width="140px"
-                            color="white"
-                            outlined
-                           @click="payment_info = true"
-                          >
-                            Pay Now
-                          </v-btn>
                        
-                        </v-card-actions>
                               <v-expand-transition>
                           <v-card  :elevation="0"
                             v-if="payment_info"
@@ -275,6 +263,19 @@
                                 </template></v-simple-table
                               >
                             </v-card-text>
+                                    <v-card-actions align="center" class="center">
+                          <v-btn
+                            text
+                            class="text-capitalize ma-3 rounded-pill red_button"
+                            min-width="140px"
+                            color="white"
+                            outlined
+                          
+                          >
+                            Pay Now
+                          </v-btn>
+                       
+                        </v-card-actions>
                           </v-card>
                         </v-expand-transition>
                             </v-card>
@@ -291,39 +292,7 @@
         </v-layout>
       </v-container>
     </div>
-    <!-- <v-dialog v-model="dialog2" max-width="332px">
-      <v-card class="rounded-lg pt-7 pb-7">
-        <v-card-title class="d-flex justify-center">
-          <h3 class="center">Add New User</h3>
-        </v-card-title>
-        <v-card-text class="pt-0">
-          <v-text-field label="Name" outlined></v-text-field>
-          <v-select :items="types" label="Role" outlined></v-select>
 
-          <v-text-field label="Mobile Number*" outlined></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            color="red"
-            text
-            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-            min-width="140px"
-            @click="dialog2 = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            text
-            class="text-capitalize ma-3 rounded-pill red_button"
-            min-width="140px"
-            color="white"
-            outlined
-          >
-            Submit
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
       <v-dialog
         v-model="dialog"
         transition="dialog-bottom-transition"
