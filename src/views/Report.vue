@@ -90,7 +90,7 @@
                                 width="100%"
                                 color="red"
                                 rounded
-                                @click="$refs.menu.save(dates)"
+                                @click="filterCalls(dates)"
                               >
                                 Save
                               </v-btn>
@@ -244,6 +244,15 @@
                         </v-expansion-panel>
                       </v-expansion-panels>
                     </v-col>
+                    <v-col v-if="noCalls">
+                        <div class="text-center">
+                          <h3 class="number_heading nunito-font light3"
+                          align="center"
+                          >
+                            No Calls
+                          </h3>
+                        </div>
+                    </v-col>
                   </v-row>
                 </div>
               </v-col>
@@ -319,6 +328,7 @@ export default {
     agentsObj: {},
     fromDate: new Date(new Date().getTime()-((24*60*60*1000) * 6)).toISOString().substr(0, 10),
     toDate: new Date().toISOString().substr(0, 10),
+    noCalls: false
   }),
   watch: {
     dates: function(val) {
@@ -352,6 +362,11 @@ export default {
     this.getAllCalls();
   },
   methods: {
+    filterCalls(dates) {
+      this.$refs.menu.save(dates);
+      console.log('Filtering calls');
+      this.getAllCalls();
+    },
     forceRerenderKey() {
       this.rerenderKey++;
     },
@@ -371,11 +386,16 @@ export default {
 
       db.collection("callLogs")
         .where("owneruid", "==", this.ownerUid)
+        .where("date", ">=", new Date(this.fromDate))
+        .where("date", "<=", new Date(this.toDate))
         .where("callstatus", "in", ['Answered', 'Missed'])
-        .orderBy("dateTime", "desc")
+        .orderBy("date", "desc")
         .get()
         .then(async (snapshot) => {
           if (!snapshot.empty) {
+
+            this.noCalls =  false;
+
             snapshot.docs.forEach((element) => {
               // console.log({
               //   id: element.id,
@@ -611,6 +631,10 @@ export default {
 
           } else {
             console.log("snapshot empty");
+            this.noCalls =  true;
+            callSummary.Total = 0;
+            callSummary.Answered = 0;
+            callSummary.Missed = 0;
           }
         });
 

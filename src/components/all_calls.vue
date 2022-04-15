@@ -302,7 +302,6 @@
                             <v-col cols="12" sm="6">
                               <div class="ml-10">
                                 <h6 class="font-weight-thin">Source</h6>
-                                {{ details }}
                                 <h5 class="font-weight-light">
                                   {{ details.source }} No: (+91
                                   {{ details.virtualnumber }})
