@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div>
-      <v-container fluid>
+      <v-container :key="rerenderKey"  fluid>
         <v-layout>
           <v-flex xs12 sm12 md12>
             <v-row no-gutters>
@@ -100,7 +100,7 @@
                       </v-menu>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col :key="rerenderKey" cols="6" sm="1" align="end">
+                    <v-col cols="6" sm="1" align="end">
                       <v-card outlined color="transparent" class="">
                         <h3
                           class="number_heading nunito-font light3"
@@ -632,9 +632,11 @@ export default {
           } else {
             console.log("snapshot empty");
             this.noCalls =  true;
-            callSummary.Total = 0;
-            callSummary.Answered = 0;
-            callSummary.Missed = 0;
+            this.callSummary.Total = 0;
+            this.callSummary.Answered = 0;
+            this.callSummary.Missed = 0;
+            this.agentWiseReport = [];
+            this.forceRerenderKey();
           }
         });
 
