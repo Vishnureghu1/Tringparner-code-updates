@@ -23,9 +23,24 @@
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
-                  <div class="comment_heading mt-6 ml-5">
-                    Configure your business number according to your needs
-                  </div>
+                  <v-row align="center" justify="center">
+                    <v-col cols="12" sm="9">
+                      <h2 class="comment_heading ml-5">
+                        Add, Modify or Remove Number
+                      </h2>
+                    </v-col>
+                    <v-col cols="10" sm="3">
+                      <v-btn
+                        class="ma-0"
+                        color="red darken-1"
+                        dark
+                        @click="addon()"
+                      >
+                        + Add New Number
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                  
                   <v-card
                     color="transparent"
                     outlined
@@ -237,6 +252,9 @@ export default {
     },
     goBack() {
       this.$router.push("/Dashboard");
+    },
+    addon(){
+      this.$router.push("/buyNewNumber")
     },
     CallFlowSettings(vn,status) {
        if(status=='expired'){
