@@ -31,16 +31,17 @@
                     outlined
                     class="mt-5"
                     max-width="1069"
-                    v-for="item in virtualnumber"
-                    :key="item"
+                    v-for="item1 in virtualnumber"
+                    :key="item1"
                   >
                     <v-row>
                       <v-col cols="12" sm="6">
                         <div class="name_heading mt-1 ml-5">
-                          {{ item.Source }}
+                          {{ item1.Source }}
+                          <v-icon  class="mr-2" color="gray" v-show="item1.Cron">mdi-chess-queen</v-icon>
                         </div>
-                        <div class="number_heading mt-2 ml-5">
-                          {{ item.VirtualNumber }}
+                        <div class="number_heading mt-2 ml-5">+91
+                          {{ item1.VirtualNumber }}
                         </div>
                       </v-col>
                       <v-col cols="12" sm="6" align="end">
@@ -58,7 +59,7 @@
                             >
                               <v-list-item-title
                                 :class="item.color"
-                                @click="blockCall()"
+                                @click="option_click(item1.VirtualNumber,item1.Source)"
                                 >{{ item.title }}</v-list-item-title
                               >
                             </v-list-item>
@@ -111,13 +112,12 @@
     <v-dialog v-model="dialog2" max-width="332px">
       <v-card class="rounded-lg pt-7 pb-7">
         <v-card-title class="d-flex justify-center">
-          <h3 class="center">Change Title</h3>
+          <h3 class="center">Source</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <p align="center" class="pb-10">Name 1</p>
-          <v-text-field label="New Source Title" outlined></v-text-field>
+          <!-- <p align="center" class="pb-10">Name 1</p> -->
+          <v-text-field label="New Source Title" outlined v-model="selected_source"></v-text-field>
         </v-card-text>
-
         <v-card-actions>
           <v-btn
             color="red"
@@ -134,6 +134,7 @@
             min-width="140px"
             color="white"
             outlined
+            @click="submit()"
           >
             Submit
           </v-btn>
@@ -148,6 +149,7 @@
 // import firebase from "firebase";
 import { db } from "@/main.js";
 import vtoast from "@/components/snackbar.vue";
+import axios from "axios";
 export default {
   components: {
     vtoast,
@@ -156,6 +158,10 @@ export default {
     this.$root.vtoast = this.$refs.vtoast;
   },
   data: () => ({
+    dialog2:false,
+    owneruid:"",
+    selected_source:"",
+    selected_number:"",
     options: [{ title: "Edit Title", color: "black--text", url: "add_note" }],
     virtualnumber: [],
     items: [
@@ -174,14 +180,18 @@ export default {
     ],
   }),
   created() {
-    
-    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.initial_value()
+  },
+  methods: {
+    initial_value(){
+      this.virtualnumber =[];
+           let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     const owneruid =
       localStorageUserObj.role == "OWNER"
         ? localStorageUserObj.uid
         : localStorageUserObj.OwnerUid;
     // console.log("vetri",owneruid)
-
+    this.owneruid =  owneruid;
     db.collection("uservirtualNumber")
       .where("Uid", "==", owneruid)
       .get()
@@ -189,15 +199,42 @@ export default {
         // console.log("test.........",snap.docs.data());
         snap.docs.forEach((element) => {
           // console.log(element.data())
-          this.virtualnumber.push(element.data());
+          this.virtualnumber.push({"VirtualNumber":element.data().VirtualNumber,"Source":element.data().Source,Cron:element.data().IsPrimary});
         });
       })
       .catch((err) => {
         console.log(err.message);
       });
-  },
-  methods: {
+    },
     // console.log(this.uid)
+    option_click(selected_number,selected_source){
+         this.dialog2=true;
+         console.log(selected_source)
+         this.selected_source = selected_source;
+         this.selected_number = selected_number;
+    },
+      submit(){
+      // console.log(this.selectedNumber,this.source)
+      const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/rename",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          updated_by: this.owneruid,
+          owner_uid: this.owneruid,
+          virtual_number: parseInt(this.selected_number),
+          source: this.selected_source,
+        },
+      };
+
+      axios(details).then(async (response) => {
+        console.log(response)    
+        await  this.initial_value();    
+         this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
+        //  await this.initial_data();
+         this.dialog2 = false         
+      })
+    },
     goBack() {
       this.$router.push("/Dashboard");
     },
