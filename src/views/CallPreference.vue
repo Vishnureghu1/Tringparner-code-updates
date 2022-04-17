@@ -111,7 +111,7 @@
                                           :input-value="agent.active"
                                           color="red"
                                           :value="true"
-                                          @change="toggleUserSwitch(agentIndex, $event, agent.PhoneNumber)"
+                                          @change="toggleUserSwitch(agentIndex, $event, agent.PhoneNumber,agent.uid,agent.Name)"
                                           >
                                           </v-switch>
                                           </v-col>
@@ -310,7 +310,7 @@
                                     >
                                       <template v-slot:label>
                                         <div class="black--text">
-                                          Prioritize<br /><small
+                                          Priority<br /><small
                                             class="grey--text light-3"
                                             >Route customer calls to specific
                                             agent based on priority order</small
@@ -483,7 +483,7 @@ export default {
 			// console.log("test.........",snap.docs.data());
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
-				this.agents.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:true});
+				this.agents.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:true,uid:element.data().uid});
 			});
 		}).catch((err)=>{
 			console.log(err.message)
@@ -492,7 +492,7 @@ export default {
 			// console.log("test.........",snap.docs.data());
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
-				this.agents.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:false});
+				this.agents.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:false,uid:element.data().uid});
 			});
 		}).catch((err)=>{
 			console.log(err.message)
@@ -655,8 +655,9 @@ export default {
 						})
     
     },
-    toggleUserSwitch(agentIndex, $event, agent){
-      console.log(agentIndex, $event, agent,this.participants)
+    toggleUserSwitch(agentIndex, $event, agentnumber,agentuid,agentname){
+      console.log(agentIndex, $event,this.participants)
+      this.participants.push({AgentUid:agentuid,Name:agentname,Number:parseInt(agentnumber)})
        const details = {
 						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/addparticipant',
             // url:"http://localhost:3000/jp",
