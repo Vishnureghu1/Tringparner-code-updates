@@ -647,6 +647,7 @@ export default {
     detail: {},
     calldetails: [],
     realdata: [],
+    backuprealdata: [],
     click_details: {},
     clicked_array: [],
     selected: false,
@@ -679,6 +680,7 @@ export default {
     totalPage:0,
     limit:20,
     page:1,
+    lastrecord:null,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -690,10 +692,19 @@ export default {
       }
     },
   },
+  mounted() {
+      this.getNextCalls();
+  },
   methods: {
     updateSearchTerm() {
       console.log(this.searchTerm);
-      this.searchMongo();
+      if(this.searchTerm !== '') {
+        this.searchMongo();
+      } else {
+        console.log('searchTerm is empty');
+        this.realdata = this.backuprealdata;
+      }
+      
     },
     searchAction() {
       this.hidden = !this.hidden;
@@ -992,31 +1003,25 @@ export default {
         console.log('DL error', error);
       })
     },
-  },
-  created() {
-    let localStorageUserObj = localStorage.getItem("tpu");
-
-    if (localStorageUserObj) {
-      let parsedUser = JSON.parse(localStorageUserObj);
-      this.userEmail = parsedUser.Email;
-
-      this.userRole = parsedUser.role;
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          this.uid = user.uid;
-          console.log("User Id : " + this.uid);
-          this.sendMessage(this.uid);
-
-          // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
+    getNextCalls() {
+      window.onscroll = () => {
+        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+        if (bottomOfWindow) {
+          console.log('getting Next Calls');
+          console.log('this.lastrecord', this.lastrecord);
+          // getting Next calls
           db.collection("callLogs")
             .where("owneruid", "==", this.uid)
             .orderBy("dateTime", "desc")
-            // .startAt(0)
-                  .limit(30)
-            .onSnapshot((querySnapshot) => {
-              this.realdata = [];
+            .startAt(this.lastrecord)
+            .limit(this.limit)
+            .get()
+            .then((querySnapshot) => {
+            // .onSnapshot((querySnapshot) => {
+              // this.realdata = [];
               if (!querySnapshot.empty) {
                 querySnapshot.forEach(async (doc) => {
+                  this.lastrecord = doc;
                   console.log(doc.id, " => ", doc.data());
                   let user_details = doc.data();
                   this.calldetails = user_details;
@@ -1075,8 +1080,111 @@ export default {
                     recordingUrl: this.calldetails.recordingurl,
                   });
                   this.realdata.push(this.detail);
+                  // this.backuprealdata.push(this.detail);
+                  console.log("next calllog ", this.realdata);
+                });
+
+                console.log('this.realdata', this.realdata.length);
+                console.log('this.backuprealdata', this.backuprealdata.length);
+              } else {
+                //alert('no calls')
+              }
+            });
+          // getting Next calls
+        }
+      }
+    },
+  },
+  created() {
+    let localStorageUserObj = localStorage.getItem("tpu");
+
+    if (localStorageUserObj) {
+      let parsedUser = JSON.parse(localStorageUserObj);
+      this.userEmail = parsedUser.Email;
+
+      this.userRole = parsedUser.role;
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.uid = user.uid;
+          console.log("User Id : " + this.uid);
+          this.sendMessage(this.uid);
+
+          // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
+          db.collection("callLogs")
+            .where("owneruid", "==", this.uid)
+            .orderBy("dateTime", "desc")
+            // .startAt(0)
+            .limit(this.limit)
+            .onSnapshot((querySnapshot) => {
+              this.realdata = [];
+              if (!querySnapshot.empty) {
+                querySnapshot.forEach(async (doc) => {
+                  // this.lastrecord = doc.data();
+                  this.lastrecord = doc.id;
+                  console.log(doc.id, " => ", doc.data());
+                  let user_details = doc.data();
+                  this.calldetails = user_details;
+                  var timestamp = this.calldetails.dateTime;
+                  var date = new Date(timestamp);
+                  console.log("full time", date);
+                  console.log("Time: ", date.getTime());
+
+                  var myCurrentDate = new Date();
+                  var missedTresholdDate = new Date(myCurrentDate);
+                  missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                  console.log(missedTresholdDate);
+
+                  console.log(timestamp); //missed call date
+                  console.log(missedTresholdDate.getTime()); //addon date
+                  console.log(myCurrentDate.getTime()); //today's date
+
+                  if (timestamp <= missedTresholdDate.getTime()) {
+                    call_time = moment(date).format("D MMM Y hh:mm a");
+                  } else {
+                    var call_time = moment(date).format("hh:mm a");
+                    call_time = moment(date).fromNow();
+                  }
+
+                  var note = "";
+                  if (this.calldetails.Notes) {
+                    note = this.calldetails.Notes;
+                  } else {
+                    console.log("no note");
+                    note = [{ Note: "" }];
+                  }
+
+                  var calledNumber =
+                    this.calldetails.callerNumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.callerNumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.callerNumber.slice(7, 11);
+                  var virtualnumber =
+                    this.calldetails.virtualnumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(7, 11);
+                  this.detail = Object.assign({}, this.detail, {
+                    callstatus: this.calldetails.callstatus,
+                    name: this.calldetails.name[0],
+                    dateTime: call_time,
+                    conversationduration: this.calldetails.conversationduration,
+                    callerNumber: calledNumber,
+                    uniqueid: this.calldetails.uniqueid,
+                    Note: note,
+                    source: this.calldetails.source,
+                    virtualnumber: virtualnumber,
+                    called_name: this.called_name,
+                    recordingUrl: this.calldetails.recordingurl,
+                  });
+                  this.realdata.push(this.detail);
+                  this.backuprealdata.push(this.detail);
                   console.log("snap calllog ", this.realdata);
                 });
+
+                console.log('this.realdata', this.realdata.length);
+                console.log('this.backuprealdata', this.backuprealdata.length);
               } else {
                 //alert('no calls')
               }
