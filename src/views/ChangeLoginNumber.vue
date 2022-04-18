@@ -39,7 +39,7 @@
                               </div>
 
                               <v-card class="mb-0 mt-0 pl-5" :elevation="0">
-                                <p>+91 7306109553</p>
+                                <p>+91 {{current_number}}</p>
                                 <v-checkbox
                                   v-model="ex4"
                                   label="I agree that I will not be able to access Tring Partner from my current login number after changing it."
@@ -82,7 +82,7 @@
         </v-card-title>
         <v-card-text class="pt-5">
         
-          <v-text-field label="New Number" outlined value="+91 ">
+          <v-text-field label="New Number" outlined v-model="new_number" value="">
 
           </v-text-field>
 
@@ -93,7 +93,7 @@
             text
             class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
             min-width="140px"
-            @click="dialog2 = false"
+            @click="cancel()"
           >
             Cancel
           </v-btn>
@@ -103,8 +103,42 @@
             min-width="140px"
             color="white"
             outlined
+            @click="sendotp()"
           >
             Next
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="enterOtpModel" max-width="332px">
+      <v-card class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Enter the OTP</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+          <!-- <v-form @submit.prevent="" ref="form" v-model="otp" lazy-validation> -->
+            <v-text-field label="Enter OTP" v-model="otp" value="" required></v-text-field>
+          <!-- </v-form> -->
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="cancel()"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+            @click="verifyOTP()"
+          >
+            Submit
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -113,12 +147,37 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
-  created() {},
-
+  created() {
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    // console.log(owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+       this.current_number = snap.docs[0].data().PhoneNumber
+			// console.log("test.........",snap.docs.data());
+      // this.baseusers = snap.docs[0].data().PlanBaseUsers;
+      // this.totalusers = snap.docs[0].data().PlanNumberOfUsers;
+			// snap.docs.forEach((element)=> {
+			// 	this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,uid:element.data().uid,option:[{title:"Edit Title",type:"Edit",headline:"Edit User",function:"edit_user"}]});
+			// });
+    
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+  },
   data: () => ({
-      dialog2: false,
+    otp:"",
+    owneruid:"",
+    new_number:"",
+    current_number:"",
+    enterOtpModel:false,
+    dialog2: false,
     ex4: false,
     isActive: true,
     e2: 1,
@@ -163,12 +222,72 @@ export default {
     },
   },
   methods: {
+    sendotp(){
+       const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/otp",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          new_number: this.new_number,
+          uid: this.owneruid,
+          updated_by:this.owneruid
+        },
+      };
+
+      axios(details).then(async (response) => { 
+         if(response.data.status == false){
+  console.log(response.data.status)   
+     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
+         }else{
+  console.log(response.data.status)   
+  this.dialog2 = false,
+  this.enterOtpModel=true
+         }
+        //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
+      
+      })
+    },
+verifyOTP(){
+  const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/otp/verify",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          new_number: this.new_number,
+          uid: this.owneruid,
+          otp: parseInt(this.otp),
+          updated_by:this.owneruid
+        },
+      };
+
+      axios(details).then(async (response) => { 
+         if(response.data.status == false){
+  console.log(response.data.status)   
+     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
+         }else{
+  console.log(response.data.status)   
+  this.dialog2 = false,
+  this.enterOtpModel=false
+  this.otp = "",
+  this.current_number = this.new_number,
+   this.$root.vtoast.show({message: response.data.message, color: 'green', timer: 2000});
+         }
+        //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
+      
+      })
+},
         popup() {
       
         this.dialog2 = true;
    
       
     },
+    cancel(){
+       this.dialog2 = false;
+       this.enterOtpModel = false;
+       this.otp = "",
+       this.new_number=""
+       },
     goBack() {
       this.$router.push("/CallFlowSettings");
     },

@@ -656,8 +656,13 @@ export default {
     
     },
     toggleUserSwitch(agentIndex, $event, agentnumber,agentuid,agentname){
-      console.log(agentIndex, $event,this.participants)
+      console.log(agentIndex, $event,this.participants,agentnumber,agentuid,agentname)
+      if($event == true){
       this.participants.push({AgentUid:agentuid,Name:agentname,Number:parseInt(agentnumber)})
+      }
+      if($event == null){
+        this.participants.splice(agentIndex,1)
+      }
        const details = {
 						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/addparticipant',
             // url:"http://localhost:3000/jp",
