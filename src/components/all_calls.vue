@@ -60,6 +60,8 @@
                         class="searchForm"
                         label="Search"
                         single-line
+                        v-model="searchTerm"
+                        @input="updateSearchTerm"
                       ></v-text-field>
 
                       <v-menu
@@ -73,7 +75,7 @@
                             ><v-icon
                               class="mt-6 mb-5 mr-4"
                               color="black"
-                              @click="hidden = !hidden"
+                              @click="searchAction"
                               >mdi-magnify</v-icon
                             >
                             <v-icon
@@ -599,6 +601,7 @@ import firebase from "firebase";
 import { db } from "@/main.js";
 import moment from "moment";
 import { Icon } from "@iconify/vue2";
+import axios from 'axios'
 
 export default {
   components: {
@@ -671,6 +674,11 @@ export default {
     timeout: 2500,
     bottom: true,
     right: false,
+    searchTerm: '',
+    perPage:20,
+    totalPage:0,
+    limit:20,
+    page:1,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -683,6 +691,13 @@ export default {
     },
   },
   methods: {
+    updateSearchTerm() {
+      console.log(this.searchTerm);
+      this.searchMongo();
+    },
+    searchAction() {
+      this.hidden = !this.hidden;
+    },
     SendVerification() {
       this.changeEmailPopup = false;
       this.sendInviteLoader = true;
@@ -851,6 +866,132 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
+    getCallSearchFilter(filterCallsConditions) {
+
+      if(this.searchTerm && this.searchTerm!='') {
+        Object.assign(filterCallsConditions.conditions, {"$or": [
+        {
+          "Notes": {"$elemMatch": {"Note": {"$regex": this.searchTerm,"$options":"i"}}}
+        },
+        {
+          "callerNumber": {"$regex": this.searchTerm,"$options":"i"}
+        },
+        {
+          "Reminder.Message" : {"$regex":this.searchTerm,"$options":"i"}
+        }
+        ] });
+      }
+
+      return filterCallsConditions;
+    },
+    searchMongo() {
+
+      var filterCallsConditions = {
+        "page_number": this.page?parseInt(this.page):1,
+        "results_per_page": parseInt(this.limit),
+        "conditions": {
+        },
+        "sort":{}
+      };
+
+      let updatedCallsFilter = this.getCallSearchFilter(filterCallsConditions);
+
+      console.log('updatedCallsFilter', updatedCallsFilter);
+
+      var cfdata = {
+        "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        "url": "http://35.244.46.144:5000/api/calllogs/paginate",
+        "payload": updatedCallsFilter
+      };
+      var raw = JSON.stringify(cfdata);
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'token': 'tpmongo'
+      }
+      axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
+        headers: headers
+      })
+      .then((response) => {
+        console.log('DL response', response.data.data);
+        let dataset = response.data.data.dataset;
+
+        this.totalPage = response.data.data.totalPages;
+        this.totalItems = response.data.data.totalItems;
+
+        // let List = [];
+        this.realdata = [];
+        dataset.forEach((doc) => {
+          // let callObj = {
+
+          // };
+
+          // call details
+          let user_details = doc;
+            this.calldetails = user_details;
+            var timestamp = this.calldetails.dateTime;
+            var date = new Date(timestamp);
+            console.log("full time", date);
+            console.log("Time: ", date.getTime());
+
+            var myCurrentDate = new Date();
+            var missedTresholdDate = new Date(myCurrentDate);
+            missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+            console.log(missedTresholdDate);
+
+            console.log(timestamp); //missed call date
+            console.log(missedTresholdDate.getTime()); //addon date
+            console.log(myCurrentDate.getTime()); //today's date
+
+            if (timestamp <= missedTresholdDate.getTime()) {
+              call_time = moment(date).format("D MMM Y hh:mm a");
+            } else {
+              var call_time = moment(date).format("hh:mm a");
+              call_time = moment(date).fromNow();
+            }
+
+            var note = "";
+            if (this.calldetails.Notes) {
+              note = this.calldetails.Notes;
+            } else {
+              console.log("no note");
+              note = [{ Note: "" }];
+            }
+
+            var calledNumber =
+              this.calldetails.callerNumber.slice(0, 5) +
+              " " +
+              this.calldetails.callerNumber.slice(5, 7) +
+              " " +
+              this.calldetails.callerNumber.slice(7, 11);
+            var virtualnumber =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
+            this.detail = Object.assign({}, this.detail, {
+              callstatus: this.calldetails.callstatus,
+              name: this.calldetails.name[0],
+              dateTime: call_time,
+              conversationduration: this.calldetails.conversationduration,
+              callerNumber: calledNumber,
+              uniqueid: this.calldetails.uniqueid,
+              Note: note,
+              source: this.calldetails.source,
+              virtualnumber: virtualnumber,
+              called_name: this.called_name,
+              recordingUrl: this.calldetails.recordingurl,
+            });
+            this.realdata.push(this.detail);
+            console.log("snap calllog ", this.realdata);
+          // call details
+        })
+      })
+      .catch((error) => {
+        console.log('DL error', error);
+      })
+    },
   },
   created() {
     let localStorageUserObj = localStorage.getItem("tpu");
@@ -871,7 +1012,7 @@ export default {
             .where("owneruid", "==", this.uid)
             .orderBy("dateTime", "desc")
             // .startAt(0)
-            //       .limit(10)
+                  .limit(30)
             .onSnapshot((querySnapshot) => {
               this.realdata = [];
               if (!querySnapshot.empty) {
