@@ -317,7 +317,7 @@ export default {
           route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
         },
         {
-          text: "Greeting Message",
+          text: "Call Routing",
           disabled: true,
           to: { name: "GreetingMessage" },
           href: `GreetingMessage`,

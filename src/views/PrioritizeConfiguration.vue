@@ -105,32 +105,7 @@ import { db } from "@/main.js";
 export default {
   components: { draggable },
   created() {
-     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
-     this.owneruid = owneruid;
-    this.uid = localStorageUserObj.uid;
-    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
-    db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
-      console.log(snap.docs[0].data().VirtualNumber)
-      const participants = snap.docs[0].data().Participants;
-      this.source = snap.docs[0].data().Source
-      console.log(participants)
-      participants.forEach(element => {
-        this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
-        // this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
-      });
-      // console.log("............",this.participant)
-			// console.log("test.........",this.response);
-    //   this.agents.forEach((element,index) =>{
-    //      const value = participants.find(({Number}) =>Number === element.PhoneNumber)
-    //      if(value){
-    //         // console.log("valuew",value,index)
-    //         this.agents[index] = Object.assign(element,{active:true});
-    //      }else{
-    //        this.agents[index] = Object.assign(element,{active:false});
-    //      }
-    //   })
-    })
+this.priorityList();
   },
   data: () => ({
     participant:[],
@@ -205,6 +180,24 @@ export default {
     },
   },
   methods: {
+    priorityList(){
+           let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+     this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
+      console.log(snap.docs[0].data().VirtualNumber)
+      const participants = snap.docs[0].data().Participants;
+      this.source = snap.docs[0].data().Source
+      console.log(participants)
+      participants.forEach(element => {
+        this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
+        // this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
+      });
+
+    })
+    },
     checkMove: function () {
       // window.console.log("Future index: " + e.draggedContext.futureIndex);
       console.log(this.participant)
@@ -229,7 +222,8 @@ export default {
 					axios(details)
 						.then((response) => {
 						console.log(response)
-              this.dialog2 = false
+              this.dialog2 = false;
+              this.priorityList();
 						})
 						.catch((error) => {
 							console.error(error);
