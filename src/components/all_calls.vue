@@ -206,12 +206,13 @@
                           </v-form>
                         </v-card>
                       </v-menu>
+                      
                     </v-col>
                   </v-row>
 
                   <!-- {{realdata}} -->
 
-                  <div @scroll="Onscrollfnction">
+                  <div>
                   <v-expansion-panels accordion flat>
                     <v-expansion-panel
                       v-for="details in realdata"
@@ -377,8 +378,31 @@
                           </v-row>
                         </div>
                       </v-expansion-panel-content>
+                      
                     </v-expansion-panel>
                   </v-expansion-panels>
+                  <v-container v-if="loadingMore">
+      <v-row
+        class="fill-height"
+        align-content="center"
+        justify="center"
+      >
+        <v-col
+          class="text-subtitle-1 text-center"
+          cols="12"
+        >
+         Loading ...
+        </v-col>
+        <v-col cols="12">
+          <v-progress-linear
+            color="red darken-4"
+            indeterminate
+            rounded
+            height="6"
+          ></v-progress-linear>
+        </v-col>
+      </v-row>
+    </v-container>
                   </div>
                 </div>
               </v-col>
@@ -615,6 +639,7 @@ export default {
     sendInviteLoader: false,
     changeEmailPopup: false,
     enterOtpModel: false,
+    loadingMore:false,
 
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
@@ -674,6 +699,7 @@ export default {
     timeout: 2500,
     bottom: true,
     right: false,
+    pageNumber:10,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -854,11 +880,9 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
-     Onscrollfnction (event) {    
-     console.log(event);
-     }
-  },
-  created() {
+getInitialList(pageNumber){
+  console.log(pageNumber);
+
     let localStorageUserObj = localStorage.getItem("tpu");
 
     if (localStorageUserObj) {
@@ -869,7 +893,7 @@ export default {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.uid = user.uid;
-          console.log("User Id : " + this.uid);
+          // console.log("User Id : " + this.uid);
           this.sendMessage(this.uid);
 
           // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
@@ -877,27 +901,27 @@ export default {
             .where("owneruid", "==", this.uid)
             .orderBy("dateTime", "desc")
             // .startAt(0)
-            //       .limit(10)
+                  .limit(pageNumber)
             .onSnapshot((querySnapshot) => {
               this.realdata = [];
               if (!querySnapshot.empty) {
                 querySnapshot.forEach(async (doc) => {
-                  console.log(doc.id, " => ", doc.data());
+                  // console.log(doc.id, " => ", doc.data());
                   let user_details = doc.data();
                   this.calldetails = user_details;
                   var timestamp = this.calldetails.dateTime;
                   var date = new Date(timestamp);
-                  console.log("full time", date);
-                  console.log("Time: ", date.getTime());
+                  // console.log("full time", date);
+                  // console.log("Time: ", date.getTime());
 
                   var myCurrentDate = new Date();
                   var missedTresholdDate = new Date(myCurrentDate);
                   missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-                  console.log(missedTresholdDate);
+                  // console.log(missedTresholdDate);
 
-                  console.log(timestamp); //missed call date
-                  console.log(missedTresholdDate.getTime()); //addon date
-                  console.log(myCurrentDate.getTime()); //today's date
+                  // console.log(timestamp); //missed call date
+                  // console.log(missedTresholdDate.getTime()); //addon date
+                  // console.log(myCurrentDate.getTime()); //today's date
 
                   if (timestamp <= missedTresholdDate.getTime()) {
                     call_time = moment(date).format("D MMM Y hh:mm a");
@@ -910,7 +934,7 @@ export default {
                   if (this.calldetails.Notes) {
                     note = this.calldetails.Notes;
                   } else {
-                    console.log("no note");
+                    // console.log("no note");
                     note = [{ Note: "" }];
                   }
 
@@ -940,7 +964,7 @@ export default {
                     recordingUrl: this.calldetails.recordingurl,
                   });
                   this.realdata.push(this.detail);
-                  console.log("snap calllog ", this.realdata);
+                  // console.log("snap calllog ", this.realdata);
                 });
               } else {
                 //alert('no calls')
@@ -949,7 +973,30 @@ export default {
         }
       });
     }
+},
+     Onscrollfunction() {
+			if (
+				window.scrollY + window.innerHeight >=
+				document.body.scrollHeight - 15
+			) {
+        console.log('bottom of the screen');
+        this.loadingMore=true;
+         setTimeout(() => (this.loadingMore = false), 3000)
+this.getInitialList(this.pageNumber);
+this.pageNumber = this.pageNumber+10;
+			}else{
+         this.loadingMore=false;
+      }
+		},
   },
+  created() {
+
+this.getInitialList(10);
+    
+  },
+  mounted(){
+    window.addEventListener("scroll", this.Onscrollfunction);
+  }
 };
 </script>
 
