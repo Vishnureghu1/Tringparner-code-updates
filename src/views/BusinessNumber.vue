@@ -84,7 +84,7 @@
                       <v-col cols="12" sm="6">
                         <div
                           class="link_style mt-1 ml-5"
-                          @click="ManageAgents(item.VirtualNumber,'active')"
+                          @click="ManageAgents(item1.VirtualNumber,'active')"
                         >
                           Manage Agents
                         </div>
@@ -94,14 +94,14 @@
                           v-bind="attrs"
                           v-on="on"
                           color="#EE1C25"
-                          @click="ManageAgents(item.VirtualNumber,'active')"
+                          @click="ManageAgents(item1.VirtualNumber,'active')"
                           >mdi-arrow-right</v-icon
                         >
                       </v-col>
                       <v-col cols="12" sm="6">
                         <div
                           class="link_style mt-1 ml-5 mb-5"
-                          @click="CallFlowSettings(item.VirtualNumber,'active')"
+                          @click="CallFlowSettings(item1.VirtualNumber,'active')"
                         >
                           Call Flow Settings
                         </div>
@@ -111,7 +111,7 @@
                           v-bind="attrs"
                           v-on="on"
                           color="#EE1C25"
-                          @click="CallFlowSettings(item.VirtualNumber,'active')"
+                          @click="CallFlowSettings(item1.VirtualNumber,'active')"
                           >mdi-arrow-right</v-icon
                         >
                       </v-col>

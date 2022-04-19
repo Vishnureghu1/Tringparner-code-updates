@@ -205,8 +205,8 @@ export default {
     },
   },
   methods: {
-    checkMove: function (e) {
-      window.console.log("Future index: " + e.draggedContext.futureIndex);
+    checkMove: function () {
+      // window.console.log("Future index: " + e.draggedContext.futureIndex);
       console.log(this.participant)
         // activecall(radiovalue){
       // console.log("test..........")
@@ -222,7 +222,7 @@ export default {
             AccountId:this.AccountId,
             new_active_caller:"PRIORITY",
             source:this.source,
-            participants:this.participant
+            participants:this.participant.reverse()
 						},
 					}
           
@@ -241,9 +241,12 @@ export default {
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("itemID", item.id);
     },
-    add: function () {},
+    add: function () {
+      
+    },
     replace: function () {},
     onDrop(evt, list) {
+      console.log("ffff")
       const itemID = evt.dataTransfer.getData("itemID");
       const item = this.items.find((item) => item.id == itemID);
       item.list = list;

@@ -355,6 +355,9 @@ export default {
   components: {},
 
   data: () => ({
+    owneruid:"",
+    PhoneNumber:"",
+    listingId:"",
     dialog2: false,
     dialog: false,
     removeNumber: false,
@@ -365,7 +368,6 @@ export default {
     repeatCallerSettings: false,
     V_numbers: "",
     timerCount: "",
-    listingId: "",
     overlay: true,
     reserve: false,
     NoNumbers: false,
@@ -466,6 +468,13 @@ export default {
 
     getNumbersList() {
       var token = localStorage.getItem("token");
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    const owneruid =
+      localStorageUserObj.role == "OWNER"
+        ? localStorageUserObj.uid
+        : localStorageUserObj.OwnerUid;
+        this.PhoneNumber = localStorageUserObj.PhoneNumber;
+    this.owneruid =  owneruid;
       if (!this.reserve) {
         this.timerCount = 180;
         this.value = 100;
@@ -475,8 +484,8 @@ export default {
           url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/list",
           method: "POST",
           data: {
-            uid: this.uid,
-            phoneNumber: this.phno,
+            uid: this.owneruid,
+            phoneNumber: this.PhoneNumber
           },
           headers: {
             token: token,
@@ -515,12 +524,13 @@ export default {
       let virtualNumber = this.V_numbers[this.toggle_none];
       console.log(virtualNumber);
       const reserve = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/reserve",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/reservenumber",
         method: "POST",
 
         data: {
-          uid: this.uid,
-          phoneNumber: this.phno,
+          uid: this.owneruid,
+          updated_by:this.owneruid,
+          phoneNumber: this.PhoneNumber,
           virtualNumber: virtualNumber,
           listingId: this.listingId,
         },
