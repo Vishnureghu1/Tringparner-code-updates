@@ -681,9 +681,10 @@ export default {
     Notes: ["Not Specified", "Yes"],
     selectedNotes: "Not Specified",
 
-    Users: ["All", "Sree", "Shinu", "Syam", "Divya", "Munasir"],
+    Users: ["All"],
+    usersObj: {"All":""},
     selectedUser:"All",
-    Numbers: ["All", "8657510921", "222222222", "22"],
+    Numbers: ["All"],
     selectedNumber: "All",
     fav: true,
     filtermenu: false,
@@ -1005,11 +1006,12 @@ export default {
         Object.assign(filterCallsConditions.conditions, { "Notes": {"$exists": true} });
       }
 
-      console.log('this.selectedNotes', this.selectedUser);
+      console.log('this.selectedUser', this.selectedUser);
       if(this.selectedUser !== "All") {
-        Object.assign(filterCallsConditions.conditions, { "connectedto": "+917994510065" });
+        let connectedTo = this.usersObj[this.selectedUser];
+        Object.assign(filterCallsConditions.conditions, { "connectedto": connectedTo });
       }
-      console.log('this.selectedNotes', this.selectedNumber);
+      console.log('this.selectedNumber', this.selectedNumber);
       if(this.selectedNumber !== "All") {
         Object.assign(filterCallsConditions.conditions, { "virtualnumber": "8657510921" });
       }
@@ -1023,6 +1025,7 @@ export default {
         "page_number": this.page?parseInt(this.page):1,
         "results_per_page": parseInt(this.limit),
         "conditions": {
+          "owneruid": this.uid
         },
         "sort":{}
       };
@@ -1149,6 +1152,7 @@ export default {
         "page_number": this.page?parseInt(this.page):1,
         "results_per_page": parseInt(this.limit),
         "conditions": {
+          "owneruid": this.uid
         },
         "sort":{}
       };
@@ -1345,6 +1349,7 @@ export default {
             "page_number": this.page?parseInt(this.page):1,
             "results_per_page": parseInt(this.limit),
             "conditions": {
+              "owneruid": this.uid
             },
             "sort":{}
           };
@@ -1557,8 +1562,32 @@ beforeMount() {
         if (user) {
           this.uid = user.uid;
           // console.log("User Id : " + this.uid);
-          this.sendMessage(this.uid);
+          // this.sendMessage(this.uid);
 
+
+          
+          db.collection("users")
+            .where("OwnerUid", "==", this.uid)
+            .orderBy("cDate", "asc")
+            .get()
+            .then((querySnapshot) => {
+
+              Object.assign(this.usersObj, { [parsedUser.FirstName?parsedUser.FirstName:parsedUser.role]: `+91${parsedUser.PhoneNumber}`})
+              this.Users.push(parsedUser.FirstName?parsedUser.FirstName:parsedUser.role);
+              console.log('this.usersObj', this.usersObj);
+              this.Numbers = parsedUser.virtualNumber;
+              this.Numbers.concat(parsedUser.virtualNumber);
+
+              querySnapshot.forEach((doc) => {
+                let user_details = doc.data();
+
+                Object.assign(this.usersObj, { [user_details.Name]: `+91${user_details.PhoneNumber}`})
+                this.Users.push(user_details.Name);
+              });
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+            }) 
           // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
           db.collection("callLogs")
             .where("owneruid", "==", this.uid)
@@ -1636,6 +1665,7 @@ beforeMount() {
                   "page_number": 1,
                   "results_per_page": parseInt(this.limit),
                   "conditions": {
+                    "owneruid": this.uid
                   },
                   "sort":{}
                 };
