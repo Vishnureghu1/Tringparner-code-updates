@@ -146,12 +146,12 @@ import { db } from '@/main.js';
 								else if (this.currentPage == "onboarding_billing" || this.currentPage == "onboarding_revisiting") {
 									this.$router.push("/Billing")
 								}
-								else if (this.currentPage == "onboarding_success") {
-									this.$router.push("/emailVerification")
+								else if (this.currentPage == "onboarding_success"||this.currentPage == "onboarding_dashboard") {
+									this.$router.push("/Dashboard")
 								}
-								else if (this.currentPage == "onboarding_dashboard") {
-									this.$router.push("/downloadApp")
-								}
+								// else if (this.currentPage == "onboarding_dashboard") {
+								// 	this.$router.push("/downloadApp")
+								// }
 							})
 						}).catch((error) => {
 							console.log("Error getting documents: ", error);
