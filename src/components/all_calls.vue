@@ -59,6 +59,8 @@
                         append-icon="mdi-magnify"
                         class="searchForm"
                         label="Search"
+                        v-model="searchTerm"
+                        @input="updateSearchTerm"
                         single-line
                       ></v-text-field>
 
@@ -112,15 +114,19 @@
 
                                 <v-list-item>
                                   <v-select
+                                    v-model="selectedTimeOfCall"
                                     :items="timeofCall"
                                     label="Time of Call"
                                     outlined
+                                    @change="handleTimeOfCallChange"
                                   ></v-select>
                                 </v-list-item>
                                 <v-list-item>
                                   <v-select
+                                    v-model="selectedDurationOfCall"
                                     :items="DurationOfCall"
                                     label="Duration Of Call"
+                                    @change="handleDurationOfCallChange"
                                     outlined
                                   ></v-select>
                                 </v-list-item>
@@ -133,8 +139,10 @@
 
                                 <v-list-item>
                                   <v-select
+                                    v-model="selectedViewByType"
                                     :items="ViewByType"
                                     label="View By Type"
+                                    @change="handleViewByTypeChange"
                                     outlined
                                   ></v-select>
                                 </v-list-item>
@@ -145,15 +153,19 @@
 
                                 <v-list-item>
                                   <v-select
+                                    v-model="selectedReminders"
                                     :items="Reminders"
                                     label="Reminders"
+                                    @change="handleRemindersChange"
                                     outlined
                                   ></v-select>
                                 </v-list-item>
                                 <v-list-item>
                                   <v-select
+                                    v-model="selectedNotes"
                                     :items="Notes"
                                     label="Notes"
+                                    @change="handleNotesChange"
                                     outlined
                                   ></v-select>
                                 </v-list-item>
@@ -166,8 +178,10 @@
 
                                 <v-list-item>
                                   <v-select
+                                    v-model="selectedUser"
                                     :items="Users"
                                     label="Users"
+                                    @change="handleUsersChange"
                                     outlined
                                   ></v-select>
                                 </v-list-item>
@@ -180,8 +194,10 @@
 
                                 <v-list-item>
                                   <v-select
+                                    v-model="selectedNumber"
                                     :items="Numbers"
                                     label="Number"
+                                    @change="handleNumbersChange"
                                     outlined
                                   ></v-select>
                                 </v-list-item>
@@ -198,7 +214,7 @@
                                 class="mr-0 flex red_button"
                                 :loading="isUpdating"
                                 depressed
-                                @click="isUpdating = true"
+                                @click="handleApplyFilter"
                               >
                                 Apply Filter
                               </v-btn>
@@ -626,6 +642,7 @@ import firebase from "firebase";
 import { db } from "@/main.js";
 import moment from "moment";
 import { Icon } from "@iconify/vue2";
+import axios from 'axios';
 
 export default {
   components: {
@@ -648,6 +665,7 @@ export default {
       { title: "Block This Number", color: "red--text", url: "block_number" },
     ],
     timeofCall: ["Ascending", "Descending"],
+    selectedTimeOfCall: "Ascending",
     DurationOfCall: [
       "Not Specified",
       "< 30 Seconds",
@@ -655,12 +673,18 @@ export default {
       "1 minitue - > 2 minutes",
       "> 2 minutes",
     ],
+    selectedDurationOfCall: '',
     ViewByType: ["Calls", "Notes", "Reminder"],
+    selectedViewByType: 'Calls',
     Reminders: ["Not Specified", "Yes"],
+    selectedReminders: "Not Specified",
     Notes: ["Not Specified", "Yes"],
+    selectedNotes: "Not Specified",
 
     Users: ["All", "Sree", "Shinu", "Syam", "Divya", "Munasir"],
+    selectedUser:"All",
     Numbers: ["All", "8657510921", "222222222", "22"],
+    selectedNumber: "All",
     fav: true,
     filtermenu: false,
     message: false,
@@ -672,6 +696,7 @@ export default {
     detail: {},
     calldetails: [],
     realdata: [],
+    backuprealdata: [],
     click_details: {},
     clicked_array: [],
     selected: false,
@@ -700,6 +725,12 @@ export default {
     bottom: true,
     right: false,
     pageNumber:10,
+    limit:20,
+    lastrecord:null,
+    searchTerm: "",
+    totalPage: 0, 
+    totalItems: 0,
+    page:1,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -712,6 +743,53 @@ export default {
     },
   },
   methods: {
+    handleTimeOfCallChange(opn) {
+      this.selectedPaymentOption = opn;
+      console.log(this.selectedTimeOfCall);
+    },
+    handleDurationOfCallChange(opn) {
+      this.selectedDurationOfCall = opn;
+      console.log(this.selectedDurationOfCall);
+    },
+    handleViewByTypeChange(opn) {
+      this.selectedViewByType = opn;
+      console.log(this.selectedViewByType);
+    },
+    handleRemindersChange(opn) {
+      this.selectedReminders = opn;
+      console.log(this.selectedReminders);
+    },
+    handleNotesChange(opn) {
+      this.selectedNotes = opn;
+      console.log(this.selectedNotes);
+    },
+    handleUsersChange(opn) {
+      this.selectedUser = opn;
+      console.log(this.selectedUser);
+    },
+    handleNumbersChange(opn) {
+      this.selectedNumber = opn;
+      console.log(this.selectedNumber);
+    },
+    handleApplyFilter() {
+      // this.isUpdating = true;
+      this.filterMongo();
+
+    },
+    updateSearchTerm() {
+      console.log(this.searchTerm);
+      console.log('this.searchTerm.length',this.searchTerm.length);
+      if(this.searchTerm !== '') {
+        this.searchMongo();
+      } else {
+        console.log('searchTerm is empty');
+        this.realdata = this.backuprealdata;
+      }
+      
+    },
+    searchAction() {
+      this.hidden = !this.hidden;
+    },
     SendVerification() {
       this.changeEmailPopup = false;
       this.sendInviteLoader = true;
@@ -880,8 +958,478 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
-getInitialList(pageNumber){
-  console.log(pageNumber);
+    getCallsFilterPayload(filterCallsConditions) {
+
+      console.log('this.selectedTimeOfCall', this.selectedTimeOfCall);
+      if(this.selectedTimeOfCall !=='' && this.selectedTimeOfCall == 'Ascending') {
+        Object.assign(filterCallsConditions.sort, { "dateTime": -1 });
+      } else {
+        Object.assign(filterCallsConditions.sort, { "dateTime": 1 });
+      }
+
+      console.log('this.selectedDurationOfCall', this.selectedDurationOfCall);
+      if(this.selectedDurationOfCall !== 'Not Specified') {
+
+        if(this.selectedDurationOfCall == "< 30 Seconds") {
+          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$lt": 30} });
+        } else if (this.selectedDurationOfCall == "30 Seconds - > 1 minute") {
+          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 30, "$lt": 60} });
+        } else if (this.selectedDurationOfCall == "1 minitue - > 2 minutes") {
+          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 60, "$lt": 120} });
+        } else if (this.selectedDurationOfCall == "> 2 minutes") {
+          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 120} });
+        }
+      }
+
+      console.log('this.selectedViewByType', this.selectedViewByType);
+      if(this.selectedViewByType == "Notes") {
+        Object.assign(filterCallsConditions.conditions, { "Notes": {"$exists": true} });
+      }
+      if(this.selectedViewByType == "Reminder") {
+        Object.assign(filterCallsConditions.conditions, { "Reminder": {"$exists": true} });
+      }
+      console.log('this.selectedReminders', this.selectedReminders);
+      if(this.selectedReminders !== "Not Specified") {
+        Object.assign(filterCallsConditions.conditions, { "Reminder": {"$exists": true} });
+      }
+      console.log('this.selectedNotes', this.selectedNotes);
+      if(this.selectedNotes !== "Not Specified") {
+        Object.assign(filterCallsConditions.conditions, { "Notes": {"$exists": true} });
+      }
+
+      console.log('this.selectedNotes', this.selectedUser);
+      if(this.selectedUser !== "All") {
+        Object.assign(filterCallsConditions.conditions, { "connectedto": "+917994510065" });
+      }
+      console.log('this.selectedNotes', this.selectedNumber);
+      if(this.selectedNumber !== "All") {
+        Object.assign(filterCallsConditions.conditions, { "virtualnumber": "8657510921" });
+      }
+
+      return filterCallsConditions;
+    },
+    filterMongo() {
+
+      console.log('Filtering Calls.....');
+      var filterCallsPayload = {
+        "page_number": this.page?parseInt(this.page):1,
+        "results_per_page": parseInt(this.limit),
+        "conditions": {
+        },
+        "sort":{}
+      };
+
+      let updatedFilterCallsPayload = this.getCallsFilterPayload(filterCallsPayload);
+      console.log('updatedFilterCallsPayload', JSON.stringify(updatedFilterCallsPayload));
+
+      var cfdata = {
+        "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        "url": "http://35.244.46.144:5000/api/calllogs/paginate",
+        "payload": updatedFilterCallsPayload
+      };
+      var raw = JSON.stringify(cfdata);
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'token': 'tpmongo'
+      }
+      axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
+        headers: headers
+      })
+      .then((response) => {
+        console.log('DL response', response.data.data);
+        let dataset = response.data.data.dataset;
+
+        this.totalPage = response.data.data.totalPages;
+        this.totalItems = response.data.data.totalItems;
+
+        // let List = [];
+        this.realdata = [];
+        dataset.forEach((doc) => {
+          // let callObj = {
+
+          // };
+
+          // call details
+          let user_details = doc;
+            this.calldetails = user_details;
+            var timestamp = this.calldetails.dateTime;
+            var date = new Date(timestamp);
+            console.log("full time", date);
+            console.log("Time: ", date.getTime());
+
+            var myCurrentDate = new Date();
+            var missedTresholdDate = new Date(myCurrentDate);
+            missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+            console.log(missedTresholdDate);
+
+            console.log(timestamp); //missed call date
+            console.log(missedTresholdDate.getTime()); //addon date
+            console.log(myCurrentDate.getTime()); //today's date
+
+            if (timestamp <= missedTresholdDate.getTime()) {
+              call_time = moment(date).format("D MMM Y hh:mm a");
+            } else {
+              var call_time = moment(date).format("hh:mm a");
+              call_time = moment(date).fromNow();
+            }
+
+            var note = "";
+            if (this.calldetails.Notes) {
+              note = this.calldetails.Notes;
+            } else {
+              console.log("no note");
+              note = [{ Note: "" }];
+            }
+
+            var calledNumber =
+              this.calldetails.callerNumber.slice(0, 5) +
+              " " +
+              this.calldetails.callerNumber.slice(5, 7) +
+              " " +
+              this.calldetails.callerNumber.slice(7, 11);
+            var virtualnumber =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
+            this.detail = Object.assign({}, this.detail, {
+              callstatus: this.calldetails.callstatus,
+              name: this.calldetails.name[0],
+              dateTime: call_time,
+              conversationduration: this.calldetails.conversationduration,
+              callerNumber: calledNumber,
+              uniqueid: this.calldetails.uniqueid,
+              Note: note,
+              source: this.calldetails.source,
+              virtualnumber: virtualnumber,
+              called_name: this.called_name,
+              recordingUrl: this.calldetails.recordingurl,
+            });
+            this.realdata.push(this.detail);
+            console.log("snap calllog ", this.realdata);
+          // call details
+        })
+      })
+      .catch((error) => {
+        console.log('DL error', error);
+      })
+
+    },
+    getCallsSearchPayload(searchCallsConditions) {
+
+      if(this.searchTerm && this.searchTerm!='') {
+        Object.assign(searchCallsConditions.conditions, {"$or": [
+        {
+          "Notes": {"$elemMatch": {"Note": {"$regex": this.searchTerm,"$options":"i"}}}
+        },
+        {
+          "callerNumber": {"$regex": this.searchTerm,"$options":"i"}
+        },
+        {
+          "Reminder.Message" : {"$regex":this.searchTerm,"$options":"i"}
+        }
+        ] });
+      }
+
+      return searchCallsConditions;
+    },
+    searchMongo() {
+
+      var searchCallsConditions = {
+        "page_number": this.page?parseInt(this.page):1,
+        "results_per_page": parseInt(this.limit),
+        "conditions": {
+        },
+        "sort":{}
+      };
+
+      let updatedSearchCallsPayload = this.getCallsSearchPayload(searchCallsConditions);
+
+      console.log('updatedSearchCallsPayload', updatedSearchCallsPayload);
+
+      var cfdata = {
+        "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        "url": "http://35.244.46.144:5000/api/calllogs/paginate",
+        "payload": updatedSearchCallsPayload
+      };
+      var raw = JSON.stringify(cfdata);
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'token': 'tpmongo'
+      }
+      axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
+        headers: headers
+      })
+      .then((response) => {
+        console.log('DL response', response.data.data);
+        let dataset = response.data.data.dataset;
+
+        this.totalPage = response.data.data.totalPages;
+        this.totalItems = response.data.data.totalItems;
+
+        // let List = [];
+        this.realdata = [];
+        dataset.forEach((doc) => {
+          // let callObj = {
+
+          // };
+
+          // call details
+          let user_details = doc;
+            this.calldetails = user_details;
+            var timestamp = this.calldetails.dateTime;
+            var date = new Date(timestamp);
+            console.log("full time", date);
+            console.log("Time: ", date.getTime());
+
+            var myCurrentDate = new Date();
+            var missedTresholdDate = new Date(myCurrentDate);
+            missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+            console.log(missedTresholdDate);
+
+            console.log(timestamp); //missed call date
+            console.log(missedTresholdDate.getTime()); //addon date
+            console.log(myCurrentDate.getTime()); //today's date
+
+            if (timestamp <= missedTresholdDate.getTime()) {
+              call_time = moment(date).format("D MMM Y hh:mm a");
+            } else {
+              var call_time = moment(date).format("hh:mm a");
+              call_time = moment(date).fromNow();
+            }
+
+            var note = "";
+            if (this.calldetails.Notes) {
+              note = this.calldetails.Notes;
+            } else {
+              console.log("no note");
+              note = [{ Note: "" }];
+            }
+
+            var calledNumber =
+              this.calldetails.callerNumber.slice(0, 5) +
+              " " +
+              this.calldetails.callerNumber.slice(5, 7) +
+              " " +
+              this.calldetails.callerNumber.slice(7, 11);
+            var virtualnumber =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
+            this.detail = Object.assign({}, this.detail, {
+              callstatus: this.calldetails.callstatus,
+              name: this.calldetails.name[0],
+              dateTime: call_time,
+              conversationduration: this.calldetails.conversationduration,
+              callerNumber: calledNumber,
+              uniqueid: this.calldetails.uniqueid,
+              Note: note,
+              source: this.calldetails.source,
+              virtualnumber: virtualnumber,
+              called_name: this.called_name,
+              recordingUrl: this.calldetails.recordingurl,
+            });
+            this.realdata.push(this.detail);
+            console.log("snap calllog ", this.realdata);
+          // call details
+        })
+      })
+      .catch((error) => {
+        console.log('DL error', error);
+      })
+    },
+    getNextCalls() {
+      window.onscroll = () => {
+        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+        if (bottomOfWindow) {
+          console.log('getting Next Calls');
+          console.log('this.lastrecord', this.lastrecord);
+          // getting Next calls
+          db.collection("callLogs")
+            .where("owneruid", "==", this.uid)
+            .orderBy("dateTime", "desc")
+            .startAt(this.lastrecord)
+            .limit(this.limit)
+            .get()
+            .then((querySnapshot) => {
+            // .onSnapshot((querySnapshot) => {
+              // this.realdata = [];
+              if (!querySnapshot.empty) {
+                querySnapshot.forEach(async (doc) => {
+                  this.lastrecord = doc;
+                  console.log(doc.id, " => ", doc.data());
+                  let user_details = doc.data();
+                  this.calldetails = user_details;
+                  var timestamp = this.calldetails.dateTime;
+                  var date = new Date(timestamp);
+                  console.log("full time", date);
+                  console.log("Time: ", date.getTime());
+
+                  var myCurrentDate = new Date();
+                  var missedTresholdDate = new Date(myCurrentDate);
+                  missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                  console.log(missedTresholdDate);
+
+                  console.log(timestamp); //missed call date
+                  console.log(missedTresholdDate.getTime()); //addon date
+                  console.log(myCurrentDate.getTime()); //today's date
+
+                  if (timestamp <= missedTresholdDate.getTime()) {
+                    call_time = moment(date).format("D MMM Y hh:mm a");
+                  } else {
+                    var call_time = moment(date).format("hh:mm a");
+                    call_time = moment(date).fromNow();
+                  }
+
+                  var note = "";
+                  if (this.calldetails.Notes) {
+                    note = this.calldetails.Notes;
+                  } else {
+                    console.log("no note");
+                    note = [{ Note: "" }];
+                  }
+
+                  var calledNumber =
+                    this.calldetails.callerNumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.callerNumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.callerNumber.slice(7, 11);
+                  var virtualnumber =
+                    this.calldetails.virtualnumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(7, 11);
+                  this.detail = Object.assign({}, this.detail, {
+                    callstatus: this.calldetails.callstatus,
+                    name: this.calldetails.name[0],
+                    dateTime: call_time,
+                    conversationduration: this.calldetails.conversationduration,
+                    callerNumber: calledNumber,
+                    uniqueid: this.calldetails.uniqueid,
+                    Note: note,
+                    source: this.calldetails.source,
+                    virtualnumber: virtualnumber,
+                    called_name: this.called_name,
+                    recordingUrl: this.calldetails.recordingurl,
+                  });
+                  this.realdata.push(this.detail);
+                  this.backuprealdata.push(this.detail);
+                  console.log("next calllog ", this.realdata);
+                });
+
+                console.log('this.realdata', this.realdata.length);
+                console.log('this.backuprealdata', this.backuprealdata.length);
+              } else {
+                //alert('no calls')
+              }
+            });
+          // getting Next calls
+        }
+      }
+    },
+  },
+  created() {
+    // let localStorageUserObj = localStorage.getItem("tpu");
+
+    // if (localStorageUserObj) {
+    //   let parsedUser = JSON.parse(localStorageUserObj);
+    //   this.userEmail = parsedUser.Email;
+
+    //   this.userRole = parsedUser.role;
+    //   firebase.auth().onAuthStateChanged((user) => {
+    //     if (user) {
+    //       this.uid = user.uid;
+    //       // console.log("User Id : " + this.uid);
+    //       this.sendMessage(this.uid);
+
+    //       // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
+    //       db.collection("callLogs")
+    //         .where("owneruid", "==", this.uid)
+    //         .orderBy("dateTime", "desc")
+    //         // .startAt(0)
+    //         .limit(this.limit)
+    //         .onSnapshot((querySnapshot) => {
+    //           this.realdata = [];
+    //           if (!querySnapshot.empty) {
+    //             querySnapshot.forEach(async (doc) => {
+    //               // console.log(doc.id, " => ", doc.data());
+    //               this.lastrecord = doc;
+    //               let user_details = doc.data();
+    //               this.calldetails = user_details;
+    //               var timestamp = this.calldetails.dateTime;
+    //               var date = new Date(timestamp);
+    //               // console.log("full time", date);
+    //               // console.log("Time: ", date.getTime());
+
+    //               var myCurrentDate = new Date();
+    //               var missedTresholdDate = new Date(myCurrentDate);
+    //               missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+    //               // console.log(missedTresholdDate);
+
+    //               // console.log(timestamp); //missed call date
+    //               // console.log(missedTresholdDate.getTime()); //addon date
+    //               // console.log(myCurrentDate.getTime()); //today's date
+
+    //               if (timestamp <= missedTresholdDate.getTime()) {
+    //                 call_time = moment(date).format("D MMM Y hh:mm a");
+    //               } else {
+    //                 var call_time = moment(date).format("hh:mm a");
+    //                 call_time = moment(date).fromNow();
+    //               }
+
+    //               var note = "";
+    //               if (this.calldetails.Notes) {
+    //                 note = this.calldetails.Notes;
+    //               } else {
+    //                 // console.log("no note");
+    //                 note = [{ Note: "" }];
+    //               }
+
+    //               var calledNumber =
+    //                 this.calldetails.callerNumber.slice(0, 5) +
+    //                 " " +
+    //                 this.calldetails.callerNumber.slice(5, 7) +
+    //                 " " +
+    //                 this.calldetails.callerNumber.slice(7, 11);
+    //               var virtualnumber =
+    //                 this.calldetails.virtualnumber.slice(0, 5) +
+    //                 " " +
+    //                 this.calldetails.virtualnumber.slice(5, 7) +
+    //                 " " +
+    //                 this.calldetails.virtualnumber.slice(7, 11);
+    //               this.detail = Object.assign({}, this.detail, {
+    //                 callstatus: this.calldetails.callstatus,
+    //                 name: this.calldetails.name[0],
+    //                 dateTime: call_time,
+    //                 conversationduration: this.calldetails.conversationduration,
+    //                 callerNumber: calledNumber,
+    //                 uniqueid: this.calldetails.uniqueid,
+    //                 Note: note,
+    //                 source: this.calldetails.source,
+    //                 virtualnumber: virtualnumber,
+    //                 called_name: this.called_name,
+    //                 recordingUrl: this.calldetails.recordingurl,
+    //               });
+    //               this.realdata.push(this.detail);
+    //               this.backuprealdata.push(this.detail);
+    //               // console.log("snap calllog ", this.realdata);
+    //             });
+    //           } else {
+    //             //alert('no calls')
+    //           }
+    //         });
+    //     }
+    //   });
+    // }
+},
+beforeMount() {
 
     let localStorageUserObj = localStorage.getItem("tpu");
 
@@ -901,12 +1449,13 @@ getInitialList(pageNumber){
             .where("owneruid", "==", this.uid)
             .orderBy("dateTime", "desc")
             // .startAt(0)
-                  .limit(pageNumber)
+            .limit(this.limit)
             .onSnapshot((querySnapshot) => {
               this.realdata = [];
               if (!querySnapshot.empty) {
                 querySnapshot.forEach(async (doc) => {
                   // console.log(doc.id, " => ", doc.data());
+                  this.lastrecord = doc;
                   let user_details = doc.data();
                   this.calldetails = user_details;
                   var timestamp = this.calldetails.dateTime;
@@ -964,6 +1513,7 @@ getInitialList(pageNumber){
                     recordingUrl: this.calldetails.recordingurl,
                   });
                   this.realdata.push(this.detail);
+                  this.backuprealdata.push(this.detail);
                   // console.log("snap calllog ", this.realdata);
                 });
               } else {
@@ -973,30 +1523,12 @@ getInitialList(pageNumber){
         }
       });
     }
-},
-     Onscrollfunction() {
-			if (
-				window.scrollY + window.innerHeight >=
-				document.body.scrollHeight - 15
-			) {
-        console.log('bottom of the screen');
-        this.loadingMore=true;
-         setTimeout(() => (this.loadingMore = false), 3000)
-this.getInitialList(this.pageNumber);
-this.pageNumber = this.pageNumber+10;
-			}else{
-         this.loadingMore=false;
-      }
-		},
-  },
-  created() {
 
-this.getInitialList(10);
-    
-  },
-  mounted(){
-    window.addEventListener("scroll", this.Onscrollfunction);
-  }
+},
+mounted() {
+  this.getNextCalls();
+}
+
 };
 </script>
 
