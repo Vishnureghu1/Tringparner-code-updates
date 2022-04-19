@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <v-alert prominent color="red darken-1" type="error">
+    <div v-if="hidealert">
+    <v-alert prominent color="red darken-1"  type="error" >
       <v-row align="center">
         <v-col class="grow">
           <h2 class="f16 regular">Email Verification</h2>
@@ -10,10 +11,11 @@
           >
         </v-col>
         <v-col class="shrink">
-          <v-btn @click="changeEmailPopup = true">Resend Email</v-btn>
+          <v-btn @click="changeEmailPopup1()">Resend Email</v-btn>
         </v-col>
       </v-row>
     </v-alert>
+    </div>
     <div>
       <v-container fluid>
         <v-snackbar
@@ -521,7 +523,7 @@
           <h3 class="center">Verify your email address</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field label="Email Address*" outlined></v-text-field>
+          <v-text-field label="Email Address*" v-model = "current_email" outlined></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -552,9 +554,10 @@
           <h3 class="center">Enter the OTP</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation>
+          <!-- <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation>
             <v-text-field label="Enter OTP" required></v-text-field>
-          </v-form>
+          </v-form> -->
+            <v-text-field label="Enter OTP" v-model="otp" value="" required></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -608,6 +611,8 @@ export default {
     Icon,
   },
   data: () => ({
+    hidealert:"",
+    otp:"",
     valid: true,
     searchForm: false,
     benched: 0,
@@ -615,7 +620,7 @@ export default {
     sendInviteLoader: false,
     changeEmailPopup: false,
     enterOtpModel: false,
-
+    current_email:"",
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_number" },
@@ -696,6 +701,10 @@ export default {
       this.getNextCalls();
   },
   methods: {
+    changeEmailPopup1(){
+      console.log("g")
+        this.changeEmailPopup = true
+    },
     updateSearchTerm() {
       console.log(this.searchTerm);
       if(this.searchTerm !== '') {
@@ -711,12 +720,65 @@ export default {
     },
     SendVerification() {
       this.changeEmailPopup = false;
-      this.sendInviteLoader = true;
+       const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/otp",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          email: this.current_email,
+          uid: this.uid,
+          updated_by:this.uid
+        },
+      };
+
+      axios(details).then(async (response) => { 
+         if(response.data.status == false){
+  console.log(response.data.status)   
+     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
+         }else{
+  console.log(response.data.status)   
+  this.sendInviteLoader = true;
+   this.changeEmailPopup = false
+  this.enterOtpModel=true
+         }
+        //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
+      
+      })
       // this.enterOtpModel = false
+    },
+    verifyOTP(){
+         const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/verification",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          email: this.current_email,
+          uid: this.uid,
+          otp: parseInt(this.otp),
+          updated_by:this.uid
+        },
+      };
+
+      axios(details).then(async (response) => { 
+         if(response.data.status == false){
+  console.log(response.data.status)   
+     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
+         }else{
+  console.log(response.data.status)   
+  this.dialog2 = false,
+  this.enterOtpModel=false
+  this.otp = "",
+  // this.current_number = this.new_number,
+   this.$root.vtoast.show({message: response.data.message, color: 'green', timer: 2000});
+         }
+        //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
+      
+      })
     },
     close() {
       this.changeEmailPopup = false;
       this.enterOtpModel = false;
+      this.otp=""
     },
     openSearchBar() {
       alert("ss");
@@ -1108,7 +1170,12 @@ export default {
           this.uid = user.uid;
           console.log("User Id : " + this.uid);
           this.sendMessage(this.uid);
-
+           db.collection("users").where("uid","==",this.uid).get().then(async(snap) =>{
+       this.current_email = snap.docs[0].data().Email
+       this.hidealert = snap.docs[0].data().IsEmailVerified==true?false:false
+		}).catch((err)=>{
+			console.log(err.message)
+		})
           // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
           db.collection("callLogs")
             .where("owneruid", "==", this.uid)
