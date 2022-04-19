@@ -89,6 +89,13 @@ const routes = [{
         meta: { requiresAuth: true, role: 'OWNER' }
     },
     {
+        path: '/reserveNumber',
+        name: 'reserveNumber',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/reserveNumber.vue'),
+        meta: { requiresAuth: true, role: 'OWNER' }
+    },
+    {
         path: '/buyNewAddOnUser',
         name: 'buyNewAddOnUser',
         component: () =>

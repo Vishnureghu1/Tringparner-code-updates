@@ -1,7 +1,6 @@
 <template>
   <v-app>
-    <div v-if="hidealert">
-    <v-alert prominent color="red darken-1"  type="error" >
+    <v-alert prominent color="red darken-1" type="error">
       <v-row align="center">
         <v-col class="grow">
           <h2 class="f16 regular">Email Verification</h2>
@@ -11,11 +10,10 @@
           >
         </v-col>
         <v-col class="shrink">
-          <v-btn @click="changeEmailPopup1()">Resend Email</v-btn>
+          <v-btn @click="changeEmailPopup = true">Resend Email</v-btn>
         </v-col>
       </v-row>
     </v-alert>
-    </div>
     <div>
       <v-container fluid>
         <v-snackbar
@@ -62,8 +60,6 @@
                         class="searchForm"
                         label="Search"
                         single-line
-                        v-model="searchTerm"
-                        @input="updateSearchTerm"
                       ></v-text-field>
 
                       <v-menu
@@ -77,7 +73,7 @@
                             ><v-icon
                               class="mt-6 mb-5 mr-4"
                               color="black"
-                              @click="searchAction"
+                              @click="hidden = !hidden"
                               >mdi-magnify</v-icon
                             >
                             <v-icon
@@ -526,7 +522,7 @@
           <h3 class="center">Verify your email address</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field label="Email Address*" v-model = "current_email" outlined></v-text-field>
+          <v-text-field label="Email Address*" outlined></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -557,10 +553,9 @@
           <h3 class="center">Enter the OTP</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <!-- <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation>
+          <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation>
             <v-text-field label="Enter OTP" required></v-text-field>
-          </v-form> -->
-            <v-text-field label="Enter OTP" v-model="otp" value="" required></v-text-field>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -607,15 +602,12 @@ import firebase from "firebase";
 import { db } from "@/main.js";
 import moment from "moment";
 import { Icon } from "@iconify/vue2";
-import axios from 'axios'
 
 export default {
   components: {
     Icon,
   },
   data: () => ({
-    hidealert:"",
-    otp:"",
     valid: true,
     searchForm: false,
     benched: 0,
@@ -623,7 +615,7 @@ export default {
     sendInviteLoader: false,
     changeEmailPopup: false,
     enterOtpModel: false,
-    current_email:"",
+
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_number" },
@@ -655,7 +647,6 @@ export default {
     detail: {},
     calldetails: [],
     realdata: [],
-    backuprealdata: [],
     click_details: {},
     clicked_array: [],
     selected: false,
@@ -683,12 +674,6 @@ export default {
     timeout: 2500,
     bottom: true,
     right: false,
-    searchTerm: '',
-    perPage:20,
-    totalPage:0,
-    limit:20,
-    page:1,
-    lastrecord:null,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -700,88 +685,15 @@ export default {
       }
     },
   },
-  mounted() {
-      this.getNextCalls();
-  },
   methods: {
-    changeEmailPopup1(){
-      console.log("g")
-        this.changeEmailPopup = true
-    },
-    updateSearchTerm() {
-      console.log(this.searchTerm);
-      if(this.searchTerm !== '') {
-        this.searchMongo();
-      } else {
-        console.log('searchTerm is empty');
-        this.realdata = this.backuprealdata;
-      }
-      
-    },
-    searchAction() {
-      this.hidden = !this.hidden;
-    },
     SendVerification() {
       this.changeEmailPopup = false;
-       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/otp",
-        method: "POST",
-        headers: { token: localStorage.getItem("token") },
-        data: {
-          email: this.current_email,
-          uid: this.uid,
-          updated_by:this.uid
-        },
-      };
-
-      axios(details).then(async (response) => { 
-         if(response.data.status == false){
-  console.log(response.data.status)   
-     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
-         }else{
-  console.log(response.data.status)   
-  this.sendInviteLoader = true;
-   this.changeEmailPopup = false
-  this.enterOtpModel=true
-         }
-        //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
-      
-      })
+      this.sendInviteLoader = true;
       // this.enterOtpModel = false
-    },
-    verifyOTP(){
-         const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/verification",
-        method: "POST",
-        headers: { token: localStorage.getItem("token") },
-        data: {
-          email: this.current_email,
-          uid: this.uid,
-          otp: parseInt(this.otp),
-          updated_by:this.uid
-        },
-      };
-
-      axios(details).then(async (response) => { 
-         if(response.data.status == false){
-  console.log(response.data.status)   
-     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
-         }else{
-  console.log(response.data.status)   
-  this.dialog2 = false,
-  this.enterOtpModel=false
-  this.otp = "",
-  // this.current_number = this.new_number,
-   this.$root.vtoast.show({message: response.data.message, color: 'green', timer: 2000});
-         }
-        //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
-      
-      })
     },
     close() {
       this.changeEmailPopup = false;
       this.enterOtpModel = false;
-      this.otp=""
     },
     openSearchBar() {
       alert("ss");
@@ -942,223 +854,9 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
-    getCallSearchFilter(filterCallsConditions) {
-
-      if(this.searchTerm && this.searchTerm!='') {
-        Object.assign(filterCallsConditions.conditions, {"$or": [
-        {
-          "Notes": {"$elemMatch": {"Note": {"$regex": this.searchTerm,"$options":"i"}}}
-        },
-        {
-          "callerNumber": {"$regex": this.searchTerm,"$options":"i"}
-        },
-        {
-          "Reminder.Message" : {"$regex":this.searchTerm,"$options":"i"}
-        }
-        ] });
-      }
-
-      return filterCallsConditions;
-    },
-    searchMongo() {
-
-      var filterCallsConditions = {
-        "page_number": this.page?parseInt(this.page):1,
-        "results_per_page": parseInt(this.limit),
-        "conditions": {
-        },
-        "sort":{}
-      };
-
-      let updatedCallsFilter = this.getCallSearchFilter(filterCallsConditions);
-
-      console.log('updatedCallsFilter', updatedCallsFilter);
-
-      var cfdata = {
-        "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-        "url": "http://35.244.46.144:5000/api/calllogs/paginate",
-        "payload": updatedCallsFilter
-      };
-      var raw = JSON.stringify(cfdata);
-
-      const headers = {
-        'Content-Type': 'application/json',
-        'token': 'tpmongo'
-      }
-      axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
-        headers: headers
-      })
-      .then((response) => {
-        console.log('DL response', response.data.data);
-        let dataset = response.data.data.dataset;
-
-        this.totalPage = response.data.data.totalPages;
-        this.totalItems = response.data.data.totalItems;
-
-        // let List = [];
-        this.realdata = [];
-        dataset.forEach((doc) => {
-          // let callObj = {
-
-          // };
-
-          // call details
-          let user_details = doc;
-            this.calldetails = user_details;
-            var timestamp = this.calldetails.dateTime;
-            var date = new Date(timestamp);
-            console.log("full time", date);
-            console.log("Time: ", date.getTime());
-
-            var myCurrentDate = new Date();
-            var missedTresholdDate = new Date(myCurrentDate);
-            missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-            console.log(missedTresholdDate);
-
-            console.log(timestamp); //missed call date
-            console.log(missedTresholdDate.getTime()); //addon date
-            console.log(myCurrentDate.getTime()); //today's date
-
-            if (timestamp <= missedTresholdDate.getTime()) {
-              call_time = moment(date).format("D MMM Y hh:mm a");
-            } else {
-              var call_time = moment(date).format("hh:mm a");
-              call_time = moment(date).fromNow();
-            }
-
-            var note = "";
-            if (this.calldetails.Notes) {
-              note = this.calldetails.Notes;
-            } else {
-              console.log("no note");
-              note = [{ Note: "" }];
-            }
-
-            var calledNumber =
-              this.calldetails.callerNumber.slice(0, 5) +
-              " " +
-              this.calldetails.callerNumber.slice(5, 7) +
-              " " +
-              this.calldetails.callerNumber.slice(7, 11);
-            var virtualnumber =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
-            this.detail = Object.assign({}, this.detail, {
-              callstatus: this.calldetails.callstatus,
-              name: this.calldetails.name[0],
-              dateTime: call_time,
-              conversationduration: this.calldetails.conversationduration,
-              callerNumber: calledNumber,
-              uniqueid: this.calldetails.uniqueid,
-              Note: note,
-              source: this.calldetails.source,
-              virtualnumber: virtualnumber,
-              called_name: this.called_name,
-              recordingUrl: this.calldetails.recordingurl,
-            });
-            this.realdata.push(this.detail);
-            console.log("snap calllog ", this.realdata);
-          // call details
-        })
-      })
-      .catch((error) => {
-        console.log('DL error', error);
-      })
-    },
-    getNextCalls() {
-      window.onscroll = () => {
-        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-        if (bottomOfWindow) {
-          console.log('getting Next Calls');
-          console.log('this.lastrecord', this.lastrecord);
-          // getting Next calls
-          db.collection("callLogs")
-            .where("owneruid", "==", this.uid)
-            .orderBy("dateTime", "desc")
-            .startAt(this.lastrecord)
-            .limit(this.limit)
-            .get()
-            .then((querySnapshot) => {
-            // .onSnapshot((querySnapshot) => {
-              // this.realdata = [];
-              if (!querySnapshot.empty) {
-                querySnapshot.forEach(async (doc) => {
-                  this.lastrecord = doc;
-                  console.log(doc.id, " => ", doc.data());
-                  let user_details = doc.data();
-                  this.calldetails = user_details;
-                  var timestamp = this.calldetails.dateTime;
-                  var date = new Date(timestamp);
-                  console.log("full time", date);
-                  console.log("Time: ", date.getTime());
-
-                  var myCurrentDate = new Date();
-                  var missedTresholdDate = new Date(myCurrentDate);
-                  missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-                  console.log(missedTresholdDate);
-
-                  console.log(timestamp); //missed call date
-                  console.log(missedTresholdDate.getTime()); //addon date
-                  console.log(myCurrentDate.getTime()); //today's date
-
-                  if (timestamp <= missedTresholdDate.getTime()) {
-                    call_time = moment(date).format("D MMM Y hh:mm a");
-                  } else {
-                    var call_time = moment(date).format("hh:mm a");
-                    call_time = moment(date).fromNow();
-                  }
-
-                  var note = "";
-                  if (this.calldetails.Notes) {
-                    note = this.calldetails.Notes;
-                  } else {
-                    console.log("no note");
-                    note = [{ Note: "" }];
-                  }
-
-                  var calledNumber =
-                    this.calldetails.callerNumber.slice(0, 5) +
-                    " " +
-                    this.calldetails.callerNumber.slice(5, 7) +
-                    " " +
-                    this.calldetails.callerNumber.slice(7, 11);
-                  var virtualnumber =
-                    this.calldetails.virtualnumber.slice(0, 5) +
-                    " " +
-                    this.calldetails.virtualnumber.slice(5, 7) +
-                    " " +
-                    this.calldetails.virtualnumber.slice(7, 11);
-                  this.detail = Object.assign({}, this.detail, {
-                    callstatus: this.calldetails.callstatus,
-                    name: this.calldetails.name[0],
-                    dateTime: call_time,
-                    conversationduration: this.calldetails.conversationduration,
-                    callerNumber: calledNumber,
-                    uniqueid: this.calldetails.uniqueid,
-                    Note: note,
-                    source: this.calldetails.source,
-                    virtualnumber: virtualnumber,
-                    called_name: this.called_name,
-                    recordingUrl: this.calldetails.recordingurl,
-                  });
-                  this.realdata.push(this.detail);
-                  // this.backuprealdata.push(this.detail);
-                  console.log("next calllog ", this.realdata);
-                });
-
-                console.log('this.realdata', this.realdata.length);
-                console.log('this.backuprealdata', this.backuprealdata.length);
-              } else {
-                //alert('no calls')
-              }
-            });
-          // getting Next calls
-        }
-      }
-    },
+     Onscrollfnction (event) {    
+     console.log(event);
+     }
   },
   created() {
     let localStorageUserObj = localStorage.getItem("tpu");
@@ -1173,24 +871,17 @@ export default {
           this.uid = user.uid;
           console.log("User Id : " + this.uid);
           this.sendMessage(this.uid);
-           db.collection("users").where("uid","==",this.uid).get().then(async(snap) =>{
-       this.current_email = snap.docs[0].data().Email
-       this.hidealert = snap.docs[0].data().IsEmailVerified==true?false:false
-		}).catch((err)=>{
-			console.log(err.message)
-		})
+
           // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
           db.collection("callLogs")
             .where("owneruid", "==", this.uid)
             .orderBy("dateTime", "desc")
             // .startAt(0)
-            .limit(this.limit)
+            //       .limit(10)
             .onSnapshot((querySnapshot) => {
               this.realdata = [];
               if (!querySnapshot.empty) {
                 querySnapshot.forEach(async (doc) => {
-                  // this.lastrecord = doc.data();
-                  this.lastrecord = doc.id;
                   console.log(doc.id, " => ", doc.data());
                   let user_details = doc.data();
                   this.calldetails = user_details;
@@ -1249,12 +940,8 @@ export default {
                     recordingUrl: this.calldetails.recordingurl,
                   });
                   this.realdata.push(this.detail);
-                  this.backuprealdata.push(this.detail);
                   console.log("snap calllog ", this.realdata);
                 });
-
-                console.log('this.realdata', this.realdata.length);
-                console.log('this.backuprealdata', this.backuprealdata.length);
               } else {
                 //alert('no calls')
               }

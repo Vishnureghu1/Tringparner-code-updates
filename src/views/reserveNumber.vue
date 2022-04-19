@@ -13,7 +13,7 @@
                         <v-icon class="mr-2" color="black" @click="goBack()"
                           >mdi-arrow-left</v-icon
                         >
-                        Buy New Business Number
+                        Details
                       </h2>
                       <v-breadcrumbs class="breadcrumbs" :items="items">
                         <template class="breadcrumbs" v-slot:divider>
@@ -25,14 +25,11 @@
                   <v-row align="center" justify="center">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
-                        Choose any new Virtual Number or tap refresh to get new
-                        list of numbers
+                        Summary of the payment
                       </h2>
                     </v-col>
                     <v-col cols="10" sm="3">
-                      <v-btn class="ma-0" color="red darken-1" dark>
-                        + Refresh List (0 Sec)
-                      </v-btn>
+                      
                     </v-col>
                   </v-row>
 
@@ -44,52 +41,137 @@
                   >
                     <v-layout>
                       <v-flex xs12 sm12 md12>
-                        <v-row no-gutters>
-                          <v-col cols="12" sm="12">
-                            <div v-if="numberList">
-                              <h4 class="mt-6 text-center">
-                                Choose your business number
-                              </h4>
-
-                              <p
-                                class="mt-6 text-center"
-                                v-if="timerCount % 60 != -1"
-                              >
-                                Time Remaining :
-                                {{ Math.floor(timerCount / 60) }} mins
-                                {{ timerCount % 60 }} sec
-                              </p>
-                              <p class="mt-6 text-center" v-else>
-                                Timed Out !!!
-                              </p>
-                              <div class="ml-5 mr-5">
-                                <v-progress-linear
-                                  color="deep-orange"
-                                  height="14"
-                                  :value="value"
-                                  striped
-                                ></v-progress-linear>
-                              </div>
-                            </div>
-                          </v-col>
-                        </v-row>
                         <v-row align="center" justify="center">
                           <v-col cols="12" sm="12">
-                            <v-card class="ml-8" elevation="0">
-                              <v-btn-toggle v-model="toggle_none">
-                                <div class="ml-3 mt-5 text-center flex">
-                                  <v-btn
-                                    v-for="item in V_numbers"
-                                    :key="item"
-                                    class="ml-1 mr-4 mb-5 red--text"
-                                    outlined
-                                    color="white"
-                                    width="45%"
-                                    >{{ item }}</v-btn
+                            <v-card class="ml-0" elevation="0">
+                              <v-card
+                                :elevation="0"
+                                class="
+                                  transition-fast-in-fast-out
+                                  v-card--reveal
+                                "
+                                style="height: 100%"
+                              >
+                                <v-card-text class="pb-0">
+                                  <v-simple-table dense>
+                                    <template v-slot:default>
+                                      <tbody class="ma-0 pa-0" border="0">
+                                        <tr colspan="2">
+                                          <td class="ma-0 pa-0" colspan="2">
+                                            <p class="light3 mt-5 mb-0">
+                                              Business Name
+                                            </p>
+                                            <p class="bold">Lek</p>
+
+                                            <p class="light3 mt-5 mb-0">
+                                              Business Address
+                                            </p>
+                                            <p class="bold">
+                                              Waybeo, Kollam, Kerala, 691306
+                                            </p>
+
+                                            <p class="light3 mt-5 mb-0">
+                                              Business Email Address
+                                            </p>
+                                            <p class="bold">
+                                              lekshmi@gmail.com
+                                            </p>
+
+                                            <p class="bold mt-5">
+                                              Selected Number: 999
+                                            </p>
+
+                                            <p class="bold red--text mb-0 mt-5">
+                                              Due On: 06-Jun-2022
+                                            </p>
+                                            <p class="light4">
+                                              (Billable Duration 1 Month(s) 7
+                                              Day(s))
+                                            </p>
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Charges
+                                          </td>
+
+                                          <td
+                                            class="ma-0 pa-0"
+                                            colspan="2"
+                                            align="right"
+                                          >
+                                            ₹ 525.0
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td
+                                            class="ma-0 pa-0 bold red--text"
+                                            colspan="1"
+                                            color="red"
+                                          >
+                                            Discount
+                                          </td>
+
+                                          <td
+                                            class="ma-0 pa-0 bold red--text"
+                                            colspan="2"
+                                            align="right"
+                                          >
+                                            ₹ 52.5
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            GST(18%)
+                                          </td>
+
+                                          <td
+                                            class="ma-0 pa-0"
+                                            colspan="2"
+                                            align="right"
+                                          >
+                                            ₹ 85.05
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td
+                                            class="ma-0 pa-0 bold"
+                                            colspan="1"
+                                          >
+                                            Total Charges
+                                          </td>
+
+                                          <td
+                                            class="ma-0 pa-0 bold"
+                                            colspan="2"
+                                            align="right"
+                                          >
+                                            ₹ 557.55
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </template></v-simple-table
                                   >
-                                </div>
-                              </v-btn-toggle>
-                              <div class="">
+                                </v-card-text>
+                                <v-card-actions align="center" class="center">
+                                  <v-btn
+                                    text
+                                    class="
+                                      text-capitalize
+                                      ma-3
+                                      rounded-pill
+                                      red_button
+                                    "
+                                    min-width="140px"
+                                    color="white"
+                                    outlined
+                                  >
+                                    Pay Now
+                                  </v-btn>
+                                </v-card-actions>
+                              </v-card>
+
+                              <div class="text-center">
                                 <v-btn
                                   v-if="toggle_none != null"
                                   class="
@@ -104,7 +186,7 @@
                                   color="red white--text"
                                   @click.prevent="reserveNumber()"
                                 >
-                                  Next
+                                  Pay Now
                                 </v-btn>
                               </div>
                             </v-card>
@@ -249,8 +331,13 @@ export default {
       },
       {
         text: "Buy New Business Number",
+        disabled: false,
+        to: { name: "buyNewNumber" },
+      },
+      {
+        text: "Summary",
         disabled: true,
-        to: { name: "" },
+        to: { name: "buyNewNumber" },
       },
     ],
   }),
