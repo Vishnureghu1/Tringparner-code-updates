@@ -178,6 +178,7 @@
 </template>
 
 <script>
+import { db } from '@/main.js';
 export default {
   components: {},
 
@@ -325,7 +326,7 @@ export default {
             this.overlay = false;
             this.V_numbers = response.data.numbers;
             this.timerCount = response.data.Seconds;
-            this.listingId = response.data.listingId;
+            this.listingId = response.data.listing_id;
             this.value = 100 - 0.55 * (180 - this.timerCount);
             console.log(this.value);
             console.log(response);
@@ -370,33 +371,17 @@ export default {
       this.$axios(reserve)
         .then((response) => {
           console.log(response);
-          this.$analytics.logEvent("Web Number reserved");
+          if(response.data.status == true){
+            this.$router.push("/reserveNumber");
+          } 
+          // this.$analytics.logEvent("Web Number reserved");
         })
         .catch((error) => {
           console.error(error);
         })
-        .finally(() => {
-          const user_stage = {
-            url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage",
-            method: "POST",
-
-            data: {
-              uid: this.uid,
-              phoneNumber: this.phno,
-              currentPage: "onboarding_plan_details",
-            },
-          };
-          console.log(user_stage);
-          this.$axios(user_stage)
-            .then((response) => {
-              console.log(response);
-              this.$analytics.logEvent("Web Pricing plan");
-              this.$router.push("/pricing");
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        });
+        // .finally(() => {
+                 
+        // });
     },
     // user stage current page onbording_testing_complete
 
@@ -425,7 +410,18 @@ export default {
     },
   },
   created() {
-    this.getNumbersList();
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId=  localStorageUserObj.AccountId;
+       db.collection("uservirtualNumber").where("Uid","==",this.owneruid).where("IsPurchased","==",false).get().then(async(snap) =>{
+      if(snap.empty){
+      this.getNumbersList();
+      }else{
+            this.$router.push("/reserveNumber");
+      }
+		}).catch((err)=>{
+			console.log(err.message)
+		})
   },
 };
 </script>
