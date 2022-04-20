@@ -1,6 +1,6 @@
 <template>
   <v-app>
-	      <v-alert prominent color="red darken-1" type="error">
+    <v-alert prominent color="red darken-1" type="error">
       <v-row align="center">
         <v-col class="grow">
           <h2 class="f16 regular">Email Verification</h2>
@@ -221,7 +221,6 @@
                           </v-form>
                         </v-card>
                       </v-menu>
-                      
                     </v-col>
                   </v-row>
                   <v-expansion-panels accordion flat>
@@ -496,7 +495,7 @@
         </v-layout>
       </v-container>
     </div>
-	  <v-dialog v-model="changeEmailPopup" max-width="332px">
+    <v-dialog v-model="changeEmailPopup" max-width="332px">
       <v-card class="rounded-lg pt-7 pb-7">
         <v-card-title class="d-flex justify-center">
           <h3 class="center">Verify your email address</h3>
@@ -583,14 +582,14 @@ import moment from "moment";
 
 export default {
   data: () => ({
-  valid: true,
+    valid: true,
     searchForm: false,
     benched: 0,
     hidden: true,
     sendInviteLoader: false,
     changeEmailPopup: false,
     enterOtpModel: false,
-    loadingMore:false,
+    loadingMore: false,
 
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
@@ -606,17 +605,17 @@ export default {
       "1 minitue - > 2 minutes",
       "> 2 minutes",
     ],
-    selectedDurationOfCall: '',
+    selectedDurationOfCall: "",
     ViewByType: ["Calls", "Notes", "Reminder"],
-    selectedViewByType: 'Calls',
+    selectedViewByType: "Calls",
     Reminders: ["Not Specified", "Yes"],
     selectedReminders: "Not Specified",
     Notes: ["Not Specified", "Yes"],
     selectedNotes: "Not Specified",
 
     Users: ["All"],
-    usersObj: {"All":""},
-    selectedUser:"All",
+    usersObj: { All: "" },
+    selectedUser: "All",
     Numbers: ["All"],
     selectedNumber: "All",
     fav: true,
@@ -631,7 +630,7 @@ export default {
     calldetails: [],
     realdata: [],
     click_details: {},
-   clicked_array: [],
+    clicked_array: [],
     selected: false,
     note: [],
     show_notes: false,
@@ -641,7 +640,7 @@ export default {
     isUpdating: false,
     callback_uid: "",
     rules: [(v) => v.length <= 120 || "Max 120 characters"],
-  show: false,
+    show: false,
     marker: true,
     column: null,
     menu2: false,
@@ -656,13 +655,13 @@ export default {
     timeout: 2500,
     bottom: true,
     right: false,
-    pageNumber:10,
-    limit:20,
-    lastrecord:null,
+    pageNumber: 10,
+    limit: 20,
+    lastrecord: null,
     searchTerm: "",
-    totalPage: 0, 
+    totalPage: 0,
     totalItems: 0,
-    page:1,
+    page: 1,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -675,7 +674,7 @@ export default {
     },
   },
   methods: {
-	      handleTimeOfCallChange(opn) {
+    handleTimeOfCallChange(opn) {
       this.selectedPaymentOption = opn;
       console.log(this.selectedTimeOfCall);
     },
@@ -706,18 +705,16 @@ export default {
     handleApplyFilter() {
       // this.isUpdating = true;
       this.filterMongo();
-
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
-      console.log('this.searchTerm.length',this.searchTerm.length);
-      if(this.searchTerm !== '') {
+      console.log("this.searchTerm.length", this.searchTerm.length);
+      if (this.searchTerm !== "") {
         this.searchMongo();
       } else {
-        console.log('searchTerm is empty');
+        console.log("searchTerm is empty");
         this.realdata = this.backuprealdata;
       }
-      
     },
     searchAction() {
       this.hidden = !this.hidden;
@@ -884,102 +881,132 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
-getCallsFilterPayload(filterCallsConditions) {
-
-      console.log('this.selectedTimeOfCall', this.selectedTimeOfCall);
-      if(this.selectedTimeOfCall !=='' && this.selectedTimeOfCall == 'Ascending') {
-        Object.assign(filterCallsConditions.sort, { "dateTime": -1 });
+    getCallsFilterPayload(filterCallsConditions) {
+      console.log("this.selectedTimeOfCall", this.selectedTimeOfCall);
+      if (
+        this.selectedTimeOfCall !== "" &&
+        this.selectedTimeOfCall == "Ascending"
+      ) {
+        Object.assign(filterCallsConditions.sort, { dateTime: -1 });
       } else {
-        Object.assign(filterCallsConditions.sort, { "dateTime": 1 });
+        Object.assign(filterCallsConditions.sort, { dateTime: 1 });
       }
 
-      console.log('this.selectedDurationOfCall', this.selectedDurationOfCall);
-      if(this.selectedDurationOfCall !== 'Not Specified') {
-
-        if(this.selectedDurationOfCall == "< 30 Seconds") {
-          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$lt": 30} });
+      console.log("this.selectedDurationOfCall", this.selectedDurationOfCall);
+      if (this.selectedDurationOfCall !== "Not Specified") {
+        if (this.selectedDurationOfCall == "< 30 Seconds") {
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $lt: 30 },
+          });
         } else if (this.selectedDurationOfCall == "30 Seconds - > 1 minute") {
-          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 30, "$lt": 60} });
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 30, $lt: 60 },
+          });
         } else if (this.selectedDurationOfCall == "1 minitue - > 2 minutes") {
-          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 60, "$lt": 120} });
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 60, $lt: 120 },
+          });
         } else if (this.selectedDurationOfCall == "> 2 minutes") {
-          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 120} });
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 120 },
+          });
         }
       }
 
-      console.log('this.selectedViewByType', this.selectedViewByType);
-      if(this.selectedViewByType == "Notes") {
-        Object.assign(filterCallsConditions.conditions, { "Notes": {"$exists": true} });
+      console.log("this.selectedViewByType", this.selectedViewByType);
+      if (this.selectedViewByType == "Notes") {
+        Object.assign(filterCallsConditions.conditions, {
+          Notes: { $exists: true },
+        });
       }
-      if(this.selectedViewByType == "Reminder") {
-        Object.assign(filterCallsConditions.conditions, { "Reminder": {"$exists": true} });
+      if (this.selectedViewByType == "Reminder") {
+        Object.assign(filterCallsConditions.conditions, {
+          Reminder: { $exists: true },
+        });
       }
-      console.log('this.selectedReminders', this.selectedReminders);
-      if(this.selectedReminders !== "Not Specified") {
-        Object.assign(filterCallsConditions.conditions, { "Reminder": {"$exists": true} });
+      console.log("this.selectedReminders", this.selectedReminders);
+      if (this.selectedReminders !== "Not Specified") {
+        Object.assign(filterCallsConditions.conditions, {
+          Reminder: { $exists: true },
+        });
       }
-      console.log('this.selectedNotes', this.selectedNotes);
-      if(this.selectedNotes !== "Not Specified") {
-        Object.assign(filterCallsConditions.conditions, { "Notes": {"$exists": true} });
+      console.log("this.selectedNotes", this.selectedNotes);
+      if (this.selectedNotes !== "Not Specified") {
+        Object.assign(filterCallsConditions.conditions, {
+          Notes: { $exists: true },
+        });
       }
 
-      console.log('this.selectedUser', this.selectedUser);
-      if(this.selectedUser !== "All") {
+      console.log("this.selectedUser", this.selectedUser);
+      if (this.selectedUser !== "All") {
         let connectedTo = this.usersObj[this.selectedUser];
-        Object.assign(filterCallsConditions.conditions, { "connectedto": connectedTo });
+        Object.assign(filterCallsConditions.conditions, {
+          connectedto: connectedTo,
+        });
       }
-      console.log('this.selectedNumber', this.selectedNumber);
-      if(this.selectedNumber !== "All") {
-        Object.assign(filterCallsConditions.conditions, { "virtualnumber": "8657510921" });
+      console.log("this.selectedNumber", this.selectedNumber);
+      if (this.selectedNumber !== "All") {
+        Object.assign(filterCallsConditions.conditions, {
+          virtualnumber: "8657510921",
+        });
       }
 
       return filterCallsConditions;
     },
     filterMongo() {
-
-      console.log('Filtering Calls.....');
+      console.log("Filtering Calls.....");
       var filterCallsPayload = {
-        "page_number": this.page?parseInt(this.page):1,
-        "results_per_page": parseInt(this.limit),
-        "conditions": {
-          "owneruid": this.uid
+        page_number: this.page ? parseInt(this.page) : 1,
+        results_per_page: parseInt(this.limit),
+        conditions: {
+          owneruid: this.uid,
         },
-        "sort":{}
+        sort: {},
       };
 
-      let updatedFilterCallsPayload = this.getCallsFilterPayload(filterCallsPayload);
-      console.log('updatedFilterCallsPayload', JSON.stringify(updatedFilterCallsPayload));
+      let updatedFilterCallsPayload =
+        this.getCallsFilterPayload(filterCallsPayload);
+      console.log(
+        "updatedFilterCallsPayload",
+        JSON.stringify(updatedFilterCallsPayload)
+      );
 
       var cfdata = {
-        "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-        "url": "http://35.244.46.144:5000/api/calllogs/paginate",
-        "payload": updatedFilterCallsPayload
+        headers:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        url: "http://35.244.46.144:5000/api/calllogs/paginate",
+        payload: updatedFilterCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
 
       const headers = {
-        'Content-Type': 'application/json',
-        'token': 'tpmongo'
-      }
-      axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
-        headers: headers
-      })
-      .then((response) => {
-        console.log('DL response', response.data.data);
-        let dataset = response.data.data.dataset;
+        "Content-Type": "application/json",
+        token: "tpmongo",
+      };
+      axios
+        .post(
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          raw,
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          console.log("DL response", response.data.data);
+          let dataset = response.data.data.dataset;
 
-        this.totalPage = response.data.data.totalPages;
-        this.totalItems = response.data.data.totalItems;
+          this.totalPage = response.data.data.totalPages;
+          this.totalItems = response.data.data.totalItems;
 
-        // let List = [];
-        this.realdata = [];
-        dataset.forEach((doc) => {
-          // let callObj = {
+          // let List = [];
+          this.realdata = [];
+          dataset.forEach((doc) => {
+            // let callObj = {
 
-          // };
+            // };
 
-          // call details
-          let user_details = doc;
+            // call details
+            let user_details = doc;
             this.calldetails = user_details;
             var timestamp = this.calldetails.dateTime;
             var date = new Date(timestamp);
@@ -1037,77 +1064,88 @@ getCallsFilterPayload(filterCallsConditions) {
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
-          // call details
+            // call details
+          });
         })
-      })
-      .catch((error) => {
-        console.log('DL error', error);
-      })
-
+        .catch((error) => {
+          console.log("DL error", error);
+        });
     },
     getCallsSearchPayload(searchCallsConditions) {
-
-      if(this.searchTerm && this.searchTerm!='') {
-        Object.assign(searchCallsConditions.conditions, {"$or": [
-        {
-          "Notes": {"$elemMatch": {"Note": {"$regex": this.searchTerm,"$options":"i"}}}
-        },
-        {
-          "callerNumber": {"$regex": this.searchTerm,"$options":"i"}
-        },
-        {
-          "Reminder.Message" : {"$regex":this.searchTerm,"$options":"i"}
-        }
-        ] });
+      if (this.searchTerm && this.searchTerm != "") {
+        Object.assign(searchCallsConditions.conditions, {
+          $or: [
+            {
+              Notes: {
+                $elemMatch: {
+                  Note: { $regex: this.searchTerm, $options: "i" },
+                },
+              },
+            },
+            {
+              callerNumber: { $regex: this.searchTerm, $options: "i" },
+            },
+            {
+              "Reminder.Message": { $regex: this.searchTerm, $options: "i" },
+            },
+          ],
+        });
       }
 
       return searchCallsConditions;
     },
     searchMongo() {
-
       var searchCallsConditions = {
-        "page_number": this.page?parseInt(this.page):1,
-        "results_per_page": parseInt(this.limit),
-        "conditions": {
-          "owneruid": this.uid
+        page_number: this.page ? parseInt(this.page) : 1,
+        results_per_page: parseInt(this.limit),
+        conditions: {
+          owneruid: this.uid,
         },
-        "sort":{}
+        sort: {},
       };
 
-      let updatedSearchCallsPayload = this.getCallsSearchPayload(searchCallsConditions);
+      let updatedSearchCallsPayload = this.getCallsSearchPayload(
+        searchCallsConditions
+      );
 
-      console.log('updatedSearchCallsPayload', updatedSearchCallsPayload);
+      console.log("updatedSearchCallsPayload", updatedSearchCallsPayload);
 
       var cfdata = {
-        "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-        "url": "http://35.244.46.144:5000/api/calllogs/paginate",
-        "payload": updatedSearchCallsPayload
+        headers:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        url: "http://35.244.46.144:5000/api/calllogs/paginate",
+        payload: updatedSearchCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
 
       const headers = {
-        'Content-Type': 'application/json',
-        'token': 'tpmongo'
-      }
-      axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
-        headers: headers
-      })
-      .then((response) => {
-        console.log('DL response', response.data.data);
-        let dataset = response.data.data.dataset;
+        "Content-Type": "application/json",
+        token: "tpmongo",
+      };
+      axios
+        .post(
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          raw,
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          console.log("DL response", response.data.data);
+          let dataset = response.data.data.dataset;
 
-        this.totalPage = response.data.data.totalPages;
-        this.totalItems = response.data.data.totalItems;
+          this.totalPage = response.data.data.totalPages;
+          this.totalItems = response.data.data.totalItems;
 
-        // let List = [];
-        this.realdata = [];
-        dataset.forEach((doc) => {
-          // let callObj = {
+          // let List = [];
+          this.realdata = [];
+          dataset.forEach((doc) => {
+            // let callObj = {
 
-          // };
+            // };
 
-          // call details
-          let user_details = doc;
+            // call details
+            let user_details = doc;
             this.calldetails = user_details;
             var timestamp = this.calldetails.dateTime;
             var date = new Date(timestamp);
@@ -1165,19 +1203,21 @@ getCallsFilterPayload(filterCallsConditions) {
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
-          // call details
+            // call details
+          });
         })
-      })
-      .catch((error) => {
-        console.log('DL error', error);
-      })
+        .catch((error) => {
+          console.log("DL error", error);
+        });
     },
     getNextCalls() {
       window.onscroll = () => {
-        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+        let bottomOfWindow =
+          document.documentElement.scrollTop + window.innerHeight ===
+          document.documentElement.offsetHeight;
         if (bottomOfWindow) {
-          console.log('getting Next Calls');
-          console.log('this.lastrecord', this.lastrecord);
+          console.log("getting Next Calls");
+          console.log("this.lastrecord", this.lastrecord);
           // getting Next calls
           // db.collection("callLogs")
           //   .where("owneruid", "==", this.uid)
@@ -1261,49 +1301,59 @@ getCallsFilterPayload(filterCallsConditions) {
           //   });
           // getting Next calls
           this.page++;
-          console.log('Filtering Calls.....');
+          console.log("Filtering Calls.....");
           var filterCallsPayload = {
-            "page_number": this.page?parseInt(this.page):1,
-            "results_per_page": parseInt(this.limit),
-            "conditions": {
-              "owneruid": this.uid
+            page_number: this.page ? parseInt(this.page) : 1,
+            results_per_page: parseInt(this.limit),
+            conditions: {
+              owneruid: this.uid,
             },
-            "sort":{}
+            sort: {},
           };
 
-          let updatedFilterCallsPayload = this.getCallsFilterPayload(filterCallsPayload);
-          console.log('updatedFilterCallsPayload', JSON.stringify(updatedFilterCallsPayload));
+          let updatedFilterCallsPayload =
+            this.getCallsFilterPayload(filterCallsPayload);
+          console.log(
+            "updatedFilterCallsPayload",
+            JSON.stringify(updatedFilterCallsPayload)
+          );
 
           var cfdata = {
-            "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-            "url": "http://35.244.46.144:5000/api/calllogs/paginate",
-            "payload": updatedFilterCallsPayload
+            headers:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+            url: "http://35.244.46.144:5000/api/calllogs/paginate",
+            payload: updatedFilterCallsPayload,
           };
           var raw = JSON.stringify(cfdata);
 
           const headers = {
-            'Content-Type': 'application/json',
-            'token': 'tpmongo'
-          }
-          axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
-            headers: headers
-          })
-          .then((response) => {
-            console.log('DL response', response.data.data);
-            let dataset = response.data.data.dataset;
+            "Content-Type": "application/json",
+            token: "tpmongo",
+          };
+          axios
+            .post(
+              "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+              raw,
+              {
+                headers: headers,
+              }
+            )
+            .then((response) => {
+              console.log("DL response", response.data.data);
+              let dataset = response.data.data.dataset;
 
-            this.totalPage = response.data.data.totalPages;
-            this.totalItems = response.data.data.totalItems;
+              this.totalPage = response.data.data.totalPages;
+              this.totalItems = response.data.data.totalItems;
 
-            // let List = [];
-            // this.realdata = [];
-            dataset.forEach((doc) => {
-              // let callObj = {
+              // let List = [];
+              // this.realdata = [];
+              dataset.forEach((doc) => {
+                // let callObj = {
 
-              // };
+                // };
 
-              // call details
-              let user_details = doc;
+                // call details
+                let user_details = doc;
                 this.calldetails = user_details;
                 var timestamp = this.calldetails.dateTime;
                 var date = new Date(timestamp);
@@ -1362,14 +1412,14 @@ getCallsFilterPayload(filterCallsConditions) {
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
                 console.log("snap calllog ", this.realdata);
-              // call details
+                // call details
+              });
             })
-          })
-          .catch((error) => {
-            console.log('DL error', error);
-          })
+            .catch((error) => {
+              console.log("DL error", error);
+            });
         }
-      }
+      };
     },
   },
   created() {
