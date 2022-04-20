@@ -47,7 +47,7 @@
                                 <v-icon>mdi-close</v-icon>
                               </span>
                             </v-card-title>
-                            <v-card height="400px" class="scroll">
+                            <v-card >
                               <v-list class="pl-5">
                                 <v-checkbox
                                   input-value="true"
