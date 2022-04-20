@@ -90,39 +90,7 @@
                                       v-on="on"
                                     ></v-text-field>
                                   </template>
-                                  <v-date-picker
-                                    v-model="dates"
-                                    no-title
-                                    range
-                                    show-adjacent-months
-                                    scrollable
-                                    color="red"
-                                  >
-                                    <v-row no-gutters>
-                                      <v-col cols="12" sm="6">
-                                        <v-btn
-                                          color="white"
-                                          class="red--text"
-                                          width="100%"
-                                          rounded
-                                          @click="menu = false"
-                                        >
-                                          Cancel
-                                        </v-btn>
-                                      </v-col>
-                                      <v-col cols="12" sm="6">
-                                        <v-btn
-                                          class="white--text"
-                                          width="100%"
-                                          color="red"
-                                          rounded
-                                          @click="filterCalls(dates)"
-                                        >
-                                          Save
-                                        </v-btn>
-                                      </v-col>
-                                    </v-row>
-                                  </v-date-picker>
+                        
                                 </v-menu>
                                 <v-text-field
                                   label="Enter e-mail ID"
@@ -136,8 +104,8 @@
                                   color="white"
                                   width="100%"
                                   text
-                                  :disabled="!valid"
-                                  class="mr-0 flex red_button"
+                                  
+                                  class="mr-0 flex red_button rounded-pill"
                                   :loading="isUpdating"
                                   depressed
                                   @click="handleApplyFilter"
