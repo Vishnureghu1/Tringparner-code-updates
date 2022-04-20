@@ -661,7 +661,6 @@ export default {
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_number" },
-      // { title: 'Call This Number',color: 'black--text' , url: 'call_this_number'},
       { title: "Block This Number", color: "red--text", url: "block_number" },
     ],
     timeofCall: ["Ascending", "Descending"],
@@ -801,7 +800,6 @@ export default {
       this.enterOtpModel = false;
     },
     openSearchBar() {
-      alert("ss");
       this.searchForm = true;
     },
     validate() {

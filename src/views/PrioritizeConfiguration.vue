@@ -181,6 +181,7 @@ this.priorityList();
   },
   methods: {
     priorityList(){
+   
            let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
      this.owneruid = owneruid;
@@ -190,7 +191,9 @@ this.priorityList();
       console.log(snap.docs[0].data().VirtualNumber)
       const participants = snap.docs[0].data().Participants;
       this.source = snap.docs[0].data().Source
-      console.log(participants)
+      console.log(participants);
+         this.participants=[];
+      this.participant=[];
       participants.forEach(element => {
         this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
         // this.participant.push({Name:element.Name,Number:element.Number,AgentUid:element.AgentUid})
