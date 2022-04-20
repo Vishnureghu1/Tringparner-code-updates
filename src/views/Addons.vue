@@ -79,15 +79,16 @@
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'buyNewNumber' }">
+                                <!-- <router-link :to="{ name: 'buyNewNumber' }"> -->
                                   <span
                                     ><v-icon
                                       class="mt-6 mb-5 mr-7"
                                       color="#EE1C25"
+                                      @click="buyaddon()"
                                       >mdi-arrow-right</v-icon
                                     >
                                   </span>
-                                </router-link>
+                                <!-- </router-link> -->
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
@@ -146,12 +147,16 @@
 </template>
 
 <script>
+import { db } from '@/main.js';
+// import axios from "axios";
 export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
   },
   data: () => ({
+    owneruid:"",
+    AccountId:"",
     items: [
       {
         text: "More",
@@ -167,6 +172,23 @@ export default {
   }),
 
   methods: {
+    buyaddon(){
+       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId=  localStorageUserObj.AccountId;
+       db.collection("uservirtualNumber").where("Uid","==",this.owneruid).where("IsPurchased","==",false).get().then(async(snap) =>{
+      if(snap.empty){
+          this.$router.push("/buyNewNumber");
+      }else{
+            this.$router.push("/reserveNumber");
+          // this.VirtualNumber = snap.docs[0].data().VirtualNumber;
+          // this.prorate()
+      }
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+        // this.$router.push("/buyNewNumber");
+    },
     goBack() {
       this.$router.push("/BusinessNumber");
     },
