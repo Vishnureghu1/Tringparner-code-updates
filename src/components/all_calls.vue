@@ -34,6 +34,35 @@
           >Notes removed successfully!</v-snackbar
         >
 
+         <v-snackbar
+          :timeout="timeout"
+          v-model="reminder_added"
+          :bottom="bottom"
+          :right="right"
+          color="green"
+          text
+          >Reminder added successfully!</v-snackbar
+        >
+
+          <v-snackbar
+          :timeout="timeout"
+          v-model="blocked_number"
+          :bottom="bottom"
+          :right="right"
+          color="red"
+          text
+          >Number blocked successfully!</v-snackbar
+        >
+
+  <v-snackbar
+          :timeout="timeout"
+          v-model="unblocked_number"
+          :bottom="bottom"
+          :right="right"
+          color="green"
+          text
+          >Number unblocked successfully!</v-snackbar
+        >
         <v-layout>
           <v-flex xs12 sm12 md12>
             <v-row no-gutters>
@@ -222,203 +251,202 @@
                           </v-form>
                         </v-card>
                       </v-menu>
-                      
                     </v-col>
                   </v-row>
 
                   <!-- {{realdata}} -->
 
                   <div>
-                  <v-expansion-panels accordion flat>
-                    <v-expansion-panel
-                      v-for="details in realdata"
-                      :key="details.text"
-                    >
-                      <v-expansion-panel-header>
-                        <div>
-                          <v-row class="calls_list">
-                            <v-col cols="12" sm="10">
-                              <!-- {{details}} -->
-                              <h3 class="font-weight-light">
-                                <v-icon
-                                  v-if="details.callstatus == 'Answered'"
-                                  class="mr-3"
-                                  color="green"
-                                  >mdi-arrow-bottom-left</v-icon
-                                >
-                                <Icon
-                                  v-else
-                                  class="mr-3 icon_adjustment"
-                                  color="red"
-                                  icon="mdi:call-missed"
-                                  width="24"
-                                  height="24"
-                                />+91 {{ details.callerNumber }}
-                                <v-icon color="gray" class="mr-5"
-                                  >mdi-shield-lock-outline</v-icon
-                                >
-                                <v-menu offset-y>
-                                  <template v-slot:activator="{ on, attrs }">
-                                    <v-icon
-                                      v-bind="attrs"
-                                      v-on="on"
-                                      color="black"
-                                      >mdi-dots-vertical</v-icon
-                                    >
-                                  </template>
-                                  <v-list>
-                                    <v-list-item
-                                      v-for="(item, index) in items"
-                                      :key="index"
-                                      active-class="pink--text"
-                                    >
-                                      <v-list-item-title
-                                        :class="item.color"
-                                        @click="
-                                          blockCall(
-                                            item.url,
-                                            details.virtualnumber,
-                                            details.uniqueid
-                                          )
-                                        "
-                                        >{{ item.title }}</v-list-item-title
-                                      >
-                                    </v-list-item>
-                                  </v-list>
-                                </v-menu>
-                              </h3>
-                              <br />
-                            </v-col>
-                            <v-spacer></v-spacer>
-                          </v-row>
+                    <v-expansion-panels accordion flat>
+                      <v-expansion-panel
+                        v-for="details in realdata"
+                        :key="details.text"
+                      >
+                        <v-expansion-panel-header>
+                          <div>
+                            <v-row class="calls_list">
+                              <v-col cols="12" sm="10">
+                                <!-- {{details}} -->
+                                <h3 class="font-weight-light">
+                                  <v-icon
+                                    v-if="details.callstatus == 'Answered'"
+                                    class="mr-3"
+                                    color="green"
+                                    >mdi-arrow-bottom-left</v-icon
+                                  >
+                                  <Icon
+                                    v-else
+                                    class="mr-3 icon_adjustment"
+                                    color="red"
+                                    icon="mdi:call-missed"
+                                    width="24"
+                                    height="24"
+                                  />+91 {{ details.callerNumber }}
+                                  <v-icon color="gray" class="mr-5"
+                                    >mdi-shield-lock-outline</v-icon
+                                  >
 
-                          <div class="ml-10 font-weight-thin date_time">
-                            <span v-if="details.conversationduration != 0"
-                              >{{ details.conversationduration }} Sec,
-                            </span>
-                            {{ details.dateTime }}, {{ details.name }}
-                          </div>
-                          <!-- {{detail}} -->
-                          <div
-                            class="ml-10 mt-3 font-weight-thin"
-                            v-for="getNotes in details.Note"
-                            :key="getNotes.text"
-                          >
-                            <div>
-                              <span
-                                v-if="getNotes.Note != ''"
-                                class="mdi mdi-note grey--text"
-                              >
+                                   
+                                 
+                             
+                                  <v-menu offset-y>
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-icon
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        color="black"
+                                        >mdi-dots-vertical</v-icon
+                                      >
+                                    </template>
+                                    <v-list>
+                                      <div
+                                    v-for="getNotes in details.Note"
+                                    :key="getNotes.text"
+                                  >
+                                 
+                                      </div>
+                                      <v-list-item
+                                        v-for="(item, index) in items"
+                                        :key="index"
+                                        active-class="pink--text"
+                                      >
+                                      <div
+                                    v-for="getNotes in details.Note"
+                                    :key="getNotes.text"
+                                  >
+                                
+                                        <v-list-item-title 
+                                          :class="item.color"
+                                          @click="
+                                            threeDotAction(
+                                              item.url,
+                                              details.virtualnumber,
+                                              details.uniqueid,
+                                               getNotes.Note
+                                            )
+                                          "
+                                          >
+                                          <span v-if="getNotes.Note!='' && item.url=='add_note' ">Edit Note</span>
+                                          <span v-else>{{ item.title }}</span>
+                                          </v-list-item-title
+                                        >
+                                      </div>
+                                      </v-list-item>
+                                    </v-list>
+                                  </v-menu>
+                                </h3>
+                                <br />
+                              </v-col>
+                              <v-spacer></v-spacer>
+                            </v-row>
+
+                            <div class="ml-10 font-weight-thin date_time">
+                              <span v-if="details.conversationduration != 0"
+                                >{{ details.conversationduration }} Sec,
                               </span>
-                              {{ getNotes.Note }}
+                              {{ details.dateTime }}, {{ details.name }}
+                            </div>
+                            <!-- {{detail}} -->
+                            <div
+                              class="ml-10 mt-3 font-weight-thin"
+                              v-for="getNotes in details.Note"
+                              :key="getNotes.text"
+                            >
+                              <div>
+                                <span
+                                  v-if="getNotes.Note != ''"
+                                  class="mdi mdi-note grey--text"
+                                >
+                                </span>
+                                {{ getNotes.Note }}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </v-expansion-panel-header>
-                      <v-expansion-panel-content>
-                        <div>
-                          <v-row>
-                            <v-col cols="12" sm="6">
-                              <div class="ml-10">
-                                <h6 class="font-weight-thin">Source</h6>
-                                <h5 class="font-weight-light">
-                                  {{ details.source }} No: (+91
-                                  {{ details.virtualnumber }})
-                                </h5>
-                                <br />
-
-                                <div
-                                  v-for="getNotes in details.Note"
-                                  :key="getNotes.text"
-                                >
-                                  <v-text-field
-                                    v-model="getNotes.Note"
-                                    :append-outer-icon="
-                                      getNotes.Note ? 'mdi-send' : ''
-                                    "
-                                    clear-icon="mdi-close-circle"
-                                    clearable
-                                    label="Notes"
-                                    :rules="rules"
-                                    counter
-                                    maxlength="120"
-                                    type="text"
-                                    @click:append-outer="
-                                      sendMessage(
-                                        details.uniqueid,
-                                        getNotes.Note
-                                      )
-                                    "
-                                    @click:clear="
-                                      clearMessage(
-                                        details.uniqueid,
-                                        getNotes.Note
-                                      )
-                                    "
-                                    class="black--text"
-                                  ></v-text-field>
-                                </div>
-
-                                <br />
-
-                                <div
-                                  v-for="getNotes in details.Note"
-                                  :key="getNotes.text"
-                                >
-                                  <v-text-field
-                                    v-model="Reminder"
-                                    clear-icon="mdi-close-circle"
-                                    clearable
-                                    label="Reminder"
-                                    append-icon="mdi-pencil"
-                                    type="text"
-                                    @click="dialog = true"
-                                  ></v-text-field>
-                                </div>
-                              </div>
-                            </v-col>
-                            <!-- {{details}} -->
-                            <v-col
-                              cols="12"
-                              sm="6"
-                              v-if="details.callstatus != 'Missed'"
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                          <div>
+                            <v-row>
+                              <v-col cols="12" sm="6">
+                                <div class="ml-10">
+                                  <h6 class="font-weight-thin">Source</h6>
+                                  <h5 class="font-weight-light">
+                                    {{ details.source }} No: (+91
+                                    {{ details.virtualnumber }})
+                                  </h5>
+                                   <div
+                              
+                              v-for="getNotes in details.Note"
+                              :key="getNotes.text"
                             >
-                              <audio controls>
-                                <source
-                                  :src="details.recordingUrl"
-                                  type="audio/mpeg"
-                                />
-                                Your browser does not support the audio tag.
-                              </audio>
-                            </v-col>
-                          </v-row>
-                        </div>
-                      </v-expansion-panel-content>
-                      
-                    </v-expansion-panel>
-                  </v-expansion-panels>
-                  <v-container v-if="loadingMore">
-      <v-row
-        class="fill-height"
-        align-content="center"
-        justify="center"
-      >
-        <v-col
-          class="text-subtitle-1 text-center"
-          cols="12"
-        >
-         Loading ...
-        </v-col>
-        <v-col cols="12">
-          <v-progress-linear
-            color="red darken-4"
-            indeterminate
-            rounded
-            height="6"
-          ></v-progress-linear>
-        </v-col>
-      </v-row>
-    </v-container>
+     <v-btn
+                            text
+                            class="text-capitalize ma-3 rounded-pill red_button ml-0"
+                            min-width="140px"
+                            color="white"
+                            outlined
+                            @click="addNotesDialog = true"
+                          >
+                          
+                          <span v-if="getNotes.Note==''"> Add Notes</span>
+                          <span v-else>Edit Notes</span>
+                          </v-btn>
+                            <v-btn
+                            color="red"
+                            text
+                            class="
+                              ma-2
+                              text-capitalize
+                              rounded-pill
+                              p-3
+                              red_button_outline
+                            "
+                            min-width="140px"
+                            @click="dialog = true"
+                          >
+                            Add Reminders
+                          </v-btn>
+                           </div>
+                        
+                                </div>
+                              </v-col>
+                              <!-- {{details}} -->
+                              <v-col
+                                cols="12"
+                                sm="6"
+                                v-if="details.callstatus != 'Missed'"
+                              >
+                                <audio controls>
+                                  <source
+                                    :src="details.recordingUrl"
+                                    type="audio/mpeg"
+                                  />
+                                  Your browser does not support the audio tag.
+                                </audio>
+                              </v-col>
+                            </v-row>
+                          </div>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                    <v-container v-if="loadingMore">
+                      <v-row
+                        class="fill-height"
+                        align-content="center"
+                        justify="center"
+                      >
+                        <v-col class="text-subtitle-1 text-center" cols="12">
+                          Loading ...
+                        </v-col>
+                        <v-col cols="12">
+                          <v-progress-linear
+                            color="red darken-4"
+                            indeterminate
+                            rounded
+                            height="6"
+                          ></v-progress-linear>
+                        </v-col>
+                      </v-row>
+                    </v-container>
                   </div>
                 </div>
               </v-col>
@@ -620,6 +648,68 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+        <!-- RENAME addNotesDialog SECTION -->
+        <v-dialog v-model="addNotesDialog" max-width="332px">
+          <v-card v-model="addNotesDialog" class="rounded-lg pt-7 pb-7">
+            <v-card-title class="d-flex justify-center">
+              <h3 class="center">{{notes_text}}</h3>
+            </v-card-title>
+            <v-card-text class="pt-0">
+      
+             <v-text-field
+                                      v-model="notes_data"
+                                     
+                                      clear-icon="mdi-close-circle"
+                                      clearable
+                                      label="Notes"
+                                      :rules="rules"
+                                      counter
+                                      maxlength="120"
+                                      type="text"
+                                    
+                                      @click:clear="
+                                        clearMessage(
+                                          uniqueId,
+                                          notes_data
+                                        )
+                                      "
+                                      class="black--text"
+                                    ></v-text-field>
+              
+                         
+                         
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn
+                color="red"
+                text
+                class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+                min-width="140px"
+                @click="addNotesDialog = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                class="text-capitalize ma-3 rounded-pill red_button"
+                min-width="140px"
+                color="white"
+                outlined
+                 @click=" sendMessage(
+                                          uniqueId,
+                                          notes_data
+                                        )
+                                      "
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- RENAME addNotesDialog SECTION -->
+
     <v-dialog v-model="sendInviteLoader" hide-overlay persistent width="300">
       <v-card color="red" dark>
         <v-card-text>
@@ -642,13 +732,22 @@ import firebase from "firebase";
 import { db } from "@/main.js";
 import moment from "moment";
 import { Icon } from "@iconify/vue2";
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   components: {
     Icon,
   },
   data: () => ({
+    addNotesDialog: false,
+    notes_data:'',
+    virtualNumber:null,
+    uniqueId:null,
+    reminder_added:false,
+    blocked_number:false,
+    unblocked_number:false,
+    notes_text:'Add Notes',
+
     valid: true,
     searchForm: false,
     benched: 0,
@@ -656,11 +755,11 @@ export default {
     sendInviteLoader: false,
     changeEmailPopup: false,
     enterOtpModel: false,
-    loadingMore:false,
+    loadingMore: false,
 
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
-      { title: "Add Reminder", color: "black--text", url: "add_number" },
+      { title: "Add Reminder", color: "black--text", url: "add_reminder" },
       { title: "Block This Number", color: "red--text", url: "block_number" },
     ],
     timeofCall: ["Ascending", "Descending"],
@@ -672,17 +771,17 @@ export default {
       "1 minitue - > 2 minutes",
       "> 2 minutes",
     ],
-    selectedDurationOfCall: '',
+    selectedDurationOfCall: "",
     ViewByType: ["Calls", "Notes", "Reminder"],
-    selectedViewByType: 'Calls',
+    selectedViewByType: "Calls",
     Reminders: ["Not Specified", "Yes"],
     selectedReminders: "Not Specified",
     Notes: ["Not Specified", "Yes"],
     selectedNotes: "Not Specified",
 
     Users: ["All"],
-    usersObj: {"All":""},
-    selectedUser:"All",
+    usersObj: { All: "" },
+    selectedUser: "All",
     Numbers: ["All"],
     selectedNumber: "All",
     fav: true,
@@ -724,13 +823,13 @@ export default {
     timeout: 2500,
     bottom: true,
     right: false,
-    pageNumber:10,
-    limit:20,
-    lastrecord:null,
+    pageNumber: 10,
+    limit: 20,
+    lastrecord: null,
     searchTerm: "",
-    totalPage: 0, 
+    totalPage: 0,
     totalItems: 0,
-    page:1,
+    page: 1,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -743,6 +842,67 @@ export default {
     },
   },
   methods: {
+
+       threeDotAction(action, virtualNumber, uniqueId, notes_text) {
+
+      if (action == "add_note") {
+        console.log("Add Note");
+        this.notes_data = notes_text;
+        this.uniqueId = uniqueId;
+        this.dialog = false;
+        this.addNotesDialog = true;
+        if(notes_text==''){
+          this.notes_text='Add Notes';
+
+        }else{
+
+          this.notes_text='Edit Notes';
+        }
+      }
+      if (action == "add_reminder") {
+        console.log("Add Reminder");
+        
+        this.addNotesDialog = false;
+        this.dialog = true;
+   
+      }
+       if (action == "block_number") {
+        console.log("Block Numebr");
+              var token = localStorage.getItem("token");
+        var tpu = localStorage.getItem("tpu");
+        var Id = JSON.parse(tpu);
+        console.log(Id);
+        const blockNumber = {
+          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/blockcall",
+          method: "POST",
+          data: {
+            number: this.virtualNumber,
+            owner_uid: this.uid, //
+            status: true,
+            UpdatedBy: this.uid, // owner uid
+            AccountId: Id.AccountId,
+          },
+          headers: {
+            token: token,
+            "Content-Type": "application/json",
+          },
+        };
+        console.log(blockNumber);
+        this.$axios(blockNumber)
+          .then((response) => {
+             this.blocked_number = true;
+            this.dialog=false;
+            console.log(response);
+   
+          })
+          .catch((error) => {
+            console.log("Error getting: ", error);
+          });
+        
+      }
+     
+    },
+    
     handleTimeOfCallChange(opn) {
       this.selectedPaymentOption = opn;
       console.log(this.selectedTimeOfCall);
@@ -774,18 +934,16 @@ export default {
     handleApplyFilter() {
       // this.isUpdating = true;
       this.filterMongo();
-
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
-      console.log('this.searchTerm.length',this.searchTerm.length);
-      if(this.searchTerm !== '') {
+      console.log("this.searchTerm.length", this.searchTerm.length);
+      if (this.searchTerm !== "") {
         this.searchMongo();
       } else {
-        console.log('searchTerm is empty');
+        console.log("searchTerm is empty");
         this.realdata = this.backuprealdata;
       }
-      
     },
     searchAction() {
       this.hidden = !this.hidden;
@@ -824,47 +982,7 @@ export default {
         alert("oi sou Eduardo Martins");
       }
     },
-    blockCall(type) {
-      // var token = localStorage.getItem('token');
-
-      // console.log(type,number);
-      // add_note
-      // add_number
-      // block_number
-      if (type == "block_number") {
-        var token = localStorage.getItem("token");
-        var tpu = localStorage.getItem("tpu");
-        var Id = JSON.parse(tpu);
-        console.log(Id);
-        const blockNumber = {
-          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/blockcall",
-          method: "POST",
-          data: {
-            number: "8657510921",
-            owner_uid: this.uid, //
-            status: true,
-            UpdatedBy: this.uid, // owner uid
-            AccountId: Id.AccountId,
-          },
-          headers: {
-            token: token,
-            "Content-Type": "application/json",
-          },
-        };
-        console.log(blockNumber);
-        this.$axios(blockNumber)
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log("Error getting: ", error);
-          });
-      } else if (type == "add_note") {
-        this.show_notes = true;
-      } else {
-        this.show_remind = true;
-      }
-    },
+   
     sendMessage(unique_id, message) {
       var token = localStorage.getItem("token");
 
@@ -885,9 +1003,10 @@ export default {
       console.log(user_data);
       this.$axios(user_data)
         .then((response) => {
-          // console.log(response.data.status)
+      
           if (response.data.status == true) {
             this.notes_added = true;
+            this.addNotesDialog=false;
           }
         })
         .catch((error) => {
@@ -930,8 +1049,12 @@ export default {
       };
       console.log(user_data);
       this.$axios(user_data)
-        .then((response) => {
-          console.log(response);
+           .then((response) => {
+      
+          if (response.data.status == true) {
+            this.reminder_added = true;
+            this.dialog=false;
+          }
         })
         .catch((error) => {
           console.log("Error getting documents: ", error);
@@ -966,101 +1089,131 @@ export default {
         });
     },
     getCallsFilterPayload(filterCallsConditions) {
-
-      console.log('this.selectedTimeOfCall', this.selectedTimeOfCall);
-      if(this.selectedTimeOfCall !=='' && this.selectedTimeOfCall == 'Ascending') {
-        Object.assign(filterCallsConditions.sort, { "dateTime": -1 });
+      console.log("this.selectedTimeOfCall", this.selectedTimeOfCall);
+      if (
+        this.selectedTimeOfCall !== "" &&
+        this.selectedTimeOfCall == "Ascending"
+      ) {
+        Object.assign(filterCallsConditions.sort, { dateTime: -1 });
       } else {
-        Object.assign(filterCallsConditions.sort, { "dateTime": 1 });
+        Object.assign(filterCallsConditions.sort, { dateTime: 1 });
       }
 
-      console.log('this.selectedDurationOfCall', this.selectedDurationOfCall);
-      if(this.selectedDurationOfCall !== 'Not Specified') {
-
-        if(this.selectedDurationOfCall == "< 30 Seconds") {
-          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$lt": 30} });
+      console.log("this.selectedDurationOfCall", this.selectedDurationOfCall);
+      if (this.selectedDurationOfCall !== "Not Specified") {
+        if (this.selectedDurationOfCall == "< 30 Seconds") {
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $lt: 30 },
+          });
         } else if (this.selectedDurationOfCall == "30 Seconds - > 1 minute") {
-          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 30, "$lt": 60} });
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 30, $lt: 60 },
+          });
         } else if (this.selectedDurationOfCall == "1 minitue - > 2 minutes") {
-          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 60, "$lt": 120} });
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 60, $lt: 120 },
+          });
         } else if (this.selectedDurationOfCall == "> 2 minutes") {
-          Object.assign(filterCallsConditions.conditions, { "conversationduration": {"$gt": 120} });
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 120 },
+          });
         }
       }
 
-      console.log('this.selectedViewByType', this.selectedViewByType);
-      if(this.selectedViewByType == "Notes") {
-        Object.assign(filterCallsConditions.conditions, { "Notes": {"$exists": true} });
+      console.log("this.selectedViewByType", this.selectedViewByType);
+      if (this.selectedViewByType == "Notes") {
+        Object.assign(filterCallsConditions.conditions, {
+          Notes: { $exists: true },
+        });
       }
-      if(this.selectedViewByType == "Reminder") {
-        Object.assign(filterCallsConditions.conditions, { "Reminder": {"$exists": true} });
+      if (this.selectedViewByType == "Reminder") {
+        Object.assign(filterCallsConditions.conditions, {
+          Reminder: { $exists: true },
+        });
       }
-      console.log('this.selectedReminders', this.selectedReminders);
-      if(this.selectedReminders !== "Not Specified") {
-        Object.assign(filterCallsConditions.conditions, { "Reminder": {"$exists": true} });
+      console.log("this.selectedReminders", this.selectedReminders);
+      if (this.selectedReminders !== "Not Specified") {
+        Object.assign(filterCallsConditions.conditions, {
+          Reminder: { $exists: true },
+        });
       }
-      console.log('this.selectedNotes', this.selectedNotes);
-      if(this.selectedNotes !== "Not Specified") {
-        Object.assign(filterCallsConditions.conditions, { "Notes": {"$exists": true} });
+      console.log("this.selectedNotes", this.selectedNotes);
+      if (this.selectedNotes !== "Not Specified") {
+        Object.assign(filterCallsConditions.conditions, {
+          Notes: { $exists: true },
+        });
       }
 
-      console.log('this.selectedUser', this.selectedUser);
-      if(this.selectedUser !== "All") {
+      console.log("this.selectedUser", this.selectedUser);
+      if (this.selectedUser !== "All") {
         let connectedTo = this.usersObj[this.selectedUser];
-        Object.assign(filterCallsConditions.conditions, { "connectedto": connectedTo });
+        Object.assign(filterCallsConditions.conditions, {
+          connectedto: connectedTo,
+        });
       }
-      console.log('this.selectedNumber', this.selectedNumber);
-      if(this.selectedNumber !== "All") {
-        Object.assign(filterCallsConditions.conditions, { "virtualnumber": "8657510921" });
+      console.log("this.selectedNumber", this.selectedNumber);
+      if (this.selectedNumber !== "All") {
+        Object.assign(filterCallsConditions.conditions, {
+          virtualnumber: "8657510921",
+        });
       }
 
       return filterCallsConditions;
     },
     filterMongo() {
-
-      console.log('Filtering Calls.....');
+      console.log("Filtering Calls.....");
       var filterCallsPayload = {
-        "page_number": this.page?parseInt(this.page):1,
-        "results_per_page": parseInt(this.limit),
-        "conditions": {
-          "owneruid": this.uid
+        page_number: this.page ? parseInt(this.page) : 1,
+        results_per_page: parseInt(this.limit),
+        conditions: {
+          owneruid: this.uid,
         },
-        "sort":{}
+        sort: {},
       };
 
-      let updatedFilterCallsPayload = this.getCallsFilterPayload(filterCallsPayload);
-      console.log('updatedFilterCallsPayload', JSON.stringify(updatedFilterCallsPayload));
+      let updatedFilterCallsPayload =
+        this.getCallsFilterPayload(filterCallsPayload);
+      console.log(
+        "updatedFilterCallsPayload",
+        JSON.stringify(updatedFilterCallsPayload)
+      );
 
       var cfdata = {
-        "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-        "url": "http://35.244.46.144:5000/api/calllogs/paginate",
-        "payload": updatedFilterCallsPayload
+        headers:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        url: "http://35.244.46.144:5000/api/calllogs/paginate",
+        payload: updatedFilterCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
 
       const headers = {
-        'Content-Type': 'application/json',
-        'token': 'tpmongo'
-      }
-      axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
-        headers: headers
-      })
-      .then((response) => {
-        console.log('DL response', response.data.data);
-        let dataset = response.data.data.dataset;
+        "Content-Type": "application/json",
+        token: "tpmongo",
+      };
+      axios
+        .post(
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          raw,
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          console.log("DL response", response.data.data);
+          let dataset = response.data.data.dataset;
 
-        this.totalPage = response.data.data.totalPages;
-        this.totalItems = response.data.data.totalItems;
+          this.totalPage = response.data.data.totalPages;
+          this.totalItems = response.data.data.totalItems;
 
-        // let List = [];
-        this.realdata = [];
-        dataset.forEach((doc) => {
-          // let callObj = {
+          // let List = [];
+          this.realdata = [];
+          dataset.forEach((doc) => {
+            // let callObj = {
 
-          // };
+            // };
 
-          // call details
-          let user_details = doc;
+            // call details
+            let user_details = doc;
             this.calldetails = user_details;
             var timestamp = this.calldetails.dateTime;
             var date = new Date(timestamp);
@@ -1118,77 +1271,88 @@ export default {
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
-          // call details
+            // call details
+          });
         })
-      })
-      .catch((error) => {
-        console.log('DL error', error);
-      })
-
+        .catch((error) => {
+          console.log("DL error", error);
+        });
     },
     getCallsSearchPayload(searchCallsConditions) {
-
-      if(this.searchTerm && this.searchTerm!='') {
-        Object.assign(searchCallsConditions.conditions, {"$or": [
-        {
-          "Notes": {"$elemMatch": {"Note": {"$regex": this.searchTerm,"$options":"i"}}}
-        },
-        {
-          "callerNumber": {"$regex": this.searchTerm,"$options":"i"}
-        },
-        {
-          "Reminder.Message" : {"$regex":this.searchTerm,"$options":"i"}
-        }
-        ] });
+      if (this.searchTerm && this.searchTerm != "") {
+        Object.assign(searchCallsConditions.conditions, {
+          $or: [
+            {
+              Notes: {
+                $elemMatch: {
+                  Note: { $regex: this.searchTerm, $options: "i" },
+                },
+              },
+            },
+            {
+              callerNumber: { $regex: this.searchTerm, $options: "i" },
+            },
+            {
+              "Reminder.Message": { $regex: this.searchTerm, $options: "i" },
+            },
+          ],
+        });
       }
 
       return searchCallsConditions;
     },
     searchMongo() {
-
       var searchCallsConditions = {
-        "page_number": this.page?parseInt(this.page):1,
-        "results_per_page": parseInt(this.limit),
-        "conditions": {
-          "owneruid": this.uid
+        page_number: this.page ? parseInt(this.page) : 1,
+        results_per_page: parseInt(this.limit),
+        conditions: {
+          owneruid: this.uid,
         },
-        "sort":{}
+        sort: {},
       };
 
-      let updatedSearchCallsPayload = this.getCallsSearchPayload(searchCallsConditions);
+      let updatedSearchCallsPayload = this.getCallsSearchPayload(
+        searchCallsConditions
+      );
 
-      console.log('updatedSearchCallsPayload', updatedSearchCallsPayload);
+      console.log("updatedSearchCallsPayload", updatedSearchCallsPayload);
 
       var cfdata = {
-        "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-        "url": "http://35.244.46.144:5000/api/calllogs/paginate",
-        "payload": updatedSearchCallsPayload
+        headers:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        url: "http://35.244.46.144:5000/api/calllogs/paginate",
+        payload: updatedSearchCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
 
       const headers = {
-        'Content-Type': 'application/json',
-        'token': 'tpmongo'
-      }
-      axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
-        headers: headers
-      })
-      .then((response) => {
-        console.log('DL response', response.data.data);
-        let dataset = response.data.data.dataset;
+        "Content-Type": "application/json",
+        token: "tpmongo",
+      };
+      axios
+        .post(
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          raw,
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          console.log("DL response", response.data.data);
+          let dataset = response.data.data.dataset;
 
-        this.totalPage = response.data.data.totalPages;
-        this.totalItems = response.data.data.totalItems;
+          this.totalPage = response.data.data.totalPages;
+          this.totalItems = response.data.data.totalItems;
 
-        // let List = [];
-        this.realdata = [];
-        dataset.forEach((doc) => {
-          // let callObj = {
+          // let List = [];
+          this.realdata = [];
+          dataset.forEach((doc) => {
+            // let callObj = {
 
-          // };
+            // };
 
-          // call details
-          let user_details = doc;
+            // call details
+            let user_details = doc;
             this.calldetails = user_details;
             var timestamp = this.calldetails.dateTime;
             var date = new Date(timestamp);
@@ -1246,145 +1410,77 @@ export default {
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
-          // call details
+            // call details
+          });
         })
-      })
-      .catch((error) => {
-        console.log('DL error', error);
-      })
+        .catch((error) => {
+          console.log("DL error", error);
+        });
     },
     getNextCalls() {
       window.onscroll = () => {
-        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+        let bottomOfWindow =
+          document.documentElement.scrollTop + window.innerHeight ===
+          document.documentElement.offsetHeight;
         if (bottomOfWindow) {
-          console.log('getting Next Calls');
-          console.log('this.lastrecord', this.lastrecord);
-          // getting Next calls
-          // db.collection("callLogs")
-          //   .where("owneruid", "==", this.uid)
-          //   .orderBy("dateTime", "desc")
-          //   .startAt(this.lastrecord)
-          //   .limit(this.limit)
-          //   .get()
-          //   .then((querySnapshot) => {
-          //   // .onSnapshot((querySnapshot) => {
-          //     // this.realdata = [];
-          //     if (!querySnapshot.empty) {
-          //       querySnapshot.forEach(async (doc) => {
-          //         this.lastrecord = doc;
-          //         console.log(doc.id, " => ", doc.data());
-          //         let user_details = doc.data();
-          //         this.calldetails = user_details;
-          //         var timestamp = this.calldetails.dateTime;
-          //         var date = new Date(timestamp);
-          //         console.log("full time", date);
-          //         console.log("Time: ", date.getTime());
+          console.log("getting Next Calls");
+          console.log("this.lastrecord", this.lastrecord);
 
-          //         var myCurrentDate = new Date();
-          //         var missedTresholdDate = new Date(myCurrentDate);
-          //         missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-          //         console.log(missedTresholdDate);
-
-          //         console.log(timestamp); //missed call date
-          //         console.log(missedTresholdDate.getTime()); //addon date
-          //         console.log(myCurrentDate.getTime()); //today's date
-
-          //         if (timestamp <= missedTresholdDate.getTime()) {
-          //           call_time = moment(date).format("D MMM Y hh:mm a");
-          //         } else {
-          //           var call_time = moment(date).format("hh:mm a");
-          //           call_time = moment(date).fromNow();
-          //         }
-
-          //         var note = "";
-          //         if (this.calldetails.Notes) {
-          //           note = this.calldetails.Notes;
-          //         } else {
-          //           console.log("no note");
-          //           note = [{ Note: "" }];
-          //         }
-
-          //         var calledNumber =
-          //           this.calldetails.callerNumber.slice(0, 5) +
-          //           " " +
-          //           this.calldetails.callerNumber.slice(5, 7) +
-          //           " " +
-          //           this.calldetails.callerNumber.slice(7, 11);
-          //         var virtualnumber =
-          //           this.calldetails.virtualnumber.slice(0, 5) +
-          //           " " +
-          //           this.calldetails.virtualnumber.slice(5, 7) +
-          //           " " +
-          //           this.calldetails.virtualnumber.slice(7, 11);
-          //         this.detail = Object.assign({}, this.detail, {
-          //           callstatus: this.calldetails.callstatus,
-          //           name: this.calldetails.name[0],
-          //           dateTime: call_time,
-          //           conversationduration: this.calldetails.conversationduration,
-          //           callerNumber: calledNumber,
-          //           uniqueid: this.calldetails.uniqueid,
-          //           Note: note,
-          //           source: this.calldetails.source,
-          //           virtualnumber: virtualnumber,
-          //           called_name: this.called_name,
-          //           recordingUrl: this.calldetails.recordingurl,
-          //         });
-          //         this.realdata.push(this.detail);
-          //         this.backuprealdata.push(this.detail);
-          //         console.log("next calllog ", this.realdata);
-          //       });
-
-          //       console.log('this.realdata', this.realdata.length);
-          //       console.log('this.backuprealdata', this.backuprealdata.length);
-          //     } else {
-          //       //alert('no calls')
-          //     }
-          //   });
           // getting Next calls
           this.page++;
-          console.log('Filtering Calls.....');
+          console.log("Filtering Calls.....");
           var filterCallsPayload = {
-            "page_number": this.page?parseInt(this.page):1,
-            "results_per_page": parseInt(this.limit),
-            "conditions": {
-              "owneruid": this.uid
+            page_number: this.page ? parseInt(this.page) : 1,
+            results_per_page: parseInt(this.limit),
+            conditions: {
+              owneruid: this.uid,
             },
-            "sort":{}
+            sort: {},
           };
 
-          let updatedFilterCallsPayload = this.getCallsFilterPayload(filterCallsPayload);
-          console.log('updatedFilterCallsPayload', JSON.stringify(updatedFilterCallsPayload));
+          let updatedFilterCallsPayload =
+            this.getCallsFilterPayload(filterCallsPayload);
+          console.log(
+            "updatedFilterCallsPayload",
+            JSON.stringify(updatedFilterCallsPayload)
+          );
 
           var cfdata = {
-            "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-            "url": "http://35.244.46.144:5000/api/calllogs/paginate",
-            "payload": updatedFilterCallsPayload
+            headers:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+            url: "http://35.244.46.144:5000/api/calllogs/paginate",
+            payload: updatedFilterCallsPayload,
           };
           var raw = JSON.stringify(cfdata);
 
           const headers = {
-            'Content-Type': 'application/json',
-            'token': 'tpmongo'
-          }
-          axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
-            headers: headers
-          })
-          .then((response) => {
-            console.log('DL response', response.data.data);
-            let dataset = response.data.data.dataset;
+            "Content-Type": "application/json",
+            token: "tpmongo",
+          };
+          axios
+            .post(
+              "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+              raw,
+              {
+                headers: headers,
+              }
+            )
+            .then((response) => {
+              console.log("DL response", response.data.data);
+              let dataset = response.data.data.dataset;
 
-            this.totalPage = response.data.data.totalPages;
-            this.totalItems = response.data.data.totalItems;
+              this.totalPage = response.data.data.totalPages;
+              this.totalItems = response.data.data.totalItems;
 
-            // let List = [];
-            // this.realdata = [];
-            dataset.forEach((doc) => {
-              // let callObj = {
+              // let List = [];
+              // this.realdata = [];
+              dataset.forEach((doc) => {
+                // let callObj = {
 
-              // };
+                // };
 
-              // call details
-              let user_details = doc;
+                // call details
+                let user_details = doc;
                 this.calldetails = user_details;
                 var timestamp = this.calldetails.dateTime;
                 var date = new Date(timestamp);
@@ -1443,112 +1539,20 @@ export default {
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
                 console.log("snap calllog ", this.realdata);
-              // call details
+                // call details
+              });
             })
-          })
-          .catch((error) => {
-            console.log('DL error', error);
-          })
+            .catch((error) => {
+              console.log("DL error", error);
+            });
         }
-      }
+      };
     },
   },
   created() {
-    // let localStorageUserObj = localStorage.getItem("tpu");
 
-    // if (localStorageUserObj) {
-    //   let parsedUser = JSON.parse(localStorageUserObj);
-    //   this.userEmail = parsedUser.Email;
-
-    //   this.userRole = parsedUser.role;
-    //   firebase.auth().onAuthStateChanged((user) => {
-    //     if (user) {
-    //       this.uid = user.uid;
-    //       // console.log("User Id : " + this.uid);
-    //       this.sendMessage(this.uid);
-
-    //       // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
-    //       db.collection("callLogs")
-    //         .where("owneruid", "==", this.uid)
-    //         .orderBy("dateTime", "desc")
-    //         // .startAt(0)
-    //         .limit(this.limit)
-    //         .onSnapshot((querySnapshot) => {
-    //           this.realdata = [];
-    //           if (!querySnapshot.empty) {
-    //             querySnapshot.forEach(async (doc) => {
-    //               // console.log(doc.id, " => ", doc.data());
-    //               this.lastrecord = doc;
-    //               let user_details = doc.data();
-    //               this.calldetails = user_details;
-    //               var timestamp = this.calldetails.dateTime;
-    //               var date = new Date(timestamp);
-    //               // console.log("full time", date);
-    //               // console.log("Time: ", date.getTime());
-
-    //               var myCurrentDate = new Date();
-    //               var missedTresholdDate = new Date(myCurrentDate);
-    //               missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-    //               // console.log(missedTresholdDate);
-
-    //               // console.log(timestamp); //missed call date
-    //               // console.log(missedTresholdDate.getTime()); //addon date
-    //               // console.log(myCurrentDate.getTime()); //today's date
-
-    //               if (timestamp <= missedTresholdDate.getTime()) {
-    //                 call_time = moment(date).format("D MMM Y hh:mm a");
-    //               } else {
-    //                 var call_time = moment(date).format("hh:mm a");
-    //                 call_time = moment(date).fromNow();
-    //               }
-
-    //               var note = "";
-    //               if (this.calldetails.Notes) {
-    //                 note = this.calldetails.Notes;
-    //               } else {
-    //                 // console.log("no note");
-    //                 note = [{ Note: "" }];
-    //               }
-
-    //               var calledNumber =
-    //                 this.calldetails.callerNumber.slice(0, 5) +
-    //                 " " +
-    //                 this.calldetails.callerNumber.slice(5, 7) +
-    //                 " " +
-    //                 this.calldetails.callerNumber.slice(7, 11);
-    //               var virtualnumber =
-    //                 this.calldetails.virtualnumber.slice(0, 5) +
-    //                 " " +
-    //                 this.calldetails.virtualnumber.slice(5, 7) +
-    //                 " " +
-    //                 this.calldetails.virtualnumber.slice(7, 11);
-    //               this.detail = Object.assign({}, this.detail, {
-    //                 callstatus: this.calldetails.callstatus,
-    //                 name: this.calldetails.name[0],
-    //                 dateTime: call_time,
-    //                 conversationduration: this.calldetails.conversationduration,
-    //                 callerNumber: calledNumber,
-    //                 uniqueid: this.calldetails.uniqueid,
-    //                 Note: note,
-    //                 source: this.calldetails.source,
-    //                 virtualnumber: virtualnumber,
-    //                 called_name: this.called_name,
-    //                 recordingUrl: this.calldetails.recordingurl,
-    //               });
-    //               this.realdata.push(this.detail);
-    //               this.backuprealdata.push(this.detail);
-    //               // console.log("snap calllog ", this.realdata);
-    //             });
-    //           } else {
-    //             //alert('no calls')
-    //           }
-    //         });
-    //     }
-    //   });
-    // }
-},
-beforeMount() {
-
+  },
+  beforeMount() {
     let localStorageUserObj = localStorage.getItem("tpu");
 
     if (localStorageUserObj) {
@@ -1562,30 +1566,35 @@ beforeMount() {
           // console.log("User Id : " + this.uid);
           // this.sendMessage(this.uid);
 
-
-          
           db.collection("users")
             .where("OwnerUid", "==", this.uid)
             .orderBy("cDate", "asc")
             .get()
             .then((querySnapshot) => {
-
-              Object.assign(this.usersObj, { [parsedUser.FirstName?parsedUser.FirstName:parsedUser.role]: `+91${parsedUser.PhoneNumber}`})
-              this.Users.push(parsedUser.FirstName?parsedUser.FirstName:parsedUser.role);
-              console.log('this.usersObj', this.usersObj);
+              Object.assign(this.usersObj, {
+                [parsedUser.FirstName
+                  ? parsedUser.FirstName
+                  : parsedUser.role]: `+91${parsedUser.PhoneNumber}`,
+              });
+              this.Users.push(
+                parsedUser.FirstName ? parsedUser.FirstName : parsedUser.role
+              );
+              console.log("this.usersObj", this.usersObj);
               this.Numbers = parsedUser.virtualNumber;
               this.Numbers.concat(parsedUser.virtualNumber);
 
               querySnapshot.forEach((doc) => {
                 let user_details = doc.data();
 
-                Object.assign(this.usersObj, { [user_details.Name]: `+91${user_details.PhoneNumber}`})
+                Object.assign(this.usersObj, {
+                  [user_details.Name]: `+91${user_details.PhoneNumber}`,
+                });
                 this.Users.push(user_details.Name);
               });
             })
             .catch((error) => {
               console.log("Error getting documents: ", error);
-            }) 
+            });
           // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
           db.collection("callLogs")
             .where("owneruid", "==", this.uid)
@@ -1595,113 +1604,61 @@ beforeMount() {
             .onSnapshot((querySnapshot) => {
               this.realdata = [];
               if (!querySnapshot.empty) {
-                // querySnapshot.forEach(async (doc) => {
-                //   // console.log(doc.id, " => ", doc.data());
-                //   this.lastrecord = doc;
-                //   let user_details = doc.data();
-                //   this.calldetails = user_details;
-                //   var timestamp = this.calldetails.dateTime;
-                //   var date = new Date(timestamp);
-                //   // console.log("full time", date);
-                //   // console.log("Time: ", date.getTime());
-
-                //   var myCurrentDate = new Date();
-                //   var missedTresholdDate = new Date(myCurrentDate);
-                //   missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-                //   // console.log(missedTresholdDate);
-
-                //   // console.log(timestamp); //missed call date
-                //   // console.log(missedTresholdDate.getTime()); //addon date
-                //   // console.log(myCurrentDate.getTime()); //today's date
-
-                //   if (timestamp <= missedTresholdDate.getTime()) {
-                //     call_time = moment(date).format("D MMM Y hh:mm a");
-                //   } else {
-                //     var call_time = moment(date).format("hh:mm a");
-                //     call_time = moment(date).fromNow();
-                //   }
-
-                //   var note = "";
-                //   if (this.calldetails.Notes) {
-                //     note = this.calldetails.Notes;
-                //   } else {
-                //     // console.log("no note");
-                //     note = [{ Note: "" }];
-                //   }
-
-                //   var calledNumber =
-                //     this.calldetails.callerNumber.slice(0, 5) +
-                //     " " +
-                //     this.calldetails.callerNumber.slice(5, 7) +
-                //     " " +
-                //     this.calldetails.callerNumber.slice(7, 11);
-                //   var virtualnumber =
-                //     this.calldetails.virtualnumber.slice(0, 5) +
-                //     " " +
-                //     this.calldetails.virtualnumber.slice(5, 7) +
-                //     " " +
-                //     this.calldetails.virtualnumber.slice(7, 11);
-                //   this.detail = Object.assign({}, this.detail, {
-                //     callstatus: this.calldetails.callstatus,
-                //     name: this.calldetails.name[0],
-                //     dateTime: call_time,
-                //     conversationduration: this.calldetails.conversationduration,
-                //     callerNumber: calledNumber,
-                //     uniqueid: this.calldetails.uniqueid,
-                //     Note: note,
-                //     source: this.calldetails.source,
-                //     virtualnumber: virtualnumber,
-                //     called_name: this.called_name,
-                //     recordingUrl: this.calldetails.recordingurl,
-                //   });
-                //   this.realdata.push(this.detail);
-                //   this.backuprealdata.push(this.detail);
-                //   // console.log("snap calllog ", this.realdata);
-                // });
+  
                 // Getting Calls from Mongo on onSnapshot
                 var filterCallsPayload = {
-                  "page_number": 1,
-                  "results_per_page": parseInt(this.limit),
-                  "conditions": {
-                    "owneruid": this.uid
+                  page_number: 1,
+                  results_per_page: parseInt(this.limit),
+                  conditions: {
+                    owneruid: this.uid,
                   },
-                  "sort":{}
+                  sort: {},
                 };
 
-                let updatedFilterCallsPayload = this.getCallsFilterPayload(filterCallsPayload);
-                console.log('updatedFilterCallsPayload', JSON.stringify(updatedFilterCallsPayload));
+                let updatedFilterCallsPayload =
+                  this.getCallsFilterPayload(filterCallsPayload);
+                console.log(
+                  "updatedFilterCallsPayload",
+                  JSON.stringify(updatedFilterCallsPayload)
+                );
 
                 var cfdata = {
-                  "headers": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-                  "url": "http://35.244.46.144:5000/api/calllogs/paginate",
-                  "payload": updatedFilterCallsPayload
+                  headers:
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+                  url: "http://35.244.46.144:5000/api/calllogs/paginate",
+                  payload: updatedFilterCallsPayload,
                 };
                 var raw = JSON.stringify(cfdata);
 
                 const headers = {
-                  'Content-Type': 'application/json',
-                  'token': 'tpmongo'
-                }
-                axios.post("https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo", raw, {
-                  headers: headers
-                })
-                .then((response) => {
-                  console.log('DL response', response.data.data);
-                  let dataset = response.data.data.dataset;
+                  "Content-Type": "application/json",
+                  token: "tpmongo",
+                };
+                axios
+                  .post(
+                    "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+                    raw,
+                    {
+                      headers: headers,
+                    }
+                  )
+                  .then((response) => {
+                    console.log("DL response", response.data.data);
+                    let dataset = response.data.data.dataset;
 
-                  this.totalPage = response.data.data.totalPages;
-                  this.totalItems = response.data.data.totalItems;
+                    this.totalPage = response.data.data.totalPages;
+                    this.totalItems = response.data.data.totalItems;
 
-                  // let List = [];
-                  this.realdata = [];
-                  this.backuprealdata = [];
-                  dataset.forEach((doc) => {
-                    // let callObj = {
+                    // let List = [];
+                    this.realdata = [];
+                    this.backuprealdata = [];
+                    dataset.forEach((doc) => {
+                      // let callObj = {
 
-                    // };
+                      // };
 
-                    // call details
-                    let user_details = doc;
+                      // call details
+                      let user_details = doc;
                       this.calldetails = user_details;
                       var timestamp = this.calldetails.dateTime;
                       var date = new Date(timestamp);
@@ -1710,7 +1667,9 @@ beforeMount() {
 
                       var myCurrentDate = new Date();
                       var missedTresholdDate = new Date(myCurrentDate);
-                      missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                      missedTresholdDate.setDate(
+                        missedTresholdDate.getDate() - 2
+                      ); //2 days before
                       console.log(missedTresholdDate);
 
                       console.log(timestamp); //missed call date
@@ -1748,7 +1707,8 @@ beforeMount() {
                         callstatus: this.calldetails.callstatus,
                         name: this.calldetails.name[0],
                         dateTime: call_time,
-                        conversationduration: this.calldetails.conversationduration,
+                        conversationduration:
+                          this.calldetails.conversationduration,
                         callerNumber: calledNumber,
                         uniqueid: this.calldetails.uniqueid,
                         Note: note,
@@ -1760,12 +1720,12 @@ beforeMount() {
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
                       console.log("snap calllog ", this.realdata);
-                    // call details
+                      // call details
+                    });
                   })
-                })
-                .catch((error) => {
-                  console.log('DL error', error);
-                })
+                  .catch((error) => {
+                    console.log("DL error", error);
+                  });
                 // Getting Calls from Mongo on onSnapshot
               } else {
                 //alert('no calls')
@@ -1774,12 +1734,10 @@ beforeMount() {
         }
       });
     }
-
-},
-mounted() {
-  this.getNextCalls();
-}
-
+  },
+  mounted() {
+    this.getNextCalls();
+  },
 };
 </script>
 

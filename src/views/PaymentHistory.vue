@@ -29,19 +29,15 @@
     <v-card-title>
       Payment History
       <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+    
     </v-card-title>
     <v-data-table
       :headers="headers"
       :items="paymentHistory"
       :search="search"
-    ></v-data-table>
+    ><template slot="item.invoice" slot-scope="invoice">
+            <v-icon class="mt-6 mb-5 mr-7" color="black">mdi-download</v-icon>
+        </template></v-data-table>
   </v-card>
                      
                     </v-row>
@@ -68,7 +64,12 @@ export default {
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
      db.collection("paymentTransaction").where("Uid","==",owneruid).where("Status","==",true).get().then(async(snap) =>{
        if(snap){
-         snap.docs.forEach(element => {this.paymentHistory.push({name: new Date(element.data().HookDate.seconds *1000).toLocaleString(),amount:element.data().InvoiceAmount,invoice:element.data().Status})});
+         snap.docs.forEach(element => {this.paymentHistory.push({
+           name: new Date(element.data().HookDate.seconds *1000).toLocaleString(),
+           amount:element.data().InvoiceAmount,
+           paymentMode: 'Payment Mode',
+           invoice: element.data().Status
+           })});
          }else{
              this.noblock ="No Blocked Numbers"
          }
@@ -82,10 +83,10 @@ export default {
           {
             text: 'Date',
             align: 'start',
-            sortable: false,
             value: 'name',
           },
           { text: 'Amount', value: 'amount' },
+          { text: 'Payment Mode', value: 'paymentMode' },
           { text: 'Invoices', value: 'invoice' },
 
         ],
