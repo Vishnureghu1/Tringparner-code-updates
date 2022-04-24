@@ -216,12 +216,12 @@
                                         colspan="2"
                                         align="right"
                                       >
-                                        ₹ 3000.0
+                                        ₹ {{SubTotal}}
                                       </td>
                                     </tr>
                                     <tr colspan="3">
                                       <td class="ma-0 pa-0" colspan="1">
-                                        Discount for Half Yearly Plan
+                                        Discount 
                                       </td>
 
                                       <td
@@ -229,7 +229,7 @@
                                         colspan="2"
                                         align="right"
                                       >
-                                        ₹ 900.0
+                                       {{Discount}} 
                                       </td>
                                     </tr>
                                     <tr colspan="3">
@@ -246,7 +246,7 @@
                                         colspan="2"
                                         align="right"
                                       >
-                                        ₹ 8100.0
+                                        {{CostAfterDiscount}}
                                       </td>
                                     </tr>
                                     <tr colspan="3">
@@ -257,12 +257,12 @@
                                         colspan="2"
                                         align="right"
                                       >
-                                        ₹ 1458.0
+                                        {{Gst}}
                                       </td>
                                     </tr>
                                     <tr colspan="3">
                                       <td class="ma-0 pa-0 bold" colspan="1">
-                                        Cost after Discount
+                                        Total
                                       </td>
 
                                       <td
@@ -270,7 +270,7 @@
                                         colspan="2"
                                         align="right"
                                       >
-                                        ₹ 9558.0
+                                        ₹ {{invoice_amount}}
                                       </td>
                                     </tr>
                                   </tbody>
@@ -356,33 +356,11 @@ export default {
     invoice_amount: "",
     amount: "",
     plans: false,
-    sublist: [
-      {
-        title: "Item",
-        qty: "Quantity",
-        amount: "Price",
-        class: "bold",
-      },
-
-      {
-        title: "Tringpartner_6M_3000",
-        qty: 1,
-        amount: "3000.0",
-        class: "light3",
-      },
-      {
-        title: "Business Numbers",
-        qty: 2,
-        amount: "3600.0",
-        class: "light3",
-      },
-      {
-        title: "Users",
-        qty: 4,
-        amount: "2400.0",
-        class: "light3",
-      },
-    ],
+    sublist: [],
+    Discount:[],
+    SubTotal:"",
+    CostAfterDiscount:"",
+    Gst:"",
     items: [
       {
         text: "More",
@@ -468,6 +446,7 @@ export default {
           : 2;
       // this.PlanId = (radio == "inital")?this.PlanId:planid;
       this.PlanId = plan;
+      this.sublist = [];
       const details = {
         // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill/",
@@ -489,6 +468,11 @@ export default {
           this.permonth = parseInt(
             response.data.invoice_amount / permonthdivison
           );
+          this.SubTotal = response.data.actual_amount+response.data.actual_vn_amount+response.data.actual_user_amount;
+          this.Discount = this.SubTotal - response.data.total_amount;
+          this.CostAfterDiscount = response.data.total_amount;
+          this.Gst = response.data.invoice_amount -response.data.total_amount;
+          this.sublist.push({title: "Item",qty: "Quantity",amount: "Price",class: "bold"},{title: response.data.code,qty: 1,amount: response.data.actual_amount,class: "light3"},{title: "Business Numbers",qty: response.data.number,amount: response.data.actual_vn_amount,class: "light3"},{title: "Users",qty: response.data.user,amount: response.data.actual_user_amount,class: "light3"})
           // console.log(response.data.invoice_amount);
         })
         .catch((error) => {
