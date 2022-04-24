@@ -630,6 +630,7 @@ export default {
     detail: {},
     calldetails: [],
     realdata: [],
+    backuprealdata: [],//for Mongo
     click_details: {},
     clicked_array: [],
     selected: false,
@@ -961,6 +962,7 @@ export default {
         results_per_page: parseInt(this.limit),
         conditions: {
           owneruid: this.uid,
+          callstatus: "Answered"
         },
         sort: {},
       };
@@ -1096,11 +1098,16 @@ export default {
       return searchCallsConditions;
     },
     searchMongo() {
+
+      if(this.page > 1) {
+        this.page = 1;
+      }
       var searchCallsConditions = {
         page_number: this.page ? parseInt(this.page) : 1,
         results_per_page: parseInt(this.limit),
         conditions: {
           owneruid: this.uid,
+          callstatus: "Answered"
         },
         sort: {},
       };
@@ -1109,7 +1116,7 @@ export default {
         searchCallsConditions
       );
 
-      console.log("updatedSearchCallsPayload", updatedSearchCallsPayload);
+      console.log("updatedSearchCallsPayload", JSON.stringify(updatedSearchCallsPayload));
 
       var cfdata = {
         headers:
@@ -1132,7 +1139,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log("DL response", response.data.data);
+          console.log("Search DL response", response.data.data);
           let dataset = response.data.data.dataset;
 
           this.totalPage = response.data.data.totalPages;
@@ -1308,6 +1315,7 @@ export default {
             results_per_page: parseInt(this.limit),
             conditions: {
               owneruid: this.uid,
+              callstatus: "Answered"
             },
             sort: {},
           };
@@ -1413,6 +1421,7 @@ export default {
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
                 console.log("snap calllog ", this.realdata);
+                console.log("getNextCalls calllog ", this.realdata.length);
                 // call details
               });
             })
@@ -1423,7 +1432,8 @@ export default {
       };
     },
   },
-  created() {
+  created() {},
+  beforeMount() {
     let localStorageUserObj = localStorage.getItem("tpu");
 
     if (localStorageUserObj) {
@@ -1435,74 +1445,228 @@ export default {
         if (user) {
           this.uid = user.uid;
           console.log("User Id : " + this.uid);
+
+          // POPULATING FILTER
+          db.collection("users")
+            .where("OwnerUid", "==", this.uid)
+            .orderBy("cDate", "asc")
+            .get()
+            .then((querySnapshot) => {
+              Object.assign(this.usersObj, {
+                [parsedUser.FirstName
+                  ? parsedUser.FirstName
+                  : parsedUser.role]: `+91${parsedUser.PhoneNumber}`,
+              });
+              this.Users.push(
+                parsedUser.FirstName ? parsedUser.FirstName : parsedUser.role
+              );
+              console.log("this.usersObj", this.usersObj);
+              this.Numbers = parsedUser.virtualNumber;
+              this.Numbers.concat(parsedUser.virtualNumber);
+
+              querySnapshot.forEach((doc) => {
+                let user_details = doc.data();
+
+                Object.assign(this.usersObj, {
+                  [user_details.Name]: `+91${user_details.PhoneNumber}`,
+                });
+                this.Users.push(user_details.Name);
+              });
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+            });
+          // POPULATING FILTER
+
           db.collection("callLogs")
             .where("owneruid", "==", this.uid)
             .where("callstatus", "==", "Answered")
             .orderBy("dateTime", "desc")
             .onSnapshot((querySnapshot) => {
               this.realdata = [];
+              this.backuprealdata = [];
               if (!querySnapshot.empty) {
-                querySnapshot.forEach(async (doc) => {
-                  console.log(doc.id, " => ", doc.data());
-                  let user_details = doc.data();
-                  this.calldetails = user_details;
-                  var timestamp = this.calldetails.dateTime;
-                  var date = new Date(timestamp);
-                  // console.log("full time",date)
-                  // var call_time = moment(date).format('hh:mm a')
-                  // call_time = moment(date).fromNow();
-                  // console.log("converted time",call_time)
 
-                  var myCurrentDate = new Date();
-                  var missedTresholdDate = new Date(myCurrentDate);
-                  missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-                  console.log(missedTresholdDate);
+                // querySnapshot.forEach(async (doc) => {
+                //   console.log(doc.id, " => ", doc.data());
+                //   let user_details = doc.data();
+                //   this.calldetails = user_details;
+                //   var timestamp = this.calldetails.dateTime;
+                //   var date = new Date(timestamp);
+                //   // console.log("full time",date)
+                //   // var call_time = moment(date).format('hh:mm a')
+                //   // call_time = moment(date).fromNow();
+                //   // console.log("converted time",call_time)
 
-                  console.log(timestamp); //missed call date
-                  console.log(missedTresholdDate.getTime()); //addon date
-                  console.log(myCurrentDate.getTime()); //today's date
+                //   var myCurrentDate = new Date();
+                //   var missedTresholdDate = new Date(myCurrentDate);
+                //   missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                //   console.log(missedTresholdDate);
 
-                  if (timestamp <= missedTresholdDate.getTime()) {
-                    call_time = moment(date).format("D MMM Y hh:mm a");
-                  } else {
-                    var call_time = moment(date).format("hh:mm a");
-                    call_time = moment(date).fromNow();
-                  }
-                  var note = "";
-                  if (this.calldetails.Notes) {
-                    note = this.calldetails.Notes;
-                  } else {
-                    console.log("no note");
-                    note = [{ Note: "" }];
-                  }
-                  var calledNumber =
-                    this.calldetails.callerNumber.slice(0, 5) +
-                    " " +
-                    this.calldetails.callerNumber.slice(5, 7) +
-                    " " +
-                    this.calldetails.callerNumber.slice(7, 11);
-                  var virtualnumber =
-                    this.calldetails.virtualnumber.slice(0, 5) +
-                    " " +
-                    this.calldetails.virtualnumber.slice(5, 7) +
-                    " " +
-                    this.calldetails.virtualnumber.slice(7, 11);
-                  this.detail = Object.assign({}, this.detail, {
-                    callstatus: this.calldetails.callstatus,
-                    name: this.calldetails.name[0],
-                    dateTime: call_time,
-                    conversationduration: this.calldetails.conversationduration,
-                    callerNumber: calledNumber,
-                    uniqueid: this.calldetails.uniqueid,
-                    Note: note,
-                    source: this.calldetails.source,
-                    virtualnumber: virtualnumber,
-                    called_name: this.called_name,
-                    recordingUrl: this.calldetails.recordingurl,
-                  });
-                  this.realdata.push(this.detail);
-                  console.log("snap calllog ", this.realdata);
+                //   console.log(timestamp); //missed call date
+                //   console.log(missedTresholdDate.getTime()); //addon date
+                //   console.log(myCurrentDate.getTime()); //today's date
+
+                //   if (timestamp <= missedTresholdDate.getTime()) {
+                //     call_time = moment(date).format("D MMM Y hh:mm a");
+                //   } else {
+                //     var call_time = moment(date).format("hh:mm a");
+                //     call_time = moment(date).fromNow();
+                //   }
+                //   var note = "";
+                //   if (this.calldetails.Notes) {
+                //     note = this.calldetails.Notes;
+                //   } else {
+                //     console.log("no note");
+                //     note = [{ Note: "" }];
+                //   }
+                //   var calledNumber =
+                //     this.calldetails.callerNumber.slice(0, 5) +
+                //     " " +
+                //     this.calldetails.callerNumber.slice(5, 7) +
+                //     " " +
+                //     this.calldetails.callerNumber.slice(7, 11);
+                //   var virtualnumber =
+                //     this.calldetails.virtualnumber.slice(0, 5) +
+                //     " " +
+                //     this.calldetails.virtualnumber.slice(5, 7) +
+                //     " " +
+                //     this.calldetails.virtualnumber.slice(7, 11);
+                //   this.detail = Object.assign({}, this.detail, {
+                //     callstatus: this.calldetails.callstatus,
+                //     name: this.calldetails.name[0],
+                //     dateTime: call_time,
+                //     conversationduration: this.calldetails.conversationduration,
+                //     callerNumber: calledNumber,
+                //     uniqueid: this.calldetails.uniqueid,
+                //     Note: note,
+                //     source: this.calldetails.source,
+                //     virtualnumber: virtualnumber,
+                //     called_name: this.called_name,
+                //     recordingUrl: this.calldetails.recordingurl,
+                //   });
+                //   this.realdata.push(this.detail);
+                //   console.log("snap calllog ", this.realdata);
+                // });
+
+                 // Getting Calls from Mongo on onSnapshot
+                var filterCallsPayload = {
+                  page_number: 1,
+                  results_per_page: parseInt(this.limit),
+                  conditions: {
+                    owneruid: this.uid,
+                    callstatus: "Answered"
+                  },
+                  sort: {},
+                };
+
+                let updatedFilterCallsPayload =
+                  this.getCallsFilterPayload(filterCallsPayload);
+                console.log(
+                  "updatedFilterCallsPayload",
+                  JSON.stringify(updatedFilterCallsPayload)
+                );
+
+                var cfdata = {
+                  headers:
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+                  url: "http://35.244.46.144:5000/api/calllogs/paginate",
+                  payload: updatedFilterCallsPayload,
+                };
+                var raw = JSON.stringify(cfdata);
+
+                const headers = {
+                  "Content-Type": "application/json",
+                  token: "tpmongo",
+                };
+                axios
+                  .post(
+                    "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+                    raw,
+                    {
+                      headers: headers,
+                    }
+                  )
+                  .then((response) => {
+                    console.log("DL response", response.data.data);
+                    let dataset = response.data.data.dataset;
+
+                    this.totalPage = response.data.data.totalPages;
+                    this.totalItems = response.data.data.totalItems;
+
+                    // let List = [];
+                    this.realdata = [];
+                    this.backuprealdata = [];
+                    dataset.forEach((doc) => {
+
+                        // console.log(doc.id, " => ", doc.data());
+                        // let user_details = doc.data();
+                        let user_details = doc;
+                        this.calldetails = user_details;
+                        var timestamp = this.calldetails.dateTime;
+                        var date = new Date(timestamp);
+                        // console.log("full time",date)
+                        // var call_time = moment(date).format('hh:mm a')
+                        // call_time = moment(date).fromNow();
+                        // console.log("converted time",call_time)
+
+                        var myCurrentDate = new Date();
+                        var missedTresholdDate = new Date(myCurrentDate);
+                        missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                        console.log(missedTresholdDate);
+
+                        console.log(timestamp); //missed call date
+                        console.log(missedTresholdDate.getTime()); //addon date
+                        console.log(myCurrentDate.getTime()); //today's date
+
+                        if (timestamp <= missedTresholdDate.getTime()) {
+                          call_time = moment(date).format("D MMM Y hh:mm a");
+                        } else {
+                          var call_time = moment(date).format("hh:mm a");
+                          call_time = moment(date).fromNow();
+                        }
+                        var note = "";
+                        if (this.calldetails.Notes) {
+                          note = this.calldetails.Notes;
+                        } else {
+                          console.log("no note");
+                          note = [{ Note: "" }];
+                        }
+                        var calledNumber =
+                          this.calldetails.callerNumber.slice(0, 5) +
+                          " " +
+                          this.calldetails.callerNumber.slice(5, 7) +
+                          " " +
+                          this.calldetails.callerNumber.slice(7, 11);
+                        var virtualnumber =
+                          this.calldetails.virtualnumber.slice(0, 5) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(5, 7) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(7, 11);
+                        this.detail = Object.assign({}, this.detail, {
+                          callstatus: this.calldetails.callstatus,
+                          name: this.calldetails.name[0],
+                          dateTime: call_time,
+                          conversationduration: this.calldetails.conversationduration,
+                          callerNumber: calledNumber,
+                          uniqueid: this.calldetails.uniqueid,
+                          Note: note,
+                          source: this.calldetails.source,
+                          virtualnumber: virtualnumber,
+                          called_name: this.called_name,
+                          recordingUrl: this.calldetails.recordingurl,
+                        });
+                        this.realdata.push(this.detail);
+                        this.backuprealdata.push(this.detail);
+                        console.log("snap calllog ", this.realdata);
+                      
+                    });
+                  })
+                  .catch((error) => {
+                  console.log("DL error", error);
                 });
+
               } else {
                 //alert('no calls')
               }
@@ -1510,6 +1674,9 @@ export default {
         }
       });
     }
+  },
+  mounted() {
+    this.getNextCalls();
   },
 };
 </script>

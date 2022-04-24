@@ -35,7 +35,7 @@
       :headers="headers"
       :items="paymentHistory"
       :search="search"
-    ><template slot="item.invoice" slot-scope="invoice">
+    ><template slot="item.invoice" :slot-scope="invoice">
             <v-icon class="mt-6 mb-5 mr-7" color="black">mdi-download</v-icon>
         </template></v-data-table>
   </v-card>

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-	      <v-alert prominent color="red darken-1" type="error">
+        <v-alert prominent color="red darken-1" type="error">
       <v-row align="center">
         <v-col class="grow">
           <h2 class="f16 regular">Email Verification</h2>
@@ -472,7 +472,7 @@
         </v-layout>
       </v-container>
     </div>
-	    <v-dialog v-model="changeEmailPopup" max-width="332px">
+      <v-dialog v-model="changeEmailPopup" max-width="332px">
       <v-card class="rounded-lg pt-7 pb-7">
         <v-card-title class="d-flex justify-center">
           <h3 class="center">Verify your email address</h3>
@@ -557,12 +557,13 @@ import firebase from "firebase";
 import { db } from "@/main.js";
 import moment from "moment";
 import { Icon } from "@iconify/vue2";
+import axios from "axios";
 export default {
   components: {
     Icon,
   },
   data: () => ({
-	valid: true,
+  valid: true,
     searchForm: false,
     benched: 0,
     hidden: true,
@@ -576,7 +577,7 @@ export default {
       // { title: 'Call This Number',color: 'black--text' },
       { title: "Block This Number", color: "red--text" },
     ],
-	timeofCall: ["Ascending", "Descending"],
+  timeofCall: ["Ascending", "Descending"],
     selectedTimeOfCall: "Ascending",
     DurationOfCall: [
       "Not Specified",
@@ -609,6 +610,7 @@ export default {
     detail: {},
     calldetails: [],
     realdata: [],
+    backuprealdata: [],//for Mongo
     click_details: {},
     clicked_array: [],
     selected: false,
@@ -616,7 +618,7 @@ export default {
     show_notes: false,
     dialog: false,
     add_note: true,
-	isUpdating: false,
+  isUpdating: false,
     callback_uid: "",
     rules: [(v) => v.length <= 120 || "Max 120 characters"],
     password: "Password",
@@ -628,7 +630,7 @@ export default {
     reminderMessage: "",
     date: "",
     time: "",
-	notes_added: false,
+  notes_added: false,
     notes_removed: false,
     timeout: 2500,
     bottom: true,
@@ -640,7 +642,7 @@ export default {
     totalPage: 0, 
     totalItems: 0,
     page:1,
-	
+  
   }),
     watch: {
     sendInviteLoader(val) {
@@ -653,7 +655,7 @@ export default {
     },
   },
   methods: {
-	      handleTimeOfCallChange(opn) {
+    handleTimeOfCallChange(opn) {
       this.selectedPaymentOption = opn;
       console.log(this.selectedTimeOfCall);
     },
@@ -718,7 +720,7 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
-	resetFilterParams() {
+  resetFilterParams() {
       this.$refs.form.resetValidation();
       this.selectedTimeOfCall = "Ascending";
       this.selectedDurationOfCall = "";
@@ -821,29 +823,128 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
-  },
-  created() {
-    let localStorageUserObj = localStorage.getItem("tpu");
+    getCallsFilterPayload(filterCallsConditions) {
+      console.log("this.selectedTimeOfCall", this.selectedTimeOfCall);
+      if (
+        this.selectedTimeOfCall !== "" &&
+        this.selectedTimeOfCall == "Ascending"
+      ) {
+        Object.assign(filterCallsConditions.sort, { dateTime: -1 });
+      } else {
+        Object.assign(filterCallsConditions.sort, { dateTime: 1 });
+      }
 
-    if (localStorageUserObj) {
-      let parsedUser = JSON.parse(localStorageUserObj);
-      this.userEmail = parsedUser.Email;
+      console.log("this.selectedDurationOfCall", this.selectedDurationOfCall);
+      if (this.selectedDurationOfCall !== "Not Specified") {
+        if (this.selectedDurationOfCall == "< 30 Seconds") {
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $lt: 30 },
+          });
+        } else if (this.selectedDurationOfCall == "30 Seconds - > 1 minute") {
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 30, $lt: 60 },
+          });
+        } else if (this.selectedDurationOfCall == "1 minitue - > 2 minutes") {
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 60, $lt: 120 },
+          });
+        } else if (this.selectedDurationOfCall == "> 2 minutes") {
+          Object.assign(filterCallsConditions.conditions, {
+            conversationduration: { $gt: 120 },
+          });
+        }
+      }
 
-      this.userRole = parsedUser.role;
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          this.uid = user.uid;
-          console.log("User Id : " + this.uid);
+      console.log("this.selectedViewByType", this.selectedViewByType);
+      if (this.selectedViewByType == "Notes") {
+        Object.assign(filterCallsConditions.conditions, {
+          Notes: { $exists: true },
+        });
+      }
+      if (this.selectedViewByType == "Reminder") {
+        Object.assign(filterCallsConditions.conditions, {
+          Reminder: { $exists: true },
+        });
+      }
+      console.log("this.selectedReminders", this.selectedReminders);
+      if (this.selectedReminders !== "Not Specified") {
+        Object.assign(filterCallsConditions.conditions, {
+          Reminder: { $exists: true },
+        });
+      }
+      console.log("this.selectedNotes", this.selectedNotes);
+      if (this.selectedNotes !== "Not Specified") {
+        Object.assign(filterCallsConditions.conditions, {
+          Notes: { $exists: true },
+        });
+      }
 
-          db.collection("callLogs")
-            .where("owneruid", "==", this.uid)
-            .where("callstatus", "==", "Missed")
-            .orderBy("dateTime", "desc")
-            .onSnapshot((querySnapshot) => {
-              if (!querySnapshot.empty) {
-                querySnapshot.forEach(async (doc) => {
-                  console.log(doc.id, " => ", doc.data());
-                  let user_details = doc.data();
+      console.log("this.selectedUser", this.selectedUser);
+      if (this.selectedUser !== "All") {
+        let connectedTo = this.usersObj[this.selectedUser];
+        Object.assign(filterCallsConditions.conditions, {
+          connectedto: connectedTo,
+        });
+      }
+      console.log("this.selectedNumber", this.selectedNumber);
+      if (this.selectedNumber !== "All") {
+        Object.assign(filterCallsConditions.conditions, {
+          virtualnumber: "8657510921",
+        });
+      }
+
+      return filterCallsConditions;
+    },
+    filterMongo() {
+      console.log("Filtering Calls.....");
+       var filterCallsPayload = {
+        page_number: this.page ? parseInt(this.page) : 1,
+        results_per_page: parseInt(this.limit),
+        conditions: {
+          owneruid: this.uid,
+          callstatus: "Missed"
+        },
+        sort: {},
+      };
+
+      let updatedFilterCallsPayload =
+        this.getCallsFilterPayload(filterCallsPayload);
+      console.log(
+        "updatedFilterCallsPayload",
+        JSON.stringify(updatedFilterCallsPayload)
+      );
+
+      var cfdata = {
+        headers:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        url: "http://35.244.46.144:5000/api/calllogs/paginate",
+        payload: updatedFilterCallsPayload,
+      };
+      var raw = JSON.stringify(cfdata);
+
+      const headers = {
+        "Content-Type": "application/json",
+        token: "tpmongo",
+      };
+      axios
+        .post(
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          raw,
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          console.log("DL response", response.data.data);
+          let dataset = response.data.data.dataset;
+
+          this.totalPage = response.data.data.totalPages;
+          this.totalItems = response.data.data.totalItems;
+
+          // let List = [];
+          this.realdata = [];
+          dataset.forEach((doc) => {
+            let user_details = doc;
                   this.calldetails = user_details;
                   var timestamp = this.calldetails.dateTime;
                   var date = new Date(timestamp);
@@ -928,8 +1029,545 @@ export default {
                     recordingUrl: this.calldetails.recordingurl,
                   });
                   this.realdata.push(this.detail);
-                  console.log("snap calllog ", this.realdata);
+                this.backuprealdata.push(this.detail);
+                console.log("filterMongo calllog ", this.realdata);
+          });
+        })
+        .catch((error) => {
+          console.log("DL error", error);
+        });
+    },
+    getCallsSearchPayload(searchCallsConditions) {
+      if (this.searchTerm && this.searchTerm != "") {
+        Object.assign(searchCallsConditions.conditions, {
+          $or: [
+            {
+              Notes: {
+                $elemMatch: {
+                  Note: { $regex: this.searchTerm, $options: "i" },
+                },
+              },
+            },
+            {
+              callerNumber: { $regex: this.searchTerm, $options: "i" },
+            },
+            {
+              "Reminder.Message": { $regex: this.searchTerm, $options: "i" },
+            },
+          ],
+        });
+      }
+
+      return searchCallsConditions;
+    },
+    searchMongo() {
+       var searchCallsConditions = {
+        page_number: this.page ? parseInt(this.page) : 1,
+        results_per_page: parseInt(this.limit),
+        conditions: {
+          owneruid: this.uid,
+          callstatus: "Missed"
+        },
+        sort: {},
+      };
+
+      let updatedSearchCallsPayload = this.getCallsSearchPayload(
+        searchCallsConditions
+      );
+
+      console.log("updatedSearchCallsPayload", updatedSearchCallsPayload);
+
+      var cfdata = {
+        headers:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+        url: "http://35.244.46.144:5000/api/calllogs/paginate",
+        payload: updatedSearchCallsPayload,
+      };
+      var raw = JSON.stringify(cfdata);
+
+      const headers = {
+        "Content-Type": "application/json",
+        token: "tpmongo",
+      };
+      axios
+        .post(
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          raw,
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          console.log("DL response", response.data.data);
+          let dataset = response.data.data.dataset;
+
+          this.totalPage = response.data.data.totalPages;
+          this.totalItems = response.data.data.totalItems;
+
+          // let List = [];
+          this.realdata = [];
+          dataset.forEach((doc) => {
+            let user_details = doc;
+                  this.calldetails = user_details;
+                  var timestamp = this.calldetails.dateTime;
+                  var date = new Date(timestamp);
+                  console.log("full time", date);
+                  // var call_time = moment(date).format('hh:mm a')
+                  // call_time = moment(date).fromNow();
+                  // console.log("converted time",call_time)
+
+                  var myCurrentDate = new Date();
+                  var missedTresholdDate = new Date(myCurrentDate);
+                  missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                  console.log(missedTresholdDate);
+
+                  console.log(timestamp); //missed call date
+                  console.log(missedTresholdDate.getTime()); //addon date
+                  console.log(myCurrentDate.getTime()); //today's date
+
+                  if (timestamp <= missedTresholdDate.getTime()) {
+                    call_time = moment(date).format("D MMM Y hh:mm a");
+                  } else {
+                    var call_time = moment(date).format("hh:mm a");
+                    call_time = moment(date).fromNow();
+                  }
+
+                  var note = "";
+                  var uid = "";
+                  var user_name = "";
+                  var owneruid = "";
+                  if (this.calldetails.Notes) {
+                    note = this.calldetails.Notes;
+                  } else {
+                    console.log("no note");
+                    note = [{ Note: "" }];
+                  }
+                  if (this.calldetails.ClickCount) {
+                    uid = this.calldetails.ClickCount.Uid;
+                    user_name = this.calldetails.name;
+                    owneruid = this.calldetails.owneruid;
+                    // console.log('user id ', this.click_details.user_name)
+                    if (
+                      uid == owneruid &&
+                      this.calldetails.callstatus == "Missed"
+                    ) {
+                      this.called_name = "You";
+                    } else if (
+                      uid == owneruid &&
+                      this.calldetails.callstatus == "Answered"
+                    ) {
+                      this.called_name = user_name;
+                    }
+                  } else {
+                    console.log("no callback");
+
+                    uid = "";
+                    user_name = "";
+                    owneruid = "";
+                    this.called_name = "";
+                  }
+                  var calledNumber =
+                    this.calldetails.callerNumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.callerNumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.callerNumber.slice(7, 11);
+                  var virtualnumber =
+                    this.calldetails.virtualnumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(7, 11);
+                  this.detail = Object.assign({}, this.detail, {
+                    callstatus: this.calldetails.callstatus,
+                    name: this.calldetails.name[0],
+                    dateTime: call_time,
+                    conversationduration: this.calldetails.conversationduration,
+                    callerNumber: calledNumber,
+                    uniqueid: this.calldetails.uniqueid,
+                    Note: note,
+                    source: this.calldetails.source,
+                    virtualnumber: virtualnumber,
+                    called_name: this.called_name,
+                    recordingUrl: this.calldetails.recordingurl,
+                  });
+                  this.realdata.push(this.detail);
+                  this.backuprealdata.push(this.detail);
+                  console.log("searchMongo calllog ", this.realdata);
+          });
+        })
+        .catch((error) => {
+          console.log("DL error", error);
+        });
+    },
+    getNextCalls() {
+      window.onscroll = () => {
+
+      let bottomOfWindow =
+          document.documentElement.scrollTop + window.innerHeight ===
+          document.documentElement.offsetHeight;
+        if (bottomOfWindow) {
+          console.log("getting Next Calls");
+          console.log("this.lastrecord", this.lastrecord);
+
+          // getting Next calls
+          this.page++;
+          console.log("Filtering Calls.....");
+          var filterCallsPayload = {
+            page_number: this.page ? parseInt(this.page) : 1,
+            results_per_page: parseInt(this.limit),
+            conditions: {
+              owneruid: this.uid,
+              callstatus: "Missed"
+            },
+            sort: {},
+          };
+
+          let updatedFilterCallsPayload =
+            this.getCallsFilterPayload(filterCallsPayload);
+          console.log(
+            "updatedFilterCallsPayload",
+            JSON.stringify(updatedFilterCallsPayload)
+          );
+
+          var cfdata = {
+            headers:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+            url: "http://35.244.46.144:5000/api/calllogs/paginate",
+            payload: updatedFilterCallsPayload,
+          };
+          var raw = JSON.stringify(cfdata);
+
+          const headers = {
+            "Content-Type": "application/json",
+            token: "tpmongo",
+          };
+          axios
+            .post(
+              "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+              raw,
+              {
+                headers: headers,
+              }
+            )
+            .then((response) => {
+              console.log("DL response", response.data.data);
+              let dataset = response.data.data.dataset;
+
+              this.totalPage = response.data.data.totalPages;
+              this.totalItems = response.data.data.totalItems;
+
+              // let List = [];
+              // this.realdata = [];
+              dataset.forEach((doc) => {
+                // let callObj = {
+
+                // };
+
+                // call details
+                let user_details = doc;
+                  this.calldetails = user_details;
+                  var timestamp = this.calldetails.dateTime;
+                  var date = new Date(timestamp);
+                  console.log("full time", date);
+                  // var call_time = moment(date).format('hh:mm a')
+                  // call_time = moment(date).fromNow();
+                  // console.log("converted time",call_time)
+
+                  var myCurrentDate = new Date();
+                  var missedTresholdDate = new Date(myCurrentDate);
+                  missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                  console.log(missedTresholdDate);
+
+                  console.log(timestamp); //missed call date
+                  console.log(missedTresholdDate.getTime()); //addon date
+                  console.log(myCurrentDate.getTime()); //today's date
+
+                  if (timestamp <= missedTresholdDate.getTime()) {
+                    call_time = moment(date).format("D MMM Y hh:mm a");
+                  } else {
+                    var call_time = moment(date).format("hh:mm a");
+                    call_time = moment(date).fromNow();
+                  }
+
+                  var note = "";
+                  var uid = "";
+                  var user_name = "";
+                  var owneruid = "";
+                  if (this.calldetails.Notes) {
+                    note = this.calldetails.Notes;
+                  } else {
+                    console.log("no note");
+                    note = [{ Note: "" }];
+                  }
+                  if (this.calldetails.ClickCount) {
+                    uid = this.calldetails.ClickCount.Uid;
+                    user_name = this.calldetails.name;
+                    owneruid = this.calldetails.owneruid;
+                    // console.log('user id ', this.click_details.user_name)
+                    if (
+                      uid == owneruid &&
+                      this.calldetails.callstatus == "Missed"
+                    ) {
+                      this.called_name = "You";
+                    } else if (
+                      uid == owneruid &&
+                      this.calldetails.callstatus == "Answered"
+                    ) {
+                      this.called_name = user_name;
+                    }
+                  } else {
+                    console.log("no callback");
+
+                    uid = "";
+                    user_name = "";
+                    owneruid = "";
+                    this.called_name = "";
+                  }
+                  var calledNumber =
+                    this.calldetails.callerNumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.callerNumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.callerNumber.slice(7, 11);
+                  var virtualnumber =
+                    this.calldetails.virtualnumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(7, 11);
+                  this.detail = Object.assign({}, this.detail, {
+                    callstatus: this.calldetails.callstatus,
+                    name: this.calldetails.name[0],
+                    dateTime: call_time,
+                    conversationduration: this.calldetails.conversationduration,
+                    callerNumber: calledNumber,
+                    uniqueid: this.calldetails.uniqueid,
+                    Note: note,
+                    source: this.calldetails.source,
+                    virtualnumber: virtualnumber,
+                    called_name: this.called_name,
+                    recordingUrl: this.calldetails.recordingurl,
+                  });
+                  this.realdata.push(this.detail);
+                this.backuprealdata.push(this.detail);
+                console.log("getNextCalls calllog ", this.realdata);
+                // call details
+              });
+            })
+            .catch((error) => {
+              console.log("DL error", error);
+            });
+        }
+      };
+    }
+  },
+  created() {},
+  beforeMount() {
+    let localStorageUserObj = localStorage.getItem("tpu");
+
+    if (localStorageUserObj) {
+      let parsedUser = JSON.parse(localStorageUserObj);
+      this.userEmail = parsedUser.Email;
+
+      this.userRole = parsedUser.role;
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.uid = user.uid;
+          console.log("User Id : " + this.uid);
+
+          db.collection("users")
+            .where("OwnerUid", "==", this.uid)
+            .orderBy("cDate", "asc")
+            .get()
+            .then((querySnapshot) => {
+              Object.assign(this.usersObj, {
+                [parsedUser.FirstName
+                  ? parsedUser.FirstName
+                  : parsedUser.role]: `+91${parsedUser.PhoneNumber}`,
+              });
+              this.Users.push(
+                parsedUser.FirstName ? parsedUser.FirstName : parsedUser.role
+              );
+              console.log("this.usersObj", this.usersObj);
+              this.Numbers = parsedUser.virtualNumber;
+              this.Numbers.concat(parsedUser.virtualNumber);
+
+              querySnapshot.forEach((doc) => {
+                let user_details = doc.data();
+
+                Object.assign(this.usersObj, {
+                  [user_details.Name]: `+91${user_details.PhoneNumber}`,
                 });
+                this.Users.push(user_details.Name);
+              });
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+            });
+
+          db.collection("callLogs")
+            .where("owneruid", "==", this.uid)
+            .where("callstatus", "==", "Missed")
+            .orderBy("dateTime", "desc")
+            .onSnapshot((querySnapshot) => {
+
+              this.realdata = [];
+              this.backuprealdata = [];
+              if (!querySnapshot.empty) {
+                // querySnapshot.forEach(async (doc) => {
+
+
+                  // API CALL CONFIG
+                  // Getting Calls from Mongo on onSnapshot
+                var filterCallsPayload = {
+                  page_number: 1,
+                  results_per_page: parseInt(this.limit),
+                  conditions: {
+                    owneruid: this.uid,
+                    callstatus: "Missed"
+                  },
+                  sort: {},
+                };
+
+                let updatedFilterCallsPayload =
+                  this.getCallsFilterPayload(filterCallsPayload);
+                console.log(
+                  "updatedFilterCallsPayload",
+                  JSON.stringify(updatedFilterCallsPayload)
+                );
+
+                var cfdata = {
+                  headers:
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
+                  url: "http://35.244.46.144:5000/api/calllogs/paginate",
+                  payload: updatedFilterCallsPayload,
+                };
+                var raw = JSON.stringify(cfdata);
+
+                const headers = {
+                  "Content-Type": "application/json",
+                  token: "tpmongo",
+                };
+                axios
+                  .post(
+                    "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+                    raw,
+                    {
+                      headers: headers,
+                    }
+                  )
+                  .then((response) => {
+                    console.log("DL response", response.data.data);
+                    let dataset = response.data.data.dataset;
+
+                    this.totalPage = response.data.data.totalPages;
+                    this.totalItems = response.data.data.totalItems;
+
+                    // let List = [];
+                    this.realdata = [];
+                    this.backuprealdata = [];
+                    dataset.forEach((doc) => {
+
+
+
+                  //ORIG DATA ITERATOR
+                  // console.log(doc.id, " => ", doc.data());
+                  // let user_details = doc.data();
+                  let user_details = doc;
+                  this.calldetails = user_details;
+                  var timestamp = this.calldetails.dateTime;
+                  var date = new Date(timestamp);
+                  console.log("full time", date);
+                  // var call_time = moment(date).format('hh:mm a')
+                  // call_time = moment(date).fromNow();
+                  // console.log("converted time",call_time)
+
+                  var myCurrentDate = new Date();
+                  var missedTresholdDate = new Date(myCurrentDate);
+                  missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                  console.log(missedTresholdDate);
+
+                  console.log(timestamp); //missed call date
+                  console.log(missedTresholdDate.getTime()); //addon date
+                  console.log(myCurrentDate.getTime()); //today's date
+
+                  if (timestamp <= missedTresholdDate.getTime()) {
+                    call_time = moment(date).format("D MMM Y hh:mm a");
+                  } else {
+                    var call_time = moment(date).format("hh:mm a");
+                    call_time = moment(date).fromNow();
+                  }
+
+                  var note = "";
+                  var uid = "";
+                  var user_name = "";
+                  var owneruid = "";
+                  if (this.calldetails.Notes) {
+                    note = this.calldetails.Notes;
+                  } else {
+                    console.log("no note");
+                    note = [{ Note: "" }];
+                  }
+                  if (this.calldetails.ClickCount) {
+                    uid = this.calldetails.ClickCount.Uid;
+                    user_name = this.calldetails.name;
+                    owneruid = this.calldetails.owneruid;
+                    // console.log('user id ', this.click_details.user_name)
+                    if (
+                      uid == owneruid &&
+                      this.calldetails.callstatus == "Missed"
+                    ) {
+                      this.called_name = "You";
+                    } else if (
+                      uid == owneruid &&
+                      this.calldetails.callstatus == "Answered"
+                    ) {
+                      this.called_name = user_name;
+                    }
+                  } else {
+                    console.log("no callback");
+
+                    uid = "";
+                    user_name = "";
+                    owneruid = "";
+                    this.called_name = "";
+                  }
+                  var calledNumber =
+                    this.calldetails.callerNumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.callerNumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.callerNumber.slice(7, 11);
+                  var virtualnumber =
+                    this.calldetails.virtualnumber.slice(0, 5) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(5, 7) +
+                    " " +
+                    this.calldetails.virtualnumber.slice(7, 11);
+                  this.detail = Object.assign({}, this.detail, {
+                    callstatus: this.calldetails.callstatus,
+                    name: this.calldetails.name[0],
+                    dateTime: call_time,
+                    conversationduration: this.calldetails.conversationduration,
+                    callerNumber: calledNumber,
+                    uniqueid: this.calldetails.uniqueid,
+                    Note: note,
+                    source: this.calldetails.source,
+                    virtualnumber: virtualnumber,
+                    called_name: this.called_name,
+                    recordingUrl: this.calldetails.recordingurl,
+                  });
+                  this.realdata.push(this.detail);
+                  this.backuprealdata.push(this.detail);
+                  console.log("snap calllog ", this.realdata);
+                  })
+                })
+                .catch((error) => {
+                  console.log("DL error", error);
+                });
+                  // API CALL CONFIG
+                // });
               } else {
                 //alert('no calls')
               }
@@ -937,6 +1575,9 @@ export default {
         }
       });
     }
+  },
+  mounted() {
+    this.getNextCalls();
   },
 };
 </script>
