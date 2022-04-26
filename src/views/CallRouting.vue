@@ -237,6 +237,7 @@ export default {
   
   data: () => ({
     // repeatCallerSettings:true,
+    OwnerUid:"",
     active:"",
     Simultaneous:true,
     callRouting:null,
@@ -287,8 +288,10 @@ export default {
   created() {
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
       this.bussinessNumber = this.$route.query.bn;
+        this.OwnerUid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+       this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
     this.setBreadcrumbs(this.bussinessNumber);
-       db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+       db.collection("uservirtualNumber").where("Uid","==",this.OwnerUid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
          this.callRouting=element.data().NewActiveCaller,

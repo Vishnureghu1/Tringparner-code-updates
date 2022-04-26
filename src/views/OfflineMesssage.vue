@@ -298,8 +298,8 @@ export default {
 
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.ownerUid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
-    this.AccountId = localStorageUserObj.AccountId;
-
+      this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+   
     this.bussinessNumber = this.$route.query.bn;
     this.setBreadcrumbs(this.bussinessNumber);
 

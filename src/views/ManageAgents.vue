@@ -205,9 +205,10 @@ export default {
   components: {},
   created() {
         let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		this.owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
-      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+     this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+      db.collection("users").where("uid","==",this.owneruid).get().then(async(snap) =>{
 			// console.log("test.........",snap.docs.data());
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
@@ -216,7 +217,7 @@ export default {
 		}).catch((err)=>{
 			console.log(err.message)
 		})
-    db.collection("users").where("OwnerUid","==",owneruid).get().then(async(snap) =>{
+    db.collection("users").where("OwnerUid","==",this.owneruid).get().then(async(snap) =>{
 			// console.log("test.........",snap.docs.data());
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
@@ -225,7 +226,7 @@ export default {
 		}).catch((err)=>{
 			console.log(err.message)
 		})
-    db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
+    db.collection("uservirtualNumber").where("Uid","==",this.owneruid).where("VirtualNumber","==",parseInt(Object.keys(this.$route.query)[0])).get().then(async(snap) =>{
       console.log(snap.docs[0].data().VirtualNumber)
       const participants = snap.docs[0].data().Participants
 			// console.log("test.........",this.response);
@@ -260,6 +261,8 @@ export default {
   data: () => ({
     // "7306109553":true,
     dialog2: false,
+    owneruid:"",
+    AccountId:"",
     form:{},
     response:{},
     users:[],

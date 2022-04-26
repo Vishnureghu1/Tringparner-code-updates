@@ -175,7 +175,7 @@ export default {
     buyaddon(){
        let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
-    this.AccountId=  localStorageUserObj.AccountId;
+    this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
        db.collection("uservirtualNumber").where("Uid","==",this.owneruid).where("IsPurchased","==",false).get().then(async(snap) =>{
       if(snap.empty){
           this.$router.push("/buyNewNumber");

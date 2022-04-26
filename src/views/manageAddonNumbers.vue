@@ -215,6 +215,7 @@ export default {
   },
   data: () => ({
     dialog:"",
+    AccountId:"",
     owneruid:"",
     uid:"",
     source:"",
@@ -329,6 +330,7 @@ export default {
 	const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
      this.owneruid = owneruid;
+      this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
     this.uid = localStorageUserObj.uid;
     this.addonNumbers=[]
       db.collection("uservirtualNumber").where("Uid","==",owneruid).orderBy("IsPrimary","asc").get().then(async(snap) =>{

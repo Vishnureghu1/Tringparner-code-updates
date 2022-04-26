@@ -295,7 +295,7 @@ export default {
       localStorageUserObj.role == "OWNER"
         ? localStorageUserObj.uid
         : localStorageUserObj.OwnerUid;
-    this.AccountId = localStorageUserObj.AccountId;
+     this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
     this.bussinessNumber = this.$route.query.bn;
     this.setBreadcrumbs(this.bussinessNumber);
     this.$on("greeting_message_changed", function (id) {
