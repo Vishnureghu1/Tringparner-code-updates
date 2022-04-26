@@ -405,8 +405,123 @@ export default {
           icon: "mdi-radar",
           text: "Dashboard",
         },
+        {
+          icon: "mdi-phone",
+          text: "Call Logs",
+          subLinks: [
+            {
+              text: "All Calls",
+              to: "/all_calls",
+              icon: "",
+            },
+            {
+              text: "Missed Calls",
+              to: "/missed_calls",
+              icon: "",
+            },
+            {
+              text: "Answered Calls",
+              to: "/answered_call",
+              icon: "",
+            },
+          ],
+        },
+        {
+          to: "/report",
+          icon: "mdi-chart-bar",
+          text: "Report",
+        },
+        {
+          icon: "mdi-dots-horizontal",
+          text: "More",
+          subLinks: [
+            {
+              icon: "",
+              text: "Business Number",
+              to: "/BusinessNumber",
+            },
+            {
+              icon: "",
+              text: "Manage Users",
+              to: "/ManageUsers",
+            },
+            {
+              icon: "",
+              text: "Add-Ons",
+              to: "/Addons",
+            },
+            {
+              icon: "",
+              text: "Billing Information",
+              to: "/BillingInformation",
+            },
+            {
+              icon: "",
+              text: "Account Info",
+              to: "/AccountInformation",
+            },
+            {
+              icon: "",
+              text: "FAQs",
+              to: "/FAQs",
+            },
+            {
+              icon: "",
+              text: "Get Support",
+              to: "/GetSupport",
+            },
+          ],
+        },
       ],
-      AGENT: [],
+      AGENT: [
+        {
+          to: "/dashboard",
+          icon: "mdi-radar",
+          text: "Dashboard",
+        },
+        {
+          icon: "mdi-phone",
+          text: "Call Logs",
+          subLinks: [
+            {
+              text: "All Calls",
+              to: "/all_calls",
+              icon: "",
+            },
+            {
+              text: "Missed Calls",
+              to: "/missed_calls",
+              icon: "",
+            },
+            {
+              text: "Answered Calls",
+              to: "/answered_call",
+              icon: "",
+            },
+          ],
+        },
+        {
+          to: "/report",
+          icon: "mdi-chart-bar",
+          text: "Report",
+        },
+        {
+          icon: "mdi-dots-horizontal",
+          text: "More",
+          subLinks: [
+            {
+              icon: "",
+              text: "FAQs",
+              to: "/FAQs",
+            },
+            {
+              icon: "",
+              text: "Get Support",
+              to: "/GetSupport",
+            },
+          ],
+        },
+      ],
     },
   }),
   watch: {

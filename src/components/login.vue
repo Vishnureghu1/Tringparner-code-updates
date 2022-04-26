@@ -87,7 +87,7 @@ import { db } from '@/main.js';
 							this.currentPage = this.Udata.currentPage
 							this.role = this.Udata.role
 							if (this.role == 'ADMIN' || this.role == 'AGENT') {
-								this.$router.push("/Dashboard")
+								this.$router.push("/dashboard")
 							} else {
 								if (this.currentPage == "onboarding_listing") {
 									this.$router.push("/ChooseNumbers")
@@ -98,7 +98,7 @@ import { db } from '@/main.js';
 								} else if (this.currentPage == "onboarding_review") {
 									this.$router.push("/Review")
 								} else if (this.currentPage == "onboarding_dashboard" || this.currentPage == "onboarding_success") {
-									this.$router.push("/Dashboard")
+									this.$router.push("/dashboard")
 								}
 							}
 						})
@@ -178,7 +178,7 @@ import { db } from '@/main.js';
 											console.log(this.role)
 											if (this.role == 'ADMIN' || this.role == 'AGENT') {
 												this.overlay = false
-												this.$router.push("/Dashboard").catch(() => {});
+												this.$router.push("/dashboard").catch(() => {});
 											} else {
 												if (this.currentPage == "onboarding_listing") {
 													this.overlay = false
@@ -194,7 +194,7 @@ import { db } from '@/main.js';
 													this.$router.push("/Review").catch(() => {});
 												} else if (this.currentPage == 'onboarding_dashboard' || this.currentPage == 'onboarding_success') {
 													this.overlay = false
-													this.$router.push("/Dashboard").catch(() => {});
+													this.$router.push("/dashboard").catch(() => {});
 												} else {
 													const user_stage = {
 														url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',

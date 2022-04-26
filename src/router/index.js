@@ -22,7 +22,7 @@ const routes = [{
         name: 'answered_call',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../components/answered_call.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
 
     {
@@ -30,84 +30,84 @@ const routes = [{
         name: 'notifications',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/ViewAllNotifications.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
     {
         path: '/missed_calls',
         name: 'missed_calls',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../components/missed_calls.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
     {
         path: '/all_calls',
         name: 'all_calls',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../components/all_calls.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
     {
         path: '/dashboard',
         name: 'dashboard',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/Dashboard.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
     {
         path: '/report',
         name: 'report',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/Report.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
     {
         path: '/Addons',
         name: 'Addons',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/Addons.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/manageAddonNumbers',
         name: 'manageAddonNumbers',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/manageAddonNumbers.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/manageAddonUsers',
         name: 'manageAddonUsers',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/manageAddonUsers.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/buyNewNumber',
         name: 'buyNewNumber',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/buyNewNumber.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/reserveNumber',
         name: 'reserveNumber',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/reserveNumber.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/buyNewAddOnUser',
         name: 'buyNewAddOnUser',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/buyNewAddOnUser.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/fancyNumberPurchase',
         name: 'fancyNumberPurchase',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/fancyNumberPurchase.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     {
@@ -115,7 +115,7 @@ const routes = [{
         name: 'BillingInformation',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/BillingInformation.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     {
@@ -123,42 +123,42 @@ const routes = [{
         name: 'BillingAddress',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/BillingAddress.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/PaymentHistory',
         name: 'PaymentHistory',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/PaymentHistory.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/BusinessNumber',
         name: 'BusinessNumber',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/BusinessNumber.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/ManageUsers',
         name: 'ManageUsers',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/ManageUsers.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/FAQs',
         name: 'FAQs',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/FAQs.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/AccountInformation',
         name: 'AccountInformation',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/AccountInformation.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     //Basic Information
     {
@@ -166,7 +166,7 @@ const routes = [{
         name: 'BasicInformation',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/BasicInformation.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     //Basic Information
     {
@@ -174,7 +174,7 @@ const routes = [{
         name: 'BusinessInformation',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/BusinessInformation.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     // ChangeLoginNumber
@@ -183,7 +183,7 @@ const routes = [{
         name: 'ChangeLoginNumber',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/ChangeLoginNumber.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     {
@@ -191,42 +191,42 @@ const routes = [{
         name: 'GetSupport',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/GetSupport.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/ChooseNumbers',
         name: 'ChooseNumbers',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/ChooseNumbers.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/SelectPlan',
         name: 'SelectPlan',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/SelectPlan.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/Billing',
         name: 'Billing',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/Billing.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/Review',
         name: 'Review',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/Review.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/CallFlowSettings',
         name: 'CallFlowSettings',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/CallFlowSettings.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     // ManageAgents
     {
@@ -234,13 +234,13 @@ const routes = [{
         name: 'ManageAgents',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/ManageAgents.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     }, {
         path: '/PauseNumber',
         name: 'PauseNumber',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/PauseNumber.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     {
@@ -248,7 +248,7 @@ const routes = [{
         name: 'CallPreference',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/CallPreference.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
 
@@ -260,7 +260,7 @@ const routes = [{
         name: 'CallRouting',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/CallRouting.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     // PrioritizeConfiguration
@@ -270,7 +270,7 @@ const routes = [{
         name: 'PrioritizeConfiguration',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/PrioritizeConfiguration.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     {
@@ -278,7 +278,7 @@ const routes = [{
         name: 'NotificationSettings',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/NotificationSettings.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     // MissedCallDistribution
@@ -288,7 +288,7 @@ const routes = [{
         name: 'MissedCallDistribution',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/MissedCallDistribution.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     // SelectSpecificAgent
@@ -297,7 +297,7 @@ const routes = [{
         name: 'SelectSpecificAgent',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/SelectSpecificAgent.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     // BlockedNumbers
@@ -306,7 +306,7 @@ const routes = [{
         name: 'BlockedNumbers',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/BlockedNumbers.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     // GreetingMessage.vue
@@ -315,7 +315,7 @@ const routes = [{
         name: 'GreetingMessage',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/GreetingMessage.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     // CallerTune.vue
@@ -324,7 +324,7 @@ const routes = [{
         name: 'CallerTune',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/CallerTune.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     // SetWorkingHours.vue
     {
@@ -332,14 +332,14 @@ const routes = [{
         name: 'WorkingHours',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/SetWorkingHours.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
         path: '/CallerID',
         name: 'CallerID',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/CallerID.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
     // OfflineMesssage
@@ -348,7 +348,7 @@ const routes = [{
         name: 'OfflineMesssage',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/OfflineMesssage.vue'),
-        meta: { requiresAuth: true, role: 'OWNER' }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
 ]
@@ -391,7 +391,9 @@ router.beforeEach(async(to, from, next) => {
         });
     } else if (requiresAuth && currentUser) {
 
-        if (metaRole == currentUserRole) {
+        // if (metaRole == currentUserRole) {
+        if (to.meta.allowedRoles.includes(currentUserRole)) {
+            console.log('metaRole', metaRole)
             next();
         } else {
             if (currentUserRole == 'OWNER') {

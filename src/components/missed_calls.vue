@@ -747,7 +747,7 @@ export default {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
         method: "POST",
         data: {
-          uid: this.uid,
+          uid: this.ownerUid,
           unique_id: unique_id,
           note: message,
         },
@@ -775,7 +775,7 @@ export default {
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
-          owner_uid: this.uid,
+          owner_uid: this.ownerUid,
           call_id: unique_id,
           message: message,
           updated_by: "",
@@ -805,7 +805,7 @@ export default {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
         method: "POST",
         data: {
-          uid: this.uid,
+          uid: this.ownerUid,
           unique_id: unique_id,
           note: message,
         },
@@ -901,7 +901,7 @@ export default {
         page_number: this.page ? parseInt(this.page) : 1,
         results_per_page: parseInt(this.limit),
         conditions: {
-          owneruid: this.uid,
+          owneruid: this.ownerUid,
           callstatus: "Missed"
         },
         sort: {},
@@ -1065,7 +1065,7 @@ export default {
         page_number: this.page ? parseInt(this.page) : 1,
         results_per_page: parseInt(this.limit),
         conditions: {
-          owneruid: this.uid,
+          owneruid: this.ownerUid,
           callstatus: "Missed"
         },
         sort: {},
@@ -1217,7 +1217,7 @@ export default {
             page_number: this.page ? parseInt(this.page) : 1,
             results_per_page: parseInt(this.limit),
             conditions: {
-              owneruid: this.uid,
+              owneruid: this.ownerUid,
               callstatus: "Missed"
             },
             sort: {},
@@ -1368,16 +1368,17 @@ export default {
 
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
+      this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
       this.userEmail = parsedUser.Email;
 
       this.userRole = parsedUser.role;
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.uid = user.uid;
-          console.log("User Id : " + this.uid);
+          console.log("User Id : " + this.ownerUid);
 
           db.collection("users")
-            .where("OwnerUid", "==", this.uid)
+            .where("OwnerUid", "==", this.ownerUid)
             .orderBy("cDate", "asc")
             .get()
             .then((querySnapshot) => {
@@ -1407,7 +1408,7 @@ export default {
             });
 
           db.collection("callLogs")
-            .where("owneruid", "==", this.uid)
+            .where("owneruid", "==", this.ownerUid)
             .where("callstatus", "==", "Missed")
             .orderBy("dateTime", "desc")
             .onSnapshot((querySnapshot) => {
@@ -1424,7 +1425,7 @@ export default {
                   page_number: 1,
                   results_per_page: parseInt(this.limit),
                   conditions: {
-                    owneruid: this.uid,
+                    owneruid: this.ownerUid,
                     callstatus: "Missed"
                   },
                   sort: {},

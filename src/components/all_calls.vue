@@ -877,9 +877,9 @@ export default {
           method: "POST",
           data: {
             number: this.virtualNumber,
-            owner_uid: this.uid, //
+            owner_uid: this.ownerUid, //
             status: true,
-            UpdatedBy: this.uid, // owner uid
+            UpdatedBy: this.ownerUid, // owner uid
             AccountId: Id.AccountId,
           },
           headers: {
@@ -990,7 +990,7 @@ export default {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
         method: "POST",
         data: {
-          uid: this.uid,
+          uid: this.ownerUid,
           // uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
           unique_id: unique_id, //call id
           note: message,
@@ -1032,8 +1032,8 @@ export default {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
 
           call_id: "1646813903.152737", // uniqueid
-          agent_uid: this.uid,
-          owner_uid: this.uid, //logged in ownere
+          agent_uid: this.ownerUid,
+          owner_uid: this.ownerUid, //logged in ownere
           reminder_at: RemindmeAt, // time in milliseconds
           name: "Akhil",
           type: "General", //custom or p // after 10 mins // after 10
@@ -1067,7 +1067,7 @@ export default {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
         method: "POST",
         data: {
-          uid: this.uid,
+          uid: this.ownerUid,
           unique_id: unique_id,
           note: message,
         },
@@ -1166,7 +1166,7 @@ export default {
         page_number: this.page ? parseInt(this.page) : 1,
         results_per_page: parseInt(this.limit),
         conditions: {
-          owneruid: this.uid,
+          owneruid: this.ownerUid,
         },
         sort: {},
       };
@@ -1306,7 +1306,7 @@ export default {
         page_number: this.page ? parseInt(this.page) : 1,
         results_per_page: parseInt(this.limit),
         conditions: {
-          owneruid: this.uid,
+          owneruid: this.ownerUid,
         },
         sort: {},
       };
@@ -1433,7 +1433,7 @@ export default {
             page_number: this.page ? parseInt(this.page) : 1,
             results_per_page: parseInt(this.limit),
             conditions: {
-              owneruid: this.uid,
+              owneruid: this.ownerUid,
             },
             sort: {},
           };
@@ -1558,6 +1558,7 @@ export default {
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
+      this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
 
       this.userRole = parsedUser.role;
       firebase.auth().onAuthStateChanged((user) => {
@@ -1567,7 +1568,7 @@ export default {
           // this.sendMessage(this.uid);
 
           db.collection("users")
-            .where("OwnerUid", "==", this.uid)
+            .where("OwnerUid", "==", this.ownerUid)
             .orderBy("cDate", "asc")
             .get()
             .then((querySnapshot) => {
@@ -1597,7 +1598,7 @@ export default {
             });
           // LcbxlNgkdCZRY8sfkBbmd7FYcXM2
           db.collection("callLogs")
-            .where("owneruid", "==", this.uid)
+            .where("owneruid", "==", this.ownerUid)
             .orderBy("dateTime", "desc")
             // .startAt(0)
             .limit(this.limit)
@@ -1610,7 +1611,7 @@ export default {
                   page_number: 1,
                   results_per_page: parseInt(this.limit),
                   conditions: {
-                    owneruid: this.uid,
+                    owneruid: this.ownerUid,
                   },
                   sort: {},
                 };

@@ -769,7 +769,7 @@ export default {
           method: "POST",
           data: {
             number: number,
-            owner_uid: this.uid,
+            owner_uid: this.ownerUid,
             status: true,
             UpdatedBy: "",
             AccountId: "",
@@ -800,7 +800,7 @@ export default {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
         method: "POST",
         data: {
-          uid: this.uid,
+          uid: this.ownerUid,
           // uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
           unique_id: unique_id,
           note: message,
@@ -832,7 +832,7 @@ export default {
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
-          owner_uid: this.uid,
+          owner_uid: this.ownerUid,
           call_id: unique_id,
           message: message,
           updated_by: "",
@@ -862,7 +862,7 @@ export default {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
         method: "POST",
         data: {
-          uid: this.uid,
+          uid: this.ownerUid,
           unique_id: unique_id,
           note: message,
         },
@@ -961,7 +961,7 @@ export default {
         page_number: this.page ? parseInt(this.page) : 1,
         results_per_page: parseInt(this.limit),
         conditions: {
-          owneruid: this.uid,
+          owneruid: this.ownerUid,
           callstatus: "Answered"
         },
         sort: {},
@@ -1106,7 +1106,7 @@ export default {
         page_number: this.page ? parseInt(this.page) : 1,
         results_per_page: parseInt(this.limit),
         conditions: {
-          owneruid: this.uid,
+          owneruid: this.ownerUid,
           callstatus: "Answered"
         },
         sort: {},
@@ -1228,7 +1228,7 @@ export default {
           console.log("this.lastrecord", this.lastrecord);
           // getting Next calls
           // db.collection("callLogs")
-          //   .where("owneruid", "==", this.uid)
+          //   .where("owneruid", "==", this.ownerUid)
           //   .orderBy("dateTime", "desc")
           //   .startAt(this.lastrecord)
           //   .limit(this.limit)
@@ -1314,7 +1314,7 @@ export default {
             page_number: this.page ? parseInt(this.page) : 1,
             results_per_page: parseInt(this.limit),
             conditions: {
-              owneruid: this.uid,
+              owneruid: this.ownerUid,
               callstatus: "Answered"
             },
             sort: {},
@@ -1350,6 +1350,9 @@ export default {
             .then((response) => {
               console.log("DL response", response.data.data);
               let dataset = response.data.data.dataset;
+              if (!dataset.length) {
+                this.page--;
+              }
 
               this.totalPage = response.data.data.totalPages;
               this.totalItems = response.data.data.totalItems;
@@ -1439,16 +1442,18 @@ export default {
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
+      console.log(parsedUser.role);
+      this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
 
       this.userRole = parsedUser.role;
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.uid = user.uid;
-          console.log("User Id : " + this.uid);
+          console.log("User Id : " + this.ownerUid);
 
           // POPULATING FILTER
           db.collection("users")
-            .where("OwnerUid", "==", this.uid)
+            .where("OwnerUid", "==", this.ownerUid)
             .orderBy("cDate", "asc")
             .get()
             .then((querySnapshot) => {
@@ -1479,7 +1484,7 @@ export default {
           // POPULATING FILTER
 
           db.collection("callLogs")
-            .where("owneruid", "==", this.uid)
+            .where("owneruid", "==", this.ownerUid)
             .where("callstatus", "==", "Answered")
             .orderBy("dateTime", "desc")
             .onSnapshot((querySnapshot) => {
@@ -1554,7 +1559,7 @@ export default {
                   page_number: 1,
                   results_per_page: parseInt(this.limit),
                   conditions: {
-                    owneruid: this.uid,
+                    owneruid: this.ownerUid,
                     callstatus: "Answered"
                   },
                   sort: {},
@@ -1668,7 +1673,7 @@ export default {
                 });
 
               } else {
-                //alert('no calls')
+                console.log('no calls')
               }
             });
         }
