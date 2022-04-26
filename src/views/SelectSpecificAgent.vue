@@ -39,18 +39,27 @@
                             <v-card class="mb-0 mt-0" :elevation="0">
                               <div
                                 class="drag-el"
-                                v-for="item1 in items1"
+                                v-for="item1 in participants"
                                 :key="item1.title"
-                                draggable
-                                @dragstart="startDrag($event, item1)"
                               >
                                               <v-checkbox
-              v-model="ex4"
-              :label="item1.title"
+              v-model="item1.status"
               color="red darken-3"
-              :value="item1.id"
+              :value="item1.status"
               hide-details
-            ></v-checkbox>
+              @click="missedcall()"
+            > 
+            <template v-slot:label>
+                                <div class="black--text">
+                                  <strong class="black--text darken-4">
+                                    {{item1.Name}}</strong
+                                  >
+                                  <br /><span class="grey--text light-3"
+                                        >{{item1.Number}}</span
+                                      >
+                                </div>
+                              </template>
+            </v-checkbox>
                               </div>
                
                             </v-card>
@@ -70,10 +79,20 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
-  created() {},
+  created() {
+    this.initial_data()
+  },
   data: () => ({
+    repeated_missed_caller:"",
+    source:"",
+    specific_agents:"",
+    owneruid:"",
+    uid:"",
+    AccountId:"",
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
@@ -91,16 +110,18 @@ export default {
     ],
     valid: false,
     stepForm: [],
-    items1: [
+    participants: [
       {
         id: 1,
         title: "Sree",
-        subtitle: "Admin: +919526287163",
+        subtitle: "+919526287163",
+        status:false
       },
       {
         id: 2,
         title: "Akhil",
-        subtitle: "Admin: +919526287163",
+        subtitle: "+91992",
+        status:true
       },
     ],
     items: [
@@ -134,7 +155,66 @@ export default {
     ],
   }),
 
-  methods: {
+  methods: {   
+     missedcall(){
+       const filter_agents = this.participants.filter((el)=> { return el.status == true})
+       const details = {
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/missedcall',
+            // url:"http://localhost:3000/jp",
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+						data: {
+						owner_uid:this.owneruid,
+            updated_by:this.uid,
+            virtual_number:parseInt(this.$route.query.bn),
+            AccountId:this.AccountId,
+            source:this.source,
+            specific_agents:filter_agents,
+            new_missed_caller:"Specific-Agents",
+            repeated_missed_caller:this.repeated_missed_caller
+						},
+					}
+          
+					axios(details)
+						.then((response) => {
+						console.log(response)
+            this.initial_data()
+             this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000})
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+    },
+    initial_data(){
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.bussinessNumber = this.$route.query.bn;
+    // this.setBreadcrumbs(this.bussinessNumber);
+    const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+      this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    this.participants=[];
+    db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
+      // console.log(snap.docs[0].data().VirtualNumber)
+      const participants = snap.docs[0].data().Participants;
+      this.specific_agents = snap.docs[0].data().SpecificAgents?snap.docs[0].data().SpecificAgents:[];
+			this.source = snap.docs[0].data().Source,
+      this.participants = participants,
+      this.repeated_missed_caller = snap.docs[0].data()?.RepeatedMissedCaller,
+      this.participants.forEach((element,index) =>{
+         const value = this.specific_agents.find(({Number}) =>Number === element.Number)
+         if(value){
+            this.participants[index] = Object.assign(element,{status:true});
+         }else{
+           this.participants[index] = Object.assign(element,{status:false});
+         }
+      })
+    console.log(this.participants)
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    },
     startDrag(evt, item) {
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
@@ -169,6 +249,7 @@ export default {
     done() {
       this.curr = 5;
     },
+   
   },
 };
 </script>

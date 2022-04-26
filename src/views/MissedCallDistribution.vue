@@ -237,10 +237,12 @@ export default {
 
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
        db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
-          this.source = snap.docs[0].data().Source
+          this.source = snap.docs[0].data().Source,
+           this.SpecificAgents = snap.docs[0].data().SpecificAgents?snap.docs[0].data().SpecificAgents:[];
 			snap.docs.forEach((element)=> {
 				// console.log(element.data())
         //  this.callRouting=element.data().NewActiveCaller,
+       
          this.repeatCallerSettings=element.data().RepeatedMissedCaller == "Sticky-Disable" ? false : true
          this.MissedCallDistribution = element.data().NewMissedCaller
 			});
@@ -250,6 +252,7 @@ export default {
   },
   data: () => ({
     source:"",
+    SpecificAgents:"",
     // bussinessNumber:this.$route.query.bn,
     participants:"",
     owneruid:"",
@@ -294,7 +297,7 @@ export default {
             virtual_number:parseInt(this.$route.query.bn),
             AccountId:this.AccountId,
             source:this.source,
-            specific_agents:[],
+            specific_agents:this.SpecificAgents,
             new_missed_caller:this.MissedCallDistribution,
             repeated_missed_caller:sticky
 						},
