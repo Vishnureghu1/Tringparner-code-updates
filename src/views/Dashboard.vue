@@ -369,7 +369,7 @@ import firebase from 'firebase'
 										console.log('isToday', this.isToday(logs.data().ReminderAt));
 
 										if(this.isToday(logs.data().ReminderAt)) {
-											
+
 											this.remiderCalls.push({
 
 												ReminderAt: call_time,
@@ -401,14 +401,16 @@ import firebase from 'firebase'
 										var call_time = moment(date).format('hh:mm a')
 										call_time = moment(date).fromNow();
 
-										this.remiderCalls.push({
+										if(this.isToday(logs.data().ReminderAt)) {
+											this.remiderCalls.push({
 
-											ReminderAt: call_time,
-											callerNumber: callerNumber,
-											AgentName: logs.data().Name,
+												ReminderAt: call_time,
+												callerNumber: callerNumber,
+												AgentName: logs.data().Name,
 
 
-										});
+											});
+										}
 									})
 								}).catch((error) => {
 									console.log("Error getting logs: ", error);
