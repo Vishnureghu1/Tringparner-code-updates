@@ -165,249 +165,264 @@ import firebase from 'firebase'
 		components: {
 			Icon,
 		},
-			data: () => ({
+		data: () => ({
 
-			agentPanel:[],
+			agentPanel: [],
 			nextTodoId: 1,
 			userEmail: '',
 			userRole: '',
-			agentName:'',
-			missedCallPanel:[],
+			agentName: '',
+			missedCallPanel: [],
 			skippedCallPanel: [],
-			remiderCalls:[],
+			remiderCalls: [],
 			agentNames: {}
 
 		}),
-		
+
 		async created() {
 			this.GetMissedCall()
 			this.GetSkippedCall()
 			this.GetRemiders()
 		},
-	computed: {
-    missedCalls() {
-        const missedCalls = new Set();
-        this.missedCallPanel.forEach(missed => missedCalls.add(missed.agentId) );
-        return Array.from(missedCalls); 
-    },
+		computed: {
+			missedCalls() {
+				const missedCalls = new Set();
+				this.missedCallPanel.forEach(missed => missedCalls.add(missed.agentId));
+				return Array.from(missedCalls);
+			},
 
-	skippedCalls() {
-        const skippedCalls = new Set();
-        this.skippedCallPanel.forEach(skipped => skippedCalls.add(skipped.agentId) );
-        return Array.from(skippedCalls); 
-    }
-	},
-	methods: {
-    getCallDetails(agentId) {
-        return this.missedCallPanel
-            .filter(missed => missed.agentId === agentId);
-    },
+			skippedCalls() {
+				const skippedCalls = new Set();
+				this.skippedCallPanel.forEach(skipped => skippedCalls.add(skipped.agentId));
+				return Array.from(skippedCalls);
+			}
+		},
+		methods: {
+			isToday(timestampInMilliseconds) {
+				const today = new Date()
+				return new Date(timestampInMilliseconds).getDate() == today.getDate() &&
+					new Date(timestampInMilliseconds).getMonth() == today.getMonth() &&
+					new Date(timestampInMilliseconds).getFullYear() == today.getFullYear()
+			},
+			getCallDetails(agentId) {
+				return this.missedCallPanel
+					.filter(missed => missed.agentId === agentId);
+			},
 
-	// skipped
-	getCallDetailsSkipped(agentId) {
-        return this.skippedCallPanel
-            .filter(skipped => skipped.agentId === agentId);
-    },
-	//get agent name
-	getAgentName(agentId) {
-            var valObj = this.agentNames[agentId];
-            return valObj;
-			
-        },
+			// skipped
+			getCallDetailsSkipped(agentId) {
+				return this.skippedCallPanel
+					.filter(skipped => skipped.agentId === agentId);
+			},
+			//get agent name
+			getAgentName(agentId) {
+				var valObj = this.agentNames[agentId];
+				return valObj;
 
-		async GetMissedCall(){
-			
-			let localStorageUserObj = localStorage.getItem('tpu');
+			},
 
-			if (localStorageUserObj) {
-				let parsedUser = JSON.parse(localStorageUserObj);
-				this.userEmail = parsedUser.Email;
+			async GetMissedCall() {
 
-				this.userRole = parsedUser.role;
-				
-				firebase.auth().onAuthStateChanged(user => {
-					if (user) {
+				let localStorageUserObj = localStorage.getItem('tpu');
+
+				if (localStorageUserObj) {
+					let parsedUser = JSON.parse(localStorageUserObj);
+					this.userEmail = parsedUser.Email;
+
+					this.userRole = parsedUser.role;
+
+					firebase.auth().onAuthStateChanged(user => {
+						if (user) {
 
 							this.uid = user.uid;
 							db.collection('callLogs')
-							.where("callstatus", "==", "Missed")
-							.where("owneruid", "==", this.uid )
-							.orderBy('dateTime', "asc")
-							.get()
-							.then((querySnapshot) => {
+								.where("callstatus", "==", "Missed")
+								.where("owneruid", "==", this.uid)
+								.orderBy('dateTime', "asc")
+								.get()
+								.then((querySnapshot) => {
 									querySnapshot.forEach((logs) => {
-							var agentData = logs.data().agentDetails;
-					agentData.forEach((agentData) => {	
-						var agentID = agentData.AgentUid;
-						var agentName = agentData.Name;
-						var callerNumber = '+91 '+logs.data().callerNumber.slice(0, 5) + ' ' + logs.data().callerNumber.slice(5, 7) + ' ' + logs.data().callerNumber.slice(7, 11);
-							// console.log(callerNumber);
+										var agentData = logs.data().agentDetails;
+										agentData.forEach((agentData) => {
+											var agentID = agentData.AgentUid;
+											var agentName = agentData.Name;
+											var callerNumber = '+91 ' + logs.data().callerNumber.slice(0, 5) + ' ' + logs.data().callerNumber.slice(5, 7) + ' ' + logs.data().callerNumber.slice(7, 11);
+											// console.log(callerNumber);
 
-							var timestamp = logs.data().dateTime
-							var date = new Date(timestamp);
-						var call_time = moment(date).format('hh:mm a')
-							call_time = moment(date).fromNow();
-						// 
-if(agentName!=''){
+											var timestamp = logs.data().dateTime
+											var date = new Date(timestamp);
+											var call_time = moment(date).format('hh:mm a')
+											call_time = moment(date).fromNow();
+											// 
+											if (agentName != '') {
 
 
-		
-						// this.agentPanel.push(agentID)
-							this.agentPanel.indexOf(agentID) === -1 ?  this.agentPanel.push(agentID)  :  this.missedCallPanel.push({
-								id: this.nextTodoId++,
-								callTime: call_time,
-								callerNumber:callerNumber,
-								ringduration:'00:'+logs.data().ringduration,
-								agentId:agentID,
-								agentName:agentName,
-						});
-}
-						this.$set(this.agentNames, agentID, agentName)
-						});
-						})
-					}).catch((error) => {
-						console.log("Error getting logs: ", error);
+
+												// this.agentPanel.push(agentID)
+												this.agentPanel.indexOf(agentID) === -1 ? this.agentPanel.push(agentID) : this.missedCallPanel.push({
+													id: this.nextTodoId++,
+													callTime: call_time,
+													callerNumber: callerNumber,
+													ringduration: '00:' + logs.data().ringduration,
+													agentId: agentID,
+													agentName: agentName,
+												});
+											}
+											this.$set(this.agentNames, agentID, agentName)
+										});
+									})
+								}).catch((error) => {
+									console.log("Error getting logs: ", error);
+								})
+
+						}
 					})
-					
-				}})
-			}
-		},
-
-				async GetSkippedCall(){
-			
-			let localStorageUserObj = localStorage.getItem('tpu');
-
-			if (localStorageUserObj) {
-				let parsedUser = JSON.parse(localStorageUserObj);
-				this.userEmail = parsedUser.Email;
-
-				this.userRole = parsedUser.role;
-				
-				firebase.auth().onAuthStateChanged(user => {
-					if (user) {
-
-							this.uid = user.uid;
-							db.collection('callLogs')
-							.where("callstatus", "==", "Answered")
-							.where("owneruid", "==", this.uid )
-							// .where("date", "==", new Date().getTime() )
-							.orderBy('dateTime', "asc")
-							.get()
-							.then((querySnapshot) => {
-									querySnapshot.forEach((logs) => {
-									
-							var agentData = logs.data().agentDetails;
-					agentData.forEach((agentData) => {	
-
-						
-						var agentID = agentData.AgentUid;
-						var agentName = agentData.Name;
-							var callerNumber = '+91 '+logs.data().callerNumber.slice(0, 5) + ' ' + logs.data().callerNumber.slice(5, 7) + ' ' + logs.data().callerNumber.slice(7, 11);
-							// console.log(callerNumber);
-							// var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
-var timestamp = logs.data().dateTime
-							var date = new Date(timestamp);
-						var call_time = moment(date).format('hh:mm a')
-							call_time = moment(date).fromNow();
-
-						this.skippedCallPanel.push({
-				
-								callTime: call_time,
-								callerNumber:callerNumber,
-								ringduration:'00:'+logs.data().ringduration,
-								agentId:agentID,
-								agentName:agentName,
-						});
-						});
-						})
-					}).catch((error) => {
-						console.log("Error getting logs: ", error);
-					})
-				}})
-			}
-		},
-
-				async GetRemiders(){
-			
-			let localStorageUserObj = localStorage.getItem('tpu');
-
-			if (localStorageUserObj) {
-				let parsedUser = JSON.parse(localStorageUserObj);
-				this.userEmail = parsedUser.Email;
-
-				this.userRole = parsedUser.role;
-				
-				firebase.auth().onAuthStateChanged(user => {
-					if (user && this.userRole=='OWNER') {
-
-						this.uid = user.uid;
-			db.collection('Reminders')
-        .where('OwnerUid', '==',  this.uid)
-		// .where('ReminderAt',"==", new Date().getTime())
-        .get()
-							.then((querySnapshot) => {
-									querySnapshot.forEach((logs) => {
-										// console.log(logs.data());
-							// console.log(logs.data());
-				
-var callerNumber = '+91 '+logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);
-var timestamp = logs.data().ReminderAt
-							var date = new Date(timestamp);
-						var call_time = moment(date).format('DD-MM-YYYY hh:mm a')
-							// call_time = moment(date).fromNow();
-
-						this.remiderCalls.push({
-				
-								ReminderAt: call_time,
-								callerNumber: callerNumber,
-								AgentName:logs.data().Name,
-						
-						});
-						})
-					}).catch((error) => {
-						console.log("Error getting logs: ", error);
-					})
-				}else{
-
-
-						this.uid = user.uid;
-			db.collection('Reminders')
-        .where('AgentUid', '==',  this.uid)
-			// .where('ReminderAt',"==", new Date().getTime())
-        .get()
-							.then((querySnapshot) => {
-									querySnapshot.forEach((logs) => {
-										// console.log(logs.data());
-							
-				
-var callerNumber = '+91 '+logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);
-var timestamp = logs.data().ReminderAt
-							var date = new Date(timestamp);
-						var call_time = moment(date).format('hh:mm a')
-							call_time = moment(date).fromNow();
-
-						this.remiderCalls.push({
-				
-								ReminderAt: call_time,
-								callerNumber: callerNumber,
-								AgentName:logs.data().Name,
-	
-						
-						});
-						})
-					}).catch((error) => {
-						console.log("Error getting logs: ", error);
-					})
-
-
-
 				}
-				
-				
-				
-				})
+			},
+
+			async GetSkippedCall() {
+
+				let localStorageUserObj = localStorage.getItem('tpu');
+
+				if (localStorageUserObj) {
+					let parsedUser = JSON.parse(localStorageUserObj);
+					this.userEmail = parsedUser.Email;
+
+					this.userRole = parsedUser.role;
+
+					firebase.auth().onAuthStateChanged(user => {
+						if (user) {
+
+							this.uid = user.uid;
+							db.collection('callLogs')
+								.where("callstatus", "==", "Answered")
+								.where("owneruid", "==", this.uid)
+								// .where("date", "==", new Date().getTime() )
+								.orderBy('dateTime', "asc")
+								.get()
+								.then((querySnapshot) => {
+									querySnapshot.forEach((logs) => {
+
+										var agentData = logs.data().agentDetails;
+										agentData.forEach((agentData) => {
+
+
+											var agentID = agentData.AgentUid;
+											var agentName = agentData.Name;
+											var callerNumber = '+91 ' + logs.data().callerNumber.slice(0, 5) + ' ' + logs.data().callerNumber.slice(5, 7) + ' ' + logs.data().callerNumber.slice(7, 11);
+											// console.log(callerNumber);
+											// var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
+											var timestamp = logs.data().dateTime
+											var date = new Date(timestamp);
+											var call_time = moment(date).format('hh:mm a')
+											call_time = moment(date).fromNow();
+
+											this.skippedCallPanel.push({
+
+												callTime: call_time,
+												callerNumber: callerNumber,
+												ringduration: '00:' + logs.data().ringduration,
+												agentId: agentID,
+												agentName: agentName,
+											});
+										});
+									})
+								}).catch((error) => {
+									console.log("Error getting logs: ", error);
+								})
+						}
+					})
+				}
+			},
+
+			async GetRemiders() {
+
+				let localStorageUserObj = localStorage.getItem('tpu');
+
+				if (localStorageUserObj) {
+					let parsedUser = JSON.parse(localStorageUserObj);
+					this.userEmail = parsedUser.Email;
+
+					this.userRole = parsedUser.role;
+
+					firebase.auth().onAuthStateChanged(user => {
+						if (user && this.userRole != 'AGENT') {
+
+							this.uid = user.uid;
+							db.collection('Reminders')
+								.where('OwnerUid', '==', this.uid)
+								// .where('ReminderAt',"==", new Date().getTime())
+								.get()
+								.then((querySnapshot) => {
+									querySnapshot.forEach((logs) => {
+										// console.log(logs.data());
+										// console.log(logs.data());
+
+										var callerNumber = '+91 ' + logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);
+										var timestamp = logs.data().ReminderAt
+										var date = new Date(timestamp);
+										var call_time = moment(date).format('DD-MM-YYYY hh:mm a')
+											// call_time = moment(date).fromNow();
+
+										const now = Date.now(); // Unix timestamp in milliseconds
+										console.log('now', now);
+										console.log('isToday', this.isToday(logs.data().ReminderAt));
+
+										if(this.isToday(logs.data().ReminderAt)) {
+											
+											this.remiderCalls.push({
+
+												ReminderAt: call_time,
+												callerNumber: callerNumber,
+												AgentName: logs.data().Name,
+
+											});
+										}
+									})
+								}).catch((error) => {
+									console.log("Error getting logs: ", error);
+								})
+						} else {
+
+
+							this.uid = user.uid;
+							db.collection('Reminders')
+								.where('AgentUid', '==', this.uid)
+								// .where('ReminderAt',"==", new Date().getTime())
+								.get()
+								.then((querySnapshot) => {
+									querySnapshot.forEach((logs) => {
+										// console.log(logs.data());
+
+
+										var callerNumber = '+91 ' + logs.data().Number.slice(0, 5) + ' ' + logs.data().Number.slice(5, 7) + ' ' + logs.data().Number.slice(7, 11);
+										var timestamp = logs.data().ReminderAt
+										var date = new Date(timestamp);
+										var call_time = moment(date).format('hh:mm a')
+										call_time = moment(date).fromNow();
+
+										this.remiderCalls.push({
+
+											ReminderAt: call_time,
+											callerNumber: callerNumber,
+											AgentName: logs.data().Name,
+
+
+										});
+									})
+								}).catch((error) => {
+									console.log("Error getting logs: ", error);
+								})
+
+
+
+						}
+
+
+
+					})
+				}
 			}
-		}
 		}
 	}
   </script>
