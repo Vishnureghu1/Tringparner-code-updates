@@ -1,5 +1,6 @@
 <template>
   <v-app>
+      <div v-if="hidealert">
     <v-alert prominent color="red darken-1" type="error">
       <v-row align="center">
         <v-col class="grow">
@@ -10,10 +11,11 @@
           >
         </v-col>
         <v-col class="shrink">
-          <v-btn @click="changeEmailPopup = true">Resend Email</v-btn>
+        <v-btn @click="changeEmailPopup1()">Resend Email</v-btn>
         </v-col>
       </v-row>
     </v-alert>
+    </div>
     <div>
       <v-container fluid>
         <v-snackbar
@@ -384,7 +386,7 @@
                             min-width="140px"
                             color="white"
                             outlined
-                            @click="addNotesDialog = true"
+                            @click="threeDotAction('add_note', 'virtualNumber', details.uniqueid, getNotes.Note)"
                           >
                           
                           <span v-if="getNotes.Note==''"> Add Notes</span>
@@ -401,7 +403,7 @@
                               red_button_outline
                             "
                             min-width="140px"
-                            @click="dialog = true"
+                            @click="threeDotAction('add_reminder', 'virtualNumber', details.uniqueid, 'notes_text')"
                           >
                             Add Reminders
                           </v-btn>
@@ -455,7 +457,6 @@
             <v-dialog v-model="dialog" max-width="400px" persistent>
               <v-card max-height>
                 <v-card-title class="text-h5"> Reminder </v-card-title>
-
                 <v-card-text>
                   <v-text-field
                     label="Remind About"
@@ -465,26 +466,26 @@
                   <v-radio-group v-model="radio" column>
                     <v-radio
                       label="10 minutes"
-                      value="radio-1"
+                      value="10"
                       color="red"
                     ></v-radio>
                     <v-radio
                       label="30 minutes"
-                      value="radio-2"
+                      value="30"
                       color="red"
                     ></v-radio>
                     <v-radio
                       label="1 hour"
-                      value="radio-3"
+                      value="60"
                       color="red"
                     ></v-radio>
                     <v-radio
                       label="Custom"
-                      value="radio-4"
+                      value="custom"
                       color="red"
                     ></v-radio>
                   </v-radio-group>
-                  <div v-if="radio == 'radio-4'">
+                  <div v-if="radio == 'custom'">
                     <v-menu
                       ref="menu1"
                       v-model="menu1"
@@ -571,7 +572,7 @@
                         rounded
                         color="red"
                         dark
-                        @click="sendReminder(date, time)"
+                        @click="sendReminder(radio,date,time)"
                       >
                         Save
                       </v-btn>
@@ -590,7 +591,7 @@
           <h3 class="center">Verify your email address</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field label="Email Address*" outlined></v-text-field>
+          <v-text-field label="Email Address*" v-model = "current_email" outlined></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -621,9 +622,9 @@
           <h3 class="center">Enter the OTP</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation>
-            <v-text-field label="Enter OTP" required></v-text-field>
-          </v-form>
+          <!-- <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation> -->
+            <v-text-field label="Enter OTP" v-model="otp" value="" required></v-text-field>
+          <!-- </v-form> -->
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -697,7 +698,7 @@
                 min-width="140px"
                 color="white"
                 outlined
-                 @click=" sendMessage(
+                 @click=" addNote(
                                           uniqueId,
                                           notes_data
                                         )
@@ -739,6 +740,8 @@ export default {
     Icon,
   },
   data: () => ({
+     hidealert:"",
+    otp:"",
     addNotesDialog: false,
     notes_data:'',
     virtualNumber:null,
@@ -747,7 +750,7 @@ export default {
     blocked_number:false,
     unblocked_number:false,
     notes_text:'Add Notes',
-
+    current_email:"",
     valid: true,
     searchForm: false,
     benched: 0,
@@ -830,6 +833,7 @@ export default {
     totalPage: 0,
     totalItems: 0,
     page: 1,
+    name:"",
   }),
   watch: {
     sendInviteLoader(val) {
@@ -842,9 +846,12 @@ export default {
     },
   },
   methods: {
+     changeEmailPopup1(){
+      console.log("g")
+        this.changeEmailPopup = true
+    },
 
        threeDotAction(action, virtualNumber, uniqueId, notes_text) {
-
       if (action == "add_note") {
         console.log("Add Note");
         this.notes_data = notes_text;
@@ -855,13 +862,14 @@ export default {
           this.notes_text='Add Notes';
 
         }else{
-
+          this.uniqueId = uniqueId;
           this.notes_text='Edit Notes';
         }
       }
       if (action == "add_reminder") {
         console.log("Add Reminder");
-        
+        console.log(uniqueId)
+         this.uniqueId = uniqueId;
         this.addNotesDialog = false;
         this.dialog = true;
    
@@ -951,11 +959,63 @@ export default {
     SendVerification() {
       this.changeEmailPopup = false;
       this.sendInviteLoader = true;
+       const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/otp",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          email: this.current_email,
+          uid: this.uid,
+          updated_by:this.uid
+        },
+      };
+      axios(details).then(async (response) => { 
+         if(response.data.status == false){
+  console.log(response.data.status)   
+     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
+         }else{
+  console.log(response.data.status)   
+  this.sendInviteLoader = true;
+   this.changeEmailPopup = false
+  this.enterOtpModel=true
+         }
+        //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
+      
+      })
       // this.enterOtpModel = false
+    },
+     verifyOTP(){
+         const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/verification",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          email: this.current_email,
+          uid: this.uid,
+          otp: parseInt(this.otp),
+          updated_by:this.uid
+        },
+      };
+      axios(details).then(async (response) => { 
+         if(response.data.status == false){
+  console.log(response.data.status)   
+     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
+         }else{
+  console.log(response.data.status)   
+  this.dialog2 = false,
+  this.enterOtpModel=false
+  this.otp = "",
+  // this.current_number = this.new_number,
+   this.$root.vtoast.show({message: response.data.message, color: 'green', timer: 2000});
+         }
+        //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
+      
+      })
     },
     close() {
       this.changeEmailPopup = false;
       this.enterOtpModel = false;
+       this.otp=""
     },
     openSearchBar() {
       this.searchForm = true;
@@ -983,14 +1043,14 @@ export default {
       }
     },
    
-    sendMessage(unique_id, message) {
+    addNote(unique_id, message) {
       var token = localStorage.getItem("token");
-
       const user_data = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
         method: "POST",
         data: {
-          uid: this.ownerUid,
+          uid: this.uid,
+          updated_by: this.uid,
           // uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
           unique_id: unique_id, //call id
           note: message,
@@ -1007,40 +1067,48 @@ export default {
           if (response.data.status == true) {
             this.notes_added = true;
             this.addNotesDialog=false;
+            this.uniqueId ="";
           }
         })
         .catch((error) => {
           console.log("Error getting documents: ", error);
         });
     },
-    sendReminder(date, time) {
+    sendReminder(radio,date, time) {
+      // console.log(moment(new Date()).format("YYYY-MM-DD hh:mm"))
       var token = localStorage.getItem("token");
-      var tpu = localStorage.getItem("tpu");
-      var Id = JSON.parse(tpu);
-      console.log(Id.AccountId);
-      console.log(date);
-      console.log(time);
-      var myCurrentDate = new Date();
-      var todayDateMillisecond = new Date(myCurrentDate).getTime();
-      console.log(todayDateMillisecond);
+      let tpu = localStorage.getItem("tpu");
+      let Id = JSON.parse(tpu);
+      let ReminderAt =""; 
+      if(radio == "10" ||radio == "30" || radio =="60"){
+        ReminderAt = new Date(moment(new Date(new Date().getTime() + (parseInt(radio)+1) * 60000)).format("YYYY-MM-DD hh:mm")).getTime();
+      }
+      if(radio == "custom"){
+        ReminderAt = new Date(date+" "+time).getTime()
+      }
+      // console.log(Id.AccountId);
+      // console.log("date",date);
+      // console.log("time",time);
+      // var myCurrentDate = new Date();
+      // var todayDateMillisecond = new Date(myCurrentDate).getTime();
+      // console.log("tomilli",todayDateMillisecond);
       // var RemindmeAt = todayDateMillisecond + hours;
-      var RemindmeAt = 1847244627217;
+      // var RemindmeAt = 1847244627217;
       const user_data = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder",
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
-
-          call_id: "1646813903.152737", // uniqueid
-          agent_uid: this.ownerUid,
+          call_id: this.uniqueId, // uniqueid
+          agent_uid: this.uid,
           owner_uid: this.ownerUid, //logged in ownere
-          reminder_at: RemindmeAt, // time in milliseconds
-          name: "Akhil",
-          type: "General", //custom or p // after 10 mins // after 10
-          Number: "99521 83 859", //caller number
-          Message: "test",
+          reminder_at: ReminderAt, // time in milliseconds
+          name: this.name,
+          type: radio, //custom or p // after 10 mins // after 10
+          Number: this.number, //caller number
+          Message: this.message,
           AccountId: Id.AccountId,
-          UpdatedBy: "", //logged in user id
+          UpdatedBy: this.uid, //logged in user id
         },
         headers: {
           token: token,
@@ -1548,9 +1616,21 @@ export default {
         }
       };
     },
+    emailStatus(){
+        db.collection("users").where("uid","==",this.uid).get().then(async(snap) =>{
+       this.current_email = snap.docs[0].data().Email
+       this.hidealert = snap.docs[0].data().IsEmailVerified==true?false:true;
+       this.name = snap.docs[0].data().role == "OWNER"?snap.docs[0].data().FirstName:snap.docs[0].data().Name;
+       this.number = snap.docs[0].data().PhoneNumber;
+       console.log("test",this.hidealert)
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    }
   },
   created() {
-
+    console.log("adm,nfa")
+       
   },
   beforeMount() {
     let localStorageUserObj = localStorage.getItem("tpu");
@@ -1559,14 +1639,13 @@ export default {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
       this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
-
       this.userRole = parsedUser.role;
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.uid = user.uid;
+          this.emailStatus();
           // console.log("User Id : " + this.uid);
           // this.sendMessage(this.uid);
-
           db.collection("users")
             .where("OwnerUid", "==", this.ownerUid)
             .orderBy("cDate", "asc")
