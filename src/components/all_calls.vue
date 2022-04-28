@@ -834,6 +834,7 @@ export default {
     totalItems: 0,
     page: 1,
     name:"",
+    userRole: '',
   }),
   watch: {
     sendInviteLoader(val) {
@@ -1225,6 +1226,11 @@ export default {
           virtualnumber: "8657510921",
         });
       }
+      if(this.userRole == 'AGENT') {
+        Object.assign(filterCallsConditions.conditions, {
+          userid: { "$in" : [this.uid]},
+        });
+      }
 
       return filterCallsConditions;
     },
@@ -1364,6 +1370,12 @@ export default {
               "Reminder.Message": { $regex: this.searchTerm, $options: "i" },
             },
           ],
+        });
+      }
+
+      if(this.userRole == 'AGENT') {
+        Object.assign(searchCallsConditions.conditions, {
+          userid: { "$in" : [this.uid]},
         });
       }
 

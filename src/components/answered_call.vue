@@ -664,6 +664,7 @@ export default {
     totalPage: 0,
     totalItems: 0,
     page: 1,
+    userRole: '',
   }),
   watch: {
     sendInviteLoader(val) {
@@ -953,6 +954,12 @@ export default {
         });
       }
 
+      if(this.userRole == 'AGENT') {
+        Object.assign(filterCallsConditions.conditions, {
+          userid: { "$in" : [this.uid]},
+        });
+      }
+
       return filterCallsConditions;
     },
     filterMongo() {
@@ -1092,6 +1099,11 @@ export default {
               "Reminder.Message": { $regex: this.searchTerm, $options: "i" },
             },
           ],
+        });
+      }
+      if(this.userRole == 'AGENT') {
+        Object.assign(searchCallsConditions.conditions, {
+          userid: { "$in" : [this.uid]},
         });
       }
 
