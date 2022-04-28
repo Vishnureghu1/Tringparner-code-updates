@@ -209,20 +209,20 @@ import { db } from '@/main.js';
 							phoneNumber: this.phno
 						},
 					}
-					console.log(details)
+					// console.log(details)
 					this.$axios(details)
 					.then((response) => {
 						this.listingId = response.data.listing_id
 						if(this.listingId){
-							console.log("1")
+							// console.log("1")
 							this.overlay = false
 							this.V_numbers = response.data.numbers
 							this.timerCount = response.data.Seconds
 							this.value = 100 - (0.55*(180-this.timerCount))
-							console.log(this.value)
-							console.log(response)
-							console.log(response.data.numbers)
-							console.log(response.data.Seconds)
+							console.log("888",this.value,this.timerCount)
+							// console.log(response)
+							// console.log(response.data.numbers)
+							// console.log(response.data.Seconds)
 							this.progressbarTimer(this.value)
 							if(this.V_numbers.length === 0){
 								console.log("2")
@@ -245,6 +245,11 @@ import { db } from '@/main.js';
 			reserveNumber() {			
 				if(this.virtualnumber == ""){
 					console.log("select number")
+					this.$root.vtoast.show({
+          message: "Please select the number!",
+          color: "red",
+          timer: 2000,
+        });
 					return 
 				}
 				this.overlay = true
@@ -292,7 +297,7 @@ import { db } from '@/main.js';
 				})
 			},
 		progressbarTimer(value) {
-					// console.log(value)
+					console.log("111",value)
 					if (value > 0) {
 						var myVar = setInterval(() => {
 							if (this.value > 1) {
@@ -300,11 +305,13 @@ import { db } from '@/main.js';
 								this.value = this.value - 0.55
 								// this.value2 = this.value2 - 10
 								this.timerCount--;
+								console.log("999",this.timerCount,this.value)
 								// console.log('after',this.timerCount)
 							} 
 							else {
 								if(!this.reserve){
 									this.overlay = true
+									clearInterval(myVar);
 									this.getNumbersList()
 									//this.$router.go()
 								}
