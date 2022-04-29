@@ -10,7 +10,7 @@
 								</v-overlay>
 								<v-card color="transparent" outlined class="" max-width="600">
 									<h2 class="page_title mt-16 mb-13">Select your Virtual Number</h2>
-									<h2 class="sub_title mt-8 mb-13">Select any one Virtual Number you want to use or tap refresh to get another <br> list of numbers.</h2>
+									<h2 class="sub_title mt-8 mb-13"><br></h2>
 									<div>
 										<v-radio-group  v-model="radio" v-if="V_numbers[0]">
 											<v-row>

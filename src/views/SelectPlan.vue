@@ -10,7 +10,7 @@
 								</v-overlay>
 								<v-card color="transparent" outlined class="" max-width="1200">
 									<h2 class="page_title mt-16 mb-4">Select your Tring Partner Payments Plan</h2>
-									<h2 class="sub_title mt-2 mb-16">Select any one Virtual Number you want to use or tap refresh to get another <br> list of numbers.</h2>
+									<h2 class="sub_title mt-2 mb-16"><br></h2>
 									<div>
 										<v-radio-group  mandatory v-model="radio">
 											<v-row>

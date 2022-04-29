@@ -759,7 +759,6 @@ export default {
     changeEmailPopup: false,
     enterOtpModel: false,
     loadingMore: false,
-
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
@@ -816,7 +815,7 @@ export default {
     column: null,
     menu2: false,
     menu1: false,
-    radio: "radio-1",
+    radio: "10",
     Reminder: "",
     reminderMessage: "",
     date: "",
@@ -974,6 +973,7 @@ export default {
          if(response.data.status == false){
   console.log(response.data.status)   
      this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
+    //  this.emailStatus()
          }else{
   console.log(response.data.status)   
   this.sendInviteLoader = true;
@@ -1006,6 +1006,7 @@ export default {
   this.dialog2 = false,
   this.enterOtpModel=false
   this.otp = "",
+  this.hidealert = false;
   // this.current_number = this.new_number,
    this.$root.vtoast.show({message: response.data.message, color: 'green', timer: 2000});
          }
@@ -1063,12 +1064,13 @@ export default {
       };
       console.log(user_data);
       this.$axios(user_data)
-        .then((response) => {
-      
+        .then((response) => {      
           if (response.data.status == true) {
             this.notes_added = true;
             this.addNotesDialog=false;
             this.uniqueId ="";
+            // setTimeout(this.getNextCalls(), 3000);
+            // this.getNextCalls();
           }
         })
         .catch((error) => {
@@ -1149,8 +1151,9 @@ export default {
       this.$axios(user_data)
         .then((response) => {
           console.log(response);
-          if (response.data.status == true) {
+          if (response.data.status == true) {          
             this.notes_removed = true;
+            //  setTimeout(this.getNextCalls(), 3000);
           }
         })
         .catch((error) => {
@@ -1641,7 +1644,8 @@ export default {
     }
   },
   created() {
-    console.log("adm,nfa")
+    // console.log("adm,nfa")
+    this.getNextCalls();
        
   },
   beforeMount() {
@@ -1828,7 +1832,7 @@ export default {
     }
   },
   mounted() {
-    this.getNextCalls();
+    // this.getNextCalls();
   },
 };
 </script>
