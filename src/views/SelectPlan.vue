@@ -18,9 +18,9 @@
 														<v-card class=""  @click="colorChange(radio)" :style="radio1 ? 'border: 1px solid #EE1C25;border-radius: 10px;' : 'border: 1px solid #B4B4B4;border-radius: 10px;'" >
 															<v-radio color='red' value="1" class="ml-4">
 																<span slot="label" class="black--text ml-3">
-																	<h2 class="page_title mt-3 ml-2 mb-5">1 months</h2> 
+																	<h2 class="page_title mt-3 ml-2 mb-5">1 month</h2> 
 																	<h2 class="price_title mt-1 ml-2 mb-3">₹ 500</h2>
-																	<h2 class="sub_title mt-1 ml-2 "> Billed on 1st of every 1 months</h2>
+																	<h2 class="sub_title mt-1 ml-2 "> Monthly Small Bussiness(Truly Unlimited)</h2>
 																	<br><br>																	
 																</span>
 															</v-radio>
@@ -32,8 +32,8 @@
 															<v-radio color='red' value="2" class="ml-4">
 																<span slot="label" class="black--text ml-3">
 																	<h2 class="page_title mt-3 ml-2 mb-5">6 months</h2> 
-																	<h2 class="price_title mt-1 ml-2 mb-3">₹ 2700 </h2>
-																	<h2 class="sub_title mt-1 ml-2 mb-3"> Billed on 1st of every 6 months</h2>
+																	<h2 class="price_title mt-1 ml-2 mb-3">₹ 2700      <strike>  ₹ 3000</strike></h2>
+																	<h2 class="sub_title mt-1 ml-2 mb-3">HalfYearly Small Bussiness(Truly Unlimited)</h2>
 																	<h2 class="offer_title ml-2 mb-2">10% off</h2>
 																</span>
 															</v-radio>
@@ -44,9 +44,9 @@
 															<v-radio color='red' value="3" class="ml-4">
 																<span slot="label" class="black--text ml-3">
 																	<h2 class="page_title mt-3 ml-2 mb-5">12 months</h2> 
-																	<h2 class="price_title mt-1 ml-2 mb-3">₹ 4800</h2>
-																	<h2 class="sub_title mt-1 ml-2 mb-3">Billed on 1st of every 12 months</h2>
-																	<h2 class="offer_title ml-2 mb-2">15% off</h2>
+																	<h2 class="price_title mt-1 ml-2 mb-3">₹ 4800   <strike>   ₹ 6000</strike></h2>
+																	<h2 class="sub_title mt-1 ml-2 mb-3">Yearly Small Bussiness(Truly Unlimited)</h2>
+																	<h2 class="offer_title ml-2 mb-2">20% off</h2>
 																</span>
 															</v-radio>
 														</v-card>					
@@ -67,6 +67,7 @@
 
 <script>
 import firebase from 'firebase'
+// import { db } from '@/main.js';
   export default {
     data: () => ({
 			radio : '',
@@ -85,6 +86,9 @@ import firebase from 'firebase'
 					console.log("logged user details",user)
 					this.uid = user.uid
 					this.phno = user.phoneNumber.slice(3)
+					// db.collection("plan_details").get().then((snap)=>{
+
+					// })
 				}
 			})
 		},
