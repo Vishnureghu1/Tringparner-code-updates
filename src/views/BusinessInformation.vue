@@ -13,7 +13,7 @@
                         <v-icon class="mr-2" color="black" @click="goBack()"
                           >mdi-arrow-left</v-icon
                         >
-                        Bussiness Information
+                        Business Information
                       </h2>
                       <v-breadcrumbs class="breadcrumbs" :items="items">
                         <template class="breadcrumbs" v-slot:divider>
@@ -26,7 +26,7 @@
                   <v-card
                     color="transparent"
                     outlined
-                    class="mt-5"
+                    class="mt-0"
                     max-width="1069"
                   >
                     <v-layout>
@@ -34,7 +34,7 @@
                         <v-row no-gutters>
                           <v-col cols="12" sm="12">
                             <v-card class="mb-0 mt-0" :elevation="0">
-                             <div class="comment_heading mt-6 ml-5">
+                             <div class="comment_heading mt-0 ml-5">
                    Review your business information like business address
                   </div>
 
@@ -100,7 +100,7 @@ export default {
         to: { name: "AccountInformation" },
       },
       {
-        text: "Bussiness Information",
+        text: "Business Information",
         disabled: true,
         to: { name: "CallFlowSettings" },
       },

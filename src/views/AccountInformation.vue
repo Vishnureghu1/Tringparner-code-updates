@@ -36,21 +36,15 @@
                           <v-col cols="12">
                             <v-row>
                               <v-col cols="6">
-                                <h2 class="name_heading mr-7">
+                                <h2 class="name_heading mt-4 mr-7 align-self-center">
                                   Basic Information
-                                </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Manage how you get notifications for each type
-                                  of vent on your Virtual Number
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
-                                <router-link
-                                  :to="{ name: 'BasicInformation' }"
-                                >
+                                <router-link :to="{ name: 'BasicInformation' }">
                                   <span
                                     ><v-icon
-                                      class="mt-6 mb-5 mr-7"
+                                      class="mt-6 mb-5 mr-7 align-self-center"
                                       color="#EE1C25"
                                       >mdi-arrow-right</v-icon
                                     >
@@ -61,21 +55,18 @@
                             <v-divider></v-divider>
                             <v-row>
                               <v-col cols="6">
-                                <h2 class="name_heading mt-4 mr-7">
-                                  Bussiness Information
+                                <h2 class="name_heading mt-4 mr-7 align-self-center">
+                                  Business Information
                                 </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Configure how incoming calls are redirected
-                                  between your agents.
-                                </h2>
+                               
                               </v-col>
                               <v-col cols="6" align="end">
-                                 <router-link
+                                <router-link
                                   :to="{ name: 'BusinessInformation' }"
                                 >
                                   <span
                                     ><v-icon
-                                      class="mt-6 mb-5 mr-7"
+                                      class="mt-6 mb-5 mr-7 align-self-center"
                                       color="#EE1C25"
                                       >mdi-arrow-right</v-icon
                                     >
@@ -85,19 +76,16 @@
                             </v-row>
                             <v-divider></v-divider>
 
-<!-- only if admin -->
-                               <v-row>
+                            <!-- only if admin -->
+                            <v-row>
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7">
                                   Change Login Number
                                 </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Configure how missed calls are managed between
-                                  your agents.
-                                </h2>
+                               
                               </v-col>
                               <v-col cols="6" align="end">
-                                  <router-link
+                                <router-link
                                   :to="{ name: 'ChangeLoginNumber' }"
                                 >
                                   <span
@@ -110,50 +98,40 @@
                                 </router-link>
                               </v-col>
                             </v-row>
-                            
-                            <v-divider></v-divider>
 
+                            <v-divider></v-divider>
 
                             <v-row>
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7">
                                   Caller ID
                                 </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Configure how missed calls are managed between
-                                  your agents.
-                                </h2>
+                              
                               </v-col>
                               <v-col cols="6" align="end">
-                                 <router-link
-                                  :to="{ name: 'CallerID' }"
-                                >
-                                <span
-                                  ><v-icon
-                                    class="mt-6 mb-5 mr-7"
-                                    color="#EE1C25"
-                                    >mdi-arrow-right</v-icon
-                                  >
-                                </span>
-                                 </router-link>
+                                <router-link :to="{ name: 'CallerID' }">
+                                  <span
+                                    ><v-icon
+                                      class="mt-6 mb-5 mr-7"
+                                      color="#EE1C25"
+                                      >mdi-arrow-right</v-icon
+                                    >
+                                  </span>
+                                </router-link>
                               </v-col>
                             </v-row>
-                            
+
                             <v-divider></v-divider>
 
                             <v-row>
                               <v-col cols="6">
-                                <h2 class="name_heading mt-4 mr-7">
-                                  Sign Out
-                                </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Configure how missed calls are managed between
-                                  your agents.
-                                </h2>
+                                <h2 class="name_heading mt-4 mr-7">Sign Out</h2>
+                               
                               </v-col>
                               <v-col cols="6" align="end">
                                 <span
-                                  ><v-icon @click="logout"
+                                  ><v-icon
+                                    @click="logout"
                                     class="mt-6 mb-5 mr-7"
                                     color="#EE1C25"
                                     >mdi-arrow-right</v-icon
@@ -163,7 +141,6 @@
                             </v-row>
 
                             <v-divider></v-divider>
-
                           </v-col>
                         </v-row>
                       </v-flex>
@@ -180,7 +157,7 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
+import firebase from "firebase";
 export default {
   components: {},
   created() {
@@ -197,7 +174,7 @@ export default {
         text: "Account Information",
         disabled: false,
         to: { name: "AccountInformation" },
-      }
+      },
     ],
   }),
 
@@ -208,14 +185,14 @@ export default {
     callPauseNumber() {
       this.$router.push("/PauseNumber");
     },
-     logout: function() {
-            console.log('clicked logout');
-            // firebase.auth()
-            firebase.auth().signOut();
-            localStorage.removeItem('tpu');
-            this.rerenderKey += 1;
-            this.$router.push("login").catch(()=>{});
-        },
+    logout: function () {
+      console.log("clicked logout");
+      // firebase.auth()
+      firebase.auth().signOut();
+      localStorage.removeItem("tpu");
+      this.rerenderKey += 1;
+      this.$router.push("login").catch(() => {});
+    },
   },
 };
 </script>
