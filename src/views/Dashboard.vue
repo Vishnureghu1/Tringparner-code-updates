@@ -29,15 +29,7 @@
 
                         <div class="mx-2">
                           Today's Missed Open Calls
-                          <v-btn
-                            class="ma-2"
-                            outlined
-                            color="red"
-                            @click="viewMissedCalls()"
-                          >
-                            Show All
-                            <v-icon right dark> mdi-eye </v-icon></v-btn
-                          >
+                      
                         </div>
                       </v-row>
                       <h4 class="heading mt-0 mb-2"></h4>
@@ -56,13 +48,14 @@
                           v-for="(agentId, key, index) in missedCalls"
                           :key="index"
                         >
-                          <v-expansion-panel-header>
+                          <v-expansion-panel-header v-if="getAgentName(agentId) !='' ">
                             <div>
                               <v-row no-gutters>
                                 <v-col cols="2" flex>
                                   <h4
                                     class="name_heading font-weight-light mt-2"
                                   >
+                                  {{key}}
                                     {{ getAgentName(agentId) }}
 
                                   </h4>
@@ -75,13 +68,15 @@
                               </v-row>
                             </div>
                           </v-expansion-panel-header>
+
                           <v-expansion-panel-content
                             v-for="(calls, innerIndex) in getCallDetails(
                               agentId
                             )"
-                            :key="innerIndex"
+                            :key="innerIndex" :class="innerIndex <= 4 ? 'shoq' :'hide' " 
                           >
-                            <v-row>
+                          
+                            <v-row v-if="innerIndex <= 4"> 
                               <v-col cols="12" sm="10">
                                 <h3 class="number_heading font-weight-light">
                                   {{ calls.callerNumber }}
@@ -89,10 +84,32 @@
                                 <h6 class="comment_heading font-weight-light">
                                   {{ calls.callTime }}
                                 </h6>
-                                <br />
+                               
+                          
                               </v-col>
-                              <v-spacer></v-spacer>
+
+
+                             
                             </v-row>
+
+
+                                  <v-row v-else-if="innerIndex == 5"> 
+                                <v-col cols="12" sm="6">
+                        <div
+                          class="link_style mt-1 ml-0"
+                        @click="viewMissedCalls()"   
+                        >
+                          Show All  <v-icon
+                          v-bind="attrs"
+                          v-on="on"
+                          color="#EE1C25"
+                          
+                          >mdi-arrow-right</v-icon
+                        >
+                        </div>
+                      </v-col>
+                      
+                                </v-row>
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>

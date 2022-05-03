@@ -254,7 +254,7 @@
                             </v-col>
                           </v-row>
                           <div class="ml-10 font-weight-thin date_time">
-                            {{ details.dateTime }}, {{ details.name }}
+                            {{ details.dateTime }}
                           </div>
                           <div
                             class="ml-10 mt-3 font-weight-thin"

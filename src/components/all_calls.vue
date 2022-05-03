@@ -1,20 +1,20 @@
 <template>
   <v-app>
-      <div v-if="hidealert">
-    <v-alert prominent color="red darken-1" type="error">
-      <v-row align="center">
-        <v-col class="grow">
-          <h2 class="f16 regular">Email Verification</h2>
-          <span class="f14 light3"
-            >Please verify your email address by clicking on the link we have
-            shared with you on email.</span
-          >
-        </v-col>
-        <v-col class="shrink">
-        <v-btn @click="changeEmailPopup1()">Resend Email</v-btn>
-        </v-col>
-      </v-row>
-    </v-alert>
+    <div v-if="hidealert">
+      <v-alert prominent color="red darken-1" type="error">
+        <v-row align="center">
+          <v-col class="grow">
+            <h2 class="f16 regular">Email Verification</h2>
+            <span class="f14 light3"
+              >Please verify your email address by clicking on the link we have
+              shared with you on email.</span
+            >
+          </v-col>
+          <v-col class="shrink">
+            <v-btn @click="changeEmailPopup1()">Resend Email</v-btn>
+          </v-col>
+        </v-row>
+      </v-alert>
     </div>
     <div>
       <v-container fluid>
@@ -36,7 +36,7 @@
           >Notes removed successfully!</v-snackbar
         >
 
-         <v-snackbar
+        <v-snackbar
           :timeout="timeout"
           v-model="reminder_added"
           :bottom="bottom"
@@ -46,7 +46,7 @@
           >Reminder added successfully!</v-snackbar
         >
 
-          <v-snackbar
+        <v-snackbar
           :timeout="timeout"
           v-model="blocked_number"
           :bottom="bottom"
@@ -56,7 +56,7 @@
           >Number blocked successfully!</v-snackbar
         >
 
-  <v-snackbar
+        <v-snackbar
           :timeout="timeout"
           v-model="unblocked_number"
           :bottom="bottom"
@@ -288,9 +288,6 @@
                                     >mdi-shield-lock-outline</v-icon
                                   >
 
-                                   
-                                 
-                             
                                   <v-menu offset-y>
                                     <template v-slot:activator="{ on, attrs }">
                                       <v-icon
@@ -302,37 +299,39 @@
                                     </template>
                                     <v-list>
                                       <div
-                                    v-for="getNotes in details.Note"
-                                    :key="getNotes.text"
-                                  >
-                                 
-                                      </div>
+                                        v-for="getNotes in details.Note"
+                                        :key="getNotes.text"
+                                      ></div>
                                       <v-list-item
                                         v-for="(item, index) in items"
                                         :key="index"
                                         active-class="pink--text"
                                       >
-                                      <div
-                                    v-for="getNotes in details.Note"
-                                    :key="getNotes.text"
-                                  >
-                                
-                                        <v-list-item-title 
-                                          :class="item.color"
-                                          @click="
-                                            threeDotAction(
-                                              item.url,
-                                              details.virtualnumber,
-                                              details.uniqueid,
-                                               getNotes.Note
-                                            )
-                                          "
-                                          >
-                                          <span v-if="getNotes.Note!='' && item.url=='add_note' ">Edit Note</span>
-                                          <span v-else>{{ item.title }}</span>
-                                          </v-list-item-title
+                                        <div
+                                          v-for="getNotes in details.Note"
+                                          :key="getNotes.text"
                                         >
-                                      </div>
+                                          <v-list-item-title
+                                            :class="item.color"
+                                            @click="
+                                              threeDotAction(
+                                                item.url,
+                                                details.virtualnumber,
+                                                details.uniqueid,
+                                                getNotes.Note
+                                              )
+                                            "
+                                          >
+                                            <span
+                                              v-if="
+                                                getNotes.Note != '' &&
+                                                item.url == 'add_note'
+                                              "
+                                              >Edit Note</span
+                                            >
+                                            <span v-else>{{ item.title }}</span>
+                                          </v-list-item-title>
+                                        </div>
                                       </v-list-item>
                                     </v-list>
                                   </v-menu>
@@ -361,9 +360,17 @@
                                 >
                                 </span>
                                 {{ getNotes.Note }}
+
+                                
                               </div>
                             </div>
                           </div>
+           <span
+                  v-if="open"
+                  key="0"
+                >
+                  Enter a name for the trip
+                </span>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
                           <div>
@@ -371,44 +378,93 @@
                               <v-col cols="12" sm="6">
                                 <div class="ml-10">
                                   <h6 class="font-weight-thin">Source</h6>
+
                                   <h5 class="font-weight-light">
                                     {{ details.source }} No: (+91
                                     {{ details.virtualnumber }})
                                   </h5>
-                                   <div
-                              
-                              v-for="getNotes in details.Note"
-                              :key="getNotes.text"
-                            >
-     <v-btn
-                            text
-                            class="text-capitalize ma-3 rounded-pill red_button ml-0"
-                            min-width="140px"
-                            color="white"
-                            outlined
-                            @click="threeDotAction('add_note', 'virtualNumber', details.uniqueid, getNotes.Note)"
-                          >
-                          
-                          <span v-if="getNotes.Note==''"> Add Notes</span>
-                          <span v-else>Edit Notes</span>
-                          </v-btn>
-                            <v-btn
-                            color="red"
-                            text
-                            class="
-                              ma-2
-                              text-capitalize
-                              rounded-pill
-                              p-3
-                              red_button_outline
-                            "
-                            min-width="140px"
-                            @click="threeDotAction('add_reminder', 'virtualNumber', details.uniqueid, 'notes_text')"
-                          >
-                            Add Reminders
-                          </v-btn>
-                           </div>
-                        
+                                  <div
+                                    v-for="getNotes in details.Note"
+                                    :key="getNotes.text"
+                                  >
+                                    <span v-if="getNotes.Note != ''">
+                                      <span class="mdi mdi-note grey--text">
+                                      </span>
+                                      {{ getNotes.Note }}
+                                      <span
+                                        class="mdi mdi-pencil grey--text"
+                                        @click="
+                                          threeDotAction(
+                                            'add_note',
+                                            'virtualNumber',
+                                            details.uniqueid,
+                                            getNotes.Note
+                                          )
+                                        "
+                                      >
+                                      </span>
+                                    </span>
+                                  </div>
+
+
+                             
+
+                                  <span
+                                    v-for="getNotes in details.Note"
+                                    :key="getNotes.text"
+                                  >
+                                    <span v-if="getNotes.Note == ''">
+                                      <v-btn
+                                        color="red"
+                                        text
+                                        class="
+                                          ma-2
+                                          ml-0
+                                           mr-2
+                                          text-capitalize
+                                          rounded-pill
+                                          p-3
+                                          red_button_outline
+                                        "
+                                        min-width="140px"
+                                        @click="
+                                          threeDotAction(
+                                            'add_note',
+                                            'virtualNumber',
+                                            details.uniqueid,
+                                            ''
+                                          )
+                                        "
+                                      >
+                                        Add Notes
+                                      </v-btn>
+                                    </span>
+                                  </span>
+                                  <span>
+                                    <v-btn
+                                      color="red"
+                                      text
+                                      class="
+                                        ma-2
+                                        ml-0
+                                        text-capitalize
+                                        rounded-pill
+                                        p-3
+                                        red_button_outline
+                                      "
+                                      min-width="140px"
+                                      @click="
+                                        threeDotAction(
+                                          'add_reminder',
+                                          'virtualNumber',
+                                          details.uniqueid,
+                                          ''
+                                        )
+                                      "
+                                    >
+                                      Add Reminders
+                                    </v-btn>
+                                  </span>
                                 </div>
                               </v-col>
                               <!-- {{details}} -->
@@ -474,11 +530,7 @@
                       value="30"
                       color="red"
                     ></v-radio>
-                    <v-radio
-                      label="1 hour"
-                      value="60"
-                      color="red"
-                    ></v-radio>
+                    <v-radio label="1 hour" value="60" color="red"></v-radio>
                     <v-radio
                       label="Custom"
                       value="custom"
@@ -572,7 +624,7 @@
                         rounded
                         color="red"
                         dark
-                        @click="sendReminder(radio,date,time)"
+                        @click="sendReminder(radio, date, time)"
                       >
                         Save
                       </v-btn>
@@ -591,7 +643,11 @@
           <h3 class="center">Verify your email address</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field label="Email Address*" v-model = "current_email" outlined></v-text-field>
+          <v-text-field
+            label="Email Address*"
+            v-model="current_email"
+            outlined
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -623,7 +679,12 @@
         </v-card-title>
         <v-card-text class="pt-0">
           <!-- <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation> -->
-            <v-text-field label="Enter OTP" v-model="otp" value="" required></v-text-field>
+          <v-text-field
+            label="Enter OTP"
+            v-model="otp"
+            value=""
+            required
+          ></v-text-field>
           <!-- </v-form> -->
         </v-card-text>
         <v-card-actions>
@@ -650,66 +711,51 @@
       </v-card>
     </v-dialog>
 
-        <!-- RENAME addNotesDialog SECTION -->
-        <v-dialog v-model="addNotesDialog" max-width="332px">
-          <v-card v-model="addNotesDialog" class="rounded-lg pt-7 pb-7">
-            <v-card-title class="d-flex justify-center">
-              <h3 class="center">{{notes_text}}</h3>
-            </v-card-title>
-            <v-card-text class="pt-0">
-      
-             <v-text-field
-                                      v-model="notes_data"
-                                     
-                                      clear-icon="mdi-close-circle"
-                                      clearable
-                                      label="Notes"
-                                      :rules="rules"
-                                      counter
-                                      maxlength="120"
-                                      type="text"
-                                    
-                                      @click:clear="
-                                        clearMessage(
-                                          uniqueId,
-                                          notes_data
-                                        )
-                                      "
-                                      class="black--text"
-                                    ></v-text-field>
-              
-                         
-                         
-            </v-card-text>
+    <!-- RENAME addNotesDialog SECTION -->
+    <v-dialog v-model="addNotesDialog" max-width="332px">
+      <v-card v-model="addNotesDialog" class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">{{ notes_text }}</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+          <v-text-field
+            v-model="notes_data"
+            clear-icon="mdi-close-circle"
+            clearable
+            label="Notes"
+            :rules="rules"
+            counter
+            maxlength="120"
+            type="text"
+            @click:clear="clearMessage(uniqueId, notes_data)"
+            class="black--text"
+          ></v-text-field>
+        </v-card-text>
 
-            <v-card-actions>
-              <v-btn
-                color="red"
-                text
-                class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-                min-width="140px"
-                @click="addNotesDialog = false"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                text
-                class="text-capitalize ma-3 rounded-pill red_button"
-                min-width="140px"
-                color="white"
-                outlined
-                 @click=" addNote(
-                                          uniqueId,
-                                          notes_data
-                                        )
-                                      "
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <!-- RENAME addNotesDialog SECTION -->
+        <v-card-actions>
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="addNotesDialog = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+            @click="addNote(uniqueId, notes_data)"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- RENAME addNotesDialog SECTION -->
 
     <v-dialog v-model="sendInviteLoader" hide-overlay persistent width="300">
       <v-card color="red" dark>
@@ -740,17 +786,17 @@ export default {
     Icon,
   },
   data: () => ({
-     hidealert:"",
-    otp:"",
+    hidealert: "",
+    otp: "",
     addNotesDialog: false,
-    notes_data:'',
-    virtualNumber:null,
-    uniqueId:null,
-    reminder_added:false,
-    blocked_number:false,
-    unblocked_number:false,
-    notes_text:'Add Notes',
-    current_email:"",
+    notes_data: "",
+    virtualNumber: null,
+    uniqueId: null,
+    reminder_added: false,
+    blocked_number: false,
+    unblocked_number: false,
+    notes_text: "Add Notes",
+    current_email: "",
     valid: true,
     searchForm: false,
     benched: 0,
@@ -832,8 +878,8 @@ export default {
     totalPage: 0,
     totalItems: 0,
     page: 1,
-    name:"",
-    userRole: '',
+    name: "",
+    userRole: "",
   }),
   watch: {
     sendInviteLoader(val) {
@@ -846,37 +892,35 @@ export default {
     },
   },
   methods: {
-     changeEmailPopup1(){
-      console.log("g")
-        this.changeEmailPopup = true
+    changeEmailPopup1() {
+      console.log("g");
+      this.changeEmailPopup = true;
     },
 
-       threeDotAction(action, virtualNumber, uniqueId, notes_text) {
+    threeDotAction(action, virtualNumber, uniqueId, notes_text) {
       if (action == "add_note") {
         console.log("Add Note");
         this.notes_data = notes_text;
         this.uniqueId = uniqueId;
         this.dialog = false;
         this.addNotesDialog = true;
-        if(notes_text==''){
-          this.notes_text='Add Notes';
-
-        }else{
+        if (notes_text == "") {
+          this.notes_text = "Add Notes";
+        } else {
           this.uniqueId = uniqueId;
-          this.notes_text='Edit Notes';
+          this.notes_text = "Edit Notes";
         }
       }
       if (action == "add_reminder") {
         console.log("Add Reminder");
-        console.log(uniqueId)
-         this.uniqueId = uniqueId;
+        console.log(uniqueId);
+        this.uniqueId = uniqueId;
         this.addNotesDialog = false;
         this.dialog = true;
-   
       }
-       if (action == "block_number") {
+      if (action == "block_number") {
         console.log("Block Numebr");
-              var token = localStorage.getItem("token");
+        var token = localStorage.getItem("token");
         var tpu = localStorage.getItem("tpu");
         var Id = JSON.parse(tpu);
         console.log(Id);
@@ -898,19 +942,16 @@ export default {
         console.log(blockNumber);
         this.$axios(blockNumber)
           .then((response) => {
-             this.blocked_number = true;
-            this.dialog=false;
+            this.blocked_number = true;
+            this.dialog = false;
             console.log(response);
-   
           })
           .catch((error) => {
             console.log("Error getting: ", error);
           });
-        
       }
-     
     },
-    
+
     handleTimeOfCallChange(opn) {
       this.selectedPaymentOption = opn;
       console.log(this.selectedTimeOfCall);
@@ -959,34 +1000,37 @@ export default {
     SendVerification() {
       this.changeEmailPopup = false;
       this.sendInviteLoader = true;
-       const details = {
+      const details = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/otp",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
           email: this.current_email,
           uid: this.uid,
-          updated_by:this.uid
+          updated_by: this.uid,
         },
       };
-      axios(details).then(async (response) => { 
-         if(response.data.status == false){
-  console.log(response.data.status)   
-     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
-    //  this.emailStatus()
-         }else{
-  console.log(response.data.status)   
-  this.sendInviteLoader = true;
-   this.changeEmailPopup = false
-  this.enterOtpModel=true
-         }
+      axios(details).then(async (response) => {
+        if (response.data.status == false) {
+          console.log(response.data.status);
+          this.$root.vtoast.show({
+            message: response.data.message,
+            color: "red",
+            timer: 2000,
+          });
+          //  this.emailStatus()
+        } else {
+          console.log(response.data.status);
+          this.sendInviteLoader = true;
+          this.changeEmailPopup = false;
+          this.enterOtpModel = true;
+        }
         //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
-      
-      })
+      });
       // this.enterOtpModel = false
     },
-     verifyOTP(){
-         const details = {
+    verifyOTP() {
+      const details = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/verification",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
@@ -994,30 +1038,35 @@ export default {
           email: this.current_email,
           uid: this.uid,
           otp: parseInt(this.otp),
-          updated_by:this.uid
+          updated_by: this.uid,
         },
       };
-      axios(details).then(async (response) => { 
-         if(response.data.status == false){
-  console.log(response.data.status)   
-     this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 2000});
-         }else{
-  console.log(response.data.status)   
-  this.dialog2 = false,
-  this.enterOtpModel=false
-  this.otp = "",
-  this.hidealert = false;
-  // this.current_number = this.new_number,
-   this.$root.vtoast.show({message: response.data.message, color: 'green', timer: 2000});
-         }
+      axios(details).then(async (response) => {
+        if (response.data.status == false) {
+          console.log(response.data.status);
+          this.$root.vtoast.show({
+            message: response.data.message,
+            color: "red",
+            timer: 2000,
+          });
+        } else {
+          console.log(response.data.status);
+          (this.dialog2 = false), (this.enterOtpModel = false);
+          (this.otp = ""), (this.hidealert = false);
+          // this.current_number = this.new_number,
+          this.$root.vtoast.show({
+            message: response.data.message,
+            color: "green",
+            timer: 2000,
+          });
+        }
         //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000});
-      
-      })
+      });
     },
     close() {
       this.changeEmailPopup = false;
       this.enterOtpModel = false;
-       this.otp=""
+      this.otp = "";
     },
     openSearchBar() {
       this.searchForm = true;
@@ -1044,7 +1093,7 @@ export default {
         alert("oi sou Eduardo Martins");
       }
     },
-   
+
     addNote(unique_id, message) {
       var token = localStorage.getItem("token");
       const user_data = {
@@ -1064,11 +1113,11 @@ export default {
       };
       console.log(user_data);
       this.$axios(user_data)
-        .then((response) => {      
+        .then((response) => {
           if (response.data.status == true) {
             this.notes_added = true;
-            this.addNotesDialog=false;
-            this.uniqueId ="";
+            this.addNotesDialog = false;
+            this.uniqueId = "";
             // setTimeout(this.getNextCalls(), 3000);
             // this.getNextCalls();
           }
@@ -1077,17 +1126,21 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
-    sendReminder(radio,date, time) {
+    sendReminder(radio, date, time) {
       // console.log(moment(new Date()).format("YYYY-MM-DD hh:mm"))
       var token = localStorage.getItem("token");
       let tpu = localStorage.getItem("tpu");
       let Id = JSON.parse(tpu);
-      let ReminderAt =""; 
-      if(radio == "10" ||radio == "30" || radio =="60"){
-        ReminderAt = new Date(moment(new Date(new Date().getTime() + (parseInt(radio)+1) * 60000)).format("YYYY-MM-DD hh:mm")).getTime();
+      let ReminderAt = "";
+      if (radio == "10" || radio == "30" || radio == "60") {
+        ReminderAt = new Date(
+          moment(
+            new Date(new Date().getTime() + (parseInt(radio) + 1) * 60000)
+          ).format("YYYY-MM-DD hh:mm")
+        ).getTime();
       }
-      if(radio == "custom"){
-        ReminderAt = new Date(date+" "+time).getTime()
+      if (radio == "custom") {
+        ReminderAt = new Date(date + " " + time).getTime();
       }
       // console.log(Id.AccountId);
       // console.log("date",date);
@@ -1108,10 +1161,10 @@ export default {
           reminder_at: ReminderAt, // time in milliseconds
           name: this.name,
           type: radio, //custom or p // after 10 mins // after 10
-          Number: this.number, //caller number
-          Message: this.message,
-          AccountId: Id.AccountId,
-          UpdatedBy: this.uid, //logged in user id
+          number: this.number, //caller number
+          message: this.reminderMessage,
+          accountId: Id.AccountId,
+          updatedBy: this.uid, //logged in user id
         },
         headers: {
           token: token,
@@ -1120,11 +1173,10 @@ export default {
       };
       console.log(user_data);
       this.$axios(user_data)
-           .then((response) => {
-      
+        .then((response) => {
           if (response.data.status == true) {
             this.reminder_added = true;
-            this.dialog=false;
+            this.dialog = false;
           }
         })
         .catch((error) => {
@@ -1151,7 +1203,7 @@ export default {
       this.$axios(user_data)
         .then((response) => {
           console.log(response);
-          if (response.data.status == true) {          
+          if (response.data.status == true) {
             this.notes_removed = true;
             //  setTimeout(this.getNextCalls(), 3000);
           }
@@ -1229,9 +1281,9 @@ export default {
           virtualnumber: "8657510921",
         });
       }
-      if(this.userRole == 'AGENT') {
+      if (this.userRole == "AGENT") {
         Object.assign(filterCallsConditions.conditions, {
-          userid: { "$in" : [this.uid]},
+          userid: { $in: [this.uid] },
         });
       }
 
@@ -1376,9 +1428,9 @@ export default {
         });
       }
 
-      if(this.userRole == 'AGENT') {
+      if (this.userRole == "AGENT") {
         Object.assign(searchCallsConditions.conditions, {
-          userid: { "$in" : [this.uid]},
+          userid: { $in: [this.uid] },
         });
       }
 
@@ -1618,6 +1670,7 @@ export default {
                   virtualnumber: virtualnumber,
                   called_name: this.called_name,
                   recordingUrl: this.calldetails.recordingurl,
+                  reminder: this.calldetails.Reminder,
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
@@ -1631,22 +1684,29 @@ export default {
         }
       };
     },
-    emailStatus(){
-        db.collection("users").where("uid","==",this.uid).get().then(async(snap) =>{
-       this.current_email = snap.docs[0].data().Email
-       this.hidealert = snap.docs[0].data().IsEmailVerified==true?false:true;
-       this.name = snap.docs[0].data().role == "OWNER"?snap.docs[0].data().FirstName:snap.docs[0].data().Name;
-       this.number = snap.docs[0].data().PhoneNumber;
-       console.log("test",this.hidealert)
-		}).catch((err)=>{
-			console.log(err.message)
-		})
-    }
+    emailStatus() {
+      db.collection("users")
+        .where("uid", "==", this.uid)
+        .get()
+        .then(async (snap) => {
+          this.current_email = snap.docs[0].data().Email;
+          this.hidealert =
+            snap.docs[0].data().IsEmailVerified == true ? false : true;
+          this.name =
+            snap.docs[0].data().role == "OWNER"
+              ? snap.docs[0].data().FirstName
+              : snap.docs[0].data().Name;
+          this.number = snap.docs[0].data().PhoneNumber;
+          console.log("test", this.hidealert);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
   },
   created() {
     // console.log("adm,nfa")
     this.getNextCalls();
-       
   },
   beforeMount() {
     let localStorageUserObj = localStorage.getItem("tpu");
@@ -1654,7 +1714,8 @@ export default {
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
-      this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
+      this.ownerUid =
+        parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
       this.userRole = parsedUser.role;
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
@@ -1700,7 +1761,6 @@ export default {
             .onSnapshot((querySnapshot) => {
               this.realdata = [];
               if (!querySnapshot.empty) {
-  
                 // Getting Calls from Mongo on onSnapshot
                 var filterCallsPayload = {
                   page_number: 1,
@@ -1812,6 +1872,7 @@ export default {
                         virtualnumber: virtualnumber,
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder,
                       });
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
