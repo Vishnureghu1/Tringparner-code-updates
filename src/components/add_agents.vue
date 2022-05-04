@@ -17,7 +17,7 @@
 									<div class="ml-4 mr-4">
 										<v-select :items="virtual_number_list" label="Virtual number" v-model='selected_virtual_number' v-on:change="changeview(selected_virtual_number)" required ></v-select>
 										<h3 class="mt-6 ml-5 mb-5 text-center">Virtual Number : 
-										<span class=" red--text text-center"> {{ selected_virtual_number }} </span></h3>
+										<span class=" primary--text text-center"> {{ selected_virtual_number }} </span></h3>
 									</div>
 									</div>
 

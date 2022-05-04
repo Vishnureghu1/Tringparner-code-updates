@@ -52,7 +52,7 @@
                         :loading="dialog"
                         @click="uploadGreetingMessage()"
                         class="ma-2"
-                        color="red darken-1"
+                        color="primary"
                         dark
                       >
                         + Upload Media
@@ -68,7 +68,7 @@
                         v-model="file"
                       ></v-file-input>
                       <v-progress-linear
-                        color="red darken-1 "
+                        color="primary "
                         buffer-value="0"
                         height="35"
                         :value="uploadedValue"
@@ -386,7 +386,7 @@ export default {
         text: "Delete File",
         disabled: false,
         href: "Dashboard",
-        color: "red--text",
+        color: "primary--text",
         actionSlug: "DELETE_FILE",
       },
     ],

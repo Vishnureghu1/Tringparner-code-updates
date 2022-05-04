@@ -16,7 +16,7 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>
 								<div v-if='numberList'>
@@ -29,7 +29,7 @@
 									</div>
 									<v-btn-toggle v-model="toggle_none" >
 										<div class="ml-3 mt-5 text-center">
-											<v-btn v-for="item in V_numbers" :key="item" class="ml-1 mr-4 mb-5 red--text" outlined color='white' width="44%">{{item}}</v-btn>
+											<v-btn v-for="item in V_numbers" :key="item" class="ml-1 mr-4 mb-5 primary--text" outlined color='white' width="44%">{{item}}</v-btn>
 										</div>
 									</v-btn-toggle>
 									<div class="text-center">							
@@ -44,8 +44,8 @@
         <template v-slot:default="dialog">
           <v-card outlined shaped elevation="8">
             <v-card-text>
-              <div class="text-h6 mt-4 red--text">No numbers Available </div>
-              <div class="text-h6 mt-2 red--text">Try after sometime !! </div>
+              <div class="text-h6 mt-4 primary--text">No numbers Available </div>
+              <div class="text-h6 mt-2 primary--text">Try after sometime !! </div>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn

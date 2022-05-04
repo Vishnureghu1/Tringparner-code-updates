@@ -104,7 +104,7 @@
                                                         <div class="dashed_border"></div>
                                                     </v-col>
                                                     <v-col cols="6" sm="1" align="left">
-                                                            <v-btn fab class="tpred--text"  x-small>1</v-btn>
+                                                            <v-btn fab class="tpprimary--text"  x-small>1</v-btn>
                                                     </v-col>
                                                     <v-col cols="6" sm="3" align="left">
                                                         <div class="stepper_inactive">Call Routing Setting</div>

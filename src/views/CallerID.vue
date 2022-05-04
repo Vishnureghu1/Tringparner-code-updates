@@ -49,7 +49,7 @@
                                           >mdi-content-copy</v-icon
                                         >
                                       </v-btn>
-                                      <label class="red--text" @click="CopyData()"
+                                      <label class="primary--text" @click="CopyData()"
                                         >Copy Numebr to Clipboard</label
                                       >
                                        <input type="hidden" id="hidden-data" value="02235195219">
@@ -62,7 +62,7 @@
                                           >mdi-account-plus</v-icon
                                         >
                                       </v-btn>
-                                      <label class="red--text"
+                                      <label class="primary--text"
                                         >Add to Contacts</label
                                       >
                                     </v-card-text>
@@ -79,7 +79,7 @@
                                           >mdi-content-copy</v-icon
                                         >
                                       </v-btn>
-                                      <label class="red--text"  @click="CopyData()"
+                                      <label class="primary--text"  @click="CopyData()"
                                         >Copy Numebr to Clipboard</label
                                       >
                                       <br />
@@ -89,7 +89,7 @@
                                           >mdi-account-plus</v-icon
                                         >
                                       </v-btn>
-                                      <label class="red--text"
+                                      <label class="primary--text"
                                         >Add to Contacts</label
                                       >
                                     </v-card-text>
@@ -106,7 +106,7 @@
                                           >mdi-content-copy</v-icon
                                         >
                                       </v-btn>
-                                      <label class="red--text"  @click="CopyData()"
+                                      <label class="primary--text"  @click="CopyData()"
                                         >Copy Numebr to Clipboard</label
                                       >
                                       <br />
@@ -116,7 +116,7 @@
                                           >mdi-account-plus</v-icon
                                         >
                                       </v-btn>
-                                      <label class="red--text"
+                                      <label class="primary--text"
                                         >Add to Contacts</label
                                       >
                                     </v-card-text>

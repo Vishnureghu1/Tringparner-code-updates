@@ -81,7 +81,7 @@
                                               Selected Number: {{VirtualNumber}}
                                             </p>
 
-                                            <p class="bold red--text mb-0 mt-5">
+                                            <p class="bold primary--text mb-0 mt-5">
                                               Due On: 06-Jun-2022
                                             </p>
                                             <p class="light4">
@@ -117,7 +117,7 @@
                                         </tr>
                                         <tr colspan="3">
                                           <td
-                                            class="ma-0 pa-0 bold red--text"
+                                            class="ma-0 pa-0 bold primary--text"
                                             colspan="1"
                                             color="red"
                                           >
@@ -125,7 +125,7 @@
                                           </td>
 
                                           <td
-                                            class="ma-0 pa-0 bold red--text"
+                                            class="ma-0 pa-0 bold primary--text"
                                             colspan="2"
                                             align="right"
                                           >
@@ -224,8 +224,8 @@
       <template v-slot:default="dialog">
         <v-card outlined shaped elevation="8">
           <v-card-text>
-            <div class="text-h6 mt-4 red--text">No numbers Available</div>
-            <div class="text-h6 mt-2 red--text">Try after sometime !!</div>
+            <div class="text-h6 mt-4 primary--text">No numbers Available</div>
+            <div class="text-h6 mt-2 primary--text">Try after sometime !!</div>
           </v-card-text>
           <v-card-actions class="justify-end">
             <v-btn text color="danger" @click="dialog.value = false"
@@ -304,7 +304,7 @@ export default {
     options: [
       { title: "Edit", color: "black--text", url: "Edit" },
       { title: "Send Invite", color: "black--text", url: "sendInvite" },
-      { title: "Remove Slot", color: "red--text", url: "removeSlot" },
+      { title: "Remove Slot", color: "primary--text", url: "removeSlot" },
     ],
     valid: false,
     stepForm: [],

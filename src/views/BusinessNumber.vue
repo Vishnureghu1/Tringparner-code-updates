@@ -32,7 +32,7 @@
                     <v-col cols="10" sm="3">
                       <v-btn
                         class="ma-0"
-                        color="red darken-1"
+                        color="primary"
                         dark
                         @click="addon()"
                       >

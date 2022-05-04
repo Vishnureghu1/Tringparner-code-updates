@@ -36,7 +36,7 @@
                         :loading="dialog"
                         @click="dialog2 = true"
                         class="ma-0"
-                        color="red darken-1"
+                        color="primary"
                         dark
                       >
                         + Add new Agent

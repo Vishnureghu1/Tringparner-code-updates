@@ -53,7 +53,7 @@
 										</div>
 										<v-btn-toggle v-model="toggle_none" >
 											<div class="ml-3 mt-5 text-center">
-												<v-btn v-for="item in V_numbers" :key="item" class="ml-1 mr-4 mb-5 red--text" outlined color='white' width="44%">{{item}}</v-btn>
+												<v-btn v-for="item in V_numbers" :key="item" class="ml-1 mr-4 mb-5 primary--text" outlined color='white' width="44%">{{item}}</v-btn>
 											</div>
 										</v-btn-toggle>
 										<div class="text-center">							

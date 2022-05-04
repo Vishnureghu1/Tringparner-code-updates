@@ -261,9 +261,7 @@ import { db } from '@/main.js';
   font-size: 14px;
   color: #3B3B3B;
 }
-.link_style{
-	color: #EE1C25;
-}
+
 .number_heading.v-btn--outlined {
     border: thin solid #EE1C25;
   }

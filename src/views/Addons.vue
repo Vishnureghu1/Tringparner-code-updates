@@ -75,7 +75,7 @@
                              <v-row class="center" justify="center" align="center">
                               <v-col cols="6">
                                 <h2 class="name_heading mr-7 regular">
-                                 Buy New Number <span class="small red--text f12 bold">40% Off</span>
+                                 Buy New Number <span class="small primary--text f12 bold">40% Off</span>
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">

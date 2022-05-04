@@ -21,7 +21,7 @@
 											</div>
 											<v-divider></v-divider>
 											<h4 class="font-weight-regular mt-2 mb-2 text-center"> Display Caller Id</h4>
-											<h4 class="font-weight-bold red--text mb-3 text-center">  8045475053 </h4>
+											<h4 class="font-weight-bold primary--text mb-3 text-center">  8045475053 </h4>
 											<v-divider></v-divider>
 											<h4 class="font-weight-regular mt-2 mb-2 text-center" >Your Number  </h4>
 											<h4 class="font-weight-bold mb-3 text-center">{{ phno }} </h4>

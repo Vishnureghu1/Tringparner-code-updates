@@ -904,7 +904,7 @@ export default {
 .link_style {
   /*font-family: 'lato', Regular;*/
   font-size: 16px;
-  color: #ee1c25;
+ 
 }
 .nunito-title {
   text-align: left;

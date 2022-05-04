@@ -169,9 +169,7 @@ import firebase from 'firebase'
   font-size: 14px;
   color: #EE1C25;
 }
-.link_style{
-	color: #EE1C25;
-}
+
 .number_heading.v-btn--outlined {
     border: thin solid #EE1C25;
   }

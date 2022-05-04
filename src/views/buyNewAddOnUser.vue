@@ -59,7 +59,7 @@
                                           <v-col cols="auto">
                                             <v-card
                                               width="100%"
-                                              color="red darken-1 rounded-t-lg"
+                                              color="primary rounded-t-lg"
                                             >
                                               <v-row
                                                 class="fill-height"
@@ -215,7 +215,7 @@
                                               </p>
                                               <p>
                                                 <span
-                                                  class="bold red--text pb-0"
+                                                  class="bold primary--text pb-0"
                                                   >Due On: {{DueOn}}</span
                                                 ><br /><span class="f14 light5"
                                                   >Billable Duration  {{ReminingDays}} 

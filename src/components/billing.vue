@@ -17,14 +17,14 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>
 								<v-dialog v-model="dialog2" transition="dialog-bottom-transition" max-width="300">
 									<template v-slot:default="dialog2">
 										<v-card outlined shaped elevation="8">
 											<v-card-text>
-												<div class="text-h6 mt-4 red--text">Payment Closed</div>
+												<div class="text-h6 mt-4 primary--text">Payment Closed</div>
 											</v-card-text>
 											<v-card-actions class="justify-end">
 												<v-btn text color="danger" @click="dialog2.value = false" >Close </v-btn>

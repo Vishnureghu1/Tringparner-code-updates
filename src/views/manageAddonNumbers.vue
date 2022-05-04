@@ -34,7 +34,7 @@
                         :loading="dialog"
                         @click="dialog2 = true"
                         class="ma-0"
-                        color="red darken-1"
+                        color="primary"
                         dark
                       >
                         + Buy New Number
@@ -228,7 +228,7 @@ export default {
 
     options: [
       { title: "Edit Title", color: "black--text", url: "changeTitle" },
-      { title: "Remove Number", color: "red--text", url: "removeNumber" },
+      { title: "Remove Number", color: "primary--text", url: "removeNumber" },
     ],
     valid: false,
     stepForm: [],

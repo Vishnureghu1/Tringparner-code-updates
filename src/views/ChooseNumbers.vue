@@ -354,9 +354,7 @@ import { db } from '@/main.js';
   font-size: 10px;
   color: #808080;
 }
-.link_style{
-	color: #EE1C25;
-}
+
 .number_heading.v-btn--outlined {
     border: thin solid #EE1C25;
   }

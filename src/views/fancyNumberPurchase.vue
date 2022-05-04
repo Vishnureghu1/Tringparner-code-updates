@@ -53,7 +53,7 @@
                                           <v-col cols="auto">
                                             <v-card
                                               width="100%"
-                                              color="red darken-1 rounded-t-lg"
+                                              color="primary rounded-t-lg"
                                             >
                                               <v-row
                                                 class="fill-height"
@@ -110,7 +110,7 @@
                                             </p>
                                           
                                             <p>
-                                              <span class="regular red--text pb-0"
+                                              <span class="regular primary--text pb-0"
                                                 >Please contact our support team and select your fancy number before makinf the payment</span
                                               >
                                             </p>

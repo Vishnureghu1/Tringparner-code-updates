@@ -30,7 +30,7 @@
                       </h2>
                     </v-col>
                     <v-col cols="10" sm="3">
-                      <v-btn class="ma-0" color="red darken-1" dark>
+                      <v-btn class="ma-0" color="primary" dark>
                         + Refresh List (0 Sec)
                       </v-btn>
                     </v-col>
@@ -81,7 +81,7 @@
                                   <v-btn
                                     v-for="item in V_numbers"
                                     :key="item"
-                                    class="ml-1 mr-4 mb-5 red--text"
+                                    class="ml-1 mr-4 mb-5 primary--text"
                                     outlined
                                     color="white"
                                     width="45%"
@@ -130,8 +130,8 @@
       <template v-slot:default="dialog">
         <v-card outlined shaped elevation="8">
           <v-card-text>
-            <div class="text-h6 mt-4 red--text">No numbers Available</div>
-            <div class="text-h6 mt-2 red--text">Try after sometime !!</div>
+            <div class="text-h6 mt-4 primary--text">No numbers Available</div>
+            <div class="text-h6 mt-2 primary--text">Try after sometime !!</div>
           </v-card-text>
           <v-card-actions class="justify-end">
             <v-btn text color="danger" @click="dialog.value = false"
@@ -205,7 +205,7 @@ export default {
     options: [
       { title: "Edit", color: "black--text", url: "Edit" },
       { title: "Send Invite", color: "black--text", url: "sendInvite" },
-      { title: "Remove Slot", color: "red--text", url: "removeSlot" },
+      { title: "Remove Slot", color: "primary--text", url: "removeSlot" },
     ],
     valid: false,
     stepForm: [],

@@ -16,7 +16,7 @@
       permanent
     >
       <!-- <v-list flat>
-                <v-list-item active-class="red--text">
+                <v-list-item active-class="primary--text">
                     <v-list-item-content>
                         <v-list-item-title class="grey--text" @click="dashboard()"> <v-icon  class="mr-3" color="grey">mdi-radar</v-icon> Dashboard</v-list-item-title>
                     </v-list-item-content>
@@ -37,7 +37,7 @@
                 </v-list-group> 
 
 
-                <v-list-item  active-class="red--text">
+                <v-list-item  active-class="primary--text">
                     <v-list-item-content>
                         <v-list-item-title class="grey--text" @click="report()"> <v-icon  class="mr-3" color="grey" >mdi-chart-bar</v-icon> Reports </v-list-item-title>
                     </v-list-item-content>
@@ -58,7 +58,7 @@
             </v-list> -->
       <!-- NEW LINKS -->
       <v-list flat>
-        <!-- <v-list-item v-for="link in links[userRole]" :key="link.text" router :to="link.route" class="red--text" active-class="border red--text" style="color:green;">
+        <!-- <v-list-item v-for="link in links[userRole]" :key="link.text" router :to="link.route" class="primary--text" active-class="border primary--text" style="color:green;">
                     <template v-if="userRole == link.role" color="green--text" >
 
                         <v-list-item-action>
@@ -75,7 +75,7 @@
           <v-list-item
             v-if="!link.subLinks"
             :to="link.to"
-            active-class="tpred--text medium"
+            active-class="tpprimary--text medium"
             avatar
             class="grey--text ubuntu-font medium"
           >
@@ -98,7 +98,7 @@
             <template v-slot:activator>
               <v-list-item-title
                 class="menu-text grey--text ubuntu-font"
-                active-class="tpred--text ubuntu-font medium"
+                active-class="tpprimary--text ubuntu-font medium"
                 >{{ link.text }}</v-list-item-title
               >
             </template>
@@ -108,7 +108,7 @@
               :to="sublink.to"
               :key="sublink.text"
               class="grey--text ubuntu-font"
-              active-class="tpred--text ubuntu-font"
+              active-class="tpprimary--text ubuntu-font"
             >
               <v-list-item-title class="menu-text ml-2">{{
                 sublink.text

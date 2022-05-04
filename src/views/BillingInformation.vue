@@ -234,7 +234,7 @@
                                     </tr>
                                     <tr colspan="3">
                                       <td
-                                        class="ma-0 pa-0 bold red--text"
+                                        class="ma-0 pa-0 bold primary--text"
                                         colspan="1"
                                         color="red"
                                       >
@@ -242,7 +242,7 @@
                                       </td>
 
                                       <td
-                                        class="ma-0 pa-0 bold red--text"
+                                        class="ma-0 pa-0 bold primary--text"
                                         colspan="2"
                                         align="right"
                                       >

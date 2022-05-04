@@ -14,7 +14,7 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>	
 								<div>
@@ -22,7 +22,7 @@
 									<div class="text-center">
 										<div class="mt-6">Your new Business Number is</div>
 										
-										<h3 class="mt-2 mb-3 red--text"> {{virtualNumber}} </h3>
+										<h3 class="mt-2 mb-3 primary--text"> {{virtualNumber}} </h3>
 										<v-divider></v-divider>
 									</div>
 									<div >

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-        <v-alert prominent color="red darken-1" type="error">
+        <v-alert prominent color="primary" type="error">
       <v-row align="center">
         <v-col class="grow">
           <h2 class="f16 regular">Email Verification</h2>
@@ -447,7 +447,7 @@
                         width="100%"
                         color="white"
                         dark
-                        class="red--text"
+                        class="primary--text"
                         @click="dialog = false"
                       >
                         Cancel
@@ -575,7 +575,7 @@ export default {
       { title: "Add Note", color: "black--text" },
       { title: "Add Reminder", color: "black--text" },
       // { title: 'Call This Number',color: 'black--text' },
-      { title: "Block This Number", color: "red--text" },
+      { title: "Block This Number", color: "primary--text" },
     ],
   timeofCall: ["Ascending", "Descending"],
     selectedTimeOfCall: "Ascending",

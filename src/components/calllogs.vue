@@ -24,7 +24,7 @@
 																	<v-expansion-panel-header>
 																		<div> {{ details.callerNumber }} 
 																			<span v-if="details.callstatus == 'Answered'" class="mdi mdi-phone-incoming ml-2 green--text"></span>
-																			<span v-else class="mdi mdi-phone-missed ml-2 red--text"></span>
+																			<span v-else class="mdi mdi-phone-missed ml-2 primary--text"></span>
 																			<span v-for="getNotes in details.Note " :key="getNotes.text" >
 																				<span v-if="getNotes.Note != ''" class="mdi mdi-note ml-2 blue--text"></span>
 																			</span>
@@ -61,7 +61,7 @@
 																<v-expansion-panel v-for="(details) in realdata" :key="details.text">
 																	<div v-if="details.callstatus == 'Missed'">
 																		<v-expansion-panel-header>
-																			<div class="red--text"> {{ details.callerNumber }} 
+																			<div class="primary--text"> {{ details.callerNumber }} 
 																				<span class="mdi mdi-phone-missed ml-2"></span> 
 																				<span v-for="getNotes in details.Note " :key="getNotes.text" >
 																					<span v-if="getNotes.Note != ''" class="mdi mdi-note ml-2 blue--text"></span>

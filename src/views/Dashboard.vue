@@ -55,7 +55,7 @@
                                   <h4
                                     class="name_heading font-weight-light mt-2"
                                   >
-                                  {{key}}
+                                  
                                     {{ getAgentName(agentId) }}
 
                                   </h4>
@@ -73,7 +73,7 @@
                             v-for="(calls, innerIndex) in getCallDetails(
                               agentId
                             )"
-                            :key="innerIndex" :class="innerIndex <= 4 ? 'shoq' :'hide' " 
+                            :key="innerIndex" :class="innerIndex <= 5 ? 'show' :'hide' " 
                           >
                           
                             <v-row v-if="innerIndex <= 4"> 
@@ -88,18 +88,12 @@
                           
                               </v-col>
 
-
-                             
-                            </v-row>
-
-
-                                  <v-row v-else-if="innerIndex == 5"> 
-                                <v-col cols="12" sm="6">
+                              <v-col cols="12" sm="12" v-if="innerIndex == 4" >
                         <div
-                          class="link_style mt-1 ml-0"
+                          class="link_style mt-1 ml-0 center" align="center"
                         @click="viewMissedCalls()"   
                         >
-                          Show All  <v-icon
+                          Show All Missed Calls <v-icon
                           v-bind="attrs"
                           v-on="on"
                           color="#EE1C25"
@@ -108,8 +102,16 @@
                         >
                         </div>
                       </v-col>
+
+
+                             
+                            </v-row>
+
+
+                               
+                                
                       
-                                </v-row>
+                                
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>

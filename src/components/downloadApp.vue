@@ -14,7 +14,7 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>
 								<div>

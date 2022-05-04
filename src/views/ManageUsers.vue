@@ -34,7 +34,7 @@
                         :loading="dialog"
                         @click="dialog2 = true"
                         class="ma-0"
-                        color="red darken-1"
+                        color="primary"
                         dark
                       >
                         + Add New User
@@ -291,7 +291,7 @@ export default {
 				this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,uid:element.data().uid,cron:(element.data().IsAddon===false)?true:false,option:[ 
         { title:"Edit Title", type:"Edit", headline:"Edit User", color: "black--text", url: "edit",function:"edit_user"},
       { title: "Send Invite", type:"Send", headline:"Send Invite", color: "black--text", url: "send", function:"send_invite"},
-      { title: "Remove User",  type:"Edit", headline:"Remove User", color: "red--text", url: "remove",function:"remove_user"},]});
+      { title: "Remove User",  type:"Edit", headline:"Remove User", color: "primary--text", url: "remove",function:"remove_user"},]});
 			});
 
      const reminingprimary = this.baseusers-assignedprimarycount;

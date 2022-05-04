@@ -158,7 +158,7 @@
                             <v-col cols="12" sm="6">
                               <v-btn
                                 color="white"
-                                class="red--text"
+                                class="primary--text"
                                 width="100%"
                                 rounded
                                 @click="menu = false"

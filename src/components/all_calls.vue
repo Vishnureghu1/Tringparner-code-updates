@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div v-if="hidealert">
-      <v-alert prominent color="red darken-1" type="error">
+      <v-alert prominent color="primary" type="error">
         <v-row align="center">
           <v-col class="grow">
             <h2 class="f16 regular">Email Verification</h2>
@@ -612,7 +612,7 @@
                         width="100%"
                         color="white"
                         dark
-                        class="red--text"
+                        class="primary--text"
                         @click="dialog = false"
                       >
                         Cancel
@@ -808,7 +808,7 @@ export default {
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
-      { title: "Block This Number", color: "red--text", url: "block_number" },
+      { title: "Block This Number", color: "primary--text", url: "block_number" },
     ],
     timeofCall: ["Ascending", "Descending"],
     selectedTimeOfCall: "Ascending",

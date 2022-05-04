@@ -34,7 +34,7 @@
                         :loading="dialog"
                         @click="dialog2 = true"
                         class="ma-0"
-                        color="red darken-1"
+                        color="primary"
                         dark
                       >
                         + Add New User
@@ -253,7 +253,7 @@ export default {
     options: [
       { title: "Edit", color: "black--text", url: "Edit" },
       { title: "Send Invite", color: "black--text", url: "sendInvite" },
-      { title: "Remove Slot", color: "red--text", url: "removeSlot" },
+      { title: "Remove Slot", color: "primary--text", url: "removeSlot" },
     ],
     valid: false,
     stepForm: [],
