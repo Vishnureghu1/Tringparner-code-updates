@@ -63,7 +63,7 @@
                                 </v-col>
                                 <v-spacer></v-spacer>
                                 <v-col cols="10" flex>
-                                  <v-divider class="mt-4"></v-divider>
+                                  <v-divider class="mt-5 mb-0"></v-divider>
                                 </v-col>
                               </v-row>
                             </div>
@@ -79,13 +79,11 @@
                             <v-row v-if="innerIndex <= 4"> 
                               <v-col cols="12" sm="10">
                                 <h3 class="number_heading font-weight-light">
-                                  {{ calls.callerNumber }}
+                                {{ calls.callerNumber }}
                                 </h3>
                                 <h6 class="comment_heading font-weight-light">
                                   {{ calls.callTime }}
                                 </h6>
-                               
-                          
                               </v-col>
 
                               <v-col cols="12" sm="12" v-if="innerIndex == 4" >
@@ -249,6 +247,7 @@ export default {
     remiderCalls: [],
     agentNames: {},
     callCount: 0,
+    c:1,
   }),
 
   async created() {
@@ -272,6 +271,9 @@ export default {
     },
   },
   methods: {
+    getCount(){
+      return this.c++;
+    },
     isToday(timestampInMilliseconds) {
       const today = new Date();
       return (

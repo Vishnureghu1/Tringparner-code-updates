@@ -343,9 +343,9 @@
 
                             <div class="ml-10 font-weight-thin date_time">
                               <span v-if="details.conversationduration != 0"
-                                >{{ details.conversationduration }} Sec,
+                                >{{ formatTime(details.conversationduration) }}, 
                               </span>
-                              {{ details.dateTime }}, {{ details.name }}
+                              {{ details.dateTime }}<span v-if="details.name">, {{ details.name }}</span>
                             </div>
                             <!-- {{detail}} -->
                             <div
@@ -365,12 +365,7 @@
                               </div>
                             </div>
                           </div>
-           <span
-                  v-if="open"
-                  key="0"
-                >
-                  Enter a name for the trip
-                </span>
+     
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
                           <div>
@@ -892,6 +887,15 @@ export default {
     },
   },
   methods: {
+     formatTime(seconds) {
+    return [
+        parseInt(seconds / 60 / 60),
+        parseInt(seconds / 60 % 60),
+        parseInt(seconds % 60)
+    ]
+        .join(":")
+        .replace(/\b(\d)\b/g, "0$1")
+},
     changeEmailPopup1() {
       console.log("g");
       this.changeEmailPopup = true;
