@@ -596,3 +596,24 @@ body {
 .v-expansion-panel-content.hide {
     display: none !important;
 }
+
+.bar-container {
+    float: left;
+    margin-right: 4px;
+    width: 30px;
+    height: 100px;
+    display: inline-block;
+}
+
+.bar {
+    background-color: #E0E0E0;
+    width: 30px;
+}
+
+.answered {
+    background-color: #13B9A8;
+}
+
+.missed {
+    background-color: #FAB4B7
+}

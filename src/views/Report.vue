@@ -262,18 +262,41 @@
                               </v-row>
                             </div>
                           </v-expansion-panel-header>
-                          <v-expansion-panel-content>
-                            <GChart
+                          <v-expansion-panel-content class="block">
+
+
+                 <div class="chart d-block">
+
+    <div class="bar-container" v-for="(item, index) in customChartData"
+                      :key="index">
+        <div class="top_text">{{item.all}} </div>
+
+        <div class="bar missed" v-bind:style="{'height': getHeight(item.missed,item.all)+'%' }" ></div>
+        <div class="bar" v-if="item.all==0" v-bind:style="{'height': '100%' }" ></div>
+        <div class="bar answered" v-bind:style="{'height': getHeight(item.answered,item.all)+'%' }"></div>
+        <div class="bottom_text">01</div>
+    </div>
+                 </div>
+    
+  
+                            <!-- <GChart
                               type="ColumnChart"
                               :data="item.chart_data"
                               :options="chartOptions"
-                            />
+                            /> -->
                             <v-row no-gutters>
-                              <v-col cols="6" sm="3" align="center">
+
+ 
+                               
+                           
+              
+                               
+   
+                              <v-col cols="6" sm="3" align="center" class="d-block">
                                 <v-card
                                   outlined
                                   color="transparent"
-                                  class="nunito-font"
+                                  class="nunito-font d-block"
                                 >
                                   <h2 align="center" class="nunito-font light3">
                                     {{ item.summary.Total }}
@@ -374,7 +397,20 @@ export default {
         .substr(0, 10),
       new Date().toISOString().substr(0, 10),
     ],
+  customChartData: [
+      {'all':30, 'missed':20, 'answered': 10},
+      {'all':1, 'missed':0, 'answered': 1},
+      {'all':11, 'missed':1, 'answered': 10},
+      {'all':33, 'missed':20, 'answered': 13},
+      {'all':12, 'missed':2, 'answered': 10},
+      {'all':30, 'missed':20, 'answered': 10},
+      {'all':0, 'missed':0, 'answered': 0},
+      {'all':0, 'missed':0, 'answered': 0},
+      {'all':30, 'missed':20, 'answered': 10},
+      {'all':20, 'missed':5, 'answered': 15},
+      {'all':30, 'missed':20, 'answered': 10},
 
+    ],
     chartData: [
       [
         "Date",
@@ -456,6 +492,12 @@ export default {
     this.getAllCalls();
   },
   methods: {
+    getHeight(value, total){
+
+      var height = (value/total)*100;
+      return height;
+
+    },
     filterCalls(dates) {
       this.$refs.menu.save(dates);
       console.log("Filtering calls");
