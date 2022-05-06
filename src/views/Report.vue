@@ -265,18 +265,20 @@
                           <v-expansion-panel-content class="block">
 
 
-                 <div class="chart d-block">
+                      <v-row no-gutters>
+                      <div class="chart d-block">
 
-    <div class="bar-container" v-for="(item, index) in customChartData"
-                      :key="index">
-        <div class="top_text">{{item.all}} </div>
+                        <div class="bar-container" v-for="(item, index) in item.custom_chart_data"
+                        :key="index">
+                          <div class="top_text">{{item.all}} </div>
 
-        <div class="bar missed" v-bind:style="{'height': getHeight(item.missed,item.all)+'%' }" ></div>
-        <div class="bar" v-if="item.all==0" v-bind:style="{'height': '100%' }" ></div>
-        <div class="bar answered" v-bind:style="{'height': getHeight(item.answered,item.all)+'%' }"></div>
-        <div class="bottom_text">01</div>
-    </div>
-                 </div>
+                          <div class="bar missed" v-bind:style="{'height': getHeight(item.missed,item.all)+'%' }" ></div>
+                          <div class="bar" v-if="item.all==0" v-bind:style="{'height': '100%' }" ></div>
+                          <div class="bar answered" v-bind:style="{'height': getHeight(item.answered,item.all)+'%' }"></div>
+                          <div class="bottom_text">{{item.day}}</div>
+                        </div>
+                      </div>
+                    </v-row>
     
   
                             <!-- <GChart
@@ -377,7 +379,7 @@
 
 <script>
 import { db } from "@/main.js";
-import { GChart } from "vue-google-charts";
+// import { GChart } from "vue-google-charts";
 export default {
   data: () => ({
     exportMenu: false,
@@ -468,7 +470,7 @@ export default {
     },
   },
   components: {
-    GChart,
+    // GChart,
   },
 
   computed: {
@@ -600,9 +602,10 @@ export default {
 
                     let callDayObj = new Date(element.data().logDate);
                     let callDay = callDayObj.toLocaleString("default", {
-                      // month: 'short',
+                      month: 'short',
                       day: "numeric",
                     });
+                    console.log('callDay', callDay);
                     // let callDay = element.data().logDate;
 
                     // console.log('logDate', element.data().logDate);
@@ -662,9 +665,11 @@ export default {
 
                     let callDayObj = new Date(element.data().logDate);
                     let callDay = callDayObj.toLocaleString("default", {
-                      // month: 'short',
+                      month: 'short',
                       day: "numeric",
                     });
+
+                    console.log('callDay', callDay);
 
                     // let callDay = element.data().logDate;
 
@@ -745,7 +750,7 @@ export default {
               );
               listOfAgentProps.forEach((ad) => {
                 if (ad == "agent_report") {
-                  // console.log('listOfAgentProps',agentWiseReport[elementProp][ad]);
+                  console.log('ad',agentWiseReport[elementProp][ad]);
                   let chartData = [
                     // [ "Date", "No Calls", { role: "style" }, "Answered Calls", { role: "style" }, "Missed Calls", { role: "style" }]
                     [
@@ -756,6 +761,7 @@ export default {
                       { role: "style" },
                     ],
                   ];
+                  let customChartData = [];
                   var rProps = Object.getOwnPropertyNames(
                     agentWiseReport[elementProp][ad]
                   );
@@ -775,10 +781,18 @@ export default {
                         Missed,
                         "#FAB4B7",
                       ]);
+
+                      customChartData.push({
+                        "day": repObj, "all": (Answered+Missed), "missed":Missed, "answered": Answered
+                      })
                     }
                   });
 
                   agentWiseReport[elementProp]["chart_data"] = chartData;
+
+                  agentWiseReport[elementProp]["custom_chart_data"] = customChartData;
+                  console.log('custom_chart_data',agentWiseReport[elementProp]["custom_chart_data"]);
+
                   // console.log('chartData', agentWiseReport[elementProp]['chart_data']);
                 }
               });
