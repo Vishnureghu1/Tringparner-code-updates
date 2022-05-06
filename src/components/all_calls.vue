@@ -1694,8 +1694,9 @@ export default {
         .get()
         .then(async (snap) => {
           this.current_email = snap.docs[0].data().Email;
-          this.hidealert =
-            snap.docs[0].data().IsEmailVerified == true ? false : true;
+          this.hidealert =  (snap.docs[0].data().role == "OWNER" && snap.docs[0].data().IsEmailVerified == false)? true : false;
+          // this.hidealert =
+          //   snap.docs[0].data().IsEmailVerified == true ? false : true;
           this.name =
             snap.docs[0].data().role == "OWNER"
               ? snap.docs[0].data().FirstName
