@@ -231,7 +231,6 @@ export default {
       this.switch1 = snap.docs[0].data().WorkingHoursStatus;
       this.time = snap.docs[0].data().StartTime?snap.docs[0].data().StartTime.substring(0, 2) + ":" + snap.docs[0].data().StartTime.substring(2, 4):"10:00";
       this.time2 = snap.docs[0].data().EndTime?snap.docs[0].data().EndTime.substring(0, 2) + ":" + snap.docs[0].data().EndTime.substring(2, 4):"10:00";
-      console.log("abdkj",this.time,this.time2)
       // console.log(moment().add(1, 'day').format('YYYY-MM-DD'))
       // this.pauseupto = new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
       // this.pauseupto = snap.docs[0].data().WorkingHoursStatus?new Date(snap.docs[0].data().PauseUpto).toISOString() : new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime() - 1000*60).toISOString();
