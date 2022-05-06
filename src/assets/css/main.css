@@ -117,12 +117,13 @@ body {
     font-weight: 400;
 }
 
-.v-list-item--active {
-    color: #ee1c25;
+.v-application .v-list-item--active {
+    color: #ee1c25 !important;
 }
 
-.v-list-group--active {
-    color: #ee1c25;
+.v-application .grey--text.v-list-item--active,
+.v-application .v-list-group--active .menu-text.grey--text {
+    color: #ee1c25 !important;
 }
 
 .menu-text {
@@ -616,4 +617,34 @@ body {
 
 .missed {
     background-color: #FAB4B7
+}
+
+.bar-container {
+    position: relative;
+    cursor: default;
+}
+
+.bar-container li {
+    list-style: none;
+}
+
+.bar-container .detail_over {
+    background: #1d1d1d;
+    color: #fff;
+    padding: 7px;
+    border-radius: 5px;
+    position: absolute;
+    min-width: 50px;
+    max-width: 300px;
+}
+
+.bar-container .detail_over:before {
+    content: '';
+    height: 3px;
+    width: 0;
+    border: 7px solid transparent;
+    border-bottom-color: #1d1d1d;
+    position: absolute;
+    top: -16px;
+    left: 14px;
 }
