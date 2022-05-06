@@ -266,35 +266,90 @@
 
 
                       <v-row no-gutters>
-                      <div class="chart d-block">
+                        <v-col cols="12" sm="12">
+                      <div class="chart d-block text-center">
 
-                        <div class="bar-container" v-for="(item, index) in item.custom_chart_data"
-                        :key="index">
-                          <div class="top_text">{{item.all}} </div>
+
+
+                        <VueSlickCarousel v-bind="settings">
+      <div v-for="(item, index) in item.custom_chart_data"  :key="index" > 
+       <v-menu
+      open-on-hover
+      
+      offset-y  
+    >
+      <template v-slot:activator="{ on, attrs }">
+     
+
+            <div class="bar-container"  v-bind="attrs"
+          v-on="on" >
+                          <div class="top_text text-center grey--text">{{item.all}} </div>
 
                           <div class="bar missed" v-bind:style="{'height': getHeight(item.missed,item.all)+'%' }" ></div>
                           <div class="bar" v-if="item.all==0" v-bind:style="{'height': '100%' }" ></div>
                           <div class="bar answered" v-bind:style="{'height': getHeight(item.answered,item.all)+'%' }"></div>
-                          <div class="bottom_text">{{item.day}}</div>
+                          <div class="bottom_text text-center grey--text">{{item.day}}</div>
                         </div>
-                      </div>
-                    </v-row>
-    
-  
-                            <!-- <GChart
-                              type="ColumnChart"
-                              :data="item.chart_data"
-                              :options="chartOptions"
-                            /> -->
-                            <v-row no-gutters>
+      </template>
 
- 
-                               
-                           
-              
-                               
-   
-                              <v-col cols="6" sm="3" align="center" class="d-block">
+      <v-list  class="rounded-tl-0
+">
+        <v-list-item >
+         
+          <v-list-item-title>
+            <ul class="over_el"> 
+            
+              <li><span class="nunito-font"><v-icon color="#13B9A8">mdi-card</v-icon></span> Answered Calls ({{item.answered}})</li>
+              <li><span class="nunito-font"><v-icon color="#FAB4B7">mdi-card</v-icon></span> Missed Calls ({{item.missed}})</li>
+              <li class="gray--text nunito-font">{{item.day}}</li>
+            </ul>
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+      </div>
+
+    </VueSlickCarousel>
+  <v-menu
+      open-on-hover
+      
+      offset-y  v-for="(item, index) in item.custom_chart_data"  :key="index" 
+    >
+      <template v-slot:activator="{ on, attrs }">
+     
+
+            <div class="bar-container"  v-bind="attrs"
+          v-on="on" >
+                          <div class="top_text text-center grey--text">{{item.all}} </div>
+
+                          <div class="bar missed" v-bind:style="{'height': getHeight(item.missed,item.all)+'%' }" ></div>
+                          <div class="bar" v-if="item.all==0" v-bind:style="{'height': '100%' }" ></div>
+                          <div class="bar answered" v-bind:style="{'height': getHeight(item.answered,item.all)+'%' }"></div>
+                          <div class="bottom_text text-center grey--text">{{item.day}}</div>
+                        </div>
+      </template>
+
+      <v-list  class="rounded-tl-0
+">
+        <v-list-item >
+         
+          <v-list-item-title>
+            <ul class="over_el"> 
+            
+              <li><span class="nunito-font"><v-icon color="#13B9A8">mdi-card</v-icon></span> Answered Calls ({{item.answered}})</li>
+              <li><span class="nunito-font"><v-icon color="#FAB4B7">mdi-card</v-icon></span> Missed Calls ({{item.missed}})</li>
+              <li class="gray--text nunito-font">{{item.day}}</li>
+            </ul>
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+                    
+                      </div>
+</v-col>
+                        <v-spacer></v-spacer>
+
+    <v-col cols="6" sm="4" align="center" class="d-block">
                                 <v-card
                                   outlined
                                   color="transparent"
@@ -308,7 +363,7 @@
                                   </h6>
                                 </v-card>
                               </v-col>
-                              <v-col cols="6" sm="3" align="center">
+                              <v-col cols="6" sm="4" align="center">
                                 <v-card
                                   outlined
                                   color="transparent"
@@ -322,7 +377,7 @@
                                   </h6>
                                 </v-card>
                               </v-col>
-                              <v-col cols="6" sm="3" align="center">
+                              <v-col cols="6" sm="4" align="center">
                                 <v-card
                                   outlined
                                   color="transparent"
@@ -336,21 +391,22 @@
                                   </h6>
                                 </v-card>
                               </v-col>
-                              <!--  <v-col cols="6" sm="3" align="center">
-                                <v-card
-                                  outlined
-                                  color="transparent"
-                                  class="nunito-font"
-                                >
-                                  <h2 align="center" class="nunito-font light3">
-                                    02
-                                  </h2>
-                                  <h6 class="comment_heading" align="center">
-                                    Offline
-                                  </h6>
-                                </v-card>
-                              </v-col> -->
-                            </v-row>
+                    </v-row>
+    
+  
+              
+                            
+                           
+
+ 
+                               
+                           
+              
+                               
+   
+                          
+                          
+                       
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>
@@ -379,11 +435,24 @@
 
 <script>
 import { db } from "@/main.js";
+
+import VueSlickCarousel from 'vue-slick-carousel'
+  import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+  // optional style for arrows & dots
+  import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 // import { GChart } from "vue-google-charts";
 export default {
   data: () => ({
     exportMenu: false,
     isUpdating: false,
+    settings:{
+  "centerMode": true,
+  "centerPadding": "4px",
+  "focusOnSelect": true,
+  "infinite": true,
+  "slidesToShow": 11,
+  "speed": 500
+},
     options: [
       { title: "Download as XML", color: "gray--text", url: "exportxml" },
       { title: "Download as PDF", color: "gtay--text", url: "send" },
@@ -471,6 +540,8 @@ export default {
   },
   components: {
     // GChart,
+    VueSlickCarousel,
+    
   },
 
   computed: {
