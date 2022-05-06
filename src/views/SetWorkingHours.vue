@@ -73,7 +73,7 @@
                       <v-col cols="6" sm="10">
                         <h2 class="sub_heading ml-15 mr-7">Working Hours</h2>
                         <h2 class="number_heading ml-15 mt-2 mr-7">
-                          {{time+" AM"+" - "+time2+" PM"}}
+                          {{time+" "+" - "+time2+" "}}
                         </h2>
                       </v-col>
                       <v-col cols="12" sm="2" align="end">
@@ -229,8 +229,9 @@ export default {
      db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.bussinessNumber)).get().then(async(snap) =>{
       // console.log(snap.docs[0].data().VirtualNumber)
       this.switch1 = snap.docs[0].data().WorkingHoursStatus;
-      this.time = snap.docs[0].data().StartTime?snap.docs[0].data().StartTime.substring(0, 2) + ":" + snap.docs[0].data().StartTime.substring(1, 3):"10:00";
-      this.time2 = snap.docs[0].data().EndTime?snap.docs[0].data().EndTime.substring(0, 2) + ":" + snap.docs[0].data().EndTime.substring(1, 3):"10:00";
+      this.time = snap.docs[0].data().StartTime?snap.docs[0].data().StartTime.substring(0, 2) + ":" + snap.docs[0].data().StartTime.substring(2, 4):"10:00";
+      this.time2 = snap.docs[0].data().EndTime?snap.docs[0].data().EndTime.substring(0, 2) + ":" + snap.docs[0].data().EndTime.substring(2, 4):"10:00";
+      console.log("abdkj",this.time,this.time2)
       // console.log(moment().add(1, 'day').format('YYYY-MM-DD'))
       // this.pauseupto = new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"});
       // this.pauseupto = snap.docs[0].data().WorkingHoursStatus?new Date(snap.docs[0].data().PauseUpto).toISOString() : new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime() - 1000*60).toISOString();
@@ -303,7 +304,8 @@ export default {
       this.dialog2 = true;
     },
        submit(status){
-
+          console.log("abcde",this.time,this.time2)
+          if(this.time.replace(":", "")>this.time2.replace(":", ""))return   this.$root.vtoast.show({message: "starttime cannot be greater than endtime", color: "red",timer: 2000,});
       // dateFormat(today, "yyyy-mm-dd");
       //  const pausevalue = (button == "toggle") ?(new Date(new Date(moment().add(1, 'day').format('YYYY-MM-DD')).getTime()) - 1000*60): this.select;
       //  console.log(button,pausevalue)
