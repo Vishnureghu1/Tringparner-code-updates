@@ -48,7 +48,7 @@
                           v-for="(agentId, key, index) in missedCalls"
                           :key="index"
                         >
-                          <v-expansion-panel-header v-if="getAgentName(agentId) !='' ">
+                          <v-expansion-panel-header v-if="getAgentNameAndCalls(agentId) !='' ">
                             <div>
                               <v-row no-gutters>
                                 <v-col cols="2" flex>
@@ -56,7 +56,7 @@
                                     class="name_heading font-weight-light mt-2"
                                   >
                                   
-                                    {{ getAgentName(agentId) }}
+                                    {{ getAgentNameAndCalls(agentId, 'missed_calls') }}
 
                                   </h4>
                                   <br />
@@ -141,7 +141,7 @@
                                   <h4
                                     class="name_heading font-weight-light mt-2"
                                   >
-                                    {{ getAgentName(agentId) }}
+                                    {{ getAgentNameAndCalls(agentId, 'skipped_calls') }}
                                   </h4>
                                   <br />
                                 </v-col>
@@ -248,6 +248,8 @@ export default {
     agentNames: {},
     callCount: 0,
     c:1,
+    today: new Date().toISOString().substr(0, 10),
+    // today: new Date().getTime(),
   }),
 
   async created() {
@@ -268,6 +270,12 @@ export default {
         skippedCalls.add(skipped.agentId)
       );
       return Array.from(skippedCalls);
+    },
+    getAgentNameAndCalls() {
+      // var valObj = this.agentNames[agentId];
+      // return `${valObj.name} (${valObj.missed_calls} )`;
+
+      return (agentId, type) => `${this.agentNames[agentId]['name']} (${this.agentNames[agentId][type]})`;
     },
   },
   methods: {
@@ -297,10 +305,10 @@ export default {
       );
     },
     //get agent name
-    getAgentName(agentId) {
-      var valObj = this.agentNames[agentId];
-      return valObj;
-    },
+    // getAgentNameAndCalls(agentId) {
+    //   var valObj = this.agentNames[agentId];
+    //   return `${valObj.name} (${valObj.missed_calls} )`;
+    // },
 
     async GetMissedCall() {
       let localStorageUserObj = localStorage.getItem("tpu");
@@ -310,6 +318,7 @@ export default {
         this.userEmail = parsedUser.Email;
 
         this.userRole = parsedUser.role;
+        console.log('this.today', this.today);
 
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
@@ -317,7 +326,8 @@ export default {
             db.collection("callLogs")
               .where("callstatus", "==", "Missed")
               .where("owneruid", "==", this.uid)
-              .orderBy("dateTime", "asc")
+              .where("date", ">=", new Date(this.today))
+              .orderBy("date", "asc")
               .get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((logs) => {
@@ -354,7 +364,15 @@ export default {
                             callCount: this.callCount++,
                           });
                     }
-                    this.$set(this.agentNames, agentID, agentName);
+                    // this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 1});
+
+                    if(!([agentID] in this.agentNames)) {
+                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 0, skipped_calls: 0 });
+                    } else {
+                      let incrCnt = this.agentNames[agentID].missed_calls + 1;
+                      console.log('incrCnt', incrCnt);
+                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: incrCnt, skipped_calls: 0 });
+                    }
                   });
                 });
               })
@@ -381,12 +399,14 @@ export default {
             db.collection("callLogs")
               .where("callstatus", "==", "Answered")
               .where("owneruid", "==", this.uid)
-              // .where("date", "==", new Date().getTime() )
-              .orderBy("dateTime", "asc")
+              .where("date", ">=", new Date(this.today))
+              .orderBy("date", "asc")
               .get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((logs) => {
-                  var agentData = logs.data().agentDetails;
+                  // var agentData = logs.data().agentDetails;
+                  //skipped calls needs to check BusyCalleesAccounts
+                  var agentData = logs.data().BusyCalleesAccounts;
                   agentData.forEach((agentData) => {
                     var agentID = agentData.AgentUid;
                     var agentName = agentData.Name;
@@ -411,6 +431,15 @@ export default {
                       agentId: agentID,
                       agentName: agentName,
                     });
+
+                    if(!([agentID] in this.agentNames)) {
+                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 0, skipped_calls: 1 });
+                    } else {
+                      let mc = this.agentNames[agentID].missed_calls;
+                      let incrCnt = this.agentNames[agentID].skipped_calls + 1;
+                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: mc, skipped_calls: incrCnt });
+                    }
+
                   });
                 });
               })
