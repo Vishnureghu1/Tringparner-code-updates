@@ -654,3 +654,28 @@ body {
     top: -16px;
     left: 14px;
 }
+
+.radio_set {
+    width: 100%;
+    padding: 150px;
+}
+
+.radio_set .v-input--radio-group__input {
+    display: flow-root;
+}
+
+.radio_border {
+    color: #3B3B3B;
+    font-size: 23px;
+    border: 1px solid #B4B4B4;
+    border-radius: 10px;
+    opacity: 1;
+    padding: 15px;
+    width: 40%;
+    float: left;
+    margin-right: 40px;
+}
+
+.radio_border.v-item--active {
+    border-color: #ee1c25;
+}

@@ -23,17 +23,13 @@
                     </v-col>
                   </v-row>
                   <v-row align="center" justify="center">
-                    <v-col cols="12" sm="9">
+                    <v-col cols="12" sm="12">
                       <h2 class="comment_heading ml-5">
                         Choose any new Virtual Number or tap refresh to get new
                         list of numbers
                       </h2>
                     </v-col>
-                    <v-col cols="10" sm="3">
-                      <v-btn class="ma-0" color="primary" dark>
-                        + Refresh List (0 Sec)
-                      </v-btn>
-                    </v-col>
+        
                   </v-row>
 
                   <v-card
@@ -76,36 +72,55 @@
                         <v-row align="center" justify="center">
                           <v-col cols="12" sm="12">
                             <v-card class="ml-8" elevation="0">
-                              <v-btn-toggle v-model="toggle_none">
-                                <div class="ml-3 mt-5 text-center flex">
-                                  <v-btn
-                                    v-for="item in V_numbers"
-                                    :key="item"
-                                    class="ml-1 mr-4 mb-5 primary--text"
-                                    outlined
-                                    color="white"
-                                    width="45%"
-                                    >{{ item }}</v-btn
-                                  >
-                                </div>
-                              </v-btn-toggle>
-                              <div class="">
-                                <v-btn
-                                  v-if="toggle_none != null"
-                                  class="
-                                    mr-4
-                                    mb-6
-                                    text-capitalize
-                                    ma-3
-                                    rounded-pill
-                                    red_button
-                                  "
-                                  width="20%"
-                                  color="red white--text"
-                                  @click.prevent="reserveNumber()"
-                                >
-                                  Next
-                                </v-btn>
+                              <div class="ml-3 mt-5 text-center flex">
+                                <v-row>
+                                  <v-col cols="12" sm="12" md="12">
+                                    <v-radio-group
+                                      v-model="toggle_none"
+                                      class="radio_set"
+                                    >
+                                      <v-radio
+                                        v-for="item in V_numbers"
+                                        class="radio_border"
+                                        :key="item"
+                                        color="red"
+                                        :value="item"
+                                        ><template v-slot:label>
+                                          <div>{{ item }}</div>
+                                        </template></v-radio
+                                      >
+                                    </v-radio-group>
+                                     <v-card-text class="pt-4 text-center">
+
+  
+                <v-row>
+                  <v-col cols="12" align="center" class="notif-mark"  v-if="timerCount % 60 != -1"> 
+                   <v-icon>mdi-reload</v-icon> Refresh List ( {{ Math.floor(timerCount / 60) }} mins
+                                {{ timerCount % 60 }} sec)
+                  </v-col>
+                </v-row>
+              </v-card-text>
+                                    <div class="">
+                                      <v-btn
+                                        v-if="toggle_none != null"
+                                        class="
+                                          mr-4
+                                          mb-6
+                                          text-capitalize
+                                          ma-3
+                                          rounded-pill
+                                          red_button
+                                        "
+                                        elevation="0"
+                                        width="20%"
+                                        color="red white--text"
+                                        @click.prevent="reserveNumber()"
+                                      >
+                                        Next
+                                      </v-btn>
+                                    </div>
+                                  </v-col>
+                                </v-row>
                               </div>
                             </v-card>
                           </v-col>
@@ -178,7 +193,7 @@
 </template>
 
 <script>
-import { db } from '@/main.js';
+import { db } from "@/main.js";
 export default {
   components: {},
 
@@ -371,17 +386,17 @@ export default {
       this.$axios(reserve)
         .then((response) => {
           console.log(response);
-          if(response.data.status == true){
+          if (response.data.status == true) {
             this.$router.push("/reserveNumber");
-          } 
+          }
           // this.$analytics.logEvent("Web Number reserved");
         })
         .catch((error) => {
           console.error(error);
-        })
-        // .finally(() => {
-                 
-        // });
+        });
+      // .finally(() => {
+
+      // });
     },
     // user stage current page onbording_testing_complete
 
@@ -410,18 +425,29 @@ export default {
     },
   },
   created() {
-     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-    this.owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
-     this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
-       db.collection("uservirtualNumber").where("Uid","==",this.owneruid).where("IsPurchased","==",false).get().then(async(snap) =>{
-      if(snap.empty){
-      this.getNumbersList();
-      }else{
-            this.$router.push("/reserveNumber");
-      }
-		}).catch((err)=>{
-			console.log(err.message)
-		})
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.owneruid =
+      localStorageUserObj.role == "OWNER"
+        ? localStorageUserObj.uid
+        : localStorageUserObj.OwnerUid;
+    this.AccountId =
+      localStorageUserObj.role == "OWNER"
+        ? localStorageUserObj.AccountId
+        : localStorageUserObj.OwnerAccountId;
+    db.collection("uservirtualNumber")
+      .where("Uid", "==", this.owneruid)
+      .where("IsPurchased", "==", false)
+      .get()
+      .then(async (snap) => {
+        if (snap.empty) {
+          this.getNumbersList();
+        } else {
+          this.$router.push("/reserveNumber");
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   },
 };
 </script>

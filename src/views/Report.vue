@@ -451,7 +451,8 @@ export default {
   "focusOnSelect": true,
   "infinite": true,
   "slidesToShow": 11,
-  "speed": 500
+  "speed": 500,
+  "adaptiveHeight": true
 },
     options: [
       { title: "Download as XML", color: "gray--text", url: "exportxml" },
