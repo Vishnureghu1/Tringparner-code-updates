@@ -9,45 +9,58 @@
 									<v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
 								</v-overlay>
 									<v-card color="transparent" outlined class="" max-width="800">
-										<h2 class="page_title  mb-4 mt-10">Review Informations and Pay Now</h2>
+										<h2 class="page_title lato-font mb-4 mt-10">Review Informations and Pay Now</h2>
 										<h2 class="sub_title mb-16">Review your business information like business address</h2>
 										<v-row>
 											<v-col cols="12" sm='6' align="start">	
-												<h2 class="name_heading ">Business Name</h2>
-												<h2 class="content_title mb-4"> {{name}}</h2>
-												<h2 class="name_heading ">Owner Name</h2>
-												<h2 class="content_title mb-4">{{name}}</h2>
-												<h2 class="name_heading ">Business Address</h2>
-												<h2 class="content_title mb-4"> {{address}}</h2>
-												<h2 class="name_heading ">Business Phone number</h2>
-												<h2 class="content_title mb-4"> +91 {{phno}} </h2>
-												<h2 class="name_heading ">Business Email</h2>
-												<h2 class="content_title mb-4"> {{email}}</h2>
+												<h2 class="name_heading light4 f14">Billing Address <v-icon
+            
+                          v-on="on"
+                          color="gray" small 
+                          @click="changeAddress()"
+                          >mdi-pencil</v-icon
+                        ></h2>
+												<h2 class="name_heading light4">Business Name</h2>
+												<h2 class="content_title medium mb-4"> {{name}}</h2>
+												<h2 class="name_heading light4">Owner Name</h2>
+												<h2 class="content_title medium mb-4">{{name}}</h2>
+												<h2 class="name_heading light4">Business Address</h2>
+												<h2 class="content_title medium mb-4"> {{address}}</h2>
+												<h2 class="name_heading light4">Business Phone number</h2>
+												<h2 class="content_title medium mb-4"> +91 {{phno}} </h2>
+												<h2 class="name_heading light4 ">Business Email</h2>
+												<h2 class="content_title medium mb-4"> {{email}}</h2>
 											</v-col>
 											<v-col cols="12" sm='6' align="start">
-												<h2 class="name_heading ">Payment Plan</h2>
-												<h2 v-if="planId == '1'" class="content_title mb-4"> 1 month - Rs 500</h2>	
-												<h2 v-else-if="planId == '2'" class="content_title mb-4"> 6 months - Rs 2700</h2>	
-												<h2 v-else-if="planId == '3'" class="content_title mb-4"> 12 months - Rs 4800</h2>	
+												<h2 class="name_heading light4">Payment Plan <v-icon
+            
+                          v-on="on"
+                          color="gray"
+                          @click="changePlan()" small
+                          >mdi-pencil</v-icon
+                        ></h2>
+												<h2 v-if="planId == '1'" class="content_title medium mb-4"> 1 month - Rs 500</h2>	
+												<h2 v-else-if="planId == '2'" class="content_title medium mb-4"> 6 months - Rs 2700</h2>	
+												<h2 v-else-if="planId == '3'" class="content_title medium mb-4"> 12 months - Rs 4800</h2>	
 												<v-row>
 													<v-col cols="12" sm='6' align="start">
-														<h2 class="name_heading mb-6 ">Actual Cost</h2>
+														<h2 class="name_heading light4 mb-6 ">Actual Cost</h2>
 														<h2 v-if="planId != '1'" class="name_heading mb-6 ">Discount</h2>
-														<h2 class="name_heading mb-6 ">GST(18%)</h2>
-														<h2 class="content_title mb-4 ">Charges</h2>
+														<h2 class="name_heading light4 mb-6 ">GST(18%)</h2>
+														<h2 class="content_title  mb-4 ">Charges</h2>
 													</v-col>	
 													<v-col cols="12" sm='6' align="end">
-														<h2 v-if="planId == '1'" class="content_title mb-4">Rs 500.00</h2>	
-														<h2 v-else-if="planId == '2'" class="content_title mb-4">Rs 3000.00</h2>	
-														<h2 v-else-if="planId == '3'" class="content_title mb-4">Rs 6000.00</h2>
-														<h2 v-if="planId == '2'" class="content_title mb-4">Rs 300.00</h2>	
-														<h2 v-else-if="planId == '3'" class="content_title mb-4">Rs 1200.00</h2>	
-														<h2 v-if="planId == '1'" class="content_title mb-4">Rs 90.00</h2>	
-														<h2 v-else-if="planId == '2'" class="content_title mb-4">Rs 486.00</h2>	
-														<h2 v-else-if="planId == '3'" class="content_title mb-4">Rs 864.00</h2>	
-														<h2 v-if="planId == '1'" class="content_title mb-4 ">Rs 590.00</h2>
-														<h2 v-else-if="planId == '2'" class="content_title mb-4 ">Rs 3186.00</h2>
-														<h2 v-else-if="planId == '3'" class="content_title mb-4 ">Rs 5664.00</h2>
+														<h2 v-if="planId == '1'" class="content_title medium mb-4">Rs 500.00</h2>	
+														<h2 v-else-if="planId == '2'" class="content_title medium mb-4">Rs 3000.00</h2>	
+														<h2 v-else-if="planId == '3'" class="content_title medium mb-4">Rs 6000.00</h2>
+														<h2 v-if="planId == '2'" class="content_title medium mb-4">Rs 300.00</h2>	
+														<h2 v-else-if="planId == '3'" class="content_title medium mb-4">Rs 1200.00</h2>	
+														<h2 v-if="planId == '1'" class="content_title medium mb-4">Rs 90.00</h2>	
+														<h2 v-else-if="planId == '2'" class="content_title medium mb-4">Rs 486.00</h2>	
+														<h2 v-else-if="planId == '3'" class="content_title medium mb-4">Rs 864.00</h2>	
+														<h2 v-if="planId == '1'" class="content_title bold mb-4 ">Rs 590.00</h2>
+														<h2 v-else-if="planId == '2'" class="content_title bold mb-4 ">Rs 3186.00</h2>
+														<h2 v-else-if="planId == '3'" class="content_title bold mb-4 ">Rs 5664.00</h2>
 													</v-col>
 												</v-row>	
 											</v-col>
@@ -147,6 +160,12 @@ import { db } from '@/main.js';
 			})
 		},
 		methods: {
+			changePlan(){
+ this.$router.push("/SelectPlan");
+			},
+						changeAddress(){
+ this.$router.push("/Billing");
+			},
 			Paynow(){
 					const details = {
 					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/payment',
@@ -232,32 +251,29 @@ import { db } from '@/main.js';
 
 <style scoped>
 .page_title {
-	font-family: 'lato', bold;
-  font-size: 23px ;
+  font-size: 23px;
   color: #3B3B3B;
 }
 .price_title {
-	font-family: 'Nunito', Bold;
   font-size: 23px;
   color: #3B3B3B;
 }
 .sub_title {
-	font-family: 'Nunito', Light;
+	font-family: 'Nunito', sans-serif;
   font-size: 12px;
   color: #3B3B3B;
 }
 .name_heading {
-	font-family: 'Nunito', light;
   font-size: 10px;
   color: #808080;	
 }
 .number_heading {
-	font-family: 'Nunito', Regular;
+	font-family: 'Nunito', sans-serif;
   font-size: 24px; 	
   color: #3B3B3B;
 }
 .content_title {
-	font-family: 'Nunito', Regular;
+	font-family: 'Nunito', sans-serif;
   font-size: 14px;
   color: #3B3B3B;
 }
