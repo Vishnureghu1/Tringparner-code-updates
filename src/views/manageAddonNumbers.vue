@@ -30,18 +30,16 @@
                     </v-col>
                     <v-col cols="10" sm="3">
                       <v-btn
-                        :disabled="dialog"
-                        :loading="dialog"
-                        @click="dialog2 = true"
+                        :disabled="false"
                         class="ma-0"
                         color="primary"
                         dark
+                        @click="buy()"
                       >
                         + Buy New Number
                       </v-btn>
                     </v-col>
                   </v-row>
-
                   <v-card
                     color="transparent"
                     outlined
@@ -310,13 +308,19 @@ export default {
       axios(details).then(async (response) => {
         console.log(response)
          this.initial_value();
-         this.$root.vtoast.show({message: 'deleted successfully', color: 'green', timer: 5000});
+         this.$root.vtoast.show({message: 'Deleted successfully', color: 'green', timer: 5000});
         //  await this.initial_data();
          this.dialog2 = false         
       })
     },
     CallFlowSettings(){
       this.$router.push("/CallFlowSettings");
+    },
+    buy(){
+    this.$router.push("/buyNewNumber");
+    },
+     goBack() {
+      this.$router.push("/Addons");
     },
     stepComplete(step) {
       return this.curr > step;
@@ -333,10 +337,10 @@ export default {
       this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
     this.uid = localStorageUserObj.uid;
     this.addonNumbers=[]
-      db.collection("uservirtualNumber").where("Uid","==",owneruid).orderBy("IsPrimary","asc").get().then(async(snap) =>{
+      db.collection("uservirtualNumber").where("Uid","==",owneruid).where("IsPrimary","==",false).get().then(async(snap) =>{
 			// console.log("test.........",snap.docs.data());
 			snap.docs.reverse().forEach((element)=> {
-        this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Edit Source", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Edit Source", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]       
+        this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Edit Source", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]       
         })
 			});
       // console.log(this.addonNumbers)
