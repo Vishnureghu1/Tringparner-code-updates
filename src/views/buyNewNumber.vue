@@ -94,9 +94,10 @@
 
   
                 <v-row>
-                  <v-col cols="12" align="center" class="notif-mark"  v-if="timerCount % 60 != -1"> 
-                   <v-icon>mdi-reload</v-icon> Refresh List ( {{ Math.floor(timerCount / 60) }} mins
-                                {{ timerCount % 60 }} sec)
+                  <v-col cols="12" align="center"  v-if="timerCount % 60 != -1"> 
+                   <v-icon color="red">mdi-reload</v-icon><span class="notif-mark">Refresh List ( {{ Math.floor(timerCount / 60) }} mins
+                                {{ timerCount % 60 }} sec)</span>
+
                   </v-col>
                 </v-row>
               </v-card-text>
