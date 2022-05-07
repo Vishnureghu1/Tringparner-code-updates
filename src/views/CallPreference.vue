@@ -9,8 +9,7 @@
                 <div class="ml-8">
                   <v-row>
                     <v-col cols="12" sm="10">
-                     <h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack(bussinessNumber)">mdi-arrow-left</v-icon>  Call Preference</h2>
-                  
+                     <h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack(bussinessNumber)">mdi-arrow-left</v-icon>  Call Preference  - {{bussinessNumber}}</h2>               
                       <!-- BREADCRUMBS SECTION -->
                       <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
 
@@ -33,7 +32,7 @@
                       <!-- BREADCRUMBS SECTION -->
                     </v-col>
                   </v-row>
-
+                  <!-- <h2 class="d-inline-flex">{{bussinessNumber}}</h2> -->
                   <v-card
                     color="transparent"
                     outlined
@@ -82,8 +81,10 @@
                                           color="transparent"
                                           class="mb-3"
                                         >
-                                          <div class="add_agent">
+                                          <div class="add_agent" @click="manageagents()">
+                                            <!-- <a href > -->
                                             + Add New Users (Call Agents)
+                                            <!-- </a> -->
                                           </div>
                                         </v-card>
                                       </v-col>
@@ -443,6 +444,7 @@
                                   :to="Dashboard"
                                   color="white"
                                   outlined
+                                  @click="dashboard()"
                                 >
                                   Go to Dashboard
                                 </v-btn>
@@ -727,8 +729,14 @@ export default {
     //    const getNumber =  Object.keys(this.$route.query)[0]
 		// 		this.$router.push("/CallFlowSettings?bn="+getNumber)
 		// 	},
+    manageagents(){
+      this.$router.push("/ManageUsers");
+    },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
+    },
+    dashboard(){
+      this.$router.push("/Dashboard");
     },
     stepComplete(step) {
       return this.curr > step;

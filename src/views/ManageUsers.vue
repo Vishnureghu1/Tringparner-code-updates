@@ -270,7 +270,7 @@ export default {
       this.baseusers = snap.docs[0].data().PlanBaseUsers;
       this.totalusers = snap.docs[0].data().PlanNumberOfUsers;
 			snap.docs.forEach((element)=> {
-				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,uid:element.data().uid,option:[{title:"Edit Title",type:"Edit",headline:"Edit User",function:"edit_user"}]});
+				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,uid:element.data().uid,option:[{title:"Edit",type:"Edit",headline:"Edit User",function:"edit_user"}]});
 			});
     
 		}).catch((err)=>{
@@ -289,7 +289,7 @@ export default {
           assignedaddoncount= assignedaddoncount+1;
              }
 				this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,uid:element.data().uid,cron:(element.data().IsAddon===false)?true:false,option:[ 
-        { title:"Edit Title", type:"Edit", headline:"Edit User", color: "black--text", url: "edit",function:"edit_user"},
+        { title:"Edit", type:"Edit", headline:"Edit User", color: "black--text", url: "edit",function:"edit_user"},
       { title: "Send Invite", type:"Send", headline:"Send Invite", color: "black--text", url: "send", function:"send_invite"},
       { title: "Remove User",  type:"Edit", headline:"Remove User", color: "primary--text", url: "remove",function:"remove_user"},]});
 			});
