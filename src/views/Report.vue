@@ -677,6 +677,7 @@ export default {
                       month: 'short',
                       day: "numeric",
                     });
+                    
                     console.log('callDay', callDay);
                     // let callDay = element.data().logDate;
 

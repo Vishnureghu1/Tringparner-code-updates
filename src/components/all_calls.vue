@@ -256,10 +256,15 @@
                     </v-col>
                   </v-row>
 
-                  <!-- {{realdata}} -->
+                  {{realdata}}
 
                   <div>
-                    <v-expansion-panels accordion flat>
+                    {{details}}
+                    <v-expansion-panels
+                      accordion
+                      flat
+                      v-if="realdata.length != ''"
+                    >
                       <v-expansion-panel
                         v-for="details in realdata"
                         :key="details.text"
@@ -297,6 +302,7 @@
                                         >mdi-dots-vertical</v-icon
                                       >
                                     </template>
+
                                     <v-list>
                                       <div
                                         v-for="getNotes in details.Note"
@@ -343,9 +349,12 @@
 
                             <div class="ml-10 font-weight-thin date_time">
                               <span v-if="details.conversationduration != 0"
-                                >{{ formatTime(details.conversationduration) }}, 
+                                >{{ formatTime(details.conversationduration) }},
                               </span>
-                              {{ details.dateTime }}<span v-if="details.name">, {{ details.name }}</span>
+                              {{ details.dateTime
+                              }}<span v-if="details.name"
+                                >, {{ details.name }}</span
+                              >
                             </div>
                             <!-- {{detail}} -->
                             <div
@@ -360,12 +369,9 @@
                                 >
                                 </span>
                                 {{ getNotes.Note }}
-
-                                
                               </div>
                             </div>
                           </div>
-     
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
                           <div>
@@ -401,9 +407,6 @@
                                     </span>
                                   </div>
 
-
-                             
-
                                   <span
                                     v-for="getNotes in details.Note"
                                     :key="getNotes.text"
@@ -415,7 +418,7 @@
                                         class="
                                           ma-2
                                           ml-0
-                                           mr-2
+                                          mr-2
                                           text-capitalize
                                           rounded-pill
                                           p-3
@@ -481,6 +484,9 @@
                         </v-expansion-panel-content>
                       </v-expansion-panel>
                     </v-expansion-panels>
+                    <v-expansion-panels v-if="realdata.length == ''"
+                      >No Calls Found!</v-expansion-panels
+                    >
                     <v-container v-if="loadingMore">
                       <v-row
                         class="fill-height"
@@ -803,7 +809,11 @@ export default {
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
-      { title: "Block This Number", color: "primary--text", url: "block_number" },
+      {
+        title: "Block This Number",
+        color: "primary--text",
+        url: "block_number",
+      },
     ],
     timeofCall: ["Ascending", "Descending"],
     selectedTimeOfCall: "Ascending",
@@ -887,15 +897,15 @@ export default {
     },
   },
   methods: {
-     formatTime(seconds) {
-    return [
+    formatTime(seconds) {
+      return [
         parseInt(seconds / 60 / 60),
-        parseInt(seconds / 60 % 60),
-        parseInt(seconds % 60)
-    ]
+        parseInt((seconds / 60) % 60),
+        parseInt(seconds % 60),
+      ]
         .join(":")
-        .replace(/\b(\d)\b/g, "0$1")
-},
+        .replace(/\b(\d)\b/g, "0$1");
+    },
     changeEmailPopup1() {
       console.log("g");
       this.changeEmailPopup = true;
@@ -1146,14 +1156,7 @@ export default {
       if (radio == "custom") {
         ReminderAt = new Date(date + " " + time).getTime();
       }
-      // console.log(Id.AccountId);
-      // console.log("date",date);
-      // console.log("time",time);
-      // var myCurrentDate = new Date();
-      // var todayDateMillisecond = new Date(myCurrentDate).getTime();
-      // console.log("tomilli",todayDateMillisecond);
-      // var RemindmeAt = todayDateMillisecond + hours;
-      // var RemindmeAt = 1847244627217;
+
       const user_data = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder",
         method: "POST",
@@ -1675,6 +1678,7 @@ export default {
                   called_name: this.called_name,
                   recordingUrl: this.calldetails.recordingurl,
                   reminder: this.calldetails.Reminder,
+                  blocked: this.calldetails,
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
@@ -1694,7 +1698,11 @@ export default {
         .get()
         .then(async (snap) => {
           this.current_email = snap.docs[0].data().Email;
-          this.hidealert =  (snap.docs[0].data().role == "OWNER" && snap.docs[0].data().IsEmailVerified == false)? true : false;
+          this.hidealert =
+            snap.docs[0].data().role == "OWNER" &&
+            snap.docs[0].data().IsEmailVerified == false
+              ? true
+              : false;
           // this.hidealert =
           //   snap.docs[0].data().IsEmailVerified == true ? false : true;
           this.name =
@@ -1878,6 +1886,7 @@ export default {
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder,
+                        blocked: '',
                       });
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
