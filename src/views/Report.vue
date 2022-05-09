@@ -325,7 +325,7 @@
                           <div class="bar missed" v-bind:style="{'height': getHeight(item.missed,item.all)+'%' }" ></div>
                           <div class="bar" v-if="item.all==0" v-bind:style="{'height': '100%' }" ></div>
                           <div class="bar answered" v-bind:style="{'height': getHeight(item.answered,item.all)+'%' }"></div>
-                          <div class="bottom_text text-center grey--text">{{item.day}}</div>
+                          <div class="bottom_text text-center grey--text">{{item.day.split("*")[1]}}</div>
                         </div>
       </template>
 
@@ -338,7 +338,7 @@
             
               <li><span class="nunito-font"><v-icon color="#13B9A8">mdi-card</v-icon></span> Answered Calls ({{item.answered}})</li>
               <li><span class="nunito-font"><v-icon color="#FAB4B7">mdi-card</v-icon></span> Missed Calls ({{item.missed}})</li>
-              <li class="gray--text nunito-font">{{item.day}}</li>
+              <li class="gray--text nunito-font">{{item.day.split("*").join(" ")}}</li>
             </ul>
           </v-list-item-title>
         </v-list-item>
@@ -673,11 +673,18 @@ export default {
                     }
 
                     let callDayObj = new Date(element.data().logDate);
-                    let callDay = callDayObj.toLocaleString("default", {
-                      month: 'short',
-                      day: "numeric",
+                    let call_month = callDayObj.toLocaleString("default", {
+                      month: 'short'
                     });
-                    
+                    let call_day = callDayObj.toLocaleString("default", {
+                      day: "numeric"
+                    });
+                    let call_year = callDayObj.toLocaleString("default", {
+                      year: "numeric"
+                    });
+
+                    let callDay = `${call_month}*${call_day}*${call_year}`;
+
                     console.log('callDay', callDay);
                     // let callDay = element.data().logDate;
 
@@ -737,10 +744,17 @@ export default {
                     }
 
                     let callDayObj = new Date(element.data().logDate);
-                    let callDay = callDayObj.toLocaleString("default", {
-                      month: 'short',
-                      day: "numeric",
+                    let call_month = callDayObj.toLocaleString("default", {
+                      month: 'short'
                     });
+                    let call_day = callDayObj.toLocaleString("default", {
+                      day: "numeric"
+                    });
+                    let call_year = callDayObj.toLocaleString("default", {
+                      year: "numeric"
+                    });
+
+                    let callDay = `${call_month}*${call_day}*${call_year}`;
 
                     console.log('callDay', callDay);
 
