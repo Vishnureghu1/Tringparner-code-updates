@@ -23,7 +23,7 @@
               >
                 <h2 class="lato-font f23 mt-16 mb-4">
                   {{ rerenderKey }}
-                  Select your Tring Partner Payments Plan
+                  Select your Tring Partner Payments Plan (Components)
                 </h2>
                 <h2 class="sub_title mt-2 mb-16">
                   Please select from below plan<br />
@@ -128,9 +128,6 @@
                   Update Plan
                 </v-btn>
               </v-card>
-              <template v-if="changePlanArea == false">
-                <PlanSelect :key="rerenderKey" />
-              </template>
 
               <v-card
                 v-if="changePlanArea == false"
@@ -140,7 +137,7 @@
                 max-width="800"
               >
                 <h2 class="page_title lato-font mb-4 mt-10">
-                  Review Informations and Pay Now (Review)
+                  Review Informations and Pay Now (components)
                 </h2>
                 <h2 class="sub_title mb-16">
                   Review your business information like business address
