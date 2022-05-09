@@ -256,10 +256,10 @@
                     </v-col>
                   </v-row>
 
-                  {{realdata}}
+                
 
                   <div>
-                    {{details}}
+                  
                     <v-expansion-panels
                       accordion
                       flat
@@ -378,6 +378,7 @@
                             <v-row>
                               <v-col cols="12" sm="6">
                                 <div class="ml-10">
+                                  {{details}}
                                   <h6 class="font-weight-thin">Source</h6>
 
                                   <h5 class="font-weight-light">
@@ -1716,6 +1717,32 @@ export default {
           console.log(err.message);
         });
     },
+// Blocked Status
+
+        blockedStatus() {
+      db.collection("blockcalls")
+        .where("uid", "==", this.uid)
+        .get()
+        .then(async (snap) => {
+          // this.current_email = snap.docs[0].data().Email;
+          // this.hidealert =
+          //   snap.docs[0].data().role == "OWNER" &&
+          //   snap.docs[0].data().IsEmailVerified == false
+          //     ? true
+          //     : false;
+          // // this.hidealert =
+          // //   snap.docs[0].data().IsEmailVerified == true ? false : true;
+          // this.name =
+          //   snap.docs[0].data().role == "OWNER"
+          //     ? snap.docs[0].data().FirstName
+          //     : snap.docs[0].data().Name;
+          // this.number = snap.docs[0].data().PhoneNumber;
+          console.log("test Snap",snap.docs);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
   },
   created() {
     // console.log("adm,nfa")
@@ -1734,6 +1761,7 @@ export default {
         if (user) {
           this.uid = user.uid;
           this.emailStatus();
+          this.blockedStatus();
           // console.log("User Id : " + this.uid);
           // this.sendMessage(this.uid);
           db.collection("users")
