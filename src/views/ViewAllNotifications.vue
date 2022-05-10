@@ -12,7 +12,7 @@
                       <h2 class="page_title ml-5">Notifications</h2>
                     </v-col>
                     <v-col cols="4" sm="4" align="center" class="notif-mark">
-                      Mark all as read(10)
+                      Mark all as read({{notificationunread.length}})
                     </v-col>
                   </v-row>
 
@@ -33,15 +33,17 @@
                               </v-tabs>
 
                               <v-tabs-items v-model="tabs">
+                                
                                 <v-tab-item>
+                                    <v-card flat v-if="unreadmessage"> No notification found </v-card>
                                   <v-card
-                                    v-for="details in notificationCenterItems"
+                                    v-for="details in notificationunread"
                                     :key="details.id"
                                     class="pb-0 pt-5"
                                     elevation="0"
                                   >
                                     <v-row>
-                                      <v-col cols="12">
+                                      <v-col cols="12" @click="redirectpage()">
                                         <div class="notif-type">
                                           {{ details.type }}
                                         </div>
@@ -58,7 +60,29 @@
                                   </v-card>
                                 </v-tab-item>
                                 <v-tab-item>
-                                  <v-card flat> No notification found </v-card>
+                                  <v-card flat v-if="readmessage"> No notification found </v-card>
+                                   <v-card
+                                    v-for="details in notificationread"
+                                    :key="details.id"
+                                    class="pb-0 pt-5"
+                                    elevation="0"
+                                  >
+                                    <v-row>
+                                      <v-col cols="12" @click="redirectpage()">
+                                        <div class="notif-type">
+                                          {{ details.type }}
+                                        </div>
+                                        <div class="notif-content">
+                                          {{ details.content }}
+                                        </div>
+                                        <div class="notif-time mb-2">
+                                          {{ details.time }}
+                                        </div>
+                                      </v-col>
+                                    </v-row>
+
+                                    <v-divider></v-divider>
+                                  </v-card>
                                 </v-tab-item>
                               </v-tabs-items>
                             </v-card>
@@ -78,6 +102,9 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
+import moment from "moment";
+// import axios from "axios";
 export default {
   components: {},
   created() {
@@ -87,79 +114,23 @@ export default {
 
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
-      console.log("parsedUser", parsedUser);
+      // console.log("parsedUser", parsedUser);
       this.user = parsedUser;
     }
-
+        this.initial_data()
     // this.init();
-    this.getBasicInfo();
+    // this.getBasicInfo();
   },
   data: () => ({
+    unreadmessage:true,
+    readmessage:true,
     tabs: null,
     user: {},
-    notificationCenterItems: [
-      {
-        id: 1,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 2,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 3,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 4,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 5,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 6,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 7,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 8,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 9,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 10,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-    ],
-    //forcefully render ui component
+    notificationread: [],
+    uid:"",
+    owneruid:"",
+    AccountId:"",
+    notificationunread:[],
     rerenderKey: 0,
     ownerInfo: [],
     primaryNumber: [],
@@ -172,12 +143,41 @@ export default {
   }),
 
   methods: {
+    redirectpage(){
+       this.$router.push("/all_calls");
+    },
     goBack() {
       this.$router.push("/dashboard");
     },
     callPauseNumber() {
       this.$router.push("/PauseNumber");
     },
+    initial_data(){
+      this.notificationread =[];
+      this.notificationunread =[];
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    // console.log(owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    db.collection("NotificationCenter").where("Uid","==",this.uid).get().then(async(snap) =>{
+      console.log(snap.docs[0])
+			snap.docs.forEach((element)=> {
+        console.log("1")
+        if(element.data().IsRead == false){
+				this.notificationunread.push({id:element.id,content:element.data().Message,type:element.data().Type,time:moment(new Date(element.data().FormDate)).format("D MMM Y hh:mm a")});
+        }else{
+        this.notificationread.push({id:element.id,content:element.data().Message,type:element.data().Type,time:moment(new Date(element.data().FormDate)).format("D MMM Y hh:mm a")});
+        }
+			});
+      this.unreadmessage = (this.notificationunread.length == 0) ? true:false;
+      this.readmessage = (this.notificationread.length == 0) ? true:false;
+      console.log(this.notificationunread)
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    }
   },
 };
 </script>

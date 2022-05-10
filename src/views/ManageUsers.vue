@@ -259,65 +259,7 @@ export default {
   // created() {  
      created() {
         // this.$root.vtoast.show({message: 'Hello there!', color: 'red', timer: 5000})
-         let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
-    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
-    // console.log(owneruid)
-    this.owneruid = owneruid;
-    this.uid = localStorageUserObj.uid;
-      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
-			// console.log("test.........",snap.docs.data());
-      this.baseusers = snap.docs[0].data().PlanBaseUsers;
-      this.totalusers = snap.docs[0].data().PlanNumberOfUsers;
-			snap.docs.forEach((element)=> {
-				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,uid:element.data().uid,option:[{title:"Edit",type:"Edit",headline:"Edit User",function:"edit_user"}]});
-			});
-    
-		}).catch((err)=>{
-			console.log(err.message)
-		})
-    // console.log(this.users);
-    db.collection("users").where("OwnerUid","==",owneruid).orderBy("IsAddon","asc").get().then(async(snapshot) =>{
-      let assignedprimarycount = 0;
-      let assignedaddoncount = 0;
-      snapshot.docs.forEach((element)=> {
-        // console.log(element.IsAddon);)
-        if(element.data().IsAddon == false){
-          assignedprimarycount= assignedprimarycount+1;
-             }
-               if(element.data().IsAddon == true){
-          assignedaddoncount= assignedaddoncount+1;
-             }
-				this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,uid:element.data().uid,cron:(element.data().IsAddon===false)?true:false,option:[ 
-        { title:"Edit", type:"Edit", headline:"Edit User", color: "black--text", url: "edit",function:"edit_user"},
-      { title: "Send Invite", type:"Send", headline:"Send Invite", color: "black--text", url: "send", function:"send_invite"},
-      { title: "Remove User",  type:"Edit", headline:"Remove User", color: "primary--text", url: "remove",function:"remove_user"},]});
-			});
-
-     const reminingprimary = this.baseusers-assignedprimarycount;
-     const remingaddon = this.totalusers-this.baseusers-assignedaddoncount;
-  //  console.log("-----------------------",reminingprimary,remingaddon,this.baseusers,this.totalusers,assignedprimarycount);
-        for(let i=0;i<reminingprimary;i++){ this.users.push({Name:"unassigned",cron:true,option:[{"title":"Add User",function:"add_user"}]});}
-         for(let i=0;i<remingaddon;i++){ this.users.push({Name:"unassigned",cron:false,option:[{"title":"Add User",function:"add_user"},{ title: "Remove Slot",function:"remove_slot"}]});}
-
-			// console.log("test.........",snapshot.docs.length());
-      // const addonsLength = snapshot.docs.length;
-      // console.log("addonsLength",addonsLength)
-      // this.users.forEach((element,index)=>{
-      // //   // console.log("velllllllllllll",index)
-      //     if(element.Name == "unassigned"){
-      //       // console.log("vettttttttt")
-      //     let data = snapshot.docs[addonsLength-index].data();
-      // //     // console.log(data,index+1);
-      //     if(data != undefined){
-      //     this.users[index] = Object.assign(element,{Name:data.Name,cron:data.IsAddon?false:true,role:data.role,PhoneNumber:data.PhoneNumber});
-      //     }
-      //   }
-      // })
-      this.options = [{"title":"vetri"}]
-		}).catch((err)=>{
-			console.log(err.message)
-		})
+        this.inital_data()
     },
   data: () => ({
     cron:"",
@@ -337,7 +279,7 @@ export default {
     baseusers:0,
     totalusers:0,
     sendInviteLoader:false,
-      dialog2: false,
+    dialog2: false,
     dialog: false,
     edit_dialog:false,
     add_dialog:false,
@@ -442,8 +384,9 @@ export default {
       axios(details).then(async (response) => {
         console.log(response)
         this.dialog2 = false;
+        this.add_dialog=false;
          this.$root.vtoast.show({message: 'added successfully', color: 'green', timer: 5000});
-        //  this.inital_data();
+         this.inital_data();
         close()
             
       })
@@ -535,6 +478,68 @@ export default {
     this.sendInviteLoader=true,
         this.removeNumber = true;
       }
+    },
+    inital_data(){
+      this.users = [];
+       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    // console.log(owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+      this.baseusers = snap.docs[0].data().PlanBaseUsers;
+      this.totalusers = snap.docs[0].data().PlanNumberOfUsers;
+			snap.docs.forEach((element)=> {
+				this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,uid:element.data().uid,option:[{title:"Edit",type:"Edit",headline:"Edit User",function:"edit_user"}]});
+			});
+    
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    // console.log(this.users);
+    db.collection("users").where("OwnerUid","==",owneruid).orderBy("IsAddon","asc").get().then(async(snapshot) =>{
+      let assignedprimarycount = 0;
+      let assignedaddoncount = 0;
+      snapshot.docs.forEach((element)=> {
+        // console.log(element.IsAddon);)
+        if(element.data().IsAddon == false){
+          assignedprimarycount= assignedprimarycount+1;
+             }
+               if(element.data().IsAddon == true){
+          assignedaddoncount= assignedaddoncount+1;
+             }
+				this.users.push({Name:element.data().Name,role:element.data().role,PhoneNumber:element.data().PhoneNumber,uid:element.data().uid,cron:(element.data().IsAddon===false)?true:false,option:[ 
+        { title:"Edit", type:"Edit", headline:"Edit User", color: "black--text", url: "edit",function:"edit_user"},
+      { title: "Send Invite", type:"Send", headline:"Send Invite", color: "black--text", url: "send", function:"send_invite"},
+      { title: "Remove User",  type:"Edit", headline:"Remove User", color: "primary--text", url: "remove",function:"remove_user"},]});
+			});
+
+     const reminingprimary = this.baseusers-assignedprimarycount;
+     const remingaddon = this.totalusers-this.baseusers-assignedaddoncount;
+  //  console.log("-----------------------",reminingprimary,remingaddon,this.baseusers,this.totalusers,assignedprimarycount);
+        for(let i=0;i<reminingprimary;i++){ this.users.push({Name:"unassigned",cron:true,option:[{"title":"Add User",function:"add_user"}]});}
+         for(let i=0;i<remingaddon;i++){ this.users.push({Name:"unassigned",cron:false,option:[{"title":"Add User",function:"add_user"},{ title: "Remove Slot",function:"remove_slot"}]});}
+
+			// console.log("test.........",snapshot.docs.length());
+      // const addonsLength = snapshot.docs.length;
+      // console.log("addonsLength",addonsLength)
+      // this.users.forEach((element,index)=>{
+      // //   // console.log("velllllllllllll",index)
+      //     if(element.Name == "unassigned"){
+      //       // console.log("vettttttttt")
+      //     let data = snapshot.docs[addonsLength-index].data();
+      // //     // console.log(data,index+1);
+      //     if(data != undefined){
+      //     this.users[index] = Object.assign(element,{Name:data.Name,cron:data.IsAddon?false:true,role:data.role,PhoneNumber:data.PhoneNumber});
+      //     }
+      //   }
+      // })
+      this.options = [{"title":"vetri"}]
+		}).catch((err)=>{
+			console.log(err.message)
+		})
     },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
