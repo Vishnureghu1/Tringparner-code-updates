@@ -704,3 +704,7 @@
     .radio_border.v-item--active {
         border-color: #ee1c25;
     }
+    
+    .cursor {
+        cursor: pointer;
+    }
