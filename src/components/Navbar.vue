@@ -155,7 +155,7 @@
               <v-divider></v-divider>
 
               <v-virtual-scroll
-                :items="notificationCenterItems"
+                :items="notificationunread"
                 :item-height="90"
                 height="300"
                 width="500"
@@ -164,9 +164,9 @@
                   <v-list-item>
                     <v-row>
                       <v-col cols="12">
-                        <div class="notif-type">Call Notification</div>
+                        <div class="notif-type">{{item.type}}</div>
                         <div class="notif-content">{{ item.content }}</div>
-                        <div class="notif-time mb-2">Today, 12:01pm</div>
+                        <div class="notif-time mb-2">{{item.time}}</div>
                       </v-col>
                     </v-row>
                   </v-list-item>
@@ -176,8 +176,8 @@
 
               <v-card-text class="pt-4 text-center">
                 <v-row>
-                  <v-col cols="12" align="center" class="notif-mark">
-                    Mark all as read(10)
+                  <v-col cols="12" align="center" class="notif-mark" @click="read_notification()">
+                    Mark all as read({{notificationunread.length}})
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -233,12 +233,14 @@
 </template>
 
 <script>
-// import { db } from '@/main.js';
+import { db } from '@/main.js';
 import firebase from "firebase";
+import moment from "moment";
+import axios from "axios";
 export default {
   async created() {
     let localStorageUserObj = localStorage.getItem("tpu");
-
+      this.notification_data();
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
@@ -253,6 +255,7 @@ export default {
     }
   },
   data: () => ({
+    unreadids:[],
     drawer: false,
     isLoggedIn: false,
     userRole: "",
@@ -261,69 +264,7 @@ export default {
     rerenderKey: 0,
     group: null,
     role: "",
-    notificationCenterItems: [
-      {
-        id: 1,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 2,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 3,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 4,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 5,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 6,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 7,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 8,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 9,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-      {
-        id: 10,
-        type: "Call Notification",
-        content: "You have a Missed Call From +91 988809991",
-        time: "Today, 12:01pm",
-      },
-    ],
-
+    notificationunread: [],
     links: {
       OWNER: [
         {
@@ -550,6 +491,53 @@ export default {
     },
     report() {
       this.$router.push("/report").catch(() => {});
+    },
+     notification_data(){
+      this.notificationread =[];
+      this.notificationunread =[];
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    // console.log(owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    db.collection("NotificationCenter").where("Uid","==",this.uid).where("IsRead","==",false).get().then(async(snap) =>{
+      // console.log(snap.docs[0])
+			snap.docs.forEach((element)=> {
+        console.log("1")
+        if(element.data().IsRead == false){
+        this.unreadids.push(element.id)
+				this.notificationunread.push({id:element.id,content:element.data().Message,type:element.data().Type,time:moment(new Date(element.data().FormDate)).format("D MMM Y hh:mm a")});
+        }
+			});
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+    },
+     read_notification() {
+      const token = localStorage.getItem("token");
+      const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/notification/read",
+        method: "POST",
+        data: {
+          owner_uid:this.owneruid,
+          updated_by: this.uid,
+          uid:this.uid,
+          notification_id:this.unreadids,
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(details)
+        .then(() => {
+           this.notification_data()
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
   },
 };

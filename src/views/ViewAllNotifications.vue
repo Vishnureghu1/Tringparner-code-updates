@@ -11,7 +11,7 @@
                     <v-col cols="8" sm="8" class="p-0">
                       <h2 class="page_title ml-5">Notifications</h2>
                     </v-col>
-                    <v-col cols="4" sm="4" align="center" class="notif-mark">
+                    <v-col cols="4" sm="4" align="center" class="notif-mark" @click="read_notification()">
                       Mark all as read({{notificationunread.length}})
                     </v-col>
                   </v-row>
@@ -104,7 +104,7 @@
 <script>
 import { db } from "@/main.js";
 import moment from "moment";
-// import axios from "axios";
+import axios from "axios";
 export default {
   components: {},
   created() {
@@ -140,6 +140,7 @@ export default {
     purchasedUserAddon: 0,
     planUnAssignedUsers: [],
     addonUnAssignedUsers: [],
+    unreadids:[]
   }),
 
   methods: {
@@ -164,9 +165,9 @@ export default {
     db.collection("NotificationCenter").where("Uid","==",this.uid).get().then(async(snap) =>{
       console.log(snap.docs[0])
 			snap.docs.forEach((element)=> {
-        console.log("1")
         if(element.data().IsRead == false){
 				this.notificationunread.push({id:element.id,content:element.data().Message,type:element.data().Type,time:moment(new Date(element.data().FormDate)).format("D MMM Y hh:mm a")});
+        this.unreadids.push(element.id)
         }else{
         this.notificationread.push({id:element.id,content:element.data().Message,type:element.data().Type,time:moment(new Date(element.data().FormDate)).format("D MMM Y hh:mm a")});
         }
@@ -177,7 +178,32 @@ export default {
 		}).catch((err)=>{
 			console.log(err.message)
 		})
-    }
+    },
+     read_notification() {
+      const token = localStorage.getItem("token");
+      const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/notification/read",
+        method: "POST",
+        data: {
+          owner_uid:this.owneruid,
+          updated_by: this.uid,
+          uid:this.uid,
+          notification_id:this.unreadids,
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(details)
+        .then(() => {
+           this.initial_data()
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
   },
 };
 </script>
