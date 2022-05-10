@@ -137,13 +137,26 @@
                               >
                                 <v-row align="center" justify="center">
                                   <v-col cols="12" sm="4">
-                                    <v-radio :value="greeting.AudioAccountId">
-                                      <span
-                                        slot="label"
-                                        class="black--text ml-3"
-                                        >{{ greeting.title }}</span
-                                      >
-                                    </v-radio>
+                                    <!-- AUDIO CLICK ACTION -->
+                                    <div v-if="radioGroup == greeting.AudioAccountId">
+                                        <v-radio :ref="radioGroup" :value="greeting.AudioAccountId" @click="triggerUnselectAudio(greeting.AudioAccountId)">
+                                          <span
+                                            slot="label"
+                                            class="black--text ml-3"
+                                            >{{ greeting.title }}</span
+                                          >
+                                        </v-radio>
+                                      </div>
+                                      <div v-else>
+                                        <v-radio :ref="radioGroup" :value="greeting.AudioAccountId">
+                                          <span
+                                            slot="label"
+                                            class="black--text ml-3"
+                                            >{{ greeting.title }}</span
+                                          >
+                                        </v-radio>
+                                      </div>
+                                    <!-- AUDIO CLICK ACTION -->
                                   </v-col>
                                   <v-col cols="12" sm="5">
                                     <audio controls>
@@ -305,6 +318,8 @@ export default {
 
     this.$on('greeting_message_changed', function(id){
       console.log(`Event from parent component emitted ${this.bussinessNumber}`, id);
+      this.dialog = true;
+      this.isProgressing = true;
       const options = {
         url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/prompt',
         method: 'POST',
@@ -328,6 +343,8 @@ export default {
           // this.newPopupAudioName = '';
           // this.greetingMessageAddedSnapshot();
           this.$root.vtoast.show({message: 'Audio Updated Successfully!', color: '#07C421', timer: 2000})
+          this.dialog = false;
+          this.isProgressing = false;
         }).catch((error) => {
           console.error(error);
         })
@@ -423,6 +440,48 @@ export default {
     },
   },
   methods: {
+    triggerUnselectAudio(greetingAudioAccountId) {
+      console.log('triggerUnselectAudio', greetingAudioAccountId);
+      this.dialog = true;
+      this.isProgressing = true;
+      // RESET AUDIO
+      const options = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/prompt",
+        method: "POST",
+        headers: {
+          
+          token: localStorage.getItem("token"),
+          "Content-Type": "application/json;charset=UTF-8",
+        },
+        data: {
+          owner_uid: this.ownerUid,
+          updated_by: this.ownerUid,
+          virtual_number: this.bussinessNumber,
+          prompt_type: "OfflinePrompt",
+          prompt: "",
+          AccountId: this.AccountId,
+        },
+      };
+      console.log(options);
+      this.$axios(options)
+        .then((response) => {
+          console.log(response.data);
+          // this.newPopupAudioName = '';
+          // this.greetingMessageAddedSnapshot();
+          this.$root.vtoast.show({
+            message: "Audio Updated Successfully!",
+            color: "#07C421",
+            timer: 2000,
+          });
+          this.radioGroup = '';
+          this.dialog = false;
+          this.isProgressing = false;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      // RESET AUDIO
+    },
     setBreadcrumbs(bussinessNumber) {
       this.items = [
         {

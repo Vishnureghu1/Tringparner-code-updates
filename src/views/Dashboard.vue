@@ -327,10 +327,12 @@ export default {
               .where("callstatus", "==", "Missed")
               .where("owneruid", "==", this.uid)
               .where("date", ">=", new Date(this.today))
-              .orderBy("date", "asc")
-              .get()
-              .then((querySnapshot) => {
+              .orderBy("date", "desc")
+              // .get()
+              // .then((querySnapshot) => {
+              .onSnapshot((querySnapshot) => {
                 querySnapshot.forEach((logs) => {
+                  console.log('logs.data().agentDetails', logs.data().agentDetails);
                   var agentData = logs.data().agentDetails;
                   agentData.forEach((agentData) => {
                     var agentID = agentData.AgentUid;
@@ -352,9 +354,18 @@ export default {
                     //
                     if (agentName != "") {
                       // this.agentPanel.push(agentID)
-                      this.agentPanel.indexOf(agentID) === -1
-                        ? this.agentPanel.push(agentID)
-                        : this.missedCallPanel.push({
+                      // this.agentPanel.indexOf(agentID) === -1
+                      //   ? this.agentPanel.push(agentID)
+                      //   : this.missedCallPanel.push({
+                      //       id: this.nextTodoId++,
+                      //       callTime: call_time,
+                      //       callerNumber: callerNumber,
+                      //       ringduration: "00:" + logs.data().ringduration,
+                      //       agentId: agentID,
+                      //       agentName: agentName,
+                      //       callCount: this.callCount++,
+                      //     });
+                      this.missedCallPanel.push({
                             id: this.nextTodoId++,
                             callTime: call_time,
                             callerNumber: callerNumber,
@@ -367,7 +378,7 @@ export default {
                     // this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 1});
 
                     if(!([agentID] in this.agentNames)) {
-                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 0, skipped_calls: 0 });
+                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 1, skipped_calls: 0 });
                     } else {
                       let incrCnt = this.agentNames[agentID].missed_calls + 1;
                       console.log('incrCnt', incrCnt);
