@@ -121,7 +121,7 @@
 
                   <v-row>
                    
-                     <v-col cols="12" sm="3">
+                     <v-col cols="12" sm="4">
                       <v-menu
                         ref="menu"
                         v-model="menu"
@@ -177,11 +177,14 @@
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-row>
+                    
+                      
+                      <v-col cols="12" sm="8">
+                        <v-row>
 
-                      <v-col cols="12" sm="4" align="end">
-                        <v-card outlined color="transparent" class="">
-                        <h3
+                          <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
+                            <v-card outlined color="transparent" class="">
+                              <h3
                           class="number_heading nunito-font light3"
                           align="center"
                         >
@@ -192,7 +195,7 @@
                         </h6>
                       </v-card>
                     </v-col>
-                    <v-col cols="12" sm="4" align="end">
+                    <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -203,7 +206,7 @@
                         <h6 class="comment_heading" align="center">Answered</h6>
                       </v-card>
                     </v-col>
-                    <v-col cols="12" sm="4" align="end">
+                    <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -216,7 +219,24 @@
                         </h6>
                       </v-card>
                     </v-col>
-                      </v-row>
+
+                          <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
+                      <v-card outlined color="transparent">
+                        <h3
+                          class="number_heading nunito-font light3"
+                          align="center"
+                        >
+                         10
+                        </h3>
+                        <h6 class="comment_heading" align="center">
+                          Offline
+                        </h6>
+                      </v-card>
+                    </v-col>
+                          </v-row>
+
+                    </v-col>
+                      
 
 
                   
@@ -254,107 +274,11 @@
                           </v-expansion-panel-header>
                           <v-expansion-panel-content class="block">
                             <v-row no-gutters>
-                              <v-col cols="12" sm="12">
-                                <div class="chart d-block text-center">
-                                  <VueSlickCarousel v-bind="settings">
-                                    <div
-                                      v-for="(
-                                        item, index
-                                      ) in item.custom_chart_data"
-                                      :key="index"
-                                    >
-                                      <v-menu open-on-hover offset-y>
-                                        <template
-                                          v-slot:activator="{ on, attrs }"
-                                        >
-                                          <div
-                                            class="bar-container"
-                                            v-bind="attrs"
-                                            v-on="on"
-                                          >
-                                            <div
-                                              class="
-                                                top_text
-                                                text-center
-                                                grey--text
-                                              "
-                                            >
-                                              {{ item.all }}
-                                            </div>
+                              <v-col cols="12" sm="12" id="container">
+                                <div class="chart d-block text-center" id="container2">
+                               
 
-                                            <div
-                                              class="bar missed"
-                                              v-bind:style="{
-                                                height:
-                                                  getHeight(
-                                                    item.missed,
-                                                    item.all
-                                                  ) + '%',
-                                              }"
-                                            ></div>
-                                            <div
-                                              class="bar"
-                                              v-if="item.all == 0"
-                                              v-bind:style="{ height: '100%' }"
-                                            ></div>
-                                            <div
-                                              class="bar answered"
-                                              v-bind:style="{
-                                                height:
-                                                  getHeight(
-                                                    item.answered,
-                                                    item.all
-                                                  ) + '%',
-                                              }"
-                                            ></div>
-                                            <div
-                                              class="
-                                                bottom_text
-                                                text-center
-                                                grey--text
-                                              "
-                                            >
-                                              {{ item.day }}
-                                            </div>
-                                          </div>
-                                        </template>
-
-                                        <v-list class="rounded-tl-0">
-                                          <v-list-item>
-                                            <v-list-item-title>
-                                              <ul class="over_el">
-                                                <li>
-                                                  <span class="nunito-font"
-                                                    ><v-icon color="#13B9A8"
-                                                      >mdi-card</v-icon
-                                                    ></span
-                                                  >
-                                                  Answered Calls ({{
-                                                    item.answered
-                                                  }})
-                                                </li>
-                                                <li>
-                                                  <span class="nunito-font"
-                                                    ><v-icon color="#FAB4B7"
-                                                      >mdi-card</v-icon
-                                                    ></span
-                                                  >
-                                                  Missed Calls ({{
-                                                    item.missed
-                                                  }})
-                                                </li>
-                                                <li
-                                                  class="gray--text nunito-font"
-                                                >
-                                                  {{ item.day }}
-                                                </li>
-                                              </ul>
-                                            </v-list-item-title>
-                                          </v-list-item>
-                                        </v-list>
-                                      </v-menu>
-                                    </div>
-                                  </VueSlickCarousel>
+                                  
                                   <v-menu
                                     open-on-hover
                                     offset-y
@@ -446,6 +370,7 @@
                                       </v-list-item>
                                     </v-list>
                                   </v-menu>
+                                 
                                 </div>
                               </v-col>
                               <v-spacer></v-spacer>
@@ -527,10 +452,10 @@
 <script>
 import { db } from "@/main.js";
 
-import VueSlickCarousel from "vue-slick-carousel";
-import "vue-slick-carousel/dist/vue-slick-carousel.css";
+// import VueSlickCarousel from "vue-slick-carousel";
+// import "vue-slick-carousel/dist/vue-slick-carousel.css";
 // optional style for arrows & dots
-import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
+// import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
 // import { GChart } from "vue-google-charts";
 export default {
   data: () => ({
@@ -631,7 +556,7 @@ export default {
   },
   components: {
     // GChart,
-    VueSlickCarousel,
+    // VueSlickCarousel,
   },
 
   computed: {
@@ -655,8 +580,29 @@ export default {
     this.getAllCalls();
   },
   methods: {
-    getHeight(value, total) {
-      var height = (value / total) * 100;
+    getDaysArray(start, end) {
+      for (var arr = {}, dt = new Date(start); dt <= new Date(end); dt.setDate(dt.getDate() + 1)) {
+
+        let callDayObj = new Date(dt);
+        let call_month = callDayObj.toLocaleString("default", {
+          month: 'short'
+        });
+        let call_day = callDayObj.toLocaleString("default", {
+          day: "numeric"
+        });
+        let call_year = callDayObj.toLocaleString("default", {
+          year: "numeric"
+        });
+
+        // arr.push(`${call_month}*${call_day}*${call_year}`);
+        arr[`${call_month}*${call_day}*${call_year}`] = { Total: 0, Missed: 0, Answered: 0 };
+        
+      }
+      return arr;
+    },
+    getHeight(value, total){
+
+      var height = (value/total)*100;
       return height;
     },
     filterCalls(dates) {
@@ -694,6 +640,9 @@ export default {
         .then(async (snapshot) => {
           if (!snapshot.empty) {
             this.noCalls = false;
+
+
+            let chartPlaceholder = this.getDaysArray(new Date(this.fromDate), new Date(this.toDate));
 
             snapshot.docs.forEach((element) => {
               // console.log({
@@ -785,12 +734,13 @@ export default {
                         agentWiseReport[doc.AgentUid]["agent_report"]
                       )
                     ) {
-                      agentWiseReport[doc.AgentUid]["agent_report"][[callDay]] =
-                        {
-                          Total: 0,
-                          Missed: 0,
-                          Answered: 0,
-                        };
+                      // agentWiseReport[doc.AgentUid]["agent_report"][[callDay]] =
+                      //   {
+                      //     Total: 0,
+                      //     Missed: 0,
+                      //     Answered: 0,
+                      //   };
+                        agentWiseReport[doc.AgentUid]["agent_report"] = chartPlaceholder;
                       // console.log('setting',agentWiseReport[doc.AgentUid]["agent_report"]);
                     }
 
@@ -853,11 +803,12 @@ export default {
                         agentWiseReport[doc.AgentUid]["agent_report"]
                       )
                     ) {
-                      agentWiseReport[doc.AgentUid]["agent_report"][callDay] = {
-                        Total: 0,
-                        Missed: 0,
-                        Answered: 0,
-                      };
+                      // agentWiseReport[doc.AgentUid]["agent_report"][callDay] = {
+                      //   Total: 0,
+                      //   Missed: 0,
+                      //   Answered: 0,
+                      // };
+                      agentWiseReport[doc.AgentUid]["agent_report"] = chartPlaceholder;
                     }
 
                     agentWiseReport[doc.AgentUid]["agent_report"][callDay]
