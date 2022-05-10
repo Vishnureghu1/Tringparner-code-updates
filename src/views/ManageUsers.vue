@@ -32,12 +32,12 @@
                       <v-btn
                         :disabled="dialog"
                         :loading="dialog"
-                        @click="dialog2 = true"
+                        @click="buyuser()"
                         class="ma-0"
                         color="primary"
                         dark
                       >
-                        + Add New User
+                        + Buy New User
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -540,6 +540,9 @@ export default {
 		}).catch((err)=>{
 			console.log(err.message)
 		})
+    },
+    buyuser(){
+       this.$router.push("/manageAddonUsers");
     },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");

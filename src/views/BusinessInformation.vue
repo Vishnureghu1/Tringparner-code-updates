@@ -40,10 +40,10 @@
 
    <v-card class="mb-0 mt-10 pl-5" :elevation="0">
                           
-        <p>Owner Name: <span class="f12 ">Name of Owner here</span></p>
-        <p>Business Address: <span class="f12 ">Address here</span></p>
-        <p>Business Phone Number: <span class="f12 ">+91 9995233009</span></p>
-        <p>Business Email Address: <span class="f12 ">test@test.com</span></p>
+        <p>Owner Name: <span class="f12 ">{{name}}</span></p>
+        <p>Business Address: <span class="f12 ">{{address}}</span></p>
+        <p>Business Phone Number: <span class="f12 ">+91 {{number}}</span></p>
+        <p>Business Email Address: <span class="f12 ">{{email}}</span></p>
                     
    </v-card>
 
@@ -65,10 +65,34 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
 export default {
   components: {},
-  created() {},
+  created() {
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    // console.log(owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+      this.name = snap.docs[0].data().FirstName;
+      this.number = snap.docs[0].data().PhoneNumber
+      this.address = snap.docs[0].data().Address +"   "+ snap.docs[0].data().City
+      this.email = snap.docs[0].data().Email
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+  },
   data: () => ({
+    owneruid:"",
+    AccountId:"",
+    uid:"",
+    name:"",
+    number:"",
+    address:"",
+    email:"",
     isActive: true,
     e2: 1,
     repeatCallerSettings: false,
