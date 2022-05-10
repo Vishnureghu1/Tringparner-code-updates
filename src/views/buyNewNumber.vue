@@ -365,7 +365,9 @@ export default {
     reserveNumber() {
       var token = localStorage.getItem("token");
       this.reserve = true;
-      let virtualNumber = this.V_numbers[this.toggle_none];
+      console.log("1",this.toggle_none)
+      // let virtualNumber = this.V_numbers[this.toggle_none];
+      let virtualNumber = this.toggle_none
       console.log(virtualNumber);
       const reserve = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/reservenumber",
