@@ -15,10 +15,23 @@
                         >
                         Prioritize Configuration
                       </h2>
-                      <v-breadcrumbs class="breadcrumbs" :items="items">
-                        <template class="breadcrumbs" v-slot:divider>
-                          <v-icon>mdi-chevron-right</v-icon>
+                     <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
+
+                        <template v-slot:item="{ item }">
+                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
+                            <v-breadcrumbs-item :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          </router-link>
+
+                          <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
+                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          <!-- </router-link> -->
+
                         </template>
+
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
@@ -87,6 +100,7 @@ export default {
     this.initial_data()
   },
   data: () => ({
+    bussinessNumber:"",
     repeated_missed_caller:"",
     source:"",
     specific_agents:"",
@@ -188,6 +202,8 @@ export default {
     initial_data(){
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.bussinessNumber = this.$route.query.bn;
+    console.log(this.bussinessNumber);
+        this.setBreadcrumbs(this.bussinessNumber);
     // this.setBreadcrumbs(this.bussinessNumber);
     const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
@@ -245,6 +261,38 @@ export default {
         // continue to next
         this.curr = n + 2;
       }
+    },
+     setBreadcrumbs(bussinessNumber) {
+      this.items = [
+        {
+          text: "Business Numbers",
+          disabled: false,
+          to: { name: "BusinessNumber" },
+          href: `BusinessNumber?bn=`,
+          route: { name: 'BusinessNumber', query: { }  }
+        },
+        {
+          text: "Call Flow Settings",
+          disabled: false,
+          to: { name: "CallFlowSettings", query: { ...{bn: 1111111}} },
+          href: `CallFlowSettings?bn=`,
+          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+        },
+        {
+          text: "Missed Call Distribution",
+          disabled: false,
+          to: { name: "MissedCallDistribution" },
+          href: `MissedCallDistribution?bn=`,
+          route: { name: 'MissedCallDistribution', query: { bn: [bussinessNumber]}  }
+        },
+         {
+          text: "Specific Agents",
+          disabled: true,
+          to: { name: "MissedCallDistribution" },
+          href: `MissedCallDistribution?bn=`,
+          route: { name: 'MissedCallDistribution', query: { bn: [bussinessNumber]}  }
+        },
+      ]
     },
     done() {
       this.curr = 5;

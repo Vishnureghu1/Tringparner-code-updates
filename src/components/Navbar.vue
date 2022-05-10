@@ -151,9 +151,15 @@
                   <v-icon>mdi-close</v-icon>
                 </span>
               </v-card-title>
-
-              <v-divider></v-divider>
-
+              <v-divider> </v-divider>
+              <!-- <v-card-text class="pt-4 text-center">
+                <v-row>
+                  <v-col cols="12" align="center" class="notif-mark" @click="read_notification()">
+                    Mark all as read({{notificationunread.length}})
+                  </v-col>
+                </v-row>
+              </v-card-text> -->
+              <!-- <div v-if="false"> -->
               <v-virtual-scroll
                 :items="notificationunread"
                 :item-height="90"
@@ -173,7 +179,7 @@
                   <v-divider></v-divider>
                 </template>
               </v-virtual-scroll>
-
+              <!-- </div> -->
               <v-card-text class="pt-4 text-center">
                 <v-row>
                   <v-col cols="12" align="center" class="notif-mark" @click="read_notification()">
