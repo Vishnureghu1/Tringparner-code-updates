@@ -27,7 +27,6 @@
                     <v-row no-gutters >
                        <v-card class="pl-5" elevation="0">
     <v-card-title>
-      Payment History
       <v-spacer></v-spacer>
     
     </v-card-title>
@@ -35,8 +34,9 @@
       :headers="headers"
       :items="paymentHistory"
       :search="search"
+      :hide-default-footer="true"
     ><template slot="item.invoice" :slot-scope="invoice">
-            <v-icon class="mt-6 mb-5 mr-7" color="black">mdi-download</v-icon>
+            <v-icon class="mt-6 mb-5 mr-7" color="black" @click="dat(invoice)">mdi-download</v-icon>
         </template></v-data-table>
   </v-card>
                      
@@ -67,8 +67,8 @@ export default {
          snap.docs.forEach(element => {this.paymentHistory.push({
            name: new Date(element.data().HookDate.seconds *1000).toLocaleString(),
            amount:element.data().InvoiceAmount,
-           paymentMode: 'Payment Mode',
-           invoice: element.data().Status
+           paymentMode: element.data().Type,
+           invoice: element.data().Invoice
            })});
          }else{
              this.noblock ="No Blocked Numbers"
@@ -88,55 +88,8 @@ export default {
           { text: 'Amount', value: 'amount' },
           { text: 'Payment Mode', value: 'paymentMode' },
           { text: 'Invoices', value: 'invoice' },
-
         ],
         paymentHistory: [],
-    
-        sublist: [
-      {
-        item: "Charges",
-        qty: "Quantity",
-        amount: "Price",
-        class: "Bold",
-      },
-    
-      {
-        name: "Tringpartner_6M_3000",
-        qty: 1,
-        amount: 3000.00,
-        class: "light3",
-      },  
-      {
-        name: "Business Numbers",
-        qty:2,
-        amount: 3600.00,
-        class: "light3",
-      },  
-      {
-        name: "Users",
-        qty: 4,
-        amount: 2400.00,
-        class: "light3",
-      },
-    ],
-  items: [
-        {
-          text: "More",
-          disabled: false,
-          href: "Dashbaord",
-        },
-			{
-          text: " Billing Information",
-          disabled: false,
-          to: { name: "BillingInformation" },
-        },
-        {
-          text: "Payment History",
-          disabled: true,
-          to: { name: "PaymentHistory" },
-        },
-	
-      ],
     facebook_info: false,
     instagram_info: false,
     paymentOptions: false,
@@ -156,6 +109,9 @@ export default {
   // },
 
   methods: {
+    dat(id){
+      console.log("vel",id)
+    },
     getBill() {
       var token = localStorage.getItem("token");
       var tpu = localStorage.getItem("tpu");
