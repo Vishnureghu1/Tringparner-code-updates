@@ -566,6 +566,26 @@ export default {
     this.getAllCalls();
   },
   methods: {
+    getDaysArray(start, end) {
+      for (var arr = {}, dt = new Date(start); dt <= new Date(end); dt.setDate(dt.getDate() + 1)) {
+
+        let callDayObj = new Date(dt);
+        let call_month = callDayObj.toLocaleString("default", {
+          month: 'short'
+        });
+        let call_day = callDayObj.toLocaleString("default", {
+          day: "numeric"
+        });
+        let call_year = callDayObj.toLocaleString("default", {
+          year: "numeric"
+        });
+
+        // arr.push(`${call_month}*${call_day}*${call_year}`);
+        arr[`${call_month}*${call_day}*${call_year}`] = { Total: 0, Missed: 0, Answered: 0 };
+        
+      }
+      return arr;
+    },
     getHeight(value, total){
 
       var height = (value/total)*100;
@@ -607,6 +627,9 @@ export default {
         .then(async (snapshot) => {
           if (!snapshot.empty) {
             this.noCalls = false;
+
+
+            let chartPlaceholder = this.getDaysArray(new Date(this.fromDate), new Date(this.toDate));
 
             snapshot.docs.forEach((element) => {
               // console.log({
@@ -698,12 +721,13 @@ export default {
                         agentWiseReport[doc.AgentUid]["agent_report"]
                       )
                     ) {
-                      agentWiseReport[doc.AgentUid]["agent_report"][[callDay]] =
-                        {
-                          Total: 0,
-                          Missed: 0,
-                          Answered: 0,
-                        };
+                      // agentWiseReport[doc.AgentUid]["agent_report"][[callDay]] =
+                      //   {
+                      //     Total: 0,
+                      //     Missed: 0,
+                      //     Answered: 0,
+                      //   };
+                        agentWiseReport[doc.AgentUid]["agent_report"] = chartPlaceholder;
                       // console.log('setting',agentWiseReport[doc.AgentUid]["agent_report"]);
                     }
 
@@ -766,11 +790,12 @@ export default {
                         agentWiseReport[doc.AgentUid]["agent_report"]
                       )
                     ) {
-                      agentWiseReport[doc.AgentUid]["agent_report"][callDay] = {
-                        Total: 0,
-                        Missed: 0,
-                        Answered: 0,
-                      };
+                      // agentWiseReport[doc.AgentUid]["agent_report"][callDay] = {
+                      //   Total: 0,
+                      //   Missed: 0,
+                      //   Answered: 0,
+                      // };
+                      agentWiseReport[doc.AgentUid]["agent_report"] = chartPlaceholder;
                     }
 
                     agentWiseReport[doc.AgentUid]["agent_report"][callDay]
