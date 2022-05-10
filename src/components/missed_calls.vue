@@ -578,7 +578,7 @@ export default {
       { title: "Block This Number", color: "primary--text" },
     ],
   timeofCall: ["Ascending", "Descending"],
-    selectedTimeOfCall: "Ascending",
+    selectedTimeOfCall: "Descending",
     DurationOfCall: [
       "Not Specified",
       "< 30 Seconds",
@@ -723,7 +723,7 @@ export default {
     },
   resetFilterParams() {
       this.$refs.form.resetValidation();
-      this.selectedTimeOfCall = "Ascending";
+      this.selectedTimeOfCall = "Descending";
       this.selectedDurationOfCall = "";
       this.selectedViewByType = "Calls";
       this.selectedReminders = "Not Specified";
@@ -828,7 +828,7 @@ export default {
       console.log("this.selectedTimeOfCall", this.selectedTimeOfCall);
       if (
         this.selectedTimeOfCall !== "" &&
-        this.selectedTimeOfCall == "Ascending"
+        this.selectedTimeOfCall == "Descending"
       ) {
         Object.assign(filterCallsConditions.sort, { dateTime: -1 });
       } else {
