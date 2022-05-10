@@ -165,7 +165,7 @@ export default {
       console.log(Id);
       const details = {
         // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill/",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/bill/",
         method: "POST",
         data: {
           uid: Id.uid,
@@ -192,7 +192,7 @@ export default {
     //   var Id = JSON.parse(tpu);
     //   console.log(Id);
     // 		const details = {
-    // 			url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill',
+    // 			url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/bill',
     // 			method: 'POST',
     // 			data: {
     // 				uid: this.uid,

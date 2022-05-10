@@ -152,7 +152,7 @@ import { db } from '@/main.js';
 						console.log('ID', this.uid)
 						console.log('phno', this.phNo)
 						const options = {
-							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/login',
+							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/login',
 							method: 'POST',
 							data: {
 								uid: this.uid,
@@ -197,7 +197,7 @@ import { db } from '@/main.js';
 													this.$router.push("/dashboard").catch(() => {});
 												} else {
 													const user_stage = {
-														url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',
+														url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage',
 														method: 'POST',
 														data: {
 															uid: this.uid,

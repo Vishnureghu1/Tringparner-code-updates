@@ -940,7 +940,7 @@ export default {
         var Id = JSON.parse(tpu);
         console.log(Id);
         const blockNumber = {
-          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/blockcall",
+          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/blockcall",
           method: "POST",
           data: {
             number: this.virtualNumber,
@@ -1016,7 +1016,7 @@ export default {
       this.changeEmailPopup = false;
       this.sendInviteLoader = true;
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/otp",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/email/otp",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -1046,7 +1046,7 @@ export default {
     },
     verifyOTP() {
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/verification",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/email/verification",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -1112,7 +1112,7 @@ export default {
     addNote(unique_id, message) {
       var token = localStorage.getItem("token");
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note",
         method: "POST",
         data: {
           uid: this.uid,
@@ -1159,7 +1159,7 @@ export default {
       }
 
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/reminder",
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
@@ -1195,7 +1195,7 @@ export default {
       var token = localStorage.getItem("token");
       message = "";
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note",
         method: "POST",
         data: {
           uid: this.ownerUid,
@@ -1329,7 +1329,7 @@ export default {
       };
       axios
         .post(
-          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
           raw,
           {
             headers: headers,
@@ -1474,7 +1474,7 @@ export default {
       };
       axios
         .post(
-          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
           raw,
           {
             headers: headers,
@@ -1602,7 +1602,7 @@ export default {
           };
           axios
             .post(
-              "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+              "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
               raw,
               {
                 headers: headers,
@@ -1833,7 +1833,7 @@ export default {
                 };
                 axios
                   .post(
-                    "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+                    "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
                     raw,
                     {
                       headers: headers,

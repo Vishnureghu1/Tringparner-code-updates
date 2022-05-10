@@ -306,7 +306,7 @@ export default {
     this.$on('greeting_message_changed', function(id){
       console.log(`Event from parent component emitted ${this.bussinessNumber}`, id);
       const options = {
-        url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/prompt',
+        url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/prompt',
         method: 'POST',
         headers: {
           'token': localStorage.getItem("token"),
@@ -564,7 +564,7 @@ export default {
         this.renameDialog = false; 
 
         const options = {
-          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio',
+          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/audio',
           method: 'PUT',
           data: {
             updated_by: this.ownerUid,
@@ -598,7 +598,7 @@ export default {
       this.deleteDialog = false; 
 
       const options = {
-          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio',
+          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/audio',
           method: 'DELETE',
           data: {
             updated_by: this.ownerUid,

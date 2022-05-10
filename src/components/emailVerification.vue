@@ -145,7 +145,7 @@ import { db } from '@/main.js';
     methods :{
 			requestOtp(){
 				const options = {
-					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/otp',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/email/otp',
 					method: 'POST',
 
 					data: {
@@ -172,7 +172,7 @@ import { db } from '@/main.js';
 
 				checkOtp(){
 					const options = {
-					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/email/verification',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/email/verification',
 					method: 'POST',
 
 					data: {

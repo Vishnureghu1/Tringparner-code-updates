@@ -215,7 +215,7 @@ export default {
      NotificationSettings(status,value){
       console.log("test..........")
        const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/notification/settings',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/notification/settings',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},

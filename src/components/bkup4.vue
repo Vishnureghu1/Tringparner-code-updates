@@ -752,7 +752,7 @@ export default {
         var Id = JSON.parse(tpu);
         console.log(Id);
         const blockNumber = {
-          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/blockcall",
+          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/blockcall",
           method: "POST",
           data: {
             number: "8657510921",
@@ -784,7 +784,7 @@ export default {
       var token = localStorage.getItem("token");
 
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note",
         method: "POST",
         data: {
           uid: this.uid,
@@ -822,7 +822,7 @@ export default {
       // var RemindmeAt = todayDateMillisecond + hours;
       var RemindmeAt = 1847244627217;
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/reminder",
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
@@ -856,7 +856,7 @@ export default {
       var token = localStorage.getItem("token");
       message = "";
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note",
         method: "POST",
         data: {
           uid: this.uid,

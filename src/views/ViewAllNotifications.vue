@@ -182,7 +182,7 @@ export default {
      read_notification() {
       const token = localStorage.getItem("token");
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/notification/read",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/notification/read",
         method: "POST",
         data: {
           owner_uid:this.owneruid,

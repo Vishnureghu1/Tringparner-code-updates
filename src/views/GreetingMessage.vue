@@ -304,7 +304,7 @@ export default {
         id
       );
       const options = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/prompt",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/prompt",
         method: "POST",
         headers: {
           token: localStorage.getItem("token"),
@@ -578,7 +578,7 @@ export default {
         // METHOD: PUT
         // PAYLOAD: {updated_by:"" ,uid:"" ,AccountId:"",AudioAccountId:"",DisplayName:""}
         const options = {
-          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio",
+          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/audio",
           method: "PUT",
           data: {
             updated_by: this.ownerUid,
@@ -615,7 +615,7 @@ export default {
       // METHOD: DELETE
       // PAYLOAD: {updated_by:"" ,uid:"" ,AccountId:"",AudioAccountId:""}
       const options = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/audio",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/audio",
         method: "DELETE",
         data: {
           updated_by: this.ownerUid,

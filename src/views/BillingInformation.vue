@@ -449,7 +449,7 @@ export default {
       this.sublist = [];
       const details = {
         // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/bill/",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/bill/",
         method: "POST",
         data: {
           uid: this.owneruid,
@@ -481,7 +481,7 @@ export default {
     },
     paynow() {
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/payment",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/payment",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {

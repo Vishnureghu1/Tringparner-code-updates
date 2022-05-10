@@ -162,7 +162,7 @@ export default {
     nextPage() {
       this.overlay = true;
       const user_stage = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage",
         method: "POST",
 
         data: {

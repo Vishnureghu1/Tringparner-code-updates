@@ -141,7 +141,7 @@ import { db } from '@/main.js';
 					this.value = 100
 					this.overlay = true
 					const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/list',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/list',
 						method: 'POST',
 						data: {
 							uid: this.uid,
@@ -181,7 +181,7 @@ import { db } from '@/main.js';
 				let virtualNumber = this.V_numbers[this.toggle_none]
 				console.log(virtualNumber)
 				const reserve = {
-					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/virtualNumber/reserve',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/reserve',
 					method: 'POST',
 
 					data: {
@@ -202,7 +202,7 @@ import { db } from '@/main.js';
 					}).finally(() => {
 
 						const user_stage = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage',
 						method: 'POST',
 
 						data: {

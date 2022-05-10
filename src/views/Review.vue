@@ -431,7 +431,7 @@ export default {
     updatePlan() {
       this.overlay = true;
       const user_stage = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/user/stage",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage",
         method: "POST",
 
         data: {
@@ -464,7 +464,7 @@ export default {
     },
     Paynow() {
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/payment",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/payment",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {

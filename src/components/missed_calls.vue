@@ -745,7 +745,7 @@ export default {
     sendMessage(unique_id, message) {
       var token = localStorage.getItem("token");
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note",
         method: "POST",
         data: {
           uid: this.ownerUid,
@@ -772,7 +772,7 @@ export default {
       console.log(time);
 
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/reminder",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/reminder",
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
@@ -803,7 +803,7 @@ export default {
       message = "";
       var token = localStorage.getItem("token");
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/note",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note",
         method: "POST",
         data: {
           uid: this.ownerUid,
@@ -935,7 +935,7 @@ export default {
       };
       axios
         .post(
-          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
           raw,
           {
             headers: headers,
@@ -1103,7 +1103,7 @@ export default {
       };
       axios
         .post(
-          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
           raw,
           {
             headers: headers,
@@ -1256,7 +1256,7 @@ export default {
           };
           axios
             .post(
-              "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+              "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
               raw,
               {
                 headers: headers,
@@ -1464,7 +1464,7 @@ export default {
                 };
                 axios
                   .post(
-                    "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/admin/mongo",
+                    "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
                     raw,
                     {
                       headers: headers,

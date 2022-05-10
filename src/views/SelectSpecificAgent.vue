@@ -159,7 +159,7 @@ export default {
      missedcall(){
        const filter_agents = this.participants.filter((el)=> { return el.status == true})
        const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/callDistribution/missedcall',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/missedcall',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},

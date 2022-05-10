@@ -367,7 +367,7 @@ export default {
       console.log("nsfjk")
       let cronvalue = (this.cron == true)?false:true;
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/user",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/user",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -397,7 +397,7 @@ export default {
       // console.log("nsfjk")
       let cronvalue = (this.cron == true)?false:true;
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/user",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/user",
         method: "PUT",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -422,7 +422,7 @@ export default {
     },
     remove_slot(){
      const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/delete",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/delete",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -441,7 +441,7 @@ export default {
     },
     remove_user(PhoneNumber){
      const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/addon/user",
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/user",
         method: "DELETE",
         headers: { token: localStorage.getItem("token") },
         data: {
