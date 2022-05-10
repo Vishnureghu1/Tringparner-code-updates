@@ -144,21 +144,6 @@
                 </h2>
                 <v-row>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                  
                   <v-col cols="12" sm="6" align="start">
                     <h2 class="name_heading light4 f14">
                       Billing Address

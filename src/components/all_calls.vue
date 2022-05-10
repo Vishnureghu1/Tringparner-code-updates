@@ -352,7 +352,7 @@
                                 >{{ formatTime(details.conversationduration) }},
                               </span>
                               {{ details.dateTime
-                              }}<span v-if="details.name"
+                              }}<span v-if="details.name "
                                 >, {{ details.name }}</span
                               >
                             </div>

@@ -35,9 +35,13 @@
       :headers="headers"
       :items="paymentHistory"
       :search="search"
-    ><template slot="item.invoice" :slot-scope="invoice">
-            <v-icon class="mt-6 mb-5 mr-7" color="black">mdi-download</v-icon>
-        </template></v-data-table>
+    >
+
+ <template v-slot:item.invoice="{ item }">
+            <v-icon class="mt-6 mb-5 mr-7" color="black"  @click="getDownloadData(item.invoice)"> mdi-download</v-icon>
+        </template> 
+        
+        </v-data-table>
   </v-card>
                      
                     </v-row>
@@ -68,7 +72,8 @@ export default {
            name: new Date(element.data().HookDate.seconds *1000).toLocaleString(),
            amount:element.data().InvoiceAmount,
            paymentMode: 'Payment Mode',
-           invoice: element.data().Status
+            invoice:element.data().Invoice,
+            indexKey:this.indexKey++
            })});
          }else{
              this.noblock ="No Blocked Numbers"
@@ -78,6 +83,7 @@ export default {
 		})
   },
   data: () => ({
+    indexKey:0,
        search: '',
         headers: [
           {
@@ -156,6 +162,10 @@ export default {
   // },
 
   methods: {
+
+    getDownloadData(data){
+console.log(data);
+    },
     getBill() {
       var token = localStorage.getItem("token");
       var tpu = localStorage.getItem("tpu");
