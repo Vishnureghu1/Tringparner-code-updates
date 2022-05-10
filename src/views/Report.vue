@@ -47,7 +47,7 @@
                                 <v-icon>mdi-close</v-icon>
                               </span>
                             </v-card-title>
-                            <v-card >
+                            <v-card>
                               <v-list class="pl-5">
                                 <v-checkbox
                                   input-value="true"
@@ -90,7 +90,6 @@
                                       v-on="on"
                                     ></v-text-field>
                                   </template>
-                        
                                 </v-menu>
                                 <v-text-field
                                   label="Enter e-mail ID"
@@ -104,7 +103,6 @@
                                   color="white"
                                   width="100%"
                                   text
-                                  
                                   class="mr-0 flex red_button rounded-pill"
                                   :loading="isUpdating"
                                   depressed
@@ -117,15 +115,13 @@
                           </v-form>
                         </v-card>
                       </v-menu>
-                      <span>
-                        <v-icon class="mt-6 mb-5 mr-7" color="black"
-                          >mdi-dots-vertical</v-icon
-                        >
-                      </span>
+                 
                     </v-col>
                   </v-row>
+
                   <v-row>
-                    <v-col cols="6" sm="3">
+                   
+                     <v-col cols="12" sm="3">
                       <v-menu
                         ref="menu"
                         v-model="menu"
@@ -181,9 +177,10 @@
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col cols="6" sm="1" align="end">
-                      <v-card outlined color="transparent" class="">
+                    <v-row>
+
+                      <v-col cols="12" sm="4" align="end">
+                        <v-card outlined color="transparent" class="">
                         <h3
                           class="number_heading nunito-font light3"
                           align="center"
@@ -195,7 +192,7 @@
                         </h6>
                       </v-card>
                     </v-col>
-                    <v-col cols="6" sm="1" align="end">
+                    <v-col cols="12" sm="4" align="end">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -206,7 +203,7 @@
                         <h6 class="comment_heading" align="center">Answered</h6>
                       </v-card>
                     </v-col>
-                    <v-col cols="6" sm="1" align="end">
+                    <v-col cols="12" sm="4" align="end">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -219,17 +216,10 @@
                         </h6>
                       </v-card>
                     </v-col>
-                    <!-- <v-col cols="6" sm="1" align="end">
-                      <v-card outlined color="transparent">
-                        <h3
-                          class="number_heading nunito-font light3"
-                          align="center"
-                        >
-                          1
-                        </h3>
-                        <h6 class="comment_heading" align="center">Offline</h6>
-                      </v-card>
-                    </v-col> -->
+                      </v-row>
+
+
+                  
                   </v-row>
                   <br />
                   <br />
@@ -263,93 +253,209 @@
                             </div>
                           </v-expansion-panel-header>
                           <v-expansion-panel-content class="block">
+                            <v-row no-gutters>
+                              <v-col cols="12" sm="12">
+                                <div class="chart d-block text-center">
+                                  <VueSlickCarousel v-bind="settings">
+                                    <div
+                                      v-for="(
+                                        item, index
+                                      ) in item.custom_chart_data"
+                                      :key="index"
+                                    >
+                                      <v-menu open-on-hover offset-y>
+                                        <template
+                                          v-slot:activator="{ on, attrs }"
+                                        >
+                                          <div
+                                            class="bar-container"
+                                            v-bind="attrs"
+                                            v-on="on"
+                                          >
+                                            <div
+                                              class="
+                                                top_text
+                                                text-center
+                                                grey--text
+                                              "
+                                            >
+                                              {{ item.all }}
+                                            </div>
 
+                                            <div
+                                              class="bar missed"
+                                              v-bind:style="{
+                                                height:
+                                                  getHeight(
+                                                    item.missed,
+                                                    item.all
+                                                  ) + '%',
+                                              }"
+                                            ></div>
+                                            <div
+                                              class="bar"
+                                              v-if="item.all == 0"
+                                              v-bind:style="{ height: '100%' }"
+                                            ></div>
+                                            <div
+                                              class="bar answered"
+                                              v-bind:style="{
+                                                height:
+                                                  getHeight(
+                                                    item.answered,
+                                                    item.all
+                                                  ) + '%',
+                                              }"
+                                            ></div>
+                                            <div
+                                              class="
+                                                bottom_text
+                                                text-center
+                                                grey--text
+                                              "
+                                            >
+                                              {{ item.day }}
+                                            </div>
+                                          </div>
+                                        </template>
 
-                      <v-row no-gutters>
-                        <v-col cols="12" sm="12">
-                      <div class="chart d-block text-center">
+                                        <v-list class="rounded-tl-0">
+                                          <v-list-item>
+                                            <v-list-item-title>
+                                              <ul class="over_el">
+                                                <li>
+                                                  <span class="nunito-font"
+                                                    ><v-icon color="#13B9A8"
+                                                      >mdi-card</v-icon
+                                                    ></span
+                                                  >
+                                                  Answered Calls ({{
+                                                    item.answered
+                                                  }})
+                                                </li>
+                                                <li>
+                                                  <span class="nunito-font"
+                                                    ><v-icon color="#FAB4B7"
+                                                      >mdi-card</v-icon
+                                                    ></span
+                                                  >
+                                                  Missed Calls ({{
+                                                    item.missed
+                                                  }})
+                                                </li>
+                                                <li
+                                                  class="gray--text nunito-font"
+                                                >
+                                                  {{ item.day }}
+                                                </li>
+                                              </ul>
+                                            </v-list-item-title>
+                                          </v-list-item>
+                                        </v-list>
+                                      </v-menu>
+                                    </div>
+                                  </VueSlickCarousel>
+                                  <v-menu
+                                    open-on-hover
+                                    offset-y
+                                    v-for="(
+                                      item, index
+                                    ) in item.custom_chart_data"
+                                    :key="index"
+                                  >
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <div
+                                        class="bar-container"
+                                        v-bind="attrs"
+                                        v-on="on"
+                                      >
+                                        <div
+                                          class="
+                                            top_text
+                                            text-center
+                                            grey--text
+                                          "
+                                        >
+                                          {{ item.all }}
+                                        </div>
 
+                                        <div
+                                          class="bar missed"
+                                          v-bind:style="{
+                                            height:
+                                              getHeight(item.missed, item.all) +
+                                              '%',
+                                          }"
+                                        ></div>
+                                        <div
+                                          class="bar"
+                                          v-if="item.all == 0"
+                                          v-bind:style="{ height: '100%' }"
+                                        ></div>
+                                        <div
+                                          class="bar answered"
+                                          v-bind:style="{
+                                            height:
+                                              getHeight(
+                                                item.answered,
+                                                item.all
+                                              ) + '%',
+                                          }"
+                                        ></div>
+                                        <div
+                                          class="
+                                            bottom_text
+                                            text-center
+                                            grey--text
+                                          "
+                                        >
+                                          {{ item.day.split("*")[1] }}
+                                        </div>
+                                      </div>
+                                    </template>
 
+                                    <v-list class="rounded-tl-0">
+                                      <v-list-item>
+                                        <v-list-item-title>
+                                          <ul class="over_el">
+                                            <li>
+                                              <span class="nunito-font"
+                                                ><v-icon color="#13B9A8"
+                                                  >mdi-card</v-icon
+                                                ></span
+                                              >
+                                              Answered Calls ({{
+                                                item.answered
+                                              }})
+                                            </li>
+                                            <li>
+                                              <span class="nunito-font"
+                                                ><v-icon color="#FAB4B7"
+                                                  >mdi-card</v-icon
+                                                ></span
+                                              >
+                                              Missed Calls ({{ item.missed }})
+                                            </li>
+                                            <li class="gray--text nunito-font">
+                                              {{
+                                                item.day.split("*").join(" ")
+                                              }}
+                                            </li>
+                                          </ul>
+                                        </v-list-item-title>
+                                      </v-list-item>
+                                    </v-list>
+                                  </v-menu>
+                                </div>
+                              </v-col>
+                              <v-spacer></v-spacer>
 
-                        <VueSlickCarousel v-bind="settings">
-      <div v-for="(item, index) in item.custom_chart_data"  :key="index" > 
-       <v-menu
-      open-on-hover
-      
-      offset-y  
-    >
-      <template v-slot:activator="{ on, attrs }">
-     
-
-            <div class="bar-container"  v-bind="attrs"
-          v-on="on" >
-                          <div class="top_text text-center grey--text">{{item.all}} </div>
-
-                          <div class="bar missed" v-bind:style="{'height': getHeight(item.missed,item.all)+'%' }" ></div>
-                          <div class="bar" v-if="item.all==0" v-bind:style="{'height': '100%' }" ></div>
-                          <div class="bar answered" v-bind:style="{'height': getHeight(item.answered,item.all)+'%' }"></div>
-                          <div class="bottom_text text-center grey--text">{{item.day}}</div>
-                        </div>
-      </template>
-
-      <v-list  class="rounded-tl-0
-">
-        <v-list-item >
-         
-          <v-list-item-title>
-            <ul class="over_el"> 
-            
-              <li><span class="nunito-font"><v-icon color="#13B9A8">mdi-card</v-icon></span> Answered Calls ({{item.answered}})</li>
-              <li><span class="nunito-font"><v-icon color="#FAB4B7">mdi-card</v-icon></span> Missed Calls ({{item.missed}})</li>
-              <li class="gray--text nunito-font">{{item.day}}</li>
-            </ul>
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-      </div>
-
-    </VueSlickCarousel>
-  <v-menu
-      open-on-hover
-      
-      offset-y  v-for="(item, index) in item.custom_chart_data"  :key="index" 
-    >
-      <template v-slot:activator="{ on, attrs }">
-     
-
-            <div class="bar-container"  v-bind="attrs"
-          v-on="on" >
-                          <div class="top_text text-center grey--text">{{item.all}} </div>
-
-                          <div class="bar missed" v-bind:style="{'height': getHeight(item.missed,item.all)+'%' }" ></div>
-                          <div class="bar" v-if="item.all==0" v-bind:style="{'height': '100%' }" ></div>
-                          <div class="bar answered" v-bind:style="{'height': getHeight(item.answered,item.all)+'%' }"></div>
-                          <div class="bottom_text text-center grey--text">{{item.day.split("*")[1]}}</div>
-                        </div>
-      </template>
-
-      <v-list  class="rounded-tl-0
-">
-        <v-list-item >
-         
-          <v-list-item-title>
-            <ul class="over_el"> 
-            
-              <li><span class="nunito-font"><v-icon color="#13B9A8">mdi-card</v-icon></span> Answered Calls ({{item.answered}})</li>
-              <li><span class="nunito-font"><v-icon color="#FAB4B7">mdi-card</v-icon></span> Missed Calls ({{item.missed}})</li>
-              <li class="gray--text nunito-font">{{item.day.split("*").join(" ")}}</li>
-            </ul>
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-                    
-                      </div>
-</v-col>
-                        <v-spacer></v-spacer>
-
-    <v-col cols="6" sm="4" align="center" class="d-block">
+                              <v-col
+                                cols="6"
+                                sm="4"
+                                align="center"
+                                class="d-block"
+                              >
                                 <v-card
                                   outlined
                                   color="transparent"
@@ -391,22 +497,7 @@
                                   </h6>
                                 </v-card>
                               </v-col>
-                    </v-row>
-    
-  
-              
-                            
-                           
-
- 
-                               
-                           
-              
-                               
-   
-                          
-                          
-                       
+                            </v-row>
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>
@@ -436,24 +527,24 @@
 <script>
 import { db } from "@/main.js";
 
-import VueSlickCarousel from 'vue-slick-carousel'
-  import 'vue-slick-carousel/dist/vue-slick-carousel.css'
-  // optional style for arrows & dots
-  import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+import VueSlickCarousel from "vue-slick-carousel";
+import "vue-slick-carousel/dist/vue-slick-carousel.css";
+// optional style for arrows & dots
+import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
 // import { GChart } from "vue-google-charts";
 export default {
   data: () => ({
     exportMenu: false,
     isUpdating: false,
-    settings:{
-  "centerMode": true,
-  "centerPadding": "4px",
-  "focusOnSelect": true,
-  "infinite": true,
-  "slidesToShow": 11,
-  "speed": 500,
-  "adaptiveHeight": true
-},
+    settings: {
+      centerMode: true,
+      centerPadding: "4px",
+      focusOnSelect: true,
+      infinite: true,
+      slidesToShow: 11,
+      speed: 500,
+      adaptiveHeight: true,
+    },
     options: [
       { title: "Download as XML", color: "gray--text", url: "exportxml" },
       { title: "Download as PDF", color: "gtay--text", url: "send" },
@@ -469,19 +560,18 @@ export default {
         .substr(0, 10),
       new Date().toISOString().substr(0, 10),
     ],
-  customChartData: [
-      {'all':30, 'missed':20, 'answered': 10},
-      {'all':1, 'missed':0, 'answered': 1},
-      {'all':11, 'missed':1, 'answered': 10},
-      {'all':33, 'missed':20, 'answered': 13},
-      {'all':12, 'missed':2, 'answered': 10},
-      {'all':30, 'missed':20, 'answered': 10},
-      {'all':0, 'missed':0, 'answered': 0},
-      {'all':0, 'missed':0, 'answered': 0},
-      {'all':30, 'missed':20, 'answered': 10},
-      {'all':20, 'missed':5, 'answered': 15},
-      {'all':30, 'missed':20, 'answered': 10},
-
+    customChartData: [
+      { all: 30, missed: 20, answered: 10 },
+      { all: 1, missed: 0, answered: 1 },
+      { all: 11, missed: 1, answered: 10 },
+      { all: 33, missed: 20, answered: 13 },
+      { all: 12, missed: 2, answered: 10 },
+      { all: 30, missed: 20, answered: 10 },
+      { all: 0, missed: 0, answered: 0 },
+      { all: 0, missed: 0, answered: 0 },
+      { all: 30, missed: 20, answered: 10 },
+      { all: 20, missed: 5, answered: 15 },
+      { all: 30, missed: 20, answered: 10 },
     ],
     chartData: [
       [
@@ -542,7 +632,6 @@ export default {
   components: {
     // GChart,
     VueSlickCarousel,
-    
   },
 
   computed: {
@@ -566,11 +655,9 @@ export default {
     this.getAllCalls();
   },
   methods: {
-    getHeight(value, total){
-
-      var height = (value/total)*100;
+    getHeight(value, total) {
+      var height = (value / total) * 100;
       return height;
-
     },
     filterCalls(dates) {
       this.$refs.menu.save(dates);
@@ -674,18 +761,18 @@ export default {
 
                     let callDayObj = new Date(element.data().logDate);
                     let call_month = callDayObj.toLocaleString("default", {
-                      month: 'short'
+                      month: "short",
                     });
                     let call_day = callDayObj.toLocaleString("default", {
-                      day: "numeric"
+                      day: "numeric",
                     });
                     let call_year = callDayObj.toLocaleString("default", {
-                      year: "numeric"
+                      year: "numeric",
                     });
 
                     let callDay = `${call_month}*${call_day}*${call_year}`;
 
-                    console.log('callDay', callDay);
+                    console.log("callDay", callDay);
                     // let callDay = element.data().logDate;
 
                     // console.log('logDate', element.data().logDate);
@@ -745,18 +832,18 @@ export default {
 
                     let callDayObj = new Date(element.data().logDate);
                     let call_month = callDayObj.toLocaleString("default", {
-                      month: 'short'
+                      month: "short",
                     });
                     let call_day = callDayObj.toLocaleString("default", {
-                      day: "numeric"
+                      day: "numeric",
                     });
                     let call_year = callDayObj.toLocaleString("default", {
-                      year: "numeric"
+                      year: "numeric",
                     });
 
                     let callDay = `${call_month}*${call_day}*${call_year}`;
 
-                    console.log('callDay', callDay);
+                    console.log("callDay", callDay);
 
                     // let callDay = element.data().logDate;
 
@@ -837,7 +924,7 @@ export default {
               );
               listOfAgentProps.forEach((ad) => {
                 if (ad == "agent_report") {
-                  console.log('ad',agentWiseReport[elementProp][ad]);
+                  console.log("ad", agentWiseReport[elementProp][ad]);
                   let chartData = [
                     // [ "Date", "No Calls", { role: "style" }, "Answered Calls", { role: "style" }, "Missed Calls", { role: "style" }]
                     [
@@ -870,15 +957,22 @@ export default {
                       ]);
 
                       customChartData.push({
-                        "day": repObj, "all": (Answered+Missed), "missed":Missed, "answered": Answered
-                      })
+                        day: repObj,
+                        all: Answered + Missed,
+                        missed: Missed,
+                        answered: Answered,
+                      });
                     }
                   });
 
                   agentWiseReport[elementProp]["chart_data"] = chartData;
 
-                  agentWiseReport[elementProp]["custom_chart_data"] = customChartData;
-                  console.log('custom_chart_data',agentWiseReport[elementProp]["custom_chart_data"]);
+                  agentWiseReport[elementProp]["custom_chart_data"] =
+                    customChartData;
+                  console.log(
+                    "custom_chart_data",
+                    agentWiseReport[elementProp]["custom_chart_data"]
+                  );
 
                   // console.log('chartData', agentWiseReport[elementProp]['chart_data']);
                 }
