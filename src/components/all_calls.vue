@@ -256,10 +256,7 @@
                     </v-col>
                   </v-row>
 
-                
-
                   <div>
-                  
                     <v-expansion-panels
                       accordion
                       flat
@@ -352,13 +349,17 @@
                                 >{{ formatTime(details.conversationduration) }},
                               </span>
                               {{ details.dateTime
-                              }}<span v-if="details.name && details.callstatus =='Answered' "
+                              }}<span
+                                v-if="
+                                  details.name &&
+                                  details.callstatus == 'Answered'
+                                "
                                 >, {{ details.name }}</span
                               >
                             </div>
                             <!-- {{detail}} -->
                             <div
-                              class="ml-10 mt-3 font-weight-thin"
+                              class="ml-10 mt-3 font-weight-thin hideOnExpand"
                               v-for="getNotes in details.Note"
                               :key="getNotes.text"
                             >
@@ -378,7 +379,6 @@
                             <v-row>
                               <v-col cols="12" sm="6">
                                 <div class="ml-10">
-                                  {{details}}
                                   <h6 class="font-weight-thin">Source</h6>
 
                                   <h5 class="font-weight-light">
@@ -461,7 +461,8 @@
                                         )
                                       "
                                     >
-                                      Add Reminders
+                                      Add Reminder
+                                      <!-- <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span> -->
                                     </v-btn>
                                   </span>
                                 </div>
@@ -1550,6 +1551,7 @@ export default {
               virtualnumber: virtualnumber,
               called_name: this.called_name,
               recordingUrl: this.calldetails.recordingurl,
+              reminder: this.calldetails.Reminder,
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1717,27 +1719,14 @@ export default {
           console.log(err.message);
         });
     },
-// Blocked Status
+    // Blocked Status
 
-        blockedStatus() {
+    blockedStatus() {
       db.collection("blockcalls")
         .where("uid", "==", this.uid)
         .get()
         .then(async (snap) => {
-          // this.current_email = snap.docs[0].data().Email;
-          // this.hidealert =
-          //   snap.docs[0].data().role == "OWNER" &&
-          //   snap.docs[0].data().IsEmailVerified == false
-          //     ? true
-          //     : false;
-          // // this.hidealert =
-          // //   snap.docs[0].data().IsEmailVerified == true ? false : true;
-          // this.name =
-          //   snap.docs[0].data().role == "OWNER"
-          //     ? snap.docs[0].data().FirstName
-          //     : snap.docs[0].data().Name;
-          // this.number = snap.docs[0].data().PhoneNumber;
-          console.log("test Snap",snap.docs);
+          console.log("test Snap", snap.docs);
         })
         .catch((err) => {
           console.log(err.message);
@@ -1745,7 +1734,7 @@ export default {
     },
   },
   created() {
-    // console.log("adm,nfa")
+
     this.getNextCalls();
   },
   beforeMount() {
@@ -1914,7 +1903,7 @@ export default {
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder,
-                        blocked: '',
+                        blocked: "",
                       });
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);

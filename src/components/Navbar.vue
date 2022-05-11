@@ -136,7 +136,12 @@
           <v-menu bottom width="378px" height="504px" rounded offset-y>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" icon>
+              <v-badge
+          color="red"
+          content="6"
+        >
                 <v-icon color="black">mdi-bell-outline</v-icon>
+                </v-badge>
               </v-btn>
             </template>
 
@@ -148,24 +153,25 @@
                   <div align="center" class="notif-mark">View all</div>
                 </router-link>
                 <span fab small>
+                  
                   <v-icon>mdi-close</v-icon>
                 </span>
               </v-card-title>
               <v-divider> </v-divider>
-              <!-- <v-card-text class="pt-4 text-center">
-                <v-row>
-                  <v-col cols="12" align="center" class="notif-mark" @click="read_notification()">
-                    Mark all as read({{notificationunread.length}})
-                  </v-col>
-                </v-row>
-              </v-card-text> -->
-              <!-- <div v-if="false"> -->
+            <v-container fill-height fluid>
+  <v-row align="center"
+      justify="center" style="padding-top:50%; position:absolute; left: 35%;">
+      <p class="red--text">No notification found!</p>
+  </v-row>
+</v-container>
               <v-virtual-scroll
                 :items="notificationunread"
                 :item-height="90"
                 height="300"
                 width="500"
               >
+
+        
                 <template v-slot:default="{ item }">
                   <v-list-item>
                     <v-row>
@@ -180,7 +186,7 @@
                 </template>
               </v-virtual-scroll>
               <!-- </div> -->
-              <v-card-text class="pt-4 text-center">
+              <v-card-text class="pt-4 text-center" v-if="notificationunread.length!=0">
                 <v-row>
                   <v-col cols="12" align="center" class="notif-mark" @click="read_notification()">
                     Mark all as read({{notificationunread.length}})

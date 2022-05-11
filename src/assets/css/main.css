@@ -708,3 +708,13 @@
     .cursor {
         cursor: pointer;
     }
+    
+    .hideOnExpand {
+        transition: all 0.5ms;
+    }
+    
+    .v-expansion-panel-header--active .hideOnExpand {
+        height: 0px;
+        transition: all 0.5ms;
+        font-size: 0px;
+    }
