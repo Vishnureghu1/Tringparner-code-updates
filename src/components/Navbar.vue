@@ -136,11 +136,11 @@
           <v-menu bottom width="378px" height="504px" rounded offset-y>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" icon>
-              <v-badge
-          color="red"
-          content="6"
-        >
-                <v-icon color="black">mdi-bell-outline</v-icon>
+                <v-badge color="red" content="0"  v-if="notificationunread.length==0">
+                  <v-icon color="black">mdi-bell-outline</v-icon>
+                </v-badge>
+                <v-badge color="red" :content="notificationunread.length"  v-if="notificationunread.length!=0">
+                  <v-icon color="black">mdi-bell-outline</v-icon>
                 </v-badge>
               </v-btn>
             </template>
@@ -153,32 +153,36 @@
                   <div align="center" class="notif-mark">View all</div>
                 </router-link>
                 <span fab small>
-                  
                   <v-icon>mdi-close</v-icon>
                 </span>
               </v-card-title>
               <v-divider> </v-divider>
-            <v-container fill-height fluid>
-  <v-row align="center"
-      justify="center" style="padding-top:50%; position:absolute; left: 35%;">
-      <p class="red--text">No notification found!</p>
-  </v-row>
-</v-container>
+              <v-container
+                fill-height
+                fluid
+                v-if="notificationunread.length == 0"
+              >
+                <v-row
+                  align="center"
+                  justify="center"
+                  style="padding-top: 50%; position: absolute; left: 35%"
+                >
+                  <p class="red--text">No notification found!</p>
+                </v-row>
+              </v-container>
               <v-virtual-scroll
                 :items="notificationunread"
                 :item-height="90"
                 height="300"
                 width="500"
               >
-
-        
                 <template v-slot:default="{ item }">
                   <v-list-item>
                     <v-row>
                       <v-col cols="12">
-                        <div class="notif-type">{{item.type}}</div>
+                        <div class="notif-type">{{ item.type }}</div>
                         <div class="notif-content">{{ item.content }}</div>
-                        <div class="notif-time mb-2">{{item.time}}</div>
+                        <div class="notif-time mb-2">{{ item.time }}</div>
                       </v-col>
                     </v-row>
                   </v-list-item>
@@ -186,10 +190,18 @@
                 </template>
               </v-virtual-scroll>
               <!-- </div> -->
-              <v-card-text class="pt-4 text-center" v-if="notificationunread.length!=0">
+              <v-card-text
+                class="pt-4 text-center"
+                v-if="notificationunread.length != 0"
+              >
                 <v-row>
-                  <v-col cols="12" align="center" class="notif-mark" @click="read_notification()">
-                    Mark all as read({{notificationunread.length}})
+                  <v-col
+                    cols="12"
+                    align="center"
+                    class="notif-mark"
+                    @click="read_notification()"
+                  >
+                    Mark all as read({{ notificationunread.length }})
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -245,14 +257,14 @@
 </template>
 
 <script>
-import { db } from '@/main.js';
+import { db } from "@/main.js";
 import firebase from "firebase";
 import moment from "moment";
 import axios from "axios";
 export default {
   async created() {
     let localStorageUserObj = localStorage.getItem("tpu");
-      this.notification_data();
+    this.notification_data();
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
@@ -267,7 +279,7 @@ export default {
     }
   },
   data: () => ({
-    unreadids:[],
+    unreadids: [],
     drawer: false,
     isLoggedIn: false,
     userRole: "",
@@ -504,38 +516,56 @@ export default {
     report() {
       this.$router.push("/report").catch(() => {});
     },
-     notification_data(){
-      this.notificationread =[];
-      this.notificationunread =[];
+    notification_data() {
+      this.notificationread = [];
+      this.notificationunread = [];
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
-    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
-    // console.log(owneruid)
-    this.owneruid = owneruid;
-    this.uid = localStorageUserObj.uid;
-    db.collection("NotificationCenter").where("Uid","==",this.uid).where("IsRead","==",false).get().then(async(snap) =>{
-      // console.log(snap.docs[0])
-			snap.docs.forEach((element)=> {
-        console.log("1")
-        if(element.data().IsRead == false){
-        this.unreadids.push(element.id)
-				this.notificationunread.push({id:element.id,content:element.data().Message,type:element.data().Type,time:moment(new Date(element.data().FormDate)).format("D MMM Y hh:mm a")});
-        }
-			});
-		}).catch((err)=>{
-			console.log(err.message)
-		})
+      const owneruid =
+        localStorageUserObj.role == "OWNER"
+          ? localStorageUserObj.uid
+          : localStorageUserObj.OwnerUid;
+      this.AccountId =
+        localStorageUserObj.role == "OWNER"
+          ? localStorageUserObj.AccountId
+          : localStorageUserObj.OwnerAccountId;
+      // console.log(owneruid)
+      this.owneruid = owneruid;
+      this.uid = localStorageUserObj.uid;
+      db.collection("NotificationCenter")
+        .where("Uid", "==", this.uid)
+        .where("IsRead", "==", false)
+        .get()
+        .then(async (snap) => {
+          // console.log(snap.docs[0])
+          snap.docs.forEach((element) => {
+            console.log("1");
+            if (element.data().IsRead == false) {
+              this.unreadids.push(element.id);
+              this.notificationunread.push({
+                id: element.id,
+                content: element.data().Message,
+                type: element.data().Type,
+                time: moment(new Date(element.data().FormDate)).format(
+                  "D MMM Y hh:mm a"
+                ),
+              });
+            }
+          });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     },
-     read_notification() {
+    read_notification() {
       const token = localStorage.getItem("token");
       const details = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/notification/read",
         method: "POST",
         data: {
-          owner_uid:this.owneruid,
+          owner_uid: this.owneruid,
           updated_by: this.uid,
-          uid:this.uid,
-          notification_id:this.unreadids,
+          uid: this.uid,
+          notification_id: this.unreadids,
         },
         headers: {
           token: token,
@@ -545,7 +575,7 @@ export default {
 
       axios(details)
         .then(() => {
-           this.notification_data()
+          this.notification_data();
         })
         .catch((error) => {
           console.error(error);
