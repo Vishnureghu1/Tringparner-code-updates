@@ -34,10 +34,13 @@
       :headers="headers"
       :items="paymentHistory"
       :search="search"
-      :hide-default-footer="true"
-    ><template slot="item.invoice" :slot-scope="invoice">
-            <v-icon class="mt-6 mb-5 mr-7" color="black" @click="dat(invoice)">mdi-download</v-icon>
-        </template></v-data-table>
+    >
+
+ <template v-slot:item.invoice="{ item }">
+            <v-icon class="mt-6 mb-5 mr-7" color="black"  @click="getDownloadData(item.invoice)"> mdi-download</v-icon>
+        </template> 
+        
+        </v-data-table>
   </v-card>
                      
                     </v-row>
@@ -65,10 +68,11 @@ export default {
      db.collection("paymentTransaction").where("Uid","==",owneruid).where("Status","==",true).get().then(async(snap) =>{
        if(snap){
          snap.docs.forEach(element => {this.paymentHistory.push({
-           name: new Date(element.data().HookDate.seconds *1000).toLocaleString(),
-           amount:element.data().InvoiceAmount,
-           paymentMode: element.data().Type,
-           invoice: element.data().Invoice
+            name: new Date(element.data().HookDate.seconds *1000).toLocaleString(),
+            amount:element.data().InvoiceAmount,
+            paymentMode: element.data().Type,
+            invoice:element.data().Invoice,
+            indexKey:this.indexKey++
            })});
          }else{
              this.noblock ="No Blocked Numbers"
@@ -78,6 +82,7 @@ export default {
 		})
   },
   data: () => ({
+    indexKey:0,
        search: '',
         headers: [
           {
@@ -89,7 +94,7 @@ export default {
           { text: 'Payment Mode', value: 'paymentMode' },
           { text: 'Invoices', value: 'invoice' },
         ],
-        paymentHistory: [],
+    paymentHistory: [],
     facebook_info: false,
     instagram_info: false,
     paymentOptions: false,
@@ -109,8 +114,9 @@ export default {
   // },
 
   methods: {
-    dat(id){
-      console.log("vel",id)
+
+    getDownloadData(data){
+console.log(data);
     },
     getBill() {
       var token = localStorage.getItem("token");

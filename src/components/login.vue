@@ -87,7 +87,7 @@ import { db } from '@/main.js';
 							this.currentPage = this.Udata.currentPage
 							this.role = this.Udata.role
 							if (this.role == 'ADMIN' || this.role == 'AGENT') {
-								this.$router.push("/dashboard")
+								this.$router.push("/all_calls")
 							} else {
 								if (this.currentPage == "onboarding_listing") {
 									this.$router.push("/ChooseNumbers")
@@ -98,7 +98,7 @@ import { db } from '@/main.js';
 								} else if (this.currentPage == "onboarding_review") {
 									this.$router.push("/Review")
 								} else if (this.currentPage == "onboarding_dashboard" || this.currentPage == "onboarding_success") {
-									this.$router.push("/dashboard")
+									this.$router.push("/all_calls")
 								}
 							}
 						})
@@ -127,6 +127,7 @@ import { db } from '@/main.js';
 							this.errorMessage = error.message
 							console.log(this.errorMessage)
 						})
+						this.$root.vtoast.show({message: 'otp send successfully', color: 'green', timer: 5000});
 				}
 			},
 		changeLoginNumber() {
@@ -138,17 +139,15 @@ import { db } from '@/main.js';
 			if (this.otp.length != 6) {
 				alert('Invalid OTP Format !');
 			} else {
-				this.overlay = true
+				// this.overlay = true
 				let userid = ''
 				let code = this.otp
 				window.confirmationResult.confirm(code).then(function(result) {
 						userid = result.user.uid;
 					})
-					.catch(function(error) {
-						console.log('error details', error)
-					})
-					.finally(() => {
+					.then(() => {
 						this.uid = userid
+						this.overlay = true
 						console.log('ID', this.uid)
 						console.log('phno', this.phNo)
 						const options = {
@@ -226,7 +225,10 @@ import { db } from '@/main.js';
 							.catch((error) => {
 								console.error(error);
 							})
-					});
+					}).catch((error)=>{
+						console.log('error details', error);
+						this.$root.vtoast.show({message: 'invalid otp', color: 'red', timer: 5000});					
+					})
 			}
 		},
 		initReCaptcha() {

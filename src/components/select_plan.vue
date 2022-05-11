@@ -22,8 +22,8 @@
                 max-width="1200"
               >
                 <h2 class="lato-font f23 mt-16 mb-4">
-                  {{ rerenderKey }}
-                  Select your Tring Partner Payments Plan (Components)
+                 
+                  Select your Tring Partner Payments Plan
                 </h2>
                 <h2 class="sub_title mt-2 mb-16">
                   Please select from below plan<br />
@@ -137,22 +137,24 @@
                 max-width="800"
               >
                 <h2 class="page_title lato-font mb-4 mt-10">
-                  Review Informations and Pay Now (components)
+                  Review Informations and Pay Now
                 </h2>
                 <h2 class="sub_title mb-16">
                   Review your business information like business address
                 </h2>
                 <v-row>
+
                   <v-col cols="12" sm="6" align="start">
                     <h2 class="name_heading light4 f14">
                       Billing Address
-                      <v-icon
-                        v-on="on"
-                        color="gray"
-                        small
-                        @click="changeAddress()"
-                        >mdi-pencil</v-icon
-                      >
+                      <span
+                      v-on="on"
+                      class="primary--text f14 cursor"
+                      @click="changeAddress()"
+                      small
+                    >
+                      Edit</span
+                    >
                     </h2>
                     <h2 class="name_heading light4">Business Name</h2>
                     <h2 class="content_title medium mb-4 f14">{{ name }}</h2>
@@ -168,34 +170,41 @@
                     <h2 class="content_title medium mb-4 f14">{{ email }}</h2>
                   </v-col>
                   <v-col cols="12" sm="6" align="start">
+                    
                     <h2 class="name_heading light4">Payment Plan</h2>
-                    <span
-                      v-on="on"
-                      class="text--red"
-                      @click="changePlan()"
-                      small
-                    >
-                      Change</span
-                    >
-                    <h2
+                    <v-row class="mb-0">
+                      <v-col cols="12" sm="6">   <h2
                       v-if="planId == '1'"
-                      class="content_title medium mb-4 f14"
+                      class="content_title medium mb-0 f14"
                     >
                       1 month - Rs 500
                     </h2>
                     <h2
                       v-else-if="planId == '2'"
-                      class="content_title medium mb-4 f14"
+                      class="content_title medium mb-0 f14"
                     >
                       6 months - Rs 2700
                     </h2>
                     <h2
                       v-else-if="planId == '3'"
-                      class="content_title medium mb-4 f14"
+                      class="content_title medium mb-0 f14"
                     >
                       12 months - Rs 4800
-                    </h2>
-                    <v-row>
+                    </h2></v-col>
+                      <v-col cols="12" sm="6"  align="end"><span
+                      v-on="on"
+                      class="primary--text f14 cursor"
+                      @click="changePlan()"
+                      small
+                    >
+                      Change</span
+                    ></v-col>
+
+                    
+                    </v-row>
+                 
+                  
+                    <v-row class="mt-0 pt-0">
                       <v-col cols="12" sm="6" align="start">
                         <h2 class="name_heading light4 mb-4">Actual Cost</h2>
                         <h2
@@ -446,6 +455,7 @@ export default {
           this.changePlanArea = false;
           this.overlay = false;
           this.forceRerenderKey();
+          this.$emit('planvalue',1);
         })
         .catch((error) => {
           console.error(error);
@@ -453,6 +463,7 @@ export default {
     },
     changePlan() {
       this.changePlanArea = true;
+      
 
       //  this.$router.push("/SelectPlan");
     },
