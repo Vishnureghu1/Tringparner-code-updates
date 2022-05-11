@@ -50,31 +50,38 @@
                             <v-card>
                               <v-list class="pl-5">
                                 <v-checkbox
-                                  input-value="true"
+                                  :input-value="AllCallsSelected"
                                   value
                                   class="mb-0 pb-0"
                                   label="All Calls"
+                                  @change="handleAllCallsChange"
                                 ></v-checkbox>
 
                                 <v-checkbox
                                   value
+                                  :input-value="AnsweredCallsSelected"
                                   label="Answered Calls"
+                                  @change="handleAnsweredCallsChange"
                                 ></v-checkbox>
 
                                 <v-checkbox
                                   value
+                                  :input-value="MissedCallsSelected"
                                   label="Missed Calls"
+                                  @change="handleMissedCallsChange"
                                 ></v-checkbox>
 
                                 <v-checkbox
                                   value
+                                  :input-value="OfflineCallsSelected"
                                   label="Offline Calls"
+                                  @change="handleOfflineCallsChange"
                                 ></v-checkbox>
                                 <v-menu
-                                  ref="menu"
-                                  v-model="menu"
+                                  ref="exportDateMenu"
+                                  v-model="exportDateMenu"
                                   :close-on-content-click="false"
-                                  :return-value.sync="dates"
+                                  :return-value.sync="exportDates"
                                   transition="scale-transition"
                                   offset-y
                                   min-width="auto"
@@ -82,7 +89,7 @@
                                   <template v-slot:activator="{ on, attrs }">
                                     <v-text-field
                                       prepend-inner-icon="mdi-calendar"
-                                      v-model="dateRangeText"
+                                      v-model="exportDateRangeText"
                                       label="Date filter"
                                       readonly
                                       outlined
@@ -90,10 +97,46 @@
                                       v-on="on"
                                     ></v-text-field>
                                   </template>
+                                  <v-date-picker
+                                    v-model="exportDates"
+                                    no-title
+                                    range
+                                    show-adjacent-months
+                                    scrollable
+                                    color="red"
+                                  >
+                                    <v-row no-gutters>
+                                      <v-col cols="12" sm="6">
+                                        <v-btn
+                                          color="white"
+                                          class="primary--text"
+                                          width="100%"
+                                          rounded
+                                          @click="exportDateMenu = false"
+                                        >
+                                          Cancel
+                                        </v-btn>
+                                      </v-col>
+                                      <v-col cols="12" sm="6">
+                                        <v-btn
+                                          class="white--text"
+                                          width="100%"
+                                          color="red"
+                                          rounded
+                                          @click="exportDateMenu = false"
+                                        >
+                                          Save
+                                        </v-btn>
+                                      </v-col>
+                                    </v-row>
+                                  </v-date-picker>
                                 </v-menu>
                                 <v-text-field
                                   label="Enter e-mail ID"
                                   prepend-inner-icon="mdi-email-outline"
+                                  @input="handleEmailChange"
+                                  v-model="EmailSelected"
+                                  :rules="dispatchEmailRules"
                                 ></v-text-field>
                               </v-list>
                               <v-card-actions>
@@ -226,10 +269,10 @@
                           class="number_heading nunito-font light3"
                           align="center"
                         >
-                         10
+                         {{ callSummary.ClickCount }}
                         </h3>
                         <h6 class="comment_heading" align="center">
-                          Offline
+                          Call Attempted
                         </h6>
                       </v-card>
                     </v-col>
@@ -377,7 +420,7 @@
 
                               <v-col
                                 cols="6"
-                                sm="4"
+                                sm="3"
                                 align="center"
                                 class="d-block"
                               >
@@ -394,7 +437,7 @@
                                   </h6>
                                 </v-card>
                               </v-col>
-                              <v-col cols="6" sm="4" align="center">
+                              <v-col cols="6" sm="3" align="center">
                                 <v-card
                                   outlined
                                   color="transparent"
@@ -408,7 +451,7 @@
                                   </h6>
                                 </v-card>
                               </v-col>
-                              <v-col cols="6" sm="4" align="center">
+                              <v-col cols="6" sm="3" align="center">
                                 <v-card
                                   outlined
                                   color="transparent"
@@ -419,6 +462,20 @@
                                   </h2>
                                   <h6 class="comment_heading" align="center">
                                     Not Answered
+                                  </h6>
+                                </v-card>
+                              </v-col>
+                              <v-col cols="6" sm="3" align="center">
+                                <v-card
+                                  outlined
+                                  color="transparent"
+                                  class="nunito-font"
+                                >
+                                  <h2 align="center" class="nunito-font light3">
+                                    {{ item.summary.ClickCount }}
+                                  </h2>
+                                  <h6 class="comment_heading" align="center">
+                                    Call Attempted
                                   </h6>
                                 </v-card>
                               </v-col>
@@ -485,18 +542,24 @@ export default {
         .substr(0, 10),
       new Date().toISOString().substr(0, 10),
     ],
-    customChartData: [
-      { all: 30, missed: 20, answered: 10 },
-      { all: 1, missed: 0, answered: 1 },
-      { all: 11, missed: 1, answered: 10 },
-      { all: 33, missed: 20, answered: 13 },
-      { all: 12, missed: 2, answered: 10 },
-      { all: 30, missed: 20, answered: 10 },
-      { all: 0, missed: 0, answered: 0 },
-      { all: 0, missed: 0, answered: 0 },
-      { all: 30, missed: 20, answered: 10 },
-      { all: 20, missed: 5, answered: 15 },
-      { all: 30, missed: 20, answered: 10 },
+    exportDates: [
+      new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 6)
+        .toISOString()
+        .substr(0, 10),
+      new Date().toISOString().substr(0, 10),
+    ],
+  customChartData: [
+      {'all':30, 'missed':20, 'answered': 10},
+      {'all':1, 'missed':0, 'answered': 1},
+      {'all':11, 'missed':1, 'answered': 10},
+      {'all':33, 'missed':20, 'answered': 13},
+      {'all':12, 'missed':2, 'answered': 10},
+      {'all':30, 'missed':20, 'answered': 10},
+      {'all':0, 'missed':0, 'answered': 0},
+      {'all':0, 'missed':0, 'answered': 0},
+      {'all':30, 'missed':20, 'answered': 10},
+      {'all':20, 'missed':5, 'answered': 15},
+      {'all':30, 'missed':20, 'answered': 10},
     ],
     chartData: [
       [
@@ -545,7 +608,23 @@ export default {
       .toISOString()
       .substr(0, 10),
     toDate: new Date().toISOString().substr(0, 10),
+    exportFromDate: new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 6)
+      .toISOString()
+      .substr(0, 10),
+    exportToDate: new Date().toISOString().substr(0, 10),
     noCalls: false,
+    AllCallsSelected: true,
+    AnsweredCallsSelected: false,
+    MissedCallsSelected: false,
+    OfflineCallsSelected: false,
+    EmailSelected: '',
+    IsValidEmailSelected: false,
+    dispatchEmailRules: [
+      v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+    ],
+    exportDateMenu: false,
+    menu: false,
+    valid: false,
   }),
   watch: {
     dates: function (val) {
@@ -568,6 +647,14 @@ export default {
         return this.dates.join(" -- ");
       }
     },
+    exportDateRangeText() {
+      console.log("this.exportDates", this.exportDates);
+      if (this.exportDates.includes(",")) {
+        return this.exportDates.join(" ~ To ~ ");
+      } else {
+        return this.exportDates.join(" -- ");
+      }
+    },
   },
   created() {
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
@@ -575,6 +662,11 @@ export default {
       localStorageUserObj.role == "OWNER"
         ? localStorageUserObj.uid
         : localStorageUserObj.OwnerUid;
+    this.EmailSelected =
+      localStorageUserObj.role == "OWNER"
+        ? localStorageUserObj.Email
+        : '';
+    this.IsValidEmailSelected =  true;
     this.AccountId = localStorageUserObj.AccountId;
 
     this.getAllCalls();
@@ -613,15 +705,122 @@ export default {
     forceRerenderKey() {
       this.rerenderKey++;
     },
+    handleAllCallsChange(opn) {
+      console.log('handleAllCallsChange', opn);
+      this.AllCallsSelected = opn;
+
+      if(opn) {
+        this.AnsweredCallsSelected = false;
+        this.MissedCallsSelected = false;
+        this.OfflineCallsSelected = false;
+      } else {
+        this.AnsweredCallsSelected = true;
+        this.MissedCallsSelected = true;
+        this.OfflineCallsSelected = true;
+      }
+    },
+    handleAnsweredCallsChange(opn) {
+      console.log('handleAnsweredCallsChange', opn);
+      this.AnsweredCallsSelected = opn;
+      if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
+        this.AllCallsSelected = true;
+      }
+    },
+    handleMissedCallsChange(opn) {
+      console.log('handleMissedCallsChange', opn);
+      this.MissedCallsSelected = opn;
+      if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
+        this.AllCallsSelected = true;
+      }
+    },
+    handleOfflineCallsChange(opn) {
+      console.log('handleOfflineCallsChange', opn);
+      this.OfflineCallsSelected = opn;
+      if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
+        this.AllCallsSelected = true;
+      }
+    },
+    handleEmailChange(opn) {
+      console.log('handleEmailChange', opn);
+      this.EmailSelected = opn;
+      if(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(opn)) {
+        console.log('Valid Email');
+        this.IsValidEmailSelected = true;
+      } else {
+        console.log('InValid Email');
+        this.IsValidEmailSelected = false;
+      }
+    },
     handleApplyFilter() {
-      this.isUpdating = true;
-      // this.filterMongo();
+      if(this.IsValidEmailSelected) {
+        this.isUpdating = true;
+        // this.filterMongo();
+
+        let payload = {
+          uid: this.ownerUid,
+          email: this.EmailSelected,
+          startdate: this.exportFromDate,
+          enddate: this.exportToDate,
+          type: [],
+          AccountId: this.AccountId,
+          updated_by: this.ownerUid
+        };
+
+        if(this.AllCallsSelected) {
+          payload.type.push('All');
+        }
+        if(this.AnsweredCallsSelected) {
+          payload.type.push('Answered');
+        }
+        if(this.MissedCallsSelected) {
+          payload.type.push('Missed');
+        }
+        if(this.OfflineCallsSelected) {
+          payload.type.push('Offline');
+        }
+        console.log(payload);
+
+        const options = {
+          url: "https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/export",
+          method: "POST",
+          headers: {
+            token: localStorage.getItem("token"),
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+          data: payload,
+        };
+        console.log(options);
+        this.$axios(options)
+          .then((response) => {
+            console.log(response.data);
+            
+            this.$root.vtoast.show({
+              message: "Call Data Dispatched to Email",
+              color: "green",
+              timer: 2000,
+            });
+
+            this.isUpdating = false;
+            this.exportMenu = false;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+
+      } else {
+        this.$root.vtoast.show({
+          message: "Please Provide a Valid Email!",
+          color: "red",
+          timer: 2000,
+        });
+      }
     },
     getAllCalls() {
       let callSummary = {
         Answered: 0,
         Missed: 0,
         Total: 0,
+        ClickCount: 0,
       };
       let agentWiseReport = {};
       let agentsObj = {};
@@ -690,6 +889,7 @@ export default {
                         Total: 0,
                         Missed: 0,
                         Answered: 0,
+                        ClickCount: 0,
                       },
                       agent_report: [],
                     });
@@ -700,6 +900,12 @@ export default {
                     } else if (call.callstatus == "Answered") {
                       agentWiseReport[doc.AgentUid]["summary"].Answered++;
                       agentWiseReport[doc.AgentUid]["summary"].Total++;
+                    }
+
+                    if ("ClickCount" in call) {
+                      console.log('ClickCount', call.ClickCount);
+                      callSummary.ClickCount++;
+                      agentWiseReport[call.ClickCount.Uid]["summary"].ClickCount++;
                     }
 
                     if ([doc.AgentUid] in agentsObj) {
@@ -780,6 +986,12 @@ export default {
                       agentWiseReport[doc.AgentUid]["summary"].Answered++;
                     }
 
+                    if ("ClickCount" in call) {
+                      console.log('ClickCount', call.ClickCount);
+                      callSummary.ClickCount++;
+                      agentWiseReport[call.ClickCount.Uid]["summary"].ClickCount++;
+                    }
+
                     let callDayObj = new Date(element.data().logDate);
                     let call_month = callDayObj.toLocaleString("default", {
                       month: "short",
@@ -841,6 +1053,8 @@ export default {
                   }
                   // console.log(`agentWiseReport -->  ${doc.AgentUid} --> `, JSON.stringify(agentWiseReport[doc.AgentUid]));
                 });
+
+
               } else if ("BusyCalleesAccounts" in call) {
                 console.log("has BusyCalleesAccounts ", call.callstatus);
                 call.agentDetails.forEach(async (doc) => {
