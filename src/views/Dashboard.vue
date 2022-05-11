@@ -11,7 +11,6 @@
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 mb-0">Dashboard</h2>
                     </v-col>
-                  
                   </v-row>
 
                   <v-row>
@@ -27,10 +26,7 @@
                         >
                         </Icon>
 
-                        <div class="mx-2">
-                          Today's Missed Open Calls
-                      
-                        </div>
+                        <div class="mx-2">Today's Missed Open Calls</div>
                       </v-row>
                       <h4 class="heading mt-0 mb-2"></h4>
                       <v-row v-if="!missedCallPanel.length">
@@ -48,16 +44,21 @@
                           v-for="(agentId, key, index) in missedCalls"
                           :key="index"
                         >
-                          <v-expansion-panel-header v-if="getAgentNameAndCalls(agentId) !='' ">
+                          <v-expansion-panel-header
+                            v-if="getAgentNameAndCalls(agentId) != ''"
+                          >
                             <div>
                               <v-row no-gutters>
                                 <v-col cols="2" flex>
                                   <h4
                                     class="name_heading font-weight-light mt-2"
                                   >
-                                  
-                                    {{ getAgentNameAndCalls(agentId, 'missed_calls') }}
-
+                                    {{
+                                      getAgentNameAndCalls(
+                                        agentId,
+                                        "missed_calls"
+                                      )
+                                    }}
                                   </h4>
                                   <br />
                                 </v-col>
@@ -73,43 +74,35 @@
                             v-for="(calls, innerIndex) in getCallDetails(
                               agentId
                             )"
-                            :key="innerIndex" :class="innerIndex <= 5 ? 'show' :'hide' " 
+                            :key="innerIndex"
+                            :class="innerIndex <= 5 ? 'show' : 'hide'"
                           >
-                          
-                            <v-row v-if="innerIndex <= 4"> 
+                            <v-row v-if="innerIndex <= 4">
                               <v-col cols="12" sm="10">
                                 <h3 class="number_heading font-weight-light">
-                                {{ calls.callerNumber }}
+                                  {{ calls.callerNumber }}
                                 </h3>
                                 <h6 class="comment_heading font-weight-light">
                                   {{ calls.callTime }}
                                 </h6>
                               </v-col>
 
-                              <v-col cols="12" sm="12" v-if="innerIndex == 4" >
-                        <div
-                          class="link_style mt-1 ml-0 center" align="center"
-                        @click="viewMissedCalls()"   
-                        >
-                          Show All Missed Calls <v-icon
-                          v-bind="attrs"
-                          v-on="on"
-                          color="#EE1C25"
-                          
-                          >mdi-arrow-right</v-icon
-                        >
-                        </div>
-                      </v-col>
-
-
-                             
+                              <v-col cols="12" sm="12" v-if="innerIndex == 4">
+                                <div
+                                  class="link_style mt-1 ml-0 center"
+                                  align="center"
+                                  @click="viewMissedCalls()"
+                                >
+                                  Show All Missed Calls
+                                  <v-icon
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    color="#EE1C25"
+                                    >mdi-arrow-right</v-icon
+                                  >
+                                </div>
+                              </v-col>
                             </v-row>
-
-
-                               
-                                
-                      
-                                
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>
@@ -141,7 +134,12 @@
                                   <h4
                                     class="name_heading font-weight-light mt-2"
                                   >
-                                    {{ getAgentNameAndCalls(agentId, 'skipped_calls') }}
+                                    {{
+                                      getAgentNameAndCalls(
+                                        agentId,
+                                        "skipped_calls"
+                                      )
+                                    }}
                                   </h4>
                                   <br />
                                 </v-col>
@@ -182,15 +180,55 @@
                         >
                         Today's Reminders
                       </h4>
+
                       <v-row v-if="!remiderCalls.length">
                         <v-col cols="12" align="left" class="pl-15">
                           <div class="mb-3 mt-0 pl-5 ml-5">Nothing to show</div>
                         </v-col>
                       </v-row>
-                      <v-row class="">
-                        <!-- {{remiderCalls}} -->
-                        <v-col cols="12" align="left" class="pl-15">
-                          <div
+
+                      <v-expansion-panels
+                        accordion
+                        flat
+                        v-model="remiderCallsPanel"
+                      >
+                        <v-expansion-panel
+                          v-for="(agentId, index) in remiderCalls"
+                          :key="index"
+                        >
+                          <v-expansion-panel-header
+                            v-if="getAgentNameAndCalls(agentId) != ''"
+                          >
+                            <div>
+                              <v-row no-gutters>
+                                <v-col cols="5" flex>
+                                  <h4
+                                    class="
+                                      name_heading
+                                      font-weight-light
+                                      mt-2
+                                      pl-10
+                                      ml-5
+                                    "
+                                  >
+                                    {{
+                                      getAgentNameAndCalls(
+                                        agentId,
+                                        "missed_calls"
+                                      )
+                                    }}
+                                  </h4>
+                                  <br />
+                                </v-col>
+                                <v-spacer></v-spacer>
+                                <v-col cols="7" flex>
+                                  <v-divider class="mt-5 mb-0"></v-divider>
+                                </v-col>
+                              </v-row>
+                            </div>
+                          </v-expansion-panel-header>
+
+                          <v-expansion-panel-content
                             v-for="(reminder, index) in remiderCalls"
                             :key="index"
                             class="mb-3 mt-5 pl-5 ml-5"
@@ -211,9 +249,62 @@
                                 {{ reminder.ReminderAt }}
                               </h5>
                             </div>
-                          </div>
-                        </v-col>
-                      </v-row>
+                          </v-expansion-panel-content>
+                        </v-expansion-panel>
+                      </v-expansion-panels>
+
+                      <v-expansion-panels accordion flat>
+                        <v-expansion-panel>
+                          <v-expansion-panel-header>
+                            <div>
+                              <v-row no-gutters>
+                                <v-col cols="5" flex align="left">
+                                  <h4
+                                    class="
+                                      name_heading
+                                      font-weight-light
+                                      mt-2
+                                      pl-10
+                                      ml-5
+                                    "
+                                  >
+                                    Agent Name (12)
+                                  </h4>
+                                  <br />
+                                </v-col>
+                                <v-spacer></v-spacer>
+                                <v-col cols="7" flex>
+                                  <v-divider class="mt-5 mb-0"></v-divider>
+                                </v-col>
+                              </v-row>
+                            </div>
+                          </v-expansion-panel-header>
+
+                          <v-expansion-panel-content
+                            class="mb-3 mt-5 mt-2 pl-10 ml-5"
+                          >
+                            <h4
+                              class="number_heading font-weight-light mr-15"
+                              align="left"
+                            >
+                              +91 0012345678
+                            </h4>
+                            <div class="mr-16">
+                              <h5
+                                align="left"
+                                class="
+                                  comment_heading
+                                  font-weight-light
+                                  mr-16
+                                  mt-1
+                                "
+                              >
+                                Sample reminder text here <br>at 12/05/2022 11:00 AM
+                              </h5>
+                            </div>
+                          </v-expansion-panel-content>
+                        </v-expansion-panel>
+                      </v-expansion-panels>
                     </v-col>
                   </v-row>
                 </div>
@@ -247,7 +338,7 @@ export default {
     remiderCalls: [],
     agentNames: {},
     callCount: 0,
-    c:1,
+    c: 1,
     today: new Date().toISOString().substr(0, 10),
     // today: new Date().getTime(),
   }),
@@ -275,11 +366,12 @@ export default {
       // var valObj = this.agentNames[agentId];
       // return `${valObj.name} (${valObj.missed_calls} )`;
 
-      return (agentId, type) => `${this.agentNames[agentId]['name']} (${this.agentNames[agentId][type]})`;
+      return (agentId, type) =>
+        `${this.agentNames[agentId]["name"]} (${this.agentNames[agentId][type]})`;
     },
   },
   methods: {
-    getCount(){
+    getCount() {
       return this.c++;
     },
     isToday(timestampInMilliseconds) {
@@ -318,7 +410,7 @@ export default {
         this.userEmail = parsedUser.Email;
 
         this.userRole = parsedUser.role;
-        console.log('this.today', this.today);
+        console.log("this.today", this.today);
 
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
@@ -332,7 +424,10 @@ export default {
               // .then((querySnapshot) => {
               .onSnapshot((querySnapshot) => {
                 querySnapshot.forEach((logs) => {
-                  console.log('logs.data().agentDetails', logs.data().agentDetails);
+                  console.log(
+                    "logs.data().agentDetails",
+                    logs.data().agentDetails
+                  );
                   var agentData = logs.data().agentDetails;
                   agentData.forEach((agentData) => {
                     var agentID = agentData.AgentUid;
@@ -366,23 +461,31 @@ export default {
                       //       callCount: this.callCount++,
                       //     });
                       this.missedCallPanel.push({
-                            id: this.nextTodoId++,
-                            callTime: call_time,
-                            callerNumber: callerNumber,
-                            ringduration: "00:" + logs.data().ringduration,
-                            agentId: agentID,
-                            agentName: agentName,
-                            callCount: this.callCount++,
-                          });
+                        id: this.nextTodoId++,
+                        callTime: call_time,
+                        callerNumber: callerNumber,
+                        ringduration: "00:" + logs.data().ringduration,
+                        agentId: agentID,
+                        agentName: agentName,
+                        callCount: this.callCount++,
+                      });
                     }
                     // this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 1});
 
-                    if(!([agentID] in this.agentNames)) {
-                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 1, skipped_calls: 0 });
+                    if (!([agentID] in this.agentNames)) {
+                      this.$set(this.agentNames, agentID, {
+                        name: agentName,
+                        missed_calls: 1,
+                        skipped_calls: 0,
+                      });
                     } else {
                       let incrCnt = this.agentNames[agentID].missed_calls + 1;
-                      console.log('incrCnt', incrCnt);
-                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: incrCnt, skipped_calls: 0 });
+                      console.log("incrCnt", incrCnt);
+                      this.$set(this.agentNames, agentID, {
+                        name: agentName,
+                        missed_calls: incrCnt,
+                        skipped_calls: 0,
+                      });
                     }
                   });
                 });
@@ -443,14 +546,21 @@ export default {
                       agentName: agentName,
                     });
 
-                    if(!([agentID] in this.agentNames)) {
-                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 0, skipped_calls: 1 });
+                    if (!([agentID] in this.agentNames)) {
+                      this.$set(this.agentNames, agentID, {
+                        name: agentName,
+                        missed_calls: 0,
+                        skipped_calls: 1,
+                      });
                     } else {
                       let mc = this.agentNames[agentID].missed_calls;
                       let incrCnt = this.agentNames[agentID].skipped_calls + 1;
-                      this.$set(this.agentNames, agentID, {name : agentName, missed_calls: mc, skipped_calls: incrCnt });
+                      this.$set(this.agentNames, agentID, {
+                        name: agentName,
+                        missed_calls: mc,
+                        skipped_calls: incrCnt,
+                      });
                     }
-
                   });
                 });
               })
