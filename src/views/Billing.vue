@@ -20,7 +20,7 @@
                       Enter your billing details
                     </h2>
                     <v-form
-                      @submit="checkForm"
+                     
                       class="mt-3 ml-5 mr-4"
                       ref="form"
                       method="post"
@@ -47,6 +47,7 @@
                         outlined
                         label="Pincode"
                         v-model="pincode"
+                        :rules="pincodeRules"
                         @change="searchPincode()"
                       ></v-text-field>
                       <v-text-field
@@ -194,14 +195,28 @@ export default {
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               let user_details = doc.data();
+              console.log(user_details);
               this.virtualnumber = user_details.virtualNumber[0];
               this.planId = user_details.PlanId;
               this.userPhoneNumber = user_details.PhoneNumber;
+              this.virtualNumber = user_details.virtualNumber[0];
+              this.address = user_details.Address;
+              this.pincode = user_details.PinCode;
+              this.city = user_details.City;
+              this.state = user_details.State;
+              this.email = user_details.Email;
+              this.businessName = user_details.CompanyName;
+              this.name = user_details.FirstName;
+              this.phno = user_details.PhoneNumber;
+              this.gst = user_details.Gstin;
+             
+              this.orderId = user_details.OrderId;
             });
           });
       }
     });
   },
+
   methods: {
     searchPincode() {
       console.log(this.pincodeDb);
@@ -226,7 +241,11 @@ export default {
       });
     },
     nextPage() {
-      this.overlay = true;
+     var dd =  this.$refs.form.validate();
+
+      if(dd==true){
+
+        this.overlay = true;
       const details = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/owner",
         method: "POST",
@@ -275,8 +294,9 @@ export default {
         .catch((error) => {
           console.error(error);
         });
-    },
+    }
   },
+  }
 };
 </script>
 
