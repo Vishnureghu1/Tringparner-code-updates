@@ -82,7 +82,7 @@
                         color="deep-purple accent-4"
                       ></v-progress-linear>
                     </v-col>
-                    <v-col cols="12" sm="7" align="end">
+                    <v-col cols="12" sm="7" align="end" class="pt-6">
                       <v-text-field
                         v-show="!hidden"
                         absolute
@@ -103,24 +103,36 @@
                       >
 
            
-                        <template v-slot:activator="{ on, attrs }">
+                        <template v-slot:activator="{ on, attrs }" >
                         
-                          <span
+                          <span  class="pr-7 "
                             >
                             <v-icon
-                              class="mt-6 mb-5 mr-4"
+                              class="mt-0 mb-5 mr-4"
                               color="black"
                               @click="hidden = !hidden"
                               >mdi-magnify</v-icon
                             >
-                            
-                            <v-icon
-                              class="mt-6 mb-5 mr-7"
+                            <v-badge v-if="showBadge==true"
+  dot
+  overlap
+>    <v-icon
+                              class="mt-0 mb-5 mr-0 "
                               color="black"
                               v-bind="attrs"
                               v-on="on"
                               >mdi-filter-variant</v-icon
-                            >
+                            ></v-badge>
+                                                 <span v-if="showBadge==false"
+  
+  overlap
+>    <v-icon
+                              class="mt-0 mb-5 mr-0 "
+                              color="black"
+                              v-bind="attrs"
+                              v-on="on"
+                              >mdi-filter-variant</v-icon
+                            ></span>
                           </span>
                         </template>
 
@@ -791,6 +803,7 @@ export default {
     Icon,
   },
   data: () => ({
+    showBadge:false,
     hidealert: "",
     otp: "",
     addNotesDialog: false,
@@ -1001,6 +1014,7 @@ export default {
     handleApplyFilter() {
       // this.isUpdating = true;
       this.filterMongo();
+      this.showBadge=true;
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
@@ -1105,6 +1119,7 @@ export default {
       this.selectedUser = "All";
       this.selectedNumber = "All";
       this.filterMongo();
+      this.showBadge=false;
     },
     handleScroll: function (e) {
       if (e.target.scrollHeight - 300 <= e.target.scrollTop) {

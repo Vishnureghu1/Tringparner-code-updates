@@ -136,10 +136,10 @@
           <v-menu bottom width="378px" height="504px" rounded offset-y>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" icon>
-                <v-badge color="red" content="0"  v-if="notificationunread.length==0">
+                <v-badge color="red" content="0" overlap  v-if="notificationunread.length==0">
                   <v-icon color="black">mdi-bell-outline</v-icon>
                 </v-badge>
-                <v-badge color="red" :content="notificationunread.length"  v-if="notificationunread.length!=0">
+                <v-badge color="red" :content="notificationunread.length"  overlap v-if="notificationunread.length!=0">
                   <v-icon color="black">mdi-bell-outline</v-icon>
                 </v-badge>
               </v-btn>
