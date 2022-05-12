@@ -223,7 +223,7 @@ this.forceRerenderKey();
                       if (testing_status.Stage == "PAID" && initial) {
                         initial = false;
                         this.overlay = false;
-                        this.$router.push("/Dashboard");
+                        this.$router.push("/all_calls");
                       }
                     });
                   });
