@@ -287,7 +287,7 @@
                           <div>
                             <v-row class="calls_list">
                               <v-col cols="12" sm="10">
-                                {{details}}
+                                
                                 <h3 class="font-weight-light">
                                   <v-icon
                                     v-if="details.callstatus == 'Answered'"
@@ -303,7 +303,7 @@
                                     width="24"
                                     height="24"
                                   />+91 {{ details.callerNumber }}
-                                  <v-icon color="gray" class="mr-5"
+                                  <v-icon color="gray" class="mr-5" v-if="details.isBlocked==true"
                                     >mdi-shield-lock-outline</v-icon
                                   >
 
@@ -318,6 +318,7 @@
                                     </template>
 
                                     <v-list>
+                                     
                                       <div
                                         v-for="getNotes in details.Note"
                                         :key="getNotes.text"
@@ -361,6 +362,7 @@
                               <v-spacer></v-spacer>
                             </v-row>
 
+
                             <div class="ml-10 font-weight-thin date_time">
                               <span v-if="details.conversationduration != 0"
                                 >{{ formatTime(details.conversationduration) }},
@@ -389,6 +391,21 @@
                                 {{ getNotes.Note }}
                               </div>
                             </div>
+    <div
+                              class="ml-10 mt-3 font-weight-thin hideOnExpand"
+                             
+                            >
+                              <div>
+                                <span
+                                
+                                  class="mdi mdi-alarm grey--text"
+                                >
+                                </span>
+                               Sample reminder here
+                              </div>
+                            </div>
+
+                            
                           </div>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
@@ -918,15 +935,9 @@ export default {
     },
   },
   methods: {
-    isBlockedCheck(num){
-      if(this.blocked_numbers_.includes(num)){
-        return true
-      }else{
-        return false
-      }
-    },
+
     // Blocked Status
-    blockedStatus() {
+   async blockedStatus() {
       this.blocked_numbers_ =[];
       db.collection("blockcalls")
         .where("Uid", "==", this.ownerUid)
@@ -941,6 +952,16 @@ export default {
         .catch((err) => {
           console.log(err.message);
         });
+    },
+        isBlockedCheck(num){
+          console.log(this.blocked_numbers_);
+          console.log(num);
+          console.log('blocked numebr');
+      if(this.blocked_numbers_.includes(num)){
+        return true
+      }else{
+        return false
+      }
     },
     formatTime(seconds) {
       return [
