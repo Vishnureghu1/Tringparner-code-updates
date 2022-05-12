@@ -27,13 +27,66 @@
                     <v-row no-gutters >
                        <v-card class="pl-5" elevation="0">
     <v-card-title>
-      <v-btn 
+      <!-- <v-row justify="center" v-if="showExport"> -->
+          <v-dialog v-model="dialog" max-width="332px">
+      <v-card class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">{{title}}</h3>
+        </v-card-title>
+       
+        <v-card-actions>
+          <!-- <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="close()"
+          >
+            Cancel
+          </v-btn> -->
+           <a v-bind:href="exportUrl" class="red--text a-red" target="_blank" download>click to download </a>
+          <!-- <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+            @click="add_user1()"
+          >
+            Submit
+          </v-btn> -->
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+      <!-- <v-dialog v-model="dialog" persistent max-width="500px"> -->
+        <!-- <v-card class="popup-layout">
+          <v-card-title class="justify-center">
+            <span class="popup-title">Export</span>
+          </v-card-title>
+          <v-card-text>
+            <h3 v-if="showWait" class="popup-subtitle">Exporting please wait</h3> -->
+            <!-- <div v-if="showDownload" class="popup-subtitle">
+              <a v-bind:href="exportUrl" class="red--text a-red" target="_blank">click to download </a>
+            </div> -->
+          <!-- </v-card-text>
+          <v-card-actions class="justify-center">
+            <v-btn class="red--text popup-red-button" text @click="dialog = false"> Cancel </v-btn>
+          </v-card-actions>
+        </v-card> -->
+      <!-- </v-dialog> -->
+    <!-- </v-row> -->
+       <!-- <div v-if="showDownload" class="popup-subtitle">
+              <a v-bind:href="exportUrl" class="red--text a-red" target="_blank">click to download </a>
+            </div> -->
+      <!-- <v-btn 
    class="ma-2" 
-   outlined 
+   :disabled="disabled" 
+   ref="submitBtn"
    href="http://www.africau.edu/images/default/sample.pdf"
    download>
-       Download PDF
-</v-btn>
+    
+</v-btn> -->
+<!-- <button type="button" ref="submitBtn" @click="submit">Submit</button> -->
       <v-spacer></v-spacer>
     </v-card-title>
     <v-data-table
@@ -93,6 +146,10 @@ export default {
 		})
   },
   data: () => ({
+    dialog:false,
+    submitBtn:"",
+    showDownload:false,
+    exportUrl:"",
     indexKey:0,
        search: '',
         headers: [
@@ -127,20 +184,34 @@ export default {
   methods: {
 
     getDownloadData(data){
+     
+      //  this.$refs.submitBtn.click();
 console.log(data);
-axios({
-          url: 'http://www.africau.edu/images/default/sample.pdf', // download file link goes here
-          method: 'GET',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          responseType: 'blob',
-        }).then((res) => {
-          var FILE = window.URL.createObjectURL(new Blob([res.data]));
-          var docUrl = document.createElement('x');
-          docUrl.href = FILE;
-          docUrl.setAttribute('download', 'sample.pdf');
-          document.body.appendChild(docUrl);
-          docUrl.click();
-        });
+// axios.get('https://vetriweddingshoot.s3.ap-south-1.amazonaws.com/111.pdf', { responseType: 'blob' })
+//       .then(response => {
+//         const blob = new Blob([response.data], { type: 'application/pdf' })
+//         const link = document.createElement('a')
+//         link.href = URL.createObjectURL(blob)
+//         link.download = "label"
+//         link.click()
+//         URL.revokeObjectURL(link.href)
+//       }).catch(console.error)
+
+
+
+// axios({
+//           url: 'http://www.africau.edu/images/default/sample.pdf', // download file link goes here
+//           method: 'GET',
+//           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+//           // responseType: 'blob',
+//         }).then((res) => {
+//           var FILE = window.URL.createObjectURL(new Blob([res.data]));
+//           var docUrl = document.createElement('x');
+//           docUrl.href = FILE;
+//           docUrl.setAttribute('download', 'sample.pdf');
+//           document.body.appendChild(docUrl);
+//           docUrl.click();
+//         });
                   // "https://storage.googleapis.com/adminstorage-gou6m/csvFile.pdf?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-n8mtz%40tringpartner-v2.iam.gserviceaccount.com%2F20220511%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20220511T163506Z&X-Goog-Expires=86401&X-Goog-SignedHeaders=host&X-Goog-Signature=2e28e95b623d8842752cb8f7832048678e0d5fed76af607c2703506cab146758a89bcf3c8f8d8e30dde1c7cc951c76d374ba0102ce5621b4e2170f0ed7b7a545aed6f10b323842038c3dc23e472f07959d0c511e2056fc1b5cd74599630fe37f4b3fd399bfe87443ffd8aa75e143ebd5f3ade7069bd6eaf92325114a047659dcf7bbbc126e1b50ede4be2349b56765c94ef117412a766ad9264bef480f2a1040d884c76d6ea7dd8224c75bbb83dbd1342ddb4c787ffff7113c10c926f566578211e19e26abde41901e66a06e081a6d356540a9eb3c59e22ec4b2efd91730eed6508858c41a0b0d1b525340ea0aa9548998a75081c3513f0d15f61d14f9b330f2";                 
           //        axios({
           //         //  url:"https://tringpartner.s3.ap-south-1.amazonaws.com/1647144077.18265.mp3",
@@ -162,18 +233,22 @@ axios({
           // document.body.appendChild(docUrl);
           // docUrl.click();
           //       });
-// const details = {
-//         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/invoice/"+parseInt(data),
-//         method: "POST",
-//         headers: { token: localStorage.getItem("token") },
-//       };
-//       axios(details).then(async (response) => {
-//         console.log("res",response.data.url[0])
-//       })
+const details = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/invoice/"+parseInt(data),
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+      };
+      axios(details).then(async (response) => {
+         console.log("res",response.data.url[0])
+          this.dialog = true,
+      this.showDownload = true;     
+        this.exportUrl = response.data.url[0];
+        // console.log("res",response.data.url[0])
+      })
     },
-    getBill() {
+    // getBill() {
     
-    },
+    // },
 
     // getOrderIdforPayment(){
     // var token = localStorage.getItem("token");

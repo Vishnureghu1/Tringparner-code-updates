@@ -806,6 +806,7 @@ export default {
     Icon,
   },
   data: () => ({
+    blocked_numbers_:[],
     showBadge:false,
     hidealert: "",
     otp: "",
@@ -974,7 +975,7 @@ export default {
           },
         };
         console.log(blockNumber);
-        this.$axios(blockNumber)
+        axios(blockNumber)
           .then((response) => {
             this.blocked_number = true;
             this.dialog = false;
@@ -1149,7 +1150,7 @@ export default {
         },
       };
       console.log(user_data);
-      this.$axios(user_data)
+      axios(user_data)
         .then((response) => {
           if (response.data.status == true) {
             this.notes_added = true;
@@ -1202,7 +1203,7 @@ export default {
         },
       };
       console.log(user_data);
-      this.$axios(user_data)
+      axios(user_data)
         .then((response) => {
           if (response.data.status == true) {
             this.reminder_added = true;
@@ -1230,7 +1231,7 @@ export default {
         },
       };
       console.log(user_data);
-      this.$axios(user_data)
+      axios(user_data)
         .then((response) => {
           console.log(response);
           if (response.data.status == true) {
@@ -1336,7 +1337,6 @@ export default {
         "updatedFilterCallsPayload",
         JSON.stringify(updatedFilterCallsPayload)
       );
-
       var cfdata = {
         headers:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
@@ -1426,6 +1426,7 @@ export default {
               source: this.calldetails.source,
               virtualnumber: virtualnumber,
               called_name: this.called_name,
+              Reminder: this.calldetails.Reminder.ReminderAt,
               recordingUrl: this.calldetails.recordingurl,
             });
             this.realdata.push(this.detail);
@@ -1701,12 +1702,13 @@ export default {
                   virtualnumber: virtualnumber,
                   called_name: this.called_name,
                   recordingUrl: this.calldetails.recordingurl,
-                  reminder: this.calldetails.Reminder,
+                  reminder: this.calldetails.Reminder.ReminderAt,
                   blocked: this.calldetails,
+                  isBlocked: this.test(calledNumber)
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
-                console.log("snap calllog ", this.realdata);
+                console.log("snapq calllog ", this.realdata);
                 // call details
               });
             })
@@ -1715,6 +1717,13 @@ export default {
             });
         }
       };
+    },
+    test(num){
+      if(this.blocked_numbers_.includes(num)){
+        return false
+      }else{
+        return true
+      }
     },
     emailStatus() {
       db.collection("users")
@@ -1743,11 +1752,16 @@ export default {
     // Blocked Status
 
     blockedStatus() {
+      this.blocked_numbers_ =[];
       db.collection("blockcalls")
-        .where("uid", "==", this.uid)
+        .where("Uid", "==", this.ownerUid)
         .get()
         .then(async (snap) => {
-          console.log("test Snap", snap.docs);
+          // if(snap.docs){
+             snap.docs.forEach(element=>{
+               this.blocked_numbers_.push(element.data().Number)
+             })
+          // }
         })
         .catch((err) => {
           console.log(err.message);
@@ -1925,10 +1939,11 @@ export default {
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder,
                         blocked: "",
+                        isBlocked:this.test(calledNumber)
                       });
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
-                      console.log("snap calllog ", this.realdata);
+                      console.log("snap1 calllog ", this.realdata);
                       // call details
                     });
                   })
