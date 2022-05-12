@@ -172,6 +172,11 @@ export default {
   methods: {   
      missedcall(){
        const filter_agents = this.participants.filter((el)=> { return el.status == true})
+       if(filter_agents.length == 0){
+          this.initial_data()
+          // this.participants[0] = Object.assign( this.participants[0],{status:true});
+          return
+       }
        const details = {
 						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/missedcall',
             // url:"http://localhost:3000/jp",
@@ -193,7 +198,7 @@ export default {
 						.then((response) => {
 						console.log(response)
             this.initial_data()
-             this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 5000})
+            //  this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 000})
 						})
 						.catch((error) => {
 							console.error(error);
@@ -226,7 +231,12 @@ export default {
            this.participants[index] = Object.assign(element,{status:false});
          }
       })
-    console.log(this.participants)
+      const empty = this.participants.find(({status}) => status=== true)
+      if(!empty){
+        this.participants[0] = Object.assign( this.participants[0],{status:true});
+        // this.missedcall()
+      }
+    // console.log(this.participants)
 		}).catch((err)=>{
 			console.log(err.message)
 		})
