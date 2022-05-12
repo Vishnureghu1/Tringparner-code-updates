@@ -759,8 +759,10 @@ export default {
         let payload = {
           uid: this.ownerUid,
           email: this.EmailSelected,
-          startdate: this.exportFromDate,
-          enddate: this.exportToDate,
+          startdate: new Date(this.exportFromDate).getTime(),
+          enddate: new Date(this.exportToDate).getTime(),
+          // startdate: 1652338880000,
+          // enddate: 1652338880000,
           type: [],
           AccountId: this.AccountId,
           updated_by: this.ownerUid
@@ -781,7 +783,7 @@ export default {
         console.log(payload);
 
         const options = {
-          url: "https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/export",
+          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/export",
           method: "POST",
           headers: {
             token: localStorage.getItem("token"),

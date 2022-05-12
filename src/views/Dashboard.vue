@@ -193,11 +193,11 @@
                         v-model="remiderCallsPanel"
                       >
                         <v-expansion-panel
-                          v-for="(agentId, index) in remiderCalls"
+                          v-for="(agentId, index) in reminderCalls"
                           :key="index"
                         >
                           <v-expansion-panel-header
-                            v-if="getAgentNameAndCalls(agentId) != ''"
+                            v-if="getAgentNameAndReminders(agentId) != ''"
                           >
                             <div>
                               <v-row no-gutters>
@@ -212,9 +212,9 @@
                                     "
                                   >
                                     {{
-                                      getAgentNameAndCalls(
+                                      getAgentNameAndReminders(
                                         agentId,
-                                        "missed_calls"
+                                        "reminder_calls"
                                       )
                                     }}
                                   </h4>
@@ -229,7 +229,7 @@
                           </v-expansion-panel-header>
 
                           <v-expansion-panel-content
-                            v-for="(reminder, index) in remiderCalls"
+                            v-for="(reminder, index) in getCallDetailsReminder(agentId)"
                             :key="index"
                             class="mb-3 mt-5 pl-5 ml-5"
                           >
@@ -335,8 +335,10 @@ export default {
     agentName: "",
     missedCallPanel: [],
     skippedCallPanel: [],
+    remiderCallsPanel: [],
     remiderCalls: [],
     agentNames: {},
+    agentReminderNames: {},
     callCount: 0,
     c: 1,
     today: new Date().toISOString().substr(0, 10),
@@ -369,6 +371,16 @@ export default {
       return (agentId, type) =>
         `${this.agentNames[agentId]["name"]} (${this.agentNames[agentId][type]})`;
     },
+    getAgentNameAndReminders() {
+      return (agentId, type) =>
+        `${this.agentReminderNames[agentId]["name"]} (${this.agentReminderNames[agentId][type]})`;
+    },
+    reminderCalls() {
+      const reminderCalls = new Set();
+      this.remiderCallsPanel.forEach((reminder) => reminderCalls.add(reminder.AgentUid));
+      console.log('reminderCalls called---->', reminderCalls);
+      return Array.from(reminderCalls);
+    },
   },
   methods: {
     getCount() {
@@ -394,6 +406,11 @@ export default {
     getCallDetailsSkipped(agentId) {
       return this.skippedCallPanel.filter(
         (skipped) => skipped.agentId === agentId
+      );
+    },
+    getCallDetailsReminder(agentId) {
+      return this.remiderCallsPanel.filter(
+        (reminder) => reminder.AgentUid === agentId
       );
     },
     //get agent name
@@ -503,6 +520,12 @@ export default {
 
       if (localStorageUserObj) {
         let parsedUser = JSON.parse(localStorageUserObj);
+
+        this.ownerUid =
+          parsedUser.role == "OWNER" ?
+          parsedUser.uid :
+          parsedUser.OwnerUid;
+
         this.userEmail = parsedUser.Email;
 
         this.userRole = parsedUser.role;
@@ -512,7 +535,7 @@ export default {
             this.uid = user.uid;
             db.collection("callLogs")
               .where("callstatus", "==", "Answered")
-              .where("owneruid", "==", this.uid)
+              .where("owneruid", "==", this.ownerUid)
               .where("date", ">=", new Date(this.today))
               .orderBy("date", "asc")
               .get()
@@ -577,6 +600,12 @@ export default {
 
       if (localStorageUserObj) {
         let parsedUser = JSON.parse(localStorageUserObj);
+
+        this.ownerUid =
+          parsedUser.role == "OWNER" ?
+          parsedUser.uid :
+          parsedUser.OwnerUid;
+
         this.userEmail = parsedUser.Email;
 
         this.userRole = parsedUser.role;
@@ -584,9 +613,32 @@ export default {
         firebase.auth().onAuthStateChanged((user) => {
           if (user && this.userRole != "AGENT") {
             this.uid = user.uid;
+
+            console.log('Reminders from calls');
+
+
+              // db.collection("callLogs")
+              // // .where("owneruid", "==", this.ownerUid)
+              // // .where("Reminder", "!=", "{}")
+              // .where('Reminder.ReminderAt',">=", new Date().getTime())
+              // .where('Reminder.ReminderAt',"<=", new Date().getTime())
+              // .get()
+              // .then((querySnapshot) => {
+              //   querySnapshot.forEach((logs) => {
+              //     console.log('Reminders from calls', logs.data());
+              //     // console.log(logs.data());
+
+              //   });
+              // })
+              // .catch((error) => {
+              //   console.log("Error getting logs: ", error);
+              // });
+
+
             db.collection("Reminders")
-              .where("OwnerUid", "==", this.uid)
-              // .where('ReminderAt',"==", new Date().getTime())
+              .where("OwnerUid", "==", this.ownerUid)
+              // .where('ReminderAt',">=", new Date().getTime())
+              // .where('ReminderAt',"<=", new Date().getTime())
               .get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((logs) => {
@@ -609,13 +661,32 @@ export default {
                   console.log("now", now);
                   console.log("isToday", this.isToday(logs.data().ReminderAt));
 
-                  if (this.isToday(logs.data().ReminderAt)) {
-                    this.remiderCalls.push({
+                  // if (this.isToday(logs.data().ReminderAt)) {
+                    this.remiderCallsPanel.push({
                       ReminderAt: call_time,
                       callerNumber: callerNumber,
                       AgentName: logs.data().Name,
+                      AgentUid: logs.data().AgentUid,
+                      Message: logs.data().Message,
+                      Type: logs.data().Type,
                     });
-                  }
+                  // }
+
+                  let AgentUid = logs.data().AgentUid;
+                  if (!([AgentUid] in this.agentReminderNames)) {
+                      this.$set(this.agentReminderNames, AgentUid, {
+                        name: logs.data().Name,
+                        reminder_calls: 1,
+                      });
+                    } else {
+                      let incrCnt = this.agentReminderNames[AgentUid].reminder_calls + 1;
+                      console.log("incrCnt", incrCnt);
+                      this.$set(this.agentReminderNames, AgentUid, {
+                        name: logs.data().Name,
+                        reminder_calls: incrCnt,
+                      });
+                    }
+
                 });
               })
               .catch((error) => {
@@ -643,13 +714,33 @@ export default {
                   var call_time = moment(date).format("hh:mm a");
                   call_time = moment(date).fromNow();
 
-                  if (this.isToday(logs.data().ReminderAt)) {
-                    this.remiderCalls.push({
+                  // if (this.isToday(logs.data().ReminderAt)) {
+                    this.remiderCallsPanel.push({
                       ReminderAt: call_time,
                       callerNumber: callerNumber,
                       AgentName: logs.data().Name,
+                      AgentUid: logs.data().AgentUid,
+                      Message: logs.data().Message,
+                      Type: logs.data().Type,
+                    });
+                  // }
+
+                  let AgentUid = logs.data().AgentUid;
+                  if (!([AgentUid] in this.agentReminderNames)) {
+                    this.$set(this.agentReminderNames, AgentUid, {
+                      name: logs.data().Name,
+                      reminder_calls: 1,
+                    });
+                  } else {
+                    let incrCnt = this.agentReminderNames[AgentUid].reminder_calls + 1;
+                    console.log("incrCnt", incrCnt);
+                    this.$set(this.agentReminderNames, AgentUid, {
+                      name: logs.data().Name,
+                      reminder_calls: incrCnt,
                     });
                   }
+
+                    
                 });
               })
               .catch((error) => {
