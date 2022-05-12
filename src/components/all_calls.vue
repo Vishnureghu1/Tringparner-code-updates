@@ -287,7 +287,7 @@
                           <div>
                             <v-row class="calls_list">
                               <v-col cols="12" sm="10">
-                                <!-- {{details}} -->
+                                {{details}}
                                 <h3 class="font-weight-light">
                                   <v-icon
                                     v-if="details.callstatus == 'Answered'"
@@ -918,6 +918,30 @@ export default {
     },
   },
   methods: {
+    isBlockedCheck(num){
+      if(this.blocked_numbers_.includes(num)){
+        return true
+      }else{
+        return false
+      }
+    },
+    // Blocked Status
+    blockedStatus() {
+      this.blocked_numbers_ =[];
+      db.collection("blockcalls")
+        .where("Uid", "==", this.ownerUid)
+        .get()
+        .then(async (snap) => {
+          // if(snap.docs){
+             snap.docs.forEach(element=>{
+               this.blocked_numbers_.push(element.data().Number)
+             })
+          // }
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
     formatTime(seconds) {
       return [
         parseInt(seconds / 60 / 60),
@@ -963,7 +987,7 @@ export default {
           url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/blockcall",
           method: "POST",
           data: {
-            number: this.virtualNumber,
+            number: virtualNumber,
             owner_uid: this.ownerUid, //
             status: true,
             UpdatedBy: this.ownerUid, // owner uid
@@ -1428,6 +1452,9 @@ export default {
               called_name: this.called_name,
               Reminder: this.calldetails.Reminder.ReminderAt,
               recordingUrl: this.calldetails.recordingurl,
+              reminder: this.calldetails.Reminder,
+                        blocked: "",
+                        isBlocked:this.isBlockedCheck(calledNumber)
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1574,6 +1601,9 @@ export default {
               called_name: this.called_name,
               recordingUrl: this.calldetails.recordingurl,
               reminder: this.calldetails.Reminder,
+
+                        blocked: "",
+                        isBlocked:this.isBlockedCheck(calledNumber)
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1704,7 +1734,7 @@ export default {
                   recordingUrl: this.calldetails.recordingurl,
                   reminder: this.calldetails.Reminder.ReminderAt,
                   blocked: this.calldetails,
-                  isBlocked: this.test(calledNumber)
+                  isBlocked: this.isBlockedCheck(calledNumber)
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
@@ -1717,13 +1747,6 @@ export default {
             });
         }
       };
-    },
-    test(num){
-      if(this.blocked_numbers_.includes(num)){
-        return false
-      }else{
-        return true
-      }
     },
     emailStatus() {
       db.collection("users")
@@ -1749,24 +1772,7 @@ export default {
           console.log(err.message);
         });
     },
-    // Blocked Status
 
-    blockedStatus() {
-      this.blocked_numbers_ =[];
-      db.collection("blockcalls")
-        .where("Uid", "==", this.ownerUid)
-        .get()
-        .then(async (snap) => {
-          // if(snap.docs){
-             snap.docs.forEach(element=>{
-               this.blocked_numbers_.push(element.data().Number)
-             })
-          // }
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    },
   },
   created() {
 
@@ -1939,7 +1945,7 @@ export default {
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder,
                         blocked: "",
-                        isBlocked:this.test(calledNumber)
+                        isBlocked:this.isBlockedCheck(calledNumber)
                       });
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
