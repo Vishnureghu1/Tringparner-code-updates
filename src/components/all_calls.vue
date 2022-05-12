@@ -473,6 +473,7 @@
                                       </v-btn>
                                     </span>
                                   </span>
+                                  {{details.reminder}}
                                   <span>
                                     <v-btn
                                       color="red"
@@ -495,13 +496,13 @@
                                         )
                                       "
                                     >
-                                      Add Reminder
-                                      <!-- <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span> -->
+                                     
+                                      <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span>
                                     </v-btn>
                                   </span>
                                 </div>
                               </v-col>
-                              <!-- {{details}} -->
+                             
                               <v-col
                                 cols="12"
                                 sm="6"
@@ -923,6 +924,7 @@ export default {
     page: 1,
     name: "",
     userRole: "",
+    reminder:"",
   }),
   watch: {
     sendInviteLoader(val) {
@@ -937,16 +939,18 @@ export default {
   methods: {
 
     // Blocked Status
-   async blockedStatus() {
+   async blockedStatus(ownerUID) {
+     console.log('Owner UID'+ownerUID);
       this.blocked_numbers_ =[];
-      db.collection("blockcalls")
-        .where("Uid", "==", this.ownerUid)
+      db.collection("blockCalls")
+        .where("Uid", "==", ownerUID)
         .get()
         .then(async (snap) => {
           // if(snap.docs){
-             snap.docs.forEach(element=>{
-               this.blocked_numbers_.push(element.data().Number)
+            snap.docs.forEach(element=>{
+              this.blocked_numbers_.push(element.data().Number)
              })
+               console.log('Blocked status'+ this.blocked_numbers_);
           // }
         })
         .catch((err) => {
@@ -1454,12 +1458,12 @@ export default {
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-            var virtualnumber =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
+            // var virtualnumber =
+            //   this.calldetails.virtualnumber.slice(0, 5) +
+            //   " " +
+            //   this.calldetails.virtualnumber.slice(5, 7) +
+            //   " " +
+            //   this.calldetails.virtualnumber.slice(7, 11);
             this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
@@ -1469,13 +1473,11 @@ export default {
               uniqueid: this.calldetails.uniqueid,
               Note: note,
               source: this.calldetails.source,
-              virtualnumber: virtualnumber,
-              called_name: this.called_name,
-              Reminder: this.calldetails.Reminder.ReminderAt,
-              recordingUrl: this.calldetails.recordingurl,
-              reminder: this.calldetails.Reminder,
-                        blocked: "",
-                        isBlocked:this.isBlockedCheck(calledNumber)
+                        virtualnumber: this.calldetails.callerNumber,
+                        called_name: this.called_name,
+                        recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
+                        isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1603,12 +1605,12 @@ export default {
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-            var virtualnumber =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
+            // var virtualnumber =
+            //   this.calldetails.virtualnumber.slice(0, 5) +
+            //   " " +
+            //   this.calldetails.virtualnumber.slice(5, 7) +
+            //   " " +
+            //   this.calldetails.virtualnumber.slice(7, 11);
             this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
@@ -1618,13 +1620,11 @@ export default {
               uniqueid: this.calldetails.uniqueid,
               Note: note,
               source: this.calldetails.source,
-              virtualnumber: virtualnumber,
-              called_name: this.called_name,
-              recordingUrl: this.calldetails.recordingurl,
-              reminder: this.calldetails.Reminder,
-
-                        blocked: "",
-                        isBlocked:this.isBlockedCheck(calledNumber)
+                        virtualnumber: this.calldetails.callerNumber,
+                        called_name: this.called_name,
+                        recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
+                        isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1735,12 +1735,12 @@ export default {
                   this.calldetails.callerNumber.slice(5, 7) +
                   " " +
                   this.calldetails.callerNumber.slice(7, 11);
-                var virtualnumber =
-                  this.calldetails.virtualnumber.slice(0, 5) +
-                  " " +
-                  this.calldetails.virtualnumber.slice(5, 7) +
-                  " " +
-                  this.calldetails.virtualnumber.slice(7, 11);
+                // var virtualnumber =
+                //   this.calldetails.virtualnumber.slice(0, 5) +
+                //   " " +
+                //   this.calldetails.virtualnumber.slice(5, 7) +
+                //   " " +
+                //   this.calldetails.virtualnumber.slice(7, 11);
                 this.detail = Object.assign({}, this.detail, {
                   callstatus: this.calldetails.callstatus,
                   name: this.calldetails.name[0],
@@ -1750,12 +1750,12 @@ export default {
                   uniqueid: this.calldetails.uniqueid,
                   Note: note,
                   source: this.calldetails.source,
-                  virtualnumber: virtualnumber,
-                  called_name: this.called_name,
-                  recordingUrl: this.calldetails.recordingurl,
-                  reminder: this.calldetails.Reminder.ReminderAt,
-                  blocked: this.calldetails,
-                  isBlocked: this.isBlockedCheck(calledNumber)
+                        virtualnumber: this.calldetails.callerNumber,
+                        called_name: this.called_name,
+                        recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
+                        isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
+                  
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
@@ -1812,7 +1812,7 @@ export default {
         if (user) {
           this.uid = user.uid;
           this.emailStatus();
-          this.blockedStatus();
+          this.blockedStatus(this.ownerUid);
           // console.log("User Id : " + this.uid);
           // this.sendMessage(this.uid);
           db.collection("users")
@@ -1945,28 +1945,27 @@ export default {
                         this.calldetails.callerNumber.slice(5, 7) +
                         " " +
                         this.calldetails.callerNumber.slice(7, 11);
-                      var virtualnumber =
-                        this.calldetails.virtualnumber.slice(0, 5) +
-                        " " +
-                        this.calldetails.virtualnumber.slice(5, 7) +
-                        " " +
-                        this.calldetails.virtualnumber.slice(7, 11);
+                      // var virtualnumber =
+                      //   this.calldetails.virtualnumber.slice(0, 5) +
+                      //   " " +
+                      //   this.calldetails.virtualnumber.slice(5, 7) +
+                      //   " " +
+                      //   this.calldetails.virtualnumber.slice(7, 11);
                       this.detail = Object.assign({}, this.detail, {
                         callstatus: this.calldetails.callstatus,
                         name: this.calldetails.name[0],
                         dateTime: call_time,
                         conversationduration:
-                          this.calldetails.conversationduration,
+                        this.calldetails.conversationduration,
                         callerNumber: calledNumber,
                         uniqueid: this.calldetails.uniqueid,
                         Note: note,
                         source: this.calldetails.source,
-                        virtualnumber: virtualnumber,
+                        virtualnumber: this.calldetails.callerNumber,
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder,
-                        blocked: "",
-                        isBlocked:this.isBlockedCheck(calledNumber)
+                        reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
+                        isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
                       });
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
