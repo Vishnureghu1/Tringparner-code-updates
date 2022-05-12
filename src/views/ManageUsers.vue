@@ -542,7 +542,7 @@ export default {
 		})
     },
     buyuser(){
-       this.$router.push("/manageAddonUsers");
+       this.$router.push("/buyNewAddOnUser");
     },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");

@@ -1484,6 +1484,30 @@ export default {
 
       return searchCallsConditions;
     },
+      emailStatus() {
+      db.collection("users")
+        .where("uid", "==", this.uid)
+        .get()
+        .then(async (snap) => {
+          this.current_email = snap.docs[0].data().Email;
+          this.hidealert =
+            snap.docs[0].data().role == "OWNER" &&
+            snap.docs[0].data().IsEmailVerified == false
+              ? true
+              : false;
+          // this.hidealert =
+          //   snap.docs[0].data().IsEmailVerified == true ? false : true;
+          this.name =
+            snap.docs[0].data().role == "OWNER"
+              ? snap.docs[0].data().FirstName
+              : snap.docs[0].data().Name;
+          this.number = snap.docs[0].data().PhoneNumber;
+          console.log("test", this.hidealert);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
     searchMongo() {
       var searchCallsConditions = {
         page_number: this.page ? parseInt(this.page) : 1,
@@ -1795,6 +1819,7 @@ export default {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.uid = user.uid;
+            this.emailStatus();
           console.log("User Id : " + this.ownerUid);
 
           db.collection("users")

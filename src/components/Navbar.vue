@@ -179,7 +179,7 @@
                 <template v-slot:default="{ item }">
                   <v-list-item>
                     <v-row>
-                      <v-col cols="12">
+                      <v-col cols="12" @click="redirectpage(item.type)">
                         <div class="notif-type">{{ item.type }}</div>
                         <div class="notif-content">{{ item.content }}</div>
                         <div class="notif-time mb-2">{{ item.time }}</div>
@@ -499,6 +499,21 @@ export default {
     },
   },
   methods: {
+      redirectpage(page){
+      if(page == "AddOn User" || page == "Addon User"){
+           this.$router.push("/manageAddonUsers");
+      }
+     if(page == "AddOn Number"){
+             this.$router.push("/manageAddonNumbers");
+     }
+      if(page == "Call Notification"){
+             this.$router.push("/all_calls");
+     }
+     if(page == "Yesterday Activity Of All Agents"){
+             this.$router.push("/report");
+     }
+       
+    },
     forceRerenderKey: function () {
       this.rerenderKey += 1;
     },

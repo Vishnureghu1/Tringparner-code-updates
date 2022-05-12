@@ -1721,7 +1721,7 @@ export default {
         .where("uid", "==", this.uid)
         .get()
         .then(async (snap) => {
-          this.current_email = snap.docs[0].data().Email;
+          this.current_email =  (snap.docs[0].data().role == "OWNER")?snap.docs[0].data().Email:"";
           this.hidealert =
             snap.docs[0].data().role == "OWNER" &&
             snap.docs[0].data().IsEmailVerified == false

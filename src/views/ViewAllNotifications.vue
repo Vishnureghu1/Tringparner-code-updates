@@ -43,7 +43,7 @@
                                     elevation="0"
                                   >
                                     <v-row>
-                                      <v-col cols="12" @click="redirectpage()">
+                                      <v-col cols="12" @click="redirectpage(details.type)">
                                         <div class="notif-type">
                                           {{ details.type }}
                                         </div>
@@ -68,7 +68,7 @@
                                     elevation="0"
                                   >
                                     <v-row>
-                                      <v-col cols="12" @click="redirectpage()">
+                                      <v-col cols="12" @click="redirectpage(details.type)">
                                         <div class="notif-type">
                                           {{ details.type }}
                                         </div>
@@ -144,8 +144,20 @@ export default {
   }),
 
   methods: {
-    redirectpage(){
-       this.$router.push("/all_calls");
+    redirectpage(page){
+      if(page == "AddOn User" || page == "Addon User"){
+           this.$router.push("/manageAddonUsers");
+      }
+     if(page == "AddOn Number"){
+             this.$router.push("/manageAddonNumbers");
+     }
+      if(page == "Call Notification"){
+             this.$router.push("/all_calls");
+     }
+     if(page == "Yesterday Activity Of All Agents"){
+             this.$router.push("/report");
+     }
+       
     },
     goBack() {
       this.$router.push("/dashboard");

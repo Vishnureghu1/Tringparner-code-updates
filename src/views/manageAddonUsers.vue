@@ -31,13 +31,14 @@
                     <v-col cols="10" sm="3">
                       <v-btn
                         :disabled="dialog"
-                        :loading="dialog"
-                        @click="dialog2 = true"
+                        @click="buy()"
                         class="ma-0"
                         color="primary"
                         dark
                       >
-                        + Add New User
+                        + Buy New User
+                         <!-- :loading="dialog"
+                        @click="dialog2 = true" -->
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -430,6 +431,9 @@ export default {
     //     this.removeNumber = true;
     //   }
     // },
+    buy(){
+       this.$router.push("/buyNewAddOnUser");
+    },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
     },
