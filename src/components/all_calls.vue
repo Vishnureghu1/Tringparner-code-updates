@@ -475,9 +475,9 @@
                             <div class="mt-3 font-weight-thin hideOnExpand" >
                               <div>
                                 <span v-if="details.reminderTime!='' &&  details.reminder" class="mdi mdi-alarm grey--text" >
-                                </span>
                                {{ details.reminderPayload.Message }}, 
                                {{ details.reminderTime }}
+                                </span>
                                 <span v-if="details.reminder && details.reminderTime!=''" class="mdi mdi-pencil grey--text"                             
                                       @click="
                                         threeDotAction(
@@ -573,7 +573,7 @@
             <v-dialog v-model="dialog" max-width="400px" persistent>
               <v-card max-height>
                
-                <v-card-title class="mb-5">  <span class="text-h5">Reminder </span> <v-spacer></v-spacer> <span class="red--text light4 f14 cursor" @click="deleteReminder()">Remove</span></v-card-title>
+                <v-card-title class="mb-5">  <span class="text-h5">Reminder </span> <v-spacer></v-spacer> <span class="red--text light4 f14 cursor" @click="deleteReminder()" >Remove</span></v-card-title>
                 <v-card-text>
                   <v-text-field
                     label="Remind About"
