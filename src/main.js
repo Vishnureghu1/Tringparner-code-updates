@@ -41,5 +41,4 @@ import '/src/assets/css/main.css';
 
 Vue.prototype.$mongoApi = 'http://35.244.46.144:5000';
 Vue.prototype.$headerKeyMongo = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0';
-
 Vue.prototype.$cloudfareApi = 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web';
