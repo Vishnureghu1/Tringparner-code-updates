@@ -391,17 +391,13 @@
                                 {{ getNotes.Note }}
                               </div>
                             </div>
-    <div
-                              class="ml-10 mt-3 font-weight-thin hideOnExpand"
-                             
-                            >
+                            <div v-if="details.reminderPayload!='' " class="ml-10 mt-3 font-weight-thin hideOnExpand" >
                               <div>
-                                <span
-                                
-                                  class="mdi mdi-alarm grey--text"
-                                >
+                                <span class="mdi mdi-alarm grey--text" >
                                 </span>
-                               Sample reminder here
+                               <!-- Sample reminder here -->
+                               {{ details.reminderPayload.Message }}, 
+                               {{ details.reminderTime }}
                               </div>
                             </div>
 
@@ -473,7 +469,19 @@
                                       </v-btn>
                                     </span>
                                   </span>
-                                  {{details.reminder}}
+                                  <!-- {{details.reminder}} -->
+
+                            <!-- Copied from collapsed reminder section -->
+                            <div v-if="details.reminderPayload!='' " class="mt-3 font-weight-thin hideOnExpand" >
+                              <div>
+                                <span class="mdi mdi-alarm grey--text" >
+                                </span>
+                               {{ details.reminderPayload.Message }}, 
+                               {{ details.reminderTime }}
+                              </div>
+                            </div>
+                            <!-- Copied from collapsed reminder section -->
+
                                   <span>
                                     <v-btn
                                       color="red"
@@ -1473,11 +1481,13 @@ export default {
               uniqueid: this.calldetails.uniqueid,
               Note: note,
               source: this.calldetails.source,
-                        virtualnumber: this.calldetails.callerNumber,
-                        called_name: this.called_name,
-                        recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
-                        isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
+              virtualnumber: this.calldetails.callerNumber,
+              called_name: this.called_name,
+              recordingUrl: this.calldetails.recordingurl,
+              reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
+              reminderPayload: this.calldetails.Reminder ? this.calldetails.Reminder : '',
+              reminderTime: this.calldetails.Reminder ? moment(this.calldetails.Reminder.ReminderAt).format("D MMM Y hh:mm a") : '',
+              isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1624,6 +1634,8 @@ export default {
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
+                        reminderPayload: this.calldetails.Reminder ? this.calldetails.Reminder : '',
+                        reminderTime: this.calldetails.Reminder ? moment(this.calldetails.Reminder.ReminderAt).format("D MMM Y hh:mm a") : '',
                         isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
             });
             this.realdata.push(this.detail);
@@ -1754,6 +1766,8 @@ export default {
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
+                        reminderPayload: this.calldetails.Reminder ? this.calldetails.Reminder : '',
+                        reminderTime: this.calldetails.Reminder ? moment(this.calldetails.Reminder.ReminderAt).format("D MMM Y hh:mm a") : '',
                         isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
                   
                 });
@@ -1965,6 +1979,8 @@ export default {
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
+                        reminderPayload: this.calldetails.Reminder ? this.calldetails.Reminder : '',
+                        reminderTime: this.calldetails.Reminder ? moment(this.calldetails.Reminder.ReminderAt).format("D MMM Y hh:mm a") : '',
                         isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
                       });
                       this.realdata.push(this.detail);

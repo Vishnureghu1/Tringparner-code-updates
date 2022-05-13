@@ -661,7 +661,7 @@ export default {
                   console.log("now", now);
                   console.log("isToday", this.isToday(logs.data().ReminderAt));
 
-                  // if (this.isToday(logs.data().ReminderAt)) {
+                  if (this.isToday(logs.data().ReminderAt)) {
                     this.remiderCallsPanel.push({
                       ReminderAt: call_time,
                       callerNumber: callerNumber,
@@ -670,7 +670,7 @@ export default {
                       Message: logs.data().Message,
                       Type: logs.data().Type,
                     });
-                  // }
+                  }
 
                   let AgentUid = logs.data().AgentUid;
                   if (!([AgentUid] in this.agentReminderNames)) {
