@@ -225,7 +225,7 @@
                       <v-col cols="12" sm="8">
                         <v-row>
 
-                          <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
+                          <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
                             <v-card outlined color="transparent" class="">
                               <h3
                           class="number_heading nunito-font light3"
@@ -238,7 +238,7 @@
                         </h6>
                       </v-card>
                     </v-col>
-                    <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
+                    <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -249,7 +249,7 @@
                         <h6 class="comment_heading" align="center">Answered</h6>
                       </v-card>
                     </v-col>
-                    <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
+                    <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -263,7 +263,7 @@
                       </v-card>
                     </v-col>
 
-                          <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
+                    <!-- <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -275,7 +275,7 @@
                           Call Attempted
                         </h6>
                       </v-card>
-                    </v-col>
+                    </v-col> -->
                           </v-row>
 
                     </v-col>
@@ -722,6 +722,9 @@ export default {
     handleAnsweredCallsChange(opn) {
       console.log('handleAnsweredCallsChange', opn);
       this.AnsweredCallsSelected = opn;
+      if(opn) {
+        this.AllCallsSelected = false;
+      }
       if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
         this.AllCallsSelected = true;
       }
@@ -729,6 +732,9 @@ export default {
     handleMissedCallsChange(opn) {
       console.log('handleMissedCallsChange', opn);
       this.MissedCallsSelected = opn;
+      if(opn) {
+        this.AllCallsSelected = false;
+      }
       if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
         this.AllCallsSelected = true;
       }
@@ -736,6 +742,9 @@ export default {
     handleOfflineCallsChange(opn) {
       console.log('handleOfflineCallsChange', opn);
       this.OfflineCallsSelected = opn;
+      if(opn) {
+        this.AllCallsSelected = false;
+      }
       if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
         this.AllCallsSelected = true;
       }
