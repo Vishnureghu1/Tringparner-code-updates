@@ -234,7 +234,7 @@ console.log(data);
           // docUrl.click();
           //       });
 const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/invoice/"+parseInt(data),
+        url: this.$cloudfareApi+"/invoice/"+parseInt(data),
         method: "POST",
         headers: { token: localStorage.getItem("token") },
       };

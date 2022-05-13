@@ -224,7 +224,7 @@ export default {
   methods: {
     sendotp(){
        const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/otp",
+        url: this.$cloudfareApi+"/user/otp",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -249,7 +249,7 @@ export default {
     },
 verifyOTP(){
   const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/otp/verify",
+        url: this.$cloudfareApi+"/user/otp/verify",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {

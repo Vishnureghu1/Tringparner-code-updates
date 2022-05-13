@@ -231,7 +231,7 @@ export default {
       submit(){
       // console.log(this.selectedNumber,this.source)
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/rename",
+        url: this.$cloudfareApi+"/virtualNumber/rename",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {

@@ -444,7 +444,7 @@ export default {
       this.isProgressing = true;
       // RESET AUDIO
       const options = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/prompt",
+        url: this.$cloudfareApi+"/callDistribution/prompt",
         method: "POST",
         headers: {
           token: localStorage.getItem("token"),

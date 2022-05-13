@@ -273,7 +273,7 @@ export default {
     submit(){
       console.log(this.selectedNumber,this.source)
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/rename",
+        url: this.$cloudfareApi+"/virtualNumber/rename",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -295,7 +295,7 @@ export default {
       console.log("delete_number");
        console.log(this.selectedNumber,this.source)
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/delete",
+        url: this.$cloudfareApi+"/addon/delete",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {

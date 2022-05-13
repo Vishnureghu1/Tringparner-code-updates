@@ -324,8 +324,8 @@ export default {
         this.value = 100;
         this.overlay = true;
         const details = {
-          // url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/list",
-          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/list",
+          // url: this.$cloudfareApi+"/virtualNumber/list",
+          url: this.$cloudfareApi+"/virtualNumber/list",
           method: "POST",
           data: {
             uid: this.owneruid,
@@ -370,7 +370,7 @@ export default {
       let virtualNumber = this.toggle_none
       console.log(virtualNumber);
       const reserve = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/reservenumber",
+        url: this.$cloudfareApi+"/addon/reservenumber",
         method: "POST",
 
         data: {

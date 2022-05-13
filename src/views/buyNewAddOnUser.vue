@@ -468,7 +468,7 @@ export default {
     },
      paynow() {
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/payment",
+        url: this.$cloudfareApi+"/addon/payment",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {

@@ -956,7 +956,7 @@ export default {
         var Id = JSON.parse(tpu);
         console.log(Id);
         const blockNumber = {
-          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/blockcall",
+          url: this.$cloudfareApi+"/blockcall",
           method: "POST",
           data: {
             number: this.virtualNumber,
@@ -1033,7 +1033,7 @@ export default {
       this.changeEmailPopup = false;
       this.sendInviteLoader = true;
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/email/otp",
+        url: this.$cloudfareApi+"/email/otp",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -1063,7 +1063,7 @@ export default {
     },
     verifyOTP() {
       const details = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/email/verification",
+        url: this.$cloudfareApi+"/email/verification",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -1130,7 +1130,7 @@ export default {
     addNote(unique_id, message) {
       var token = localStorage.getItem("token");
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note",
+        url: this.$cloudfareApi+"/note",
         method: "POST",
         data: {
           uid: this.uid,
@@ -1177,7 +1177,7 @@ export default {
       }
 
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/reminder",
+        url: this.$cloudfareApi+"/reminder",
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
@@ -1213,7 +1213,7 @@ export default {
       var token = localStorage.getItem("token");
       message = "";
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note",
+        url: this.$cloudfareApi+"/note",
         method: "POST",
         data: {
           uid: this.ownerUid,
@@ -1336,8 +1336,8 @@ export default {
 
       var cfdata = {
         headers:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-        url: "http://35.244.46.144:5000/api/calllogs/paginate",
+          this.$headerKeyMongo,
+        url: this.$mongoApi+"/api/calllogs/paginate",
         payload: updatedFilterCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
@@ -1348,7 +1348,7 @@ export default {
       };
       axios
         .post(
-          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
+          this.$cloudfareApi+"/admin/mongo",
           raw,
           {
             headers: headers,
@@ -1509,8 +1509,8 @@ export default {
 
       var cfdata = {
         headers:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-        url: "http://35.244.46.144:5000/api/calllogs/paginate",
+          this.$headerKeyMongo,
+        url: this.$mongoApi+"/api/calllogs/paginate",
         payload: updatedSearchCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
@@ -1521,7 +1521,7 @@ export default {
       };
       axios
         .post(
-          "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
+          this.$cloudfareApi+"/admin/mongo",
           raw,
           {
             headers: headers,
@@ -1637,8 +1637,8 @@ export default {
 
           var cfdata = {
             headers:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-            url: "http://35.244.46.144:5000/api/calllogs/paginate",
+              this.$headerKeyMongo,
+            url: this.$mongoApi+"/api/calllogs/paginate",
             payload: updatedFilterCallsPayload,
           };
           var raw = JSON.stringify(cfdata);
@@ -1649,7 +1649,7 @@ export default {
           };
           axios
             .post(
-              "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
+              this.$cloudfareApi+"/admin/mongo",
               raw,
               {
                 headers: headers,
@@ -1883,8 +1883,8 @@ export default {
 
                 var cfdata = {
                   headers:
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWMwNmQ1NjY1YzZmNGU4NTk4MDBkNGMiLCJpYXQiOjE2NDAwMDQ2OTN9.7VPtc5_xb6_4Feds3zdAZw9VZdOeq0rvwp425m0efE0",
-                  url: "http://35.244.46.144:5000/api/calllogs/paginate",
+                    this.$headerKeyMongo,
+                  url: this.$mongoApi+"/api/calllogs/paginate",
                   payload: updatedFilterCallsPayload,
                 };
                 var raw = JSON.stringify(cfdata);
@@ -1895,7 +1895,7 @@ export default {
                 };
                 axios
                   .post(
-                    "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/admin/mongo",
+                    this.$cloudfareApi+"/admin/mongo",
                     raw,
                     {
                       headers: headers,
