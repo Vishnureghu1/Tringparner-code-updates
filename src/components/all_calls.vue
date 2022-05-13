@@ -573,7 +573,7 @@
 
             <v-dialog v-model="dialog" max-width="400px" persistent>
               <v-card max-height>
-                <v-card-title class="text-h5"> Reminder </v-card-title>
+                <v-card-title class="text-h5" @click="deleteReminder()"> Reminder </v-card-title>
                 <v-card-text>
                   <v-text-field
                     label="Remind About"
