@@ -792,7 +792,7 @@ export default {
         console.log(payload);
 
         const options = {
-          url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/export",
+          url: this.$cloudfareApi+"/export",
           method: "POST",
           headers: {
             token: localStorage.getItem("token"),
