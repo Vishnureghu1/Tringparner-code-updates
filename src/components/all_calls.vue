@@ -396,7 +396,7 @@
                                 <span class="mdi mdi-alarm grey--text" >
                                 </span>
                                <!-- Sample reminder here -->
-                               {{ details.reminderPayload.Message }}, 
+                               <!-- {{ details.reminderPayload.Message }},  -->
                                {{ details.reminderTime }}
                               </div>
                             </div>
@@ -472,20 +472,19 @@
                                   <!-- {{details.reminder}} -->
 
                             <!-- Copied from collapsed reminder section -->
-                            <div v-if="details.reminderPayload!='' " class="mt-3 font-weight-thin hideOnExpand" >
+                            <div class="mt-3 font-weight-thin hideOnExpand" >
                               <div>
-                                <span class="mdi mdi-alarm grey--text" >
+                                <span v-if="details.reminderTime!=''" class="mdi mdi-alarm grey--text" >
                                 </span>
                                {{ details.reminderPayload.Message }}, 
                                {{ details.reminderTime }}
-                                <span class="mdi mdi-pencil grey--text"
-                                  
+                                <span v-if="details.reminderTime!=''" class="mdi mdi-pencil grey--text"                             
                                       @click="
                                         threeDotAction(
                                           'add_reminder',
                                           'virtualNumber',
                                           details.uniqueid,
-                                          ''
+                                          '',details.reminderPayload.Message,details.reminderPayload.Type
                                         )
                                       "
                                     >
@@ -493,6 +492,31 @@
                                       <!-- <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span> -->
                                     <!-- </v-btn> -->
                                   </span>
+                                  <span v-else><v-btn 
+                                        color="red"
+                                        text
+                                        class="
+                                          ma-2
+                                          ml-0
+                                          mr-2
+                                          text-capitalize
+                                          rounded-pill
+                                          p-3
+                                          red_button_outline
+                                        "
+                                        min-width="140px"
+                                        @click="
+                                          threeDotAction(
+                                            'add_reminder',
+                                            'virtualNumber',
+                                            details.uniqueid,
+                                            ''
+                                          )
+                                        "
+                                      >
+                                        Add Reminder
+                                      </v-btn>
+                                      </span>
                               </div>
                             <!-- </div> -->
                             <!-- Copied from collapsed reminder section -->
