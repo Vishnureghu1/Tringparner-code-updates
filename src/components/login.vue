@@ -177,7 +177,7 @@ import { db } from '@/main.js';
 											console.log(this.role)
 											if (this.role == 'ADMIN' || this.role == 'AGENT') {
 												this.overlay = false
-												this.$router.push("/dashboard").catch(() => {});
+												this.$router.push("/all_calls").catch(() => {});
 											} else {
 												if (this.currentPage == "onboarding_listing") {
 													this.overlay = false
@@ -193,7 +193,7 @@ import { db } from '@/main.js';
 													this.$router.push("/Review").catch(() => {});
 												} else if (this.currentPage == 'onboarding_dashboard' || this.currentPage == 'onboarding_success') {
 													this.overlay = false
-													this.$router.push("/dashboard").catch(() => {});
+													this.$router.push("/all_calls").catch(() => {});
 												} else {
 													const user_stage = {
 														url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage',
