@@ -1005,7 +1005,7 @@ export default {
       this.changeEmailPopup = true;
     },
 
-    threeDotAction(action, virtualNumber, uniqueId, notes_text) {
+    threeDotAction(action, virtualNumber, uniqueId, notes_text,oldnote,oldradio) {
       if (action == "add_note") {
         console.log("Add Note");
         this.notes_data = notes_text;
@@ -1025,6 +1025,8 @@ export default {
         this.uniqueId = uniqueId;
         this.addNotesDialog = false;
         this.dialog = true;
+        this.reminderMessage = oldnote;
+        this.radio = oldradio
       }
       if (action == "block_number") {
         console.log("Block Numebr");
@@ -1280,6 +1282,39 @@ export default {
         .then((response) => {
           if (response.data.status == true) {
             this.reminder_added = true;
+            this.dialog = false;
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    },
+    deleteReminder(){
+       var token = localStorage.getItem("token");
+      let tpu = localStorage.getItem("tpu");
+      let Id = JSON.parse(tpu);
+       const user_data = {
+        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/reminder",
+        method: "DELETE",
+        data: {
+          // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+          call_id: this.uniqueId, // uniqueid
+          agent_uid: this.uid,
+          owner_uid: this.ownerUid, //logged in ownere
+          accountId: Id.AccountId,
+          updatedBy: this.uid, //logged in user id
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(user_data);
+      axios(user_data)
+        .then((response) => {
+          if (response.data.status == true) {
+            // this.reminder_added = true;
+            this.testreminder=""
             this.dialog = false;
           }
         })
