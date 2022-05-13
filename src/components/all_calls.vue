@@ -478,23 +478,8 @@
                                 </span>
                                {{ details.reminderPayload.Message }}, 
                                {{ details.reminderTime }}
-                              </div>
-                            </div>
-                            <!-- Copied from collapsed reminder section -->
-
-                                  <span>
-                                    <v-btn
-                                      color="red"
-                                      text
-                                      class="
-                                        ma-2
-                                        ml-0
-                                        text-capitalize
-                                        rounded-pill
-                                        p-3
-                                        red_button_outline
-                                      "
-                                      min-width="140px"
+                                <span class="mdi mdi-pencil grey--text"
+                                  
                                       @click="
                                         threeDotAction(
                                           'add_reminder',
@@ -505,9 +490,15 @@
                                       "
                                     >
                                      
-                                      <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span>
-                                    </v-btn>
+                                      <!-- <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span> -->
+                                    <!-- </v-btn> -->
                                   </span>
+                              </div>
+                            <!-- </div> -->
+                            <!-- Copied from collapsed reminder section -->
+
+                                 
+                            </div>
                                 </div>
                               </v-col>
                              
@@ -918,6 +909,7 @@ export default {
     reminderMessage: "",
     date: "",
     time: "",
+    testreminder:"",
     notes_added: false,
     notes_removed: false,
     timeout: 2500,
@@ -1232,12 +1224,12 @@ export default {
           moment(
             new Date(new Date().getTime() + (parseInt(radio) + 1) * 60000)
           ).format("YYYY-MM-DD hh:mm")
-        ).getTime();
+        ).getTime()+(60000*60*12);
       }
       if (radio == "custom") {
         ReminderAt = new Date(date + " " + time).getTime();
       }
-
+       this.testreminder = ReminderAt;
       const user_data = {
         url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/reminder",
         method: "POST",
@@ -1815,7 +1807,6 @@ export default {
   },
   beforeMount() {
     let localStorageUserObj = localStorage.getItem("tpu");
-
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
@@ -1988,6 +1979,12 @@ export default {
                       console.log("snap1 calllog ", this.realdata);
                       // call details
                     });
+                    const index = this.realdata.findIndex(object => {
+                  return object.uniqueid === this.uniqueId;
+             });
+             this.realdata[index].reminderTime = moment(this.testreminder).format("D MMM Y hh:mm a") 
+            console.log("gfghghgvhgvhgv",this.realdata[index])
+              this.testreminder=""
                   })
                   .catch((error) => {
                     console.log("DL error", error);
