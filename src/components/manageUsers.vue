@@ -212,7 +212,7 @@ import { db } from '@/main.js';
 				var token = localStorage.getItem('token');
 				console.log(token)
 				const updata = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/user',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/user',
 					method: 'POST',
 					headers : {
 						'token': token
@@ -287,7 +287,7 @@ var data = JSON.stringify({
 
 var config = {
   method: 'PUT',
-  url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/user',
+  url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/user',
   headers: { 
     'token': token,
     'Content-Type': 'application/json'
@@ -344,7 +344,7 @@ axios(config)
 					var token = localStorage.getItem('token');
 					console.log(token)
 					const userDelete = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/user',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/user',
 						method: 'DELETE',
 						headers : {
 							'token': token
@@ -405,7 +405,7 @@ axios(config)
 
 
 
-// 				axios.delete('https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/user', {
+// 				axios.delete('https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/user', {
 //   headers: {
 //     "token": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6ODg5MTk3ODA4NSwiaWF0IjoxNjIwNzU4MDYxfQ.RkXw6KLgBwNscIwXV8KClSfBN7ZO0lxfsNwYgibny0Y'
 //   },

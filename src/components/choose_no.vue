@@ -5,6 +5,7 @@
 			<v-row justify="center">
 				<v-col sm="12" md="4">
 					<v-card class="mx-auto" height="100%">
+						
 						<v-overlay :value="overlay"></v-overlay>
 						<v-row no-gutters>
 							<v-col cols="12">
@@ -15,26 +16,47 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>
 								<div v-if='numberList'>
 									<h4 class="mt-6 text-center">Choose your business number</h4>
 									
-									<p class="mt-6 text-center">Time Remaining : {{ Math.floor(timerCount/60) }} mins {{ timerCount%60 }} sec</p>
+									<p class="mt-6 text-center" v-if="(timerCount%60) != -1" >Time Remaining : {{ Math.floor(timerCount/60) }} mins {{ timerCount%60 }} sec</p>
+									<p class="mt-6 text-center" v-else > Timed Out !!! </p>
 									<div class="ml-5 mr-5">
 										<v-progress-linear  color="deep-orange" height="14" :value= 'value' striped ></v-progress-linear>
 									</div>
 									<v-btn-toggle v-model="toggle_none" >
 										<div class="ml-3 mt-5 text-center">
-											<v-btn v-for="item in V_numbers" :key="item" class="ml-1 mr-4 mb-5 red--text" outlined color='white' width="44%">{{item}}</v-btn>
+											<v-btn v-for="item in V_numbers" :key="item" class="ml-1 mr-4 mb-5 primary--text" outlined color='white' width="44%">{{item}}</v-btn>
 										</div>
 									</v-btn-toggle>
 									<div class="text-center">							
 										<v-btn v-if="toggle_none != null" class="mr-4 mb-6 white--text text-center" width="40%" @click.prevent='reserveNumber()' color='light-blue darken-1'> Next </v-btn>
 									</div>
 								</div>
-
+      <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        max-width="400"
+      >
+        <template v-slot:default="dialog">
+          <v-card outlined shaped elevation="8">
+            <v-card-text>
+              <div class="text-h6 mt-4 primary--text">No numbers Available </div>
+              <div class="text-h6 mt-2 primary--text">Try after sometime !! </div>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn
+                text
+                color="danger"
+                @click="dialog.value = false"
+              >Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
 								<div class="ml-9 mr-4 mb-8">
 									<small class="font-weight-light">By proceeding, you agree to our our <a href="
 									https://www.tringpartner.com/terms" target="_blank" class="text-blue">Terms &amp; Conditions</a>, <a href="https://www.tringpartner.com/privacy" target="_blank" class="text-blue">Privacy Policy. </a> &amp; <a href="
@@ -108,6 +130,8 @@ import { db } from '@/main.js';
 				changecolor : false,
 				overlay: true,
 				reserve: false,
+				NoNumbers: false,
+				dialog: false,
       }
     },
     methods:{
@@ -117,7 +141,7 @@ import { db } from '@/main.js';
 					this.value = 100
 					this.overlay = true
 					const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/list',
 						method: 'POST',
 						data: {
 							uid: this.uid,
@@ -138,8 +162,9 @@ import { db } from '@/main.js';
 							console.log(response.data.Seconds)
 							this.progressbarTimer(this.value)
 							if(this.V_numbers.length === 0){
-								alert('Numbers not available , please try later!!')
-								this.overlay = true
+								// alert('Numbers not available , please try later!!')
+								this.dialog = true
+								this.overlay = false
 								this.value = 0
 								this.timerCount = 0
 
@@ -156,7 +181,7 @@ import { db } from '@/main.js';
 				let virtualNumber = this.V_numbers[this.toggle_none]
 				console.log(virtualNumber)
 				const reserve = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/reserve',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/reserve',
 					method: 'POST',
 
 					data: {
@@ -170,13 +195,14 @@ import { db } from '@/main.js';
         this.$axios(reserve)
 					.then((response) => {
 						console.log(response)
+						this.$analytics.logEvent("Web Number reserved");
 					})
 					.catch((error) => {
 						console.error(error);
 					}).finally(() => {
 
 						const user_stage = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage',
 						method: 'POST',
 
 						data: {
@@ -189,6 +215,7 @@ import { db } from '@/main.js';
 						this.$axios(user_stage)
 							.then((response) => {
 								console.log(response)
+								this.$analytics.logEvent("Web Pricing plan");
 								this.$router.push("/pricing")
 							})
 							.catch((error) => {

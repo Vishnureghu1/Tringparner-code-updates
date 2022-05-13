@@ -260,7 +260,8 @@ export default {
 					PlanId = 1
 				}
 				const bill = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/bill',
+					//    https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/bill',
 					method: 'POST',
 
 					data: {
@@ -320,7 +321,7 @@ export default {
 			},
 			updateData(){
 				const user_data = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/update',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/update',
 					method: 'POST',
 					data: {
 							uid: this.uid,
@@ -349,7 +350,7 @@ export default {
 			recharge(){
 			var token = localStorage.getItem('token');
 			const user_details = {
-				url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/payment',
+				url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/payment',
 				method: 'POST',
 				headers: { 
 					'token': token,

@@ -22,6 +22,7 @@
 		<router-view></router-view>
 	</v-card>
 </nav>
+
 </template>
 
 
@@ -29,7 +30,29 @@
 import firebase from 'firebase'
 import { db } from '@/main.js';
   export default {
+	      data: () => ({
+      drawer: false,
+      group: null,
+			links: [
+				{ icon: 'dashboard', text: 'Call Logs', route: '/call_logs' },
+				{ icon: 'folder', text: 'Analytics', route: '/analytics' },
+				{ icon: 'person', text: 'Manage User', route: '/manageUser' },
+				{ icon: 'dashboard', text: 'Greeting Message', route: '/greeting' },
+				{ icon: 'dashboard', text: 'Whatsapp', route: '/whatsapp' },
+				{ icon: 'dashboard', text: 'Billing', route: '/billing_details' },
+				{ icon: 'dashboard', text: 'Export', route: '/export' },
+			]
+    }),
 			created() {
+
+				
+
+
+
+
+
+
+
 								firebase.auth().onAuthStateChanged(user => {
 							if (user) {
 								console.log("logged user details",user)
@@ -50,19 +73,8 @@ import { db } from '@/main.js';
 						}
 					})
     },
-    data: () => ({
-      drawer: false,
-      group: null,
-			links: [
-				{ icon: 'dashboard', text: 'Call Logs', route: '/call_logs' },
-				{ icon: 'folder', text: 'Analytics', route: '/analytics' },
-				{ icon: 'person', text: 'Manage User', route: '/manageUser' },
-				{ icon: 'dashboard', text: 'Greeting Message', route: '/greeting' },
-				{ icon: 'dashboard', text: 'Whatsapp', route: '/whatsapp' },
-				{ icon: 'dashboard', text: 'Billing', route: '/billing_details' },
-				{ icon: 'dashboard', text: 'Export', route: '/export' },
-			]
-    }),
+
+
 
     watch: {
       group () {

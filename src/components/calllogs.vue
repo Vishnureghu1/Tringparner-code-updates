@@ -24,7 +24,7 @@
 																	<v-expansion-panel-header>
 																		<div> {{ details.callerNumber }} 
 																			<span v-if="details.callstatus == 'Answered'" class="mdi mdi-phone-incoming ml-2 green--text"></span>
-																			<span v-else class="mdi mdi-phone-missed ml-2 red--text"></span>
+																			<span v-else class="mdi mdi-phone-missed ml-2 primary--text"></span>
 																			<span v-for="getNotes in details.Note " :key="getNotes.text" >
 																				<span v-if="getNotes.Note != ''" class="mdi mdi-note ml-2 blue--text"></span>
 																			</span>
@@ -40,7 +40,7 @@
 																	<h5 class="font-weight-regular mb-3" v-else> No callback attempted</h5>
 																
 																	<div v-for="getNotes in details.Note " :key="getNotes.text" >
-																		<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Add notes" :rules="rules" counter maxlength="75" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" ></v-text-field>
+																		<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Add notes" :rules="rules" counter maxlength="120" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" ></v-text-field>
 																	</div>
 
 																</v-expansion-panel-content>
@@ -61,7 +61,7 @@
 																<v-expansion-panel v-for="(details) in realdata" :key="details.text">
 																	<div v-if="details.callstatus == 'Missed'">
 																		<v-expansion-panel-header>
-																			<div class="red--text"> {{ details.callerNumber }} 
+																			<div class="primary--text"> {{ details.callerNumber }} 
 																				<span class="mdi mdi-phone-missed ml-2"></span> 
 																				<span v-for="getNotes in details.Note " :key="getNotes.text" >
 																					<span v-if="getNotes.Note != ''" class="mdi mdi-note ml-2 blue--text"></span>
@@ -77,7 +77,7 @@
 																	</div>
 																	<h5 class="font-weight-regular mb-3" v-else> No callback attempted</h5>
 																		<div v-for="getNotes in details.Note " :key="getNotes.text" >
-																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Add notes" :rules="rules" counter maxlength="75" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" ></v-text-field>
+																			<v-text-field v-model="getNotes.Note" :append-outer-icon="getNotes.Note ? 'mdi-send' : ''" clear-icon="mdi-close-circle" clearable label="Add notes" :rules="rules" counter maxlength="120" type="text" @click:append-outer="sendMessage(details.uniqueid,getNotes.Note)" @click:clear="clearMessage(details.uniqueid,getNotes.Note)" ></v-text-field>
 																		</div>
 																	</v-expansion-panel-content>
 																</div>
@@ -275,7 +275,7 @@ import moment from 'moment'
 			dialog2 : false,
 			add_note : true,
 			callback_uid : '',
-			rules: [v => v.length <= 75 || 'Max 75 characters'],
+			rules: [v => v.length <= 120 || 'Max 120 characters'],
 			password: 'Password',
       show: false,
       marker: true,
@@ -327,7 +327,7 @@ import moment from 'moment'
 
       sendMessage (unique_id, message) {
 				const user_data = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/note',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note',
 					method: 'POST',
 					data: {
 						uid: this.uid,
@@ -348,7 +348,7 @@ import moment from 'moment'
       clearMessage (unique_id, message) {
         message = ''
         const user_data = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/note',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/note',
 					method: 'POST',
 					data: {
 						uid: this.uid,

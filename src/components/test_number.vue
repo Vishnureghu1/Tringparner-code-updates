@@ -14,14 +14,14 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>	
 								<div>
 									<div class="ml-4 mr-4">
 										<h2 class="mt-6 ml-5 text-center blue--text">Yaaay!!</h2>
 										<h4 class="mb-0 text-center mt-3" >Your new Business Number is</h4>
-										<h2 class="mb-0 text-center mt-3 red--text" > 8891978085 </h2>
+										<h2 class="mb-0 text-center mt-3 primary--text" > 8891978085 </h2>
 										<v-divider></v-divider>
 
 										<h4 class="mb-0 text-center mt-3" >Testing Successful</h4>
@@ -156,7 +156,7 @@ import { db } from '@/main.js';
     methods: {
 			nextPage(){
 				const user_stage = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage',
 					method: 'POST',
 
 					data: {

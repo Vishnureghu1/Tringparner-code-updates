@@ -14,30 +14,35 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>
 								<div>
 									<div class="ml-4 mr-4">
 										<h3 class="mt-6 ml-5 text-center">Email Verification</h3>
 									</div>
-									<v-form @submit.prevent="" class="mt-3 ml-8 mr-4" ref="form" v-model="valid" lazy-validation >
-										<v-row>
+									<v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation >
+										<v-row class="mt-3 ml-6 mr-4">
 											<v-col v-if="getOtp">
 												<v-text-field label="Your Name" v-model="name" :rules="nameRules" required></v-text-field>
 												<v-text-field v-model="email" :rules="emailRules" label="Business E-mail" required ></v-text-field>
-												<v-text-field label="Source" append-icon="mdi-pencil" hint="For Example : Facebook, Linkedin etc" v-model="source" persistent-hint></v-text-field>
+												<v-text-field label="Source Name of your Business Number" append-icon="mdi-pencil" hint="Change source name of your business number. For Example : Facebook, Linkedin etc" v-model="source" persistent-hint></v-text-field>
 												<div class="text-center">
-													<v-btn type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='requestOtp()' color='light-green'> Request Otp </v-btn>
+													<v-btn type="submit" class="mt-6 mb-4 white--text text-center" max-width @click.prevent='requestOtp()' color='light-green'> Request Otp </v-btn>
 												</div>
 											</v-col>
 											<v-col v-else>
-												<v-text-field label="Enter otp" v-model="otp" required></v-text-field>
-												<div class="text-center">
-													<v-btn  type="submit" class="mr-4 mb-6 mt-6 white--text text-center" width="40%" @click.prevent='checkOtp()' color='light-green'> Confirm Otp </v-btn>
-												</div>
+												<v-text-field v-model="email" :rules="emailRules" label="Business E-mail" required ></v-text-field>
+												<v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation >
+													<v-text-field label="Enter OTP" :rules="[otpConfirmationRule]" v-model="otp" required></v-text-field>
+												</v-form>
 											</v-col>
 										</v-row>
+										<div class="text-center" v-if="!getOtp">
+											<v-spacer></v-spacer>
+											<v-btn type="submit" class="mt-6 mb-4 mr-2 white--text text-center" max-width @click.prevent='requestOtp()' color='primary'> Resend Otp </v-btn>
+											<v-btn  type="submit" class="mt-6 mb-4 white--text text-center" max-width @click.prevent='checkOtp()' color='primary'> Confirm Otp </v-btn>
+										</div>
 									</v-form>
 								</div>
 										<div class="ml-9 mr-4 mb-8">
@@ -114,6 +119,7 @@ import { db } from '@/main.js';
         email: '',
         virtualnumber : '',
         source : 'General',
+        otpCorrect : true ,
         getOtp : true,
         otp : '',
         emailRules: [ 
@@ -126,12 +132,20 @@ import { db } from '@/main.js';
 					v => /^[a-zA-Z][a-zA-Z ]+$/.test(v) || 'Name should not contain symbols or digits. Please try again.',
 
 					],
+					// otpRule : [
+					// 	v => (v.length < 5 || 'Too many characters.Please try again !!' ),
+					// ]
         }
       },
+      computed: {
+    otpConfirmationRule() {
+      return () => ( this.otpCorrect || 'Invalid OTP' )
+    }
+},
     methods :{
 			requestOtp(){
 				const options = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/email/otp',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/email/otp',
 					method: 'POST',
 
 					data: {
@@ -144,16 +158,21 @@ import { db } from '@/main.js';
         this.$axios(options)
 					.then((response) => {
 						console.log(response)
+						this.$analytics.logEvent("Web Email Otp send");
 						this.getOtp = false
 					})
 					.catch((error) => {
 						console.error(error);
 					})
 				},
+				validate () {
+					this.$refs.form.validate()
+					let v = this.$refs.form.validate()
+				},
 
 				checkOtp(){
 					const options = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/email/verification',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/email/verification',
 					method: 'POST',
 
 					data: {
@@ -165,8 +184,18 @@ import { db } from '@/main.js';
 				console.log(options)
         this.$axios(options)
 					.then((response) => {
-						console.log(response)
-						this.$router.push("/downloadApp")
+						console.log(response.data.status)
+						if (response.data.status){
+							this.otpCorrect = true
+							this.validate()
+							this.$analytics.logEvent("Web Email verification");
+							this.$router.push("/downloadApp")
+						}
+						else {
+							this.otpCorrect = false
+							this.validate()
+							console.log("invalid otp")
+						}
 					})
 					.catch((error) => {
 						console.error(error);

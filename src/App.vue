@@ -1,21 +1,25 @@
 <template>
   <v-app app>
-  <Navbar v-if="this.$router.history.current.fullPath == '/manageUsers' || this.$router.history.current.fullPath == '/billing_details' || this.$router.history.current.fullPath == '/myinfo' || this.$router.history.current.fullPath == '/calllogs' || this.$router.history.current.fullPath == '/add_agents' || this.$router.history.current.fullPath == '/active_call' || this.$router.history.current.fullPath == '/missed_call' || this.$router.history.current.fullPath == '/greeting' || this.$router.history.current.fullPath == '/blocked_calls' || this.$router.history.current.fullPath == '/addons' || this.$router.history.current.fullPath == '/analytics'" />
+  <Navbar />
 
     <v-main class="ma-4">
-      <router-view v-if="this.$router.history.current.fullPath != '/calllogs'"></router-view>
-      <!-- <router-view v-if="this.$router.history.current.fullPath != '/billing_details'"></router-view> -->
     </v-main>
-  
+    <vtoast ref="vtoast"/>
   </v-app>
 </template>
-
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js" integrity="sha256-S1J4GVHHDMiirir9qsXWc8ZWw74PHHafpsHp5PXtjTs=" crossorigin="anonymous"></script>
 <script>
 import Navbar from '@/components/Navbar.vue';
+import vtoast from '@/components/snackbar.vue';
 export default {
   name: 'App',
   components: {
   Navbar,
+  vtoast 
   },
+  mounted() {
+    this.$root.vtoast = this.$refs.vtoast;
+  }
 };
 </script>

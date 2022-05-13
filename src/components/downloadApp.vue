@@ -14,7 +14,7 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>
 								<div>
@@ -26,6 +26,8 @@
 										<v-icon x-large color="green darken-2" >mdi-checkbox-marked-circle </v-icon>
 									</div>
 									<div>
+										<h3 class="mt-6 text-center blue--text"><a class="text-decoration-none" href="https://tringpartner.page.link/signupapp">Click to Open in Mobile app</a></h3>
+										<h3 class="mt-6 text-center black--text">OR</h3>
 										<h3 class="mt-6 text-center blue--text">Download The Mobile App</h3>
 									</div>
 									<div class="text-center">
@@ -57,7 +59,7 @@ import { db } from '@/main.js';
 						console.log("logged user details",user)
 						this.uid = user.uid
 						this.phno = user.phoneNumber.slice(3)
-
+						this.$analytics.logEvent("Web Successfully signed up");
 					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
 						querySnapshot.forEach((doc) => {
 							console.log(doc.id, " => ", doc.data());
@@ -103,9 +105,11 @@ import { db } from '@/main.js';
       },
     methods :{
 			playStore(){
+				this.$analytics.logEvent("Web Google play app download");
 				window.open(`https://play.google.com`)
 			},
 			appStore(){
+				this.$analytics.logEvent("Web App store app download");
 				window.open(`https://www.apple.com/in/app-store/`)
 			}
   }

@@ -53,7 +53,7 @@
 										</div>
 										<v-btn-toggle v-model="toggle_none" >
 											<div class="ml-3 mt-5 text-center">
-												<v-btn v-for="item in V_numbers" :key="item" class="ml-1 mr-4 mb-5 red--text" outlined color='white' width="44%">{{item}}</v-btn>
+												<v-btn v-for="item in V_numbers" :key="item" class="ml-1 mr-4 mb-5 primary--text" outlined color='white' width="44%">{{item}}</v-btn>
 											</div>
 										</v-btn-toggle>
 										<div class="text-center">							
@@ -171,7 +171,7 @@ import moment from 'moment'
 					if(type == 'USER') {
 						var token = localStorage.getItem('token');
 						const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/delete',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/delete',
 						method: 'POST',
 						data: {
 							owner_uid: this.uid,
@@ -196,7 +196,7 @@ import moment from 'moment'
 					else if (type == 'BUSINESS_NUMBER') {
 						var token = localStorage.getItem('token');
 						const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/delete',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/delete',
 						method: 'POST',
 						data: {
 							owner_uid: this.uid,
@@ -227,7 +227,7 @@ import moment from 'moment'
 				this.bm = false
 				var token = localStorage.getItem('token');
 					const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/prorate',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/prorate',
 						method: 'POST',
 						data: {
 							owner_uid: this.uid,
@@ -265,7 +265,7 @@ import moment from 'moment'
 				this.bm = true
 				var token = localStorage.getItem('token');
 				const details = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/prorate',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/prorate',
 					method: 'POST',
 					headers: { 
 						'token': token,
@@ -335,7 +335,7 @@ import moment from 'moment'
 			add_user() {
 				var token = localStorage.getItem('token');
 				const user_details = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/payment',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/payment',
 					method: 'POST',
 					headers: { 
 						'token': token,
@@ -409,7 +409,7 @@ import moment from 'moment'
 				this.showNumbers = true
 				this.main = false
 				const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/virtualNumber/list',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/virtualNumber/list',
 						method: 'POST',
 						data: {
 							uid: this.uid,
@@ -448,7 +448,7 @@ import moment from 'moment'
 			makePayment() {
 				var token = localStorage.getItem('token');
 				const user_details = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/payment',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/payment',
 					method: 'POST',
 					headers: { 
 						'token': token,
@@ -524,7 +524,7 @@ import moment from 'moment'
 				let virtualNumber = this.V_numbers[this.toggle_none]
 				console.log(virtualNumber)
 				const details = {
-						url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/reservenumber',
+						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/reservenumber',
 						method: 'POST',
 						data: {
 							uid: this.uid,
@@ -547,7 +547,7 @@ import moment from 'moment'
 						})
 				var token = localStorage.getItem('token');
 				const user_details = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/addon/payment',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/payment',
 					method: 'POST',
 					headers: { 
 						'token': token,

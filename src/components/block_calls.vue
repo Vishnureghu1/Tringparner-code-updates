@@ -133,7 +133,7 @@ import moment from 'moment'
     methods :{
 			block_user(number,virtual_number){
 				const blocked_data = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/blockcall',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/blockcall',
 					method: 'POST',
 					data: {
 						owner_uid: this.uid,
@@ -155,7 +155,7 @@ import moment from 'moment'
 
 			unblock_user(number,virtual_number){
 				const blocked_data = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/blockcall',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/blockcall',
 					method: 'POST',
 					data: {
 						owner_uid: this.uid,

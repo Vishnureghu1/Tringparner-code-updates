@@ -14,7 +14,7 @@
 										<v-btn icon>
 											<v-icon color='red' >mdi-chat-outline</v-icon>
 										</v-btn>
-										<label class='red--text'>support</label>
+										<label class='primary--text'>support</label>
 									</v-app-bar>
 								</div>	
 								<div>
@@ -22,19 +22,19 @@
 									<div class="text-center">
 										<div class="mt-6">Your new Business Number is</div>
 										
-										<h3 class="mt-2 mb-3 red--text"> {{virtualNumber}} </h3>
+										<h3 class="mt-2 mb-3 primary--text"> {{virtualNumber}} </h3>
 										<v-divider></v-divider>
 									</div>
 									<div >
 										<h3 class="mt-5 mb-5 text-center" >Choose Pricing Plan</h3>
 									</div>
 									<v-divider></v-divider>
-									<v-radio-group class="ml-16 mt-5 mr-16">
+									<v-radio-group class="ml-9 mt-5 mr-10" v-model="radio">
 										<div class="mb-4">
 
-												<v-radio >
-												<span slot="label" class="black--text ml-3">Try for 1 month @ just ₹ 500 
-													<h3 class="mt-3 text-center"> ₹ 500 + GST</h3>
+												<v-radio value="1">>
+												<span slot="label" class="black--text ml-3">Try for 1 month @ ₹ 500 
+													<h4 class="mt-3 text-center"> ₹ 500 + GST</h4>
 												</span>
 											</v-radio>
 						
@@ -44,9 +44,9 @@
 
 										<div class="mt-5 mb-5">
 										
-												<v-radio >
+												<v-radio value="2">>
 												<span slot="label" class="black--text ml-3">Pay for 6 months & Save 10%
-													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 3000</span> ₹2500 + GST</h3>
+													<h4 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 3000</span> ₹2700 + GST</h4>
 												</span>
 											</v-radio>
 								
@@ -55,9 +55,9 @@
 
 										<div class="mt-5 mb-5">
 											
-												<v-radio >
-												<span slot="label" class="black--text ml-3">Pay for 6 months & Save 20%
-													<h3 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 6000</span> ₹5000 + GST</h3>
+												<v-radio value="3">>
+												<span slot="label" class="black--text ml-3">Pay for 1 year & Save 20%
+													<h4 class="text-center green--text mt-3"><span class="text-decoration-line-through text-center black--text"> ₹ 6000</span> ₹4800 + GST</h4>
 												</span>
 											</v-radio>
 											
@@ -102,8 +102,6 @@ import { db } from '@/main.js';
 					console.log("logged user details",user)
 					this.uid = user.uid
 					this.phno = user.phoneNumber.slice(3)
-					console.log("page pricing il user id", this.uid)
-					console.log("page pricing il user number", this.phno)
 					
 					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
 						querySnapshot.forEach((doc) => {
@@ -154,6 +152,7 @@ import { db } from '@/main.js';
 					uid : '',
 					phno : '',
 					virtualNumber : '',
+					radio: '2',
 					items: [ 
 						{ text: '1 Cloud Business Number' },
 						{ text: '1 User Login' },
@@ -168,7 +167,7 @@ import { db } from '@/main.js';
 		methods: {
 			nextPage(){
 				const user_stage = {
-					url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/user/stage',
+					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage',
 					method: 'POST',
 
 					data: {
@@ -180,12 +179,15 @@ import { db } from '@/main.js';
 				console.log(user_stage)
         this.$axios(user_stage)
 					.then((response) => {
+						localStorage.setItem('planId',this.radio)
 						console.log(response)
+						this.$analytics.logEvent("Web Billing page");
+						this.$router.push("/billing")
 					})
 					.catch((error) => {
 						console.error(error);
 					})
-				this.$router.push("/billing")
+
 			}
 		}
 	}

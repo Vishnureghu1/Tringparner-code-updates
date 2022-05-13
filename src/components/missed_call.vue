@@ -147,7 +147,7 @@ import { db } from '@/main.js';
 				}
 				console.log(this.getMissed)
 				const user_data = {
-				url: 'https://asia-south1-tringpartner-v2.cloudfunctions.net/tpv2/callDistribution/missedcall',
+				url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/missedcall',
 				method: 'POST',
 				data: {
 					owner_uid: this.uid,
