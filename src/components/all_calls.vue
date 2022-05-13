@@ -391,7 +391,7 @@
                                 {{ getNotes.Note }}
                               </div>
                             </div>
-                            <div v-if="details.reminderPayload!='' " class="ml-10 mt-3 font-weight-thin hideOnExpand" >
+                            <div v-if="details.reminderPayload!='' && details.reminder" class="ml-10 mt-3 font-weight-thin hideOnExpand" >
                               <div>
                                 <span class="mdi mdi-alarm grey--text" >
                                 </span>
@@ -474,11 +474,11 @@
                             <!-- Copied from collapsed reminder section -->
                             <div class="mt-3 font-weight-thin hideOnExpand" >
                               <div>
-                                <span v-if="details.reminderTime!=''" class="mdi mdi-alarm grey--text" >
+                                <span v-if="details.reminderTime!='' &&  details.reminder" class="mdi mdi-alarm grey--text" >
                                 </span>
                                {{ details.reminderPayload.Message }}, 
                                {{ details.reminderTime }}
-                                <span v-if="details.reminderTime!=''" class="mdi mdi-pencil grey--text"                             
+                                <span v-if="details.reminder && details.reminderTime!=''" class="mdi mdi-pencil grey--text"                             
                                       @click="
                                         threeDotAction(
                                           'add_reminder',
@@ -488,8 +488,7 @@
                                         )
                                       "
                                     >
-                                     
-                                      <!-- <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span> -->
+                                    
                                     <!-- </v-btn> -->
                                   </span>
                                   <span v-else><v-btn 
@@ -573,7 +572,8 @@
 
             <v-dialog v-model="dialog" max-width="400px" persistent>
               <v-card max-height>
-                <v-card-title class="text-h5" @click="deleteReminder()"> Reminder </v-card-title>
+               
+                <v-card-title class="mb-5">  <span class="text-h5">Reminder </span> <v-spacer></v-spacer> <span class="red--text light4 f14 cursor" @click="deleteReminder()">Remove</span></v-card-title>
                 <v-card-text>
                   <v-text-field
                     label="Remind About"
