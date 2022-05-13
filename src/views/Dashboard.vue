@@ -181,7 +181,7 @@
                         Today's Reminders
                       </h4>
 
-                      <v-row v-if="!remiderCalls.length">
+                      <v-row v-if="!reminderCalls.length">
                         <v-col cols="12" align="left" class="pl-15">
                           <div class="mb-3 mt-0 pl-5 ml-5">Nothing to show</div>
                         </v-col>
@@ -231,13 +231,14 @@
                           <v-expansion-panel-content
                             v-for="(reminder, index) in getCallDetailsReminder(agentId)"
                             :key="index"
-                            class="mb-3 mt-5 pl-5 ml-5"
+                            class="mb-3 mt-5 mt-2 pl-10 ml-5"
                           >
-                            <h4 class="number_heading font-weight-light mr-15">
-                              {{ reminder.AgentName }}
+                            <h4 class="number_heading font-weight-light mr-15" align="left">
+                              {{ reminder.callerNumber }}
                             </h4>
                             <div class="mr-16">
                               <h5
+                                align="left"
                                 class="
                                   comment_heading
                                   font-weight-light
@@ -245,15 +246,14 @@
                                   mt-1
                                 "
                               >
-                                {{ reminder.callerNumber }} at
-                                {{ reminder.ReminderAt }}
+                                {{ reminder.Message }}<br>at {{ reminder.ReminderAt }}
                               </h5>
                             </div>
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>
 
-                      <v-expansion-panels accordion flat>
+                      <!-- <v-expansion-panels accordion flat>
                         <v-expansion-panel>
                           <v-expansion-panel-header>
                             <div>
@@ -304,7 +304,7 @@
                             </div>
                           </v-expansion-panel-content>
                         </v-expansion-panel>
-                      </v-expansion-panels>
+                      </v-expansion-panels> -->
                     </v-col>
                   </v-row>
                 </div>
@@ -653,7 +653,7 @@ export default {
                     " " +
                     logs.data().Number.slice(7, 11);
                   var timestamp = logs.data().ReminderAt;
-                  var date = new Date(timestamp);
+                  var date = new Date(parseInt(timestamp));
                   var call_time = moment(date).format("DD-MM-YYYY hh:mm a");
                   // call_time = moment(date).fromNow();
 

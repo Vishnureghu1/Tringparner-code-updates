@@ -16,7 +16,7 @@
                         Play Offline Message
                       </h2>
                       <!-- BREADCRUMBS SECTION -->
-                      <v-breadcrumbs class="breadcrumbs" :items="items">
+                      <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
 
                         <template v-slot:item="{ item }">
                           <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
