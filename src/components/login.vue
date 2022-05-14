@@ -131,7 +131,7 @@ import { db } from '@/main.js';
 				}
 			},
 		changeLoginNumber() {
-			this.phNo = ''
+			// this.phNo = ''
 			this.getNumber = true
 			this.getOtp = false
 		},
