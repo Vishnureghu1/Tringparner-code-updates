@@ -343,6 +343,7 @@ export default {
     c: 1,
     today: new Date().toISOString().substr(0, 10),
     // today: new Date().getTime(),
+    reminderCalls:[]
   }),
 
   async created() {
@@ -375,24 +376,32 @@ export default {
       return (agentId, type) =>
         `${this.agentReminderNames[agentId]["name"]} (${this.agentReminderNames[agentId][type]})`;
     },
-    reminderCalls() {
-      const reminderCalls = new Set();
-      this.remiderCallsPanel.forEach((reminder) => reminderCalls.add(reminder.AgentUid));
-      console.log('reminderCalls called---->', reminderCalls);
-      return Array.from(reminderCalls);
-    },
+    // reminderCalls() {
+    //   const reminderCalls = new Set();
+    //   // if(this.remiderCallsPanel) {
+    //     // this.remiderCallsPanel.forEach((reminder) => reminderCalls.add(reminder.AgentUid));
+
+    //     for (reminder in this.remiderCallsPanel) {
+    //       reminderCalls.add(reminder.AgentUid);
+    //     }
+    //     console.log('reminderCalls called---->', reminderCalls);
+    //   // }
+    //   return Array.from(reminderCalls);
+    // },
   },
   methods: {
     getCount() {
       return this.c++;
     },
     isToday(timestampInMilliseconds) {
-      const today = new Date();
-      return (
-        new Date(timestampInMilliseconds).getDate() == today.getDate() &&
-        new Date(timestampInMilliseconds).getMonth() == today.getMonth() &&
-        new Date(timestampInMilliseconds).getFullYear() == today.getFullYear()
-      );
+      
+      var todayDate = new Date().toLocaleString().split(',')[0];
+      var reminderDate = new Date(parseInt(timestampInMilliseconds)).toLocaleString().split(',')[0];
+      if(todayDate == reminderDate) {
+        return true;
+      } else {
+        return false;
+      }
     },
     getCallDetails(agentId) {
       return this.missedCallPanel.filter(
@@ -409,6 +418,7 @@ export default {
       );
     },
     getCallDetailsReminder(agentId) {
+
       return this.remiderCallsPanel.filter(
         (reminder) => reminder.AgentUid === agentId
       );
@@ -424,8 +434,8 @@ export default {
 
       if (localStorageUserObj) {
         let parsedUser = JSON.parse(localStorageUserObj);
+        this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
         this.userEmail = parsedUser.Email;
-
         this.userRole = parsedUser.role;
         console.log("this.today", this.today);
 
@@ -521,13 +531,8 @@ export default {
       if (localStorageUserObj) {
         let parsedUser = JSON.parse(localStorageUserObj);
 
-        this.ownerUid =
-          parsedUser.role == "OWNER" ?
-          parsedUser.uid :
-          parsedUser.OwnerUid;
-
+        this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
         this.userEmail = parsedUser.Email;
-
         this.userRole = parsedUser.role;
 
         firebase.auth().onAuthStateChanged((user) => {
@@ -614,54 +619,36 @@ export default {
           if (user && this.userRole != "AGENT") {
             this.uid = user.uid;
 
-            console.log('Reminders from calls');
-
-
-              // db.collection("callLogs")
-              // // .where("owneruid", "==", this.ownerUid)
-              // // .where("Reminder", "!=", "{}")
-              // .where('Reminder.ReminderAt',">=", new Date().getTime())
-              // .where('Reminder.ReminderAt',"<=", new Date().getTime())
-              // .get()
-              // .then((querySnapshot) => {
-              //   querySnapshot.forEach((logs) => {
-              //     console.log('Reminders from calls', logs.data());
-              //     // console.log(logs.data());
-
-              //   });
-              // })
-              // .catch((error) => {
-              //   console.log("Error getting logs: ", error);
-              // });
-
-
             db.collection("Reminders")
               .where("OwnerUid", "==", this.ownerUid)
-              // .where('ReminderAt',">=", new Date().getTime())
-              // .where('ReminderAt',"<=", new Date().getTime())
-              .get()
-              .then((querySnapshot) => {
-                querySnapshot.forEach((logs) => {
-                  // console.log(logs.data());
-                  // console.log(logs.data());
+              // .get()
+              // .then((querySnapshot) => {
+              .onSnapshot((querySnapshot) => {
+
+                console.log('querySnapshot.size',querySnapshot.size);
+
+                this.remiderCallsPanel = [];
+                this.remiderCalls = [];
+
+                querySnapshot.docs.forEach((logs) => {
+
+                  if (this.isToday(parseInt(logs.data().ReminderAt))) {
+
+                  // let callerNumber = logs.data().Number?.toString();
+                  let CallerNo = logs.data().Number?.toString();
 
                   var callerNumber =
                     "+91 " +
-                    logs.data().Number.slice(0, 5) +
+                    CallerNo.slice(0, 5) +
                     " " +
-                    logs.data().Number.slice(5, 7) +
+                    CallerNo.slice(5, 7) +
                     " " +
-                    logs.data().Number.slice(7, 11);
+                    CallerNo.slice(7, 11);
                   var timestamp = logs.data().ReminderAt;
                   var date = new Date(parseInt(timestamp));
                   var call_time = moment(date).format("DD-MM-YYYY hh:mm a");
-                  // call_time = moment(date).fromNow();
+                  console.log("CallId", logs.data().CallId);
 
-                  const now = Date.now(); // Unix timestamp in milliseconds
-                  console.log("now", now);
-                  console.log("isToday", this.isToday(logs.data().ReminderAt));
-
-                  if (this.isToday(logs.data().ReminderAt)) {
                     this.remiderCallsPanel.push({
                       ReminderAt: call_time,
                       callerNumber: callerNumber,
@@ -669,11 +656,12 @@ export default {
                       AgentUid: logs.data().AgentUid,
                       Message: logs.data().Message,
                       Type: logs.data().Type,
-                    });
-                  }
+                    })
 
-                  let AgentUid = logs.data().AgentUid;
-                  if (!([AgentUid] in this.agentReminderNames)) {
+                    //set agent reminder count
+                    let AgentUid = logs.data().AgentUid;
+                    if (!([AgentUid] in this.agentReminderNames)) {
+                      this.reminderCalls.push(AgentUid);
                       this.$set(this.agentReminderNames, AgentUid, {
                         name: logs.data().Name,
                         reminder_calls: 1,
@@ -686,12 +674,15 @@ export default {
                         reminder_calls: incrCnt,
                       });
                     }
+                    //set agent reminder count
+                  }
+
 
                 });
               })
-              .catch((error) => {
-                console.log("Error getting logs: ", error);
-              });
+              // .catch((error) => {
+              //   console.log("Error getting logs: ", error);
+              // });
           } else {
             this.uid = user.uid;
             db.collection("Reminders")
@@ -702,19 +693,21 @@ export default {
                 querySnapshot.forEach((logs) => {
                   // console.log(logs.data());
 
+                  if (this.isToday(parseInt(logs.data().ReminderAt))) {
+
+                  let CallerNo = logs.data().Number?.toString();
                   var callerNumber =
                     "+91 " +
-                    logs.data().Number.slice(0, 5) +
+                    CallerNo.slice(0, 5) +
                     " " +
-                    logs.data().Number.slice(5, 7) +
+                    CallerNo.slice(5, 7) +
                     " " +
-                    logs.data().Number.slice(7, 11);
+                    CallerNo.slice(7, 11);
                   var timestamp = logs.data().ReminderAt;
                   var date = new Date(timestamp);
                   var call_time = moment(date).format("hh:mm a");
                   call_time = moment(date).fromNow();
 
-                  // if (this.isToday(logs.data().ReminderAt)) {
                     this.remiderCallsPanel.push({
                       ReminderAt: call_time,
                       callerNumber: callerNumber,
@@ -723,10 +716,11 @@ export default {
                       Message: logs.data().Message,
                       Type: logs.data().Type,
                     });
-                  // }
+                  }
 
                   let AgentUid = logs.data().AgentUid;
                   if (!([AgentUid] in this.agentReminderNames)) {
+                    this.reminderCalls.push(AgentUid);
                     this.$set(this.agentReminderNames, AgentUid, {
                       name: logs.data().Name,
                       reminder_calls: 1,
