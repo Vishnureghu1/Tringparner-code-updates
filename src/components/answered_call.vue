@@ -274,7 +274,7 @@
                   </v-row>
 
                   <div>
-                    <v-expansion-panels
+                                        <v-expansion-panels
                       accordion
                       flat
                       v-if="realdata.length != ''"
@@ -287,7 +287,6 @@
                           <div>
                             <v-row class="calls_list">
                               <v-col cols="12" sm="10">
-                                <!-- {{details}} -->
                                 <h3 class="font-weight-light">
                                   <v-icon
                                     v-if="details.callstatus == 'Answered'"
@@ -303,7 +302,10 @@
                                     width="24"
                                     height="24"
                                   />+91 {{ details.callerNumber }}
-                                  <v-icon color="gray" class="mr-5"
+                                  <v-icon
+                                    color="gray"
+                                    class="mr-5"
+                                    v-if="details.isBlocked == true"
                                     >mdi-shield-lock-outline</v-icon
                                   >
 
@@ -389,6 +391,21 @@
                                 {{ getNotes.Note }}
                               </div>
                             </div>
+                            <!-- {{details.reminder}} -->
+                            <div
+                              v-if="
+                                details.reminderPayload != '' &&
+                                details.reminder
+                              "
+                              class="ml-10 mt-3 font-weight-thin hideOnExpand"
+                            >
+                              <div>
+                                <span class="mdi mdi-alarm grey--text"> </span>
+                                <!-- Sample reminder here -->
+                                <!-- {{ details.reminderPayload.Message }},  -->
+                                {{ details.reminderTime }}
+                              </div>
+                            </div>
                           </div>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
@@ -425,66 +442,104 @@
                                     </span>
                                   </div>
 
-                                  <span
-                                    v-for="getNotes in details.Note"
-                                    :key="getNotes.text"
+                                  <!-- Copied from collapsed reminder section -->
+                                  <div
+                                    class="mt-3 font-weight-thin hideOnExpand"
                                   >
-                                    <span v-if="getNotes.Note == ''">
-                                      <v-btn
-                                        color="red"
-                                        text
-                                        class="
-                                          ma-2
-                                          ml-0
-                                          mr-2
-                                          text-capitalize
-                                          rounded-pill
-                                          p-3
-                                          red_button_outline
+                                    <div>
+                                      <span
+                                        v-for="getNotes in details.Note"
+                                        :key="getNotes.text"
+                                      >
+                                        <span v-if="getNotes.Note == ''">
+                                          <v-btn
+                                            color="red"
+                                            text
+                                            class="
+                                              ma-2
+                                              ml-0
+                                              mr-2
+                                              text-capitalize
+                                              rounded-pill
+                                              p-3
+                                              red_button_outline
+                                            "
+                                            min-width="140px"
+                                            @click="
+                                              threeDotAction(
+                                                'add_note',
+                                                'virtualNumber',
+                                                details.uniqueid,
+                                                ''
+                                              )
+                                            "
+                                          >
+                                            Add Notes
+                                          </v-btn>
+                                        </span>
+                                      </span>
+                                      <span
+                                        v-if="
+                                          details.reminderTime != '' &&
+                                          details.reminder
                                         "
-                                        min-width="140px"
+                                        class="mdi mdi-alarm grey--text"
+                                      >
+                                        {{ details.reminderPayload.Message }},
+                                        {{ details.reminderTime }}
+                                      </span>
+                                      <span
+                                        v-if="
+                                          details.reminder &&
+                                          details.reminderTime != ''
+                                        "
+                                        class="mdi mdi-pencil grey--text"
                                         @click="
                                           threeDotAction(
-                                            'add_note',
+                                            'add_reminder',
                                             'virtualNumber',
                                             details.uniqueid,
-                                            ''
+                                            '',
+                                            details.reminderPayload.Message,
+                                            details.reminderPayload.Type
                                           )
                                         "
                                       >
-                                        Add Notes
-                                      </v-btn>
-                                    </span>
-                                  </span>
-                                  <span>
-                                    <v-btn
-                                      color="red"
-                                      text
-                                      class="
-                                        ma-2
-                                        ml-0
-                                        text-capitalize
-                                        rounded-pill
-                                        p-3
-                                        red_button_outline
-                                      "
-                                      min-width="140px"
-                                      @click="
-                                        threeDotAction(
-                                          'add_reminder',
-                                          'virtualNumber',
-                                          details.uniqueid,
-                                          ''
-                                        )
-                                      "
-                                    >
-                                      Add Reminder
-                                      <!-- <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span> -->
-                                    </v-btn>
-                                  </span>
+                                        <!-- </v-btn> -->
+                                      </span>
+                                      <span v-else
+                                        ><v-btn
+                                          color="red"
+                                          text
+                                          class="
+                                            ma-2
+                                            ml-0
+                                            mr-2
+                                            text-capitalize
+                                            rounded-pill
+                                            p-3
+                                            red_button_outline
+                                          "
+                                          min-width="140px"
+                                          @click="
+                                            threeDotAction(
+                                              'add_reminder',
+                                              'virtualNumber',
+                                              details.uniqueid,
+                                              ''
+                                            )
+                                          "
+                                        >
+                                          Add Reminder
+                                        </v-btn>
+                                      </span>
+                                    </div>
+                                    <!-- </div> -->
+                                    <!-- Copied from collapsed reminder section -->
+                                  </div>
                                 </div>
                               </v-col>
-                              <!-- {{details}} -->
+
                               <v-col
                                 cols="12"
                                 sm="6"
@@ -1209,11 +1264,44 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
+    deleteReminder() {
+      var token = localStorage.getItem("token");
+      let tpu = localStorage.getItem("tpu");
+      let Id = JSON.parse(tpu);
+      const user_data = {
+        url: this.$cloudfareApi + "/reminder",
+        method: "DELETE",
+        data: {
+          // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+          call_id: this.uniqueId, // uniqueid
+          agent_uid: this.uid,
+          owner_uid: this.ownerUid, //logged in ownere
+          accountId: Id.AccountId,
+          updatedBy: this.uid, //logged in user id
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(user_data);
+      axios(user_data)
+        .then((response) => {
+          if (response.data.status == true) {
+            // this.reminder_added = true;
+            this.testreminder = "";
+            this.dialog = false;
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    },
     clearMessage(unique_id, message) {
       var token = localStorage.getItem("token");
       message = "";
       const user_data = {
-        url: this.$cloudfareApi+"/note",
+        url: this.$cloudfareApi + "/note",
         method: "POST",
         data: {
           uid: this.ownerUid,
@@ -1226,7 +1314,7 @@ export default {
         },
       };
       console.log(user_data);
-      this.$axios(user_data)
+      axios(user_data)
         .then((response) => {
           console.log(response);
           if (response.data.status == true) {

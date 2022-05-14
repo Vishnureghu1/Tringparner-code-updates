@@ -82,7 +82,7 @@
                         color="deep-purple accent-4"
                       ></v-progress-linear>
                     </v-col>
-                     <v-col cols="12" sm="7" align="end" class="pt-6">
+                    <v-col cols="12" sm="7" align="end" class="pt-6">
                       <v-text-field
                         v-show="!hidden"
                         absolute
@@ -101,38 +101,32 @@
                         :nudge-width="200"
                         offset-x
                       >
-
-           
-                        <template v-slot:activator="{ on, attrs }" >
-                        
-                          <span  class="pr-7 "
-                            >
+                        <template v-slot:activator="{ on, attrs }">
+                          <span class="pr-7">
                             <v-icon
                               class="mt-0 mb-5 mr-4"
                               color="black"
                               @click="hidden = !hidden"
                               >mdi-magnify</v-icon
                             >
-                            <v-badge v-if="showBadge==true"
-  dot
-  overlap
->    <v-icon
-                              class="mt-0 mb-5 mr-0 "
-                              color="black"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-filter-variant</v-icon
-                            ></v-badge>
-                                                 <span v-if="showBadge==false"
-  
-  overlap
->    <v-icon
-                              class="mt-0 mb-5 mr-0 "
-                              color="black"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-filter-variant</v-icon
-                            ></span>
+                            <v-badge v-if="showBadge == true" dot overlap>
+                              <v-icon
+                                class="mt-0 mb-5 mr-0"
+                                color="black"
+                                v-bind="attrs"
+                                v-on="on"
+                                >mdi-filter-variant</v-icon
+                              ></v-badge
+                            >
+                            <span v-if="showBadge == false" overlap>
+                              <v-icon
+                                class="mt-0 mb-5 mr-0"
+                                color="black"
+                                v-bind="attrs"
+                                v-on="on"
+                                >mdi-filter-variant</v-icon
+                              ></span
+                            >
                           </span>
                         </template>
 
@@ -286,7 +280,6 @@
                           <div>
                             <v-row class="calls_list">
                               <v-col cols="12" sm="10">
-                                <!-- {{details}} -->
                                 <h3 class="font-weight-light">
                                   <v-icon
                                     v-if="details.callstatus == 'Answered'"
@@ -302,7 +295,10 @@
                                     width="24"
                                     height="24"
                                   />+91 {{ details.callerNumber }}
-                                  <v-icon color="gray" class="mr-5"
+                                  <v-icon
+                                    color="gray"
+                                    class="mr-5"
+                                    v-if="details.isBlocked == true"
                                     >mdi-shield-lock-outline</v-icon
                                   >
 
@@ -388,6 +384,21 @@
                                 {{ getNotes.Note }}
                               </div>
                             </div>
+                            <!-- {{details.reminder}} -->
+                            <div
+                              v-if="
+                                details.reminderPayload != '' &&
+                                details.reminder
+                              "
+                              class="ml-10 mt-3 font-weight-thin hideOnExpand"
+                            >
+                              <div>
+                                <span class="mdi mdi-alarm grey--text"> </span>
+                                <!-- Sample reminder here -->
+                                <!-- {{ details.reminderPayload.Message }},  -->
+                                {{ details.reminderTime }}
+                              </div>
+                            </div>
                           </div>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
@@ -424,66 +435,104 @@
                                     </span>
                                   </div>
 
-                                  <span
-                                    v-for="getNotes in details.Note"
-                                    :key="getNotes.text"
+                                  <!-- Copied from collapsed reminder section -->
+                                  <div
+                                    class="mt-3 font-weight-thin hideOnExpand"
                                   >
-                                    <span v-if="getNotes.Note == ''">
-                                      <v-btn
-                                        color="red"
-                                        text
-                                        class="
-                                          ma-2
-                                          ml-0
-                                          mr-2
-                                          text-capitalize
-                                          rounded-pill
-                                          p-3
-                                          red_button_outline
+                                    <div>
+                                      <span
+                                        v-for="getNotes in details.Note"
+                                        :key="getNotes.text"
+                                      >
+                                        <span v-if="getNotes.Note == ''">
+                                          <v-btn
+                                            color="red"
+                                            text
+                                            class="
+                                              ma-2
+                                              ml-0
+                                              mr-2
+                                              text-capitalize
+                                              rounded-pill
+                                              p-3
+                                              red_button_outline
+                                            "
+                                            min-width="140px"
+                                            @click="
+                                              threeDotAction(
+                                                'add_note',
+                                                'virtualNumber',
+                                                details.uniqueid,
+                                                ''
+                                              )
+                                            "
+                                          >
+                                            Add Notes
+                                          </v-btn>
+                                        </span>
+                                      </span>
+                                      <span
+                                        v-if="
+                                          details.reminderTime != '' &&
+                                          details.reminder
                                         "
-                                        min-width="140px"
+                                        class="mdi mdi-alarm grey--text"
+                                      >
+                                        {{ details.reminderPayload.Message }},
+                                        {{ details.reminderTime }}
+                                      </span>
+                                      <span
+                                        v-if="
+                                          details.reminder &&
+                                          details.reminderTime != ''
+                                        "
+                                        class="mdi mdi-pencil grey--text"
                                         @click="
                                           threeDotAction(
-                                            'add_note',
+                                            'add_reminder',
                                             'virtualNumber',
                                             details.uniqueid,
-                                            ''
+                                            '',
+                                            details.reminderPayload.Message,
+                                            details.reminderPayload.Type
                                           )
                                         "
                                       >
-                                        Add Notes
-                                      </v-btn>
-                                    </span>
-                                  </span>
-                                  <span>
-                                    <v-btn
-                                      color="red"
-                                      text
-                                      class="
-                                        ma-2
-                                        ml-0
-                                        text-capitalize
-                                        rounded-pill
-                                        p-3
-                                        red_button_outline
-                                      "
-                                      min-width="140px"
-                                      @click="
-                                        threeDotAction(
-                                          'add_reminder',
-                                          'virtualNumber',
-                                          details.uniqueid,
-                                          ''
-                                        )
-                                      "
-                                    >
-                                      Add Reminder
-                                      <!-- <span v-if="details.reminder!=''">Edit Reminders</span><span v-else>Add Reminders</span> -->
-                                    </v-btn>
-                                  </span>
+                                        <!-- </v-btn> -->
+                                      </span>
+                                      <span v-else
+                                        ><v-btn
+                                          color="red"
+                                          text
+                                          class="
+                                            ma-2
+                                            ml-0
+                                            mr-2
+                                            text-capitalize
+                                            rounded-pill
+                                            p-3
+                                            red_button_outline
+                                          "
+                                          min-width="140px"
+                                          @click="
+                                            threeDotAction(
+                                              'add_reminder',
+                                              'virtualNumber',
+                                              details.uniqueid,
+                                              ''
+                                            )
+                                          "
+                                        >
+                                          Add Reminder
+                                        </v-btn>
+                                      </span>
+                                    </div>
+                                    <!-- </div> -->
+                                    <!-- Copied from collapsed reminder section -->
+                                  </div>
                                 </div>
                               </v-col>
-                              <!-- {{details}} -->
+
                               <v-col
                                 cols="12"
                                 sm="6"
@@ -802,7 +851,7 @@ export default {
     Icon,
   },
   data: () => ({
-    showBadge:false,
+    showBadge: false,
     hidealert: "",
     otp: "",
     addNotesDialog: false,
@@ -955,7 +1004,7 @@ export default {
         var Id = JSON.parse(tpu);
         console.log(Id);
         const blockNumber = {
-          url: this.$cloudfareApi+"/blockcall",
+          url: this.$cloudfareApi + "/blockcall",
           method: "POST",
           data: {
             number: this.virtualNumber,
@@ -1013,7 +1062,7 @@ export default {
     handleApplyFilter() {
       // this.isUpdating = true;
       this.filterMongo();
-      this.showBadge=true;
+      this.showBadge = true;
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
@@ -1032,7 +1081,7 @@ export default {
       this.changeEmailPopup = false;
       this.sendInviteLoader = true;
       const details = {
-        url: this.$cloudfareApi+"/email/otp",
+        url: this.$cloudfareApi + "/email/otp",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -1063,7 +1112,7 @@ export default {
 
     verifyOTP() {
       const details = {
-        url: this.$cloudfareApi+"/email/verification",
+        url: this.$cloudfareApi + "/email/verification",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -1119,8 +1168,7 @@ export default {
       this.selectedUser = "All";
       this.selectedNumber = "All";
       this.filterMongo();
-      this.showBadge=false;
-
+      this.showBadge = false;
     },
     handleScroll: function (e) {
       if (e.target.scrollHeight - 300 <= e.target.scrollTop) {
@@ -1131,7 +1179,7 @@ export default {
     addNote(unique_id, message) {
       var token = localStorage.getItem("token");
       const user_data = {
-        url: this.$cloudfareApi+"/note",
+        url: this.$cloudfareApi + "/note",
         method: "POST",
         data: {
           uid: this.uid,
@@ -1178,7 +1226,7 @@ export default {
       }
 
       const user_data = {
-        url: this.$cloudfareApi+"/reminder",
+        url: this.$cloudfareApi + "/reminder",
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
@@ -1210,11 +1258,44 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
+    deleteReminder() {
+      var token = localStorage.getItem("token");
+      let tpu = localStorage.getItem("tpu");
+      let Id = JSON.parse(tpu);
+      const user_data = {
+        url: this.$cloudfareApi + "/reminder",
+        method: "DELETE",
+        data: {
+          // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+          call_id: this.uniqueId, // uniqueid
+          agent_uid: this.uid,
+          owner_uid: this.ownerUid, //logged in ownere
+          accountId: Id.AccountId,
+          updatedBy: this.uid, //logged in user id
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(user_data);
+      axios(user_data)
+        .then((response) => {
+          if (response.data.status == true) {
+            // this.reminder_added = true;
+            this.testreminder = "";
+            this.dialog = false;
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    },
     clearMessage(unique_id, message) {
       var token = localStorage.getItem("token");
       message = "";
       const user_data = {
-        url: this.$cloudfareApi+"/note",
+        url: this.$cloudfareApi + "/note",
         method: "POST",
         data: {
           uid: this.ownerUid,
@@ -1227,7 +1308,7 @@ export default {
         },
       };
       console.log(user_data);
-      this.$axios(user_data)
+      axios(user_data)
         .then((response) => {
           console.log(response);
           if (response.data.status == true) {
@@ -1336,9 +1417,8 @@ export default {
       );
 
       var cfdata = {
-        headers:
-          this.$headerKeyMongo,
-        url: this.$mongoApi+"/api/calllogs/paginate",
+        headers: this.$headerKeyMongo,
+        url: this.$mongoApi + "/api/calllogs/paginate",
         payload: updatedFilterCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
@@ -1348,13 +1428,9 @@ export default {
         token: "tpmongo",
       };
       axios
-        .post(
-          this.$cloudfareApi+"/admin/mongo",
-          raw,
-          {
-            headers: headers,
-          }
-        )
+        .post(this.$cloudfareApi + "/admin/mongo", raw, {
+          headers: headers,
+        })
         .then((response) => {
           console.log("DL response", response.data.data);
           let dataset = response.data.data.dataset;
@@ -1484,7 +1560,7 @@ export default {
 
       return searchCallsConditions;
     },
-      emailStatus() {
+    emailStatus() {
       db.collection("users")
         .where("uid", "==", this.uid)
         .get()
@@ -1526,9 +1602,8 @@ export default {
       console.log("updatedSearchCallsPayload", updatedSearchCallsPayload);
 
       var cfdata = {
-        headers:
-          this.$headerKeyMongo,
-        url: this.$mongoApi+"/api/calllogs/paginate",
+        headers: this.$headerKeyMongo,
+        url: this.$mongoApi + "/api/calllogs/paginate",
         payload: updatedSearchCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
@@ -1538,13 +1613,9 @@ export default {
         token: "tpmongo",
       };
       axios
-        .post(
-          this.$cloudfareApi+"/admin/mongo",
-          raw,
-          {
-            headers: headers,
-          }
-        )
+        .post(this.$cloudfareApi + "/admin/mongo", raw, {
+          headers: headers,
+        })
         .then((response) => {
           console.log("DL response", response.data.data);
           let dataset = response.data.data.dataset;
@@ -1675,9 +1746,8 @@ export default {
           );
 
           var cfdata = {
-            headers:
-              this.$headerKeyMongo,
-            url: this.$mongoApi+"/api/calllogs/paginate",
+            headers: this.$headerKeyMongo,
+            url: this.$mongoApi + "/api/calllogs/paginate",
             payload: updatedFilterCallsPayload,
           };
           var raw = JSON.stringify(cfdata);
@@ -1687,13 +1757,9 @@ export default {
             token: "tpmongo",
           };
           axios
-            .post(
-              this.$cloudfareApi+"/admin/mongo",
-              raw,
-              {
-                headers: headers,
-              }
-            )
+            .post(this.$cloudfareApi + "/admin/mongo", raw, {
+              headers: headers,
+            })
             .then((response) => {
               console.log("DL response", response.data.data);
               let dataset = response.data.data.dataset;
@@ -1819,7 +1885,7 @@ export default {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.uid = user.uid;
-            this.emailStatus();
+          this.emailStatus();
           console.log("User Id : " + this.ownerUid);
 
           db.collection("users")
@@ -1882,9 +1948,8 @@ export default {
                 );
 
                 var cfdata = {
-                  headers:
-                    this.$headerKeyMongo,
-                  url: this.$mongoApi+"/api/calllogs/paginate",
+                  headers: this.$headerKeyMongo,
+                  url: this.$mongoApi + "/api/calllogs/paginate",
                   payload: updatedFilterCallsPayload,
                 };
                 var raw = JSON.stringify(cfdata);
@@ -1894,13 +1959,9 @@ export default {
                   token: "tpmongo",
                 };
                 axios
-                  .post(
-                    this.$cloudfareApi+"/admin/mongo",
-                    raw,
-                    {
-                      headers: headers,
-                    }
-                  )
+                  .post(this.$cloudfareApi + "/admin/mongo", raw, {
+                    headers: headers,
+                  })
                   .then((response) => {
                     console.log("DL response", response.data.data);
                     let dataset = response.data.data.dataset;
