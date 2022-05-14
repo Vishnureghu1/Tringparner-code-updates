@@ -101,38 +101,32 @@
                         :nudge-width="200"
                         offset-x
                       >
-
-           
-                        <template v-slot:activator="{ on, attrs }" >
-                        
-                          <span  class="pr-7 "
-                            >
+                        <template v-slot:activator="{ on, attrs }">
+                          <span class="pr-7">
                             <v-icon
                               class="mt-0 mb-5 mr-4"
                               color="black"
                               @click="hidden = !hidden"
                               >mdi-magnify</v-icon
                             >
-                            <v-badge v-if="showBadge==true"
-  dot
-  overlap
->    <v-icon
-                              class="mt-0 mb-5 mr-0 "
-                              color="black"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-filter-variant</v-icon
-                            ></v-badge>
-                                                 <span v-if="showBadge==false"
-  
-  overlap
->    <v-icon
-                              class="mt-0 mb-5 mr-0 "
-                              color="black"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-filter-variant</v-icon
-                            ></span>
+                            <v-badge v-if="showBadge == true" dot overlap>
+                              <v-icon
+                                class="mt-0 mb-5 mr-0"
+                                color="black"
+                                v-bind="attrs"
+                                v-on="on"
+                                >mdi-filter-variant</v-icon
+                              ></v-badge
+                            >
+                            <span v-if="showBadge == false" overlap>
+                              <v-icon
+                                class="mt-0 mb-5 mr-0"
+                                color="black"
+                                v-bind="attrs"
+                                v-on="on"
+                                >mdi-filter-variant</v-icon
+                              ></span
+                            >
                           </span>
                         </template>
 
@@ -287,7 +281,6 @@
                           <div>
                             <v-row class="calls_list">
                               <v-col cols="12" sm="10">
-                                
                                 <h3 class="font-weight-light">
                                   <v-icon
                                     v-if="details.callstatus == 'Answered'"
@@ -303,7 +296,10 @@
                                     width="24"
                                     height="24"
                                   />+91 {{ details.callerNumber }}
-                                  <v-icon color="gray" class="mr-5" v-if="details.isBlocked==true"
+                                  <v-icon
+                                    color="gray"
+                                    class="mr-5"
+                                    v-if="details.isBlocked == true"
                                     >mdi-shield-lock-outline</v-icon
                                   >
 
@@ -318,7 +314,6 @@
                                     </template>
 
                                     <v-list>
-                                     
                                       <div
                                         v-for="getNotes in details.Note"
                                         :key="getNotes.text"
@@ -362,7 +357,6 @@
                               <v-spacer></v-spacer>
                             </v-row>
 
-
                             <div class="ml-10 font-weight-thin date_time">
                               <span v-if="details.conversationduration != 0"
                                 >{{ formatTime(details.conversationduration) }},
@@ -391,17 +385,22 @@
                                 {{ getNotes.Note }}
                               </div>
                             </div>
-                            <div v-if="details.reminderPayload!='' && details.reminder" class="ml-10 mt-3 font-weight-thin hideOnExpand" >
+
+                            <!-- {{details.reminder}} -->
+                            <div
+                              v-if="
+                                details.reminderPayload != '' &&
+                                details.reminder
+                              "
+                              class="ml-10 mt-3 font-weight-thin hideOnExpand"
+                            >
                               <div>
-                                <span class="mdi mdi-alarm grey--text" >
-                                </span>
-                               <!-- Sample reminder here -->
-                               <!-- {{ details.reminderPayload.Message }},  -->
-                               {{ details.reminderTime }}
+                                <span class="mdi mdi-alarm grey--text"> </span>
+                                <!-- Sample reminder here -->
+                                <!-- {{ details.reminderPayload.Message }},  -->
+                                {{ details.reminderTime }}
                               </div>
                             </div>
-
-                            
                           </div>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
@@ -438,93 +437,104 @@
                                     </span>
                                   </div>
 
-                                  <span
-                                    v-for="getNotes in details.Note"
-                                    :key="getNotes.text"
+                                  <!-- Copied from collapsed reminder section -->
+                                  <div
+                                    class="mt-3 font-weight-thin hideOnExpand"
                                   >
-                                    <span v-if="getNotes.Note == ''">
-                                      <v-btn
-                                        color="red"
-                                        text
-                                        class="
-                                          ma-2
-                                          ml-0
-                                          mr-2
-                                          text-capitalize
-                                          rounded-pill
-                                          p-3
-                                          red_button_outline
-                                        "
-                                        min-width="140px"
-                                        @click="
-                                          threeDotAction(
-                                            'add_note',
-                                            'virtualNumber',
-                                            details.uniqueid,
-                                            ''
-                                          )
-                                        "
+                                    <div>
+                                      <span
+                                        v-for="getNotes in details.Note"
+                                        :key="getNotes.text"
                                       >
-                                        Add Notes
-                                      </v-btn>
-                                    </span>
-                                  </span>
-                                  <!-- {{details.reminder}} -->
-
-                            <!-- Copied from collapsed reminder section -->
-                            <div class="mt-3 font-weight-thin hideOnExpand" >
-                              <div>
-                                <span v-if="details.reminderTime!='' &&  details.reminder" class="mdi mdi-alarm grey--text" >
-                               {{ details.reminderPayload.Message }}, 
-                               {{ details.reminderTime }}
-                                </span>
-                                <span v-if="details.reminder && details.reminderTime!=''" class="mdi mdi-pencil grey--text"                             
-                                      @click="
-                                        threeDotAction(
-                                          'add_reminder',
-                                          'virtualNumber',
-                                          details.uniqueid,
-                                          '',details.reminderPayload.Message,details.reminderPayload.Type
-                                        )
-                                      "
-                                    >
-                                    
-                                    <!-- </v-btn> -->
-                                  </span>
-                                  <span v-else><v-btn 
-                                        color="red"
-                                        text
-                                        class="
-                                          ma-2
-                                          ml-0
-                                          mr-2
-                                          text-capitalize
-                                          rounded-pill
-                                          p-3
-                                          red_button_outline
+                                        <span v-if="getNotes.Note == ''">
+                                          <v-btn
+                                            color="red"
+                                            text
+                                            class="
+                                              ma-2
+                                              ml-0
+                                              mr-2
+                                              text-capitalize
+                                              rounded-pill
+                                              p-3
+                                              red_button_outline
+                                            "
+                                            min-width="140px"
+                                            @click="
+                                              threeDotAction(
+                                                'add_note',
+                                                'virtualNumber',
+                                                details.uniqueid,
+                                                ''
+                                              )
+                                            "
+                                          >
+                                            Add Notes
+                                          </v-btn>
+                                        </span>
+                                      </span>
+                                      <span
+                                        v-if="
+                                          details.reminderTime != '' &&
+                                          details.reminder
                                         "
-                                        min-width="140px"
+                                        class="mdi mdi-alarm grey--text"
+                                      >
+                                        {{ details.reminderPayload.Message }},
+                                        {{ details.reminderTime }}
+                                      </span>
+                                      <span
+                                        v-if="
+                                          details.reminder &&
+                                          details.reminderTime != ''
+                                        "
+                                        class="mdi mdi-pencil grey--text"
                                         @click="
                                           threeDotAction(
                                             'add_reminder',
                                             'virtualNumber',
                                             details.uniqueid,
-                                            ''
+                                            '',
+                                            details.reminderPayload.Message,
+                                            details.reminderPayload.Type
                                           )
                                         "
                                       >
-                                        Add Reminder
-                                      </v-btn>
+                                        <!-- </v-btn> -->
                                       </span>
-                              </div>
-                            <!-- </div> -->
-                            <!-- Copied from collapsed reminder section -->
-
-                                 
-                            </div>
+                                      <span v-else
+                                        ><v-btn
+                                          color="red"
+                                          text
+                                          class="
+                                            ma-2
+                                            ml-0
+                                            mr-2
+                                            text-capitalize
+                                            rounded-pill
+                                            p-3
+                                            red_button_outline
+                                          "
+                                          min-width="140px"
+                                          @click="
+                                            threeDotAction(
+                                              'add_reminder',
+                                              'virtualNumber',
+                                              details.uniqueid,
+                                              ''
+                                            )
+                                          "
+                                        >
+                                          Add Reminder
+                                        </v-btn>
+                                      </span>
+                                    </div>
+                                    <!-- </div> -->
+                                    <!-- Copied from collapsed reminder section -->
+                                  </div>
                                 </div>
                               </v-col>
-                             
+
                               <v-col
                                 cols="12"
                                 sm="6"
@@ -572,8 +582,14 @@
 
             <v-dialog v-model="dialog" max-width="400px" persistent>
               <v-card max-height>
-               
-                <v-card-title class="mb-5">  <span class="text-h5">Reminder </span> <v-spacer></v-spacer> <span class="red--text light4 f14 cursor" @click="deleteReminder()" >Remove</span></v-card-title>
+                <v-card-title class="mb-5">
+                  <span class="text-h5">Reminder </span> <v-spacer></v-spacer>
+                  <span
+                    class="red--text light4 f14 cursor"
+                    @click="deleteReminder()"
+                    >Remove</span
+                  ></v-card-title
+                >
                 <v-card-text>
                   <v-text-field
                     label="Remind About"
@@ -847,8 +863,8 @@ export default {
     Icon,
   },
   data: () => ({
-    blocked_numbers_:[],
-    showBadge:false,
+    blocked_numbers_: [],
+    showBadge: false,
     hidealert: "",
     otp: "",
     addNotesDialog: false,
@@ -933,7 +949,7 @@ export default {
     reminderMessage: "",
     date: "",
     time: "",
-    testreminder:"",
+    testreminder: "",
     notes_added: false,
     notes_removed: false,
     timeout: 2500,
@@ -948,7 +964,7 @@ export default {
     page: 1,
     name: "",
     userRole: "",
-    reminder:"",
+    reminder: "",
   }),
   watch: {
     sendInviteLoader(val) {
@@ -961,34 +977,33 @@ export default {
     },
   },
   methods: {
-
     // Blocked Status
-   async blockedStatus(ownerUID) {
-     console.log('Owner UID'+ownerUID);
-      this.blocked_numbers_ =[];
+    async blockedStatus(ownerUID) {
+      console.log("Owner UID" + ownerUID);
+      this.blocked_numbers_ = [];
       db.collection("blockCalls")
         .where("Uid", "==", ownerUID)
         .get()
         .then(async (snap) => {
           // if(snap.docs){
-            snap.docs.forEach(element=>{
-              this.blocked_numbers_.push(element.data().Number)
-             })
-               console.log('Blocked status'+ this.blocked_numbers_);
+          snap.docs.forEach((element) => {
+            this.blocked_numbers_.push(element.data().Number);
+          });
+          console.log("Blocked status" + this.blocked_numbers_);
           // }
         })
         .catch((err) => {
           console.log(err.message);
         });
     },
-        isBlockedCheck(num){
-          console.log(this.blocked_numbers_);
-          console.log(num);
-          console.log('blocked numebr');
-      if(this.blocked_numbers_.includes(num)){
-        return true
-      }else{
-        return false
+    isBlockedCheck(num) {
+      console.log(this.blocked_numbers_);
+      console.log(num);
+      console.log("blocked numebr");
+      if (this.blocked_numbers_.includes(num)) {
+        return true;
+      } else {
+        return false;
       }
     },
     formatTime(seconds) {
@@ -1005,7 +1020,14 @@ export default {
       this.changeEmailPopup = true;
     },
 
-    threeDotAction(action, virtualNumber, uniqueId, notes_text,oldnote,oldradio) {
+    threeDotAction(
+      action,
+      virtualNumber,
+      uniqueId,
+      notes_text,
+      oldnote,
+      oldradio
+    ) {
       if (action == "add_note") {
         console.log("Add Note");
         this.notes_data = notes_text;
@@ -1026,7 +1048,7 @@ export default {
         this.addNotesDialog = false;
         this.dialog = true;
         this.reminderMessage = oldnote;
-        this.radio = oldradio
+        this.radio = oldradio;
       }
       if (action == "block_number") {
         console.log("Block Numebr");
@@ -1035,7 +1057,7 @@ export default {
         var Id = JSON.parse(tpu);
         console.log(Id);
         const blockNumber = {
-          url: this.$cloudfareApi+"/blockcall",
+          url: this.$cloudfareApi + "/blockcall",
           method: "POST",
           data: {
             number: virtualNumber,
@@ -1093,7 +1115,7 @@ export default {
     handleApplyFilter() {
       // this.isUpdating = true;
       this.filterMongo();
-      this.showBadge=true;
+      this.showBadge = true;
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
@@ -1112,7 +1134,7 @@ export default {
       this.changeEmailPopup = false;
       this.sendInviteLoader = true;
       const details = {
-        url: this.$cloudfareApi+"/email/otp",
+        url: this.$cloudfareApi + "/email/otp",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -1142,7 +1164,7 @@ export default {
     },
     verifyOTP() {
       const details = {
-        url: this.$cloudfareApi+"/email/verification",
+        url: this.$cloudfareApi + "/email/verification",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -1198,8 +1220,7 @@ export default {
       this.selectedUser = "All";
       this.selectedNumber = "All";
       this.filterMongo();
-      this.showBadge=false;
-
+      this.showBadge = false;
     },
     handleScroll: function (e) {
       if (e.target.scrollHeight - 300 <= e.target.scrollTop) {
@@ -1210,7 +1231,7 @@ export default {
     addNote(unique_id, message) {
       var token = localStorage.getItem("token");
       const user_data = {
-        url: this.$cloudfareApi+"/note",
+        url: this.$cloudfareApi + "/note",
         method: "POST",
         data: {
           uid: this.uid,
@@ -1246,18 +1267,20 @@ export default {
       let Id = JSON.parse(tpu);
       let ReminderAt = "";
       if (radio == "10" || radio == "30" || radio == "60") {
-        ReminderAt = new Date(
-          moment(
-            new Date(new Date().getTime() + (parseInt(radio) + 1) * 60000)
-          ).format("YYYY-MM-DD hh:mm")
-        ).getTime()+(60000*60*12);
+        ReminderAt =
+          new Date(
+            moment(
+              new Date(new Date().getTime() + (parseInt(radio) + 1) * 60000)
+            ).format("YYYY-MM-DD hh:mm")
+          ).getTime() +
+          60000 * 60 * 12;
       }
       if (radio == "custom") {
         ReminderAt = new Date(date + " " + time).getTime();
       }
-       this.testreminder = ReminderAt;
+      this.testreminder = ReminderAt;
       const user_data = {
-        url: this.$cloudfareApi+"/reminder",
+        url: this.$cloudfareApi + "/reminder",
         method: "POST",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
@@ -1289,12 +1312,12 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
-    deleteReminder(){
-       var token = localStorage.getItem("token");
+    deleteReminder() {
+      var token = localStorage.getItem("token");
       let tpu = localStorage.getItem("tpu");
       let Id = JSON.parse(tpu);
-       const user_data = {
-        url: this.$cloudfareApi+"/reminder",
+      const user_data = {
+        url: this.$cloudfareApi + "/reminder",
         method: "DELETE",
         data: {
           // owner_uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
@@ -1314,7 +1337,7 @@ export default {
         .then((response) => {
           if (response.data.status == true) {
             // this.reminder_added = true;
-            this.testreminder=""
+            this.testreminder = "";
             this.dialog = false;
           }
         })
@@ -1326,7 +1349,7 @@ export default {
       var token = localStorage.getItem("token");
       message = "";
       const user_data = {
-        url: this.$cloudfareApi+"/note",
+        url: this.$cloudfareApi + "/note",
         method: "POST",
         data: {
           uid: this.ownerUid,
@@ -1446,9 +1469,8 @@ export default {
         JSON.stringify(updatedFilterCallsPayload)
       );
       var cfdata = {
-        headers:
-          this.$headerKeyMongo,
-        url: this.$mongoApi+"/api/calllogs/paginate",
+        headers: this.$headerKeyMongo,
+        url: this.$mongoApi + "/api/calllogs/paginate",
         payload: updatedFilterCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
@@ -1458,13 +1480,9 @@ export default {
         token: "tpmongo",
       };
       axios
-        .post(
-          this.$cloudfareApi+"/admin/mongo",
-          raw,
-          {
-            headers: headers,
-          }
-        )
+        .post(this.$cloudfareApi + "/admin/mongo", raw, {
+          headers: headers,
+        })
         .then((response) => {
           console.log("DL response", response.data.data);
           let dataset = response.data.data.dataset;
@@ -1535,10 +1553,20 @@ export default {
               virtualnumber: this.calldetails.callerNumber,
               called_name: this.called_name,
               recordingUrl: this.calldetails.recordingurl,
-              reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
-              reminderPayload: this.calldetails.Reminder ? this.calldetails.Reminder : '',
-              reminderTime: this.calldetails.Reminder ? moment(this.calldetails.Reminder.ReminderAt).format("D MMM Y hh:mm a") : '',
-              isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
+              reminder: this.calldetails.Reminder
+                ? this.calldetails.Reminder.ReminderAt
+                : "",
+              reminderPayload: this.calldetails.Reminder
+                ? this.calldetails.Reminder
+                : "",
+              reminderTime: this.calldetails.Reminder
+                ? moment(this.calldetails.Reminder.ReminderAt).format(
+                    "D MMM Y hh:mm a"
+                  )
+                : "",
+              isBlocked: this.blocked_numbers_.includes(
+                parseInt(this.calldetails.callerNumber)
+              ),
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1595,9 +1623,8 @@ export default {
       console.log("updatedSearchCallsPayload", updatedSearchCallsPayload);
 
       var cfdata = {
-        headers:
-          this.$headerKeyMongo,
-        url: this.$mongoApi+"/api/calllogs/paginate",
+        headers: this.$headerKeyMongo,
+        url: this.$mongoApi + "/api/calllogs/paginate",
         payload: updatedSearchCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
@@ -1607,13 +1634,9 @@ export default {
         token: "tpmongo",
       };
       axios
-        .post(
-          this.$cloudfareApi+"/admin/mongo",
-          raw,
-          {
-            headers: headers,
-          }
-        )
+        .post(this.$cloudfareApi + "/admin/mongo", raw, {
+          headers: headers,
+        })
         .then((response) => {
           console.log("DL response", response.data.data);
           let dataset = response.data.data.dataset;
@@ -1681,13 +1704,23 @@ export default {
               uniqueid: this.calldetails.uniqueid,
               Note: note,
               source: this.calldetails.source,
-                        virtualnumber: this.calldetails.callerNumber,
-                        called_name: this.called_name,
-                        recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
-                        reminderPayload: this.calldetails.Reminder ? this.calldetails.Reminder : '',
-                        reminderTime: this.calldetails.Reminder ? moment(this.calldetails.Reminder.ReminderAt).format("D MMM Y hh:mm a") : '',
-                        isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
+              virtualnumber: this.calldetails.callerNumber,
+              called_name: this.called_name,
+              recordingUrl: this.calldetails.recordingurl,
+              reminder: this.calldetails.Reminder
+                ? this.calldetails.Reminder.ReminderAt
+                : "",
+              reminderPayload: this.calldetails.Reminder
+                ? this.calldetails.Reminder
+                : "",
+              reminderTime: this.calldetails.Reminder
+                ? moment(this.calldetails.Reminder.ReminderAt).format(
+                    "D MMM Y hh:mm a"
+                  )
+                : "",
+              isBlocked: this.blocked_numbers_.includes(
+                parseInt(this.calldetails.callerNumber)
+              ),
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1727,9 +1760,8 @@ export default {
           );
 
           var cfdata = {
-            headers:
-              this.$headerKeyMongo,
-            url: this.$mongoApi+"/api/calllogs/paginate",
+            headers: this.$headerKeyMongo,
+            url: this.$mongoApi + "/api/calllogs/paginate",
             payload: updatedFilterCallsPayload,
           };
           var raw = JSON.stringify(cfdata);
@@ -1739,13 +1771,9 @@ export default {
             token: "tpmongo",
           };
           axios
-            .post(
-              this.$cloudfareApi+"/admin/mongo",
-              raw,
-              {
-                headers: headers,
-              }
-            )
+            .post(this.$cloudfareApi + "/admin/mongo", raw, {
+              headers: headers,
+            })
             .then((response) => {
               console.log("DL response", response.data.data);
               let dataset = response.data.data.dataset;
@@ -1813,14 +1841,23 @@ export default {
                   uniqueid: this.calldetails.uniqueid,
                   Note: note,
                   source: this.calldetails.source,
-                        virtualnumber: this.calldetails.callerNumber,
-                        called_name: this.called_name,
-                        recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
-                        reminderPayload: this.calldetails.Reminder ? this.calldetails.Reminder : '',
-                        reminderTime: this.calldetails.Reminder ? moment(this.calldetails.Reminder.ReminderAt).format("D MMM Y hh:mm a") : '',
-                        isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
-                  
+                  virtualnumber: this.calldetails.callerNumber,
+                  called_name: this.called_name,
+                  recordingUrl: this.calldetails.recordingurl,
+                  reminder: this.calldetails.Reminder
+                    ? this.calldetails.Reminder.ReminderAt
+                    : "",
+                  reminderPayload: this.calldetails.Reminder
+                    ? this.calldetails.Reminder
+                    : "",
+                  reminderTime: this.calldetails.Reminder
+                    ? moment(this.calldetails.Reminder.ReminderAt).format(
+                        "D MMM Y hh:mm a"
+                      )
+                    : "",
+                  isBlocked: this.blocked_numbers_.includes(
+                    parseInt(this.calldetails.callerNumber)
+                  ),
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
@@ -1839,7 +1876,10 @@ export default {
         .where("uid", "==", this.uid)
         .get()
         .then(async (snap) => {
-          this.current_email =  (snap.docs[0].data().role == "OWNER")?snap.docs[0].data().Email:"";
+          this.current_email =
+            snap.docs[0].data().role == "OWNER"
+              ? snap.docs[0].data().Email
+              : "";
           this.hidealert =
             snap.docs[0].data().role == "OWNER" &&
             snap.docs[0].data().IsEmailVerified == false
@@ -1858,10 +1898,8 @@ export default {
           console.log(err.message);
         });
     },
-
   },
   created() {
-
     this.getNextCalls();
   },
   beforeMount() {
@@ -1935,9 +1973,8 @@ export default {
                 );
 
                 var cfdata = {
-                  headers:
-                    this.$headerKeyMongo,
-                  url: this.$mongoApi+"/api/calllogs/paginate",
+                  headers: this.$headerKeyMongo,
+                  url: this.$mongoApi + "/api/calllogs/paginate",
                   payload: updatedFilterCallsPayload,
                 };
                 var raw = JSON.stringify(cfdata);
@@ -1947,13 +1984,9 @@ export default {
                   token: "tpmongo",
                 };
                 axios
-                  .post(
-                    this.$cloudfareApi+"/admin/mongo",
-                    raw,
-                    {
-                      headers: headers,
-                    }
-                  )
+                  .post(this.$cloudfareApi + "/admin/mongo", raw, {
+                    headers: headers,
+                  })
                   .then((response) => {
                     console.log("DL response", response.data.data);
                     let dataset = response.data.data.dataset;
@@ -2020,7 +2053,7 @@ export default {
                         name: this.calldetails.name[0],
                         dateTime: call_time,
                         conversationduration:
-                        this.calldetails.conversationduration,
+                          this.calldetails.conversationduration,
                         callerNumber: calledNumber,
                         uniqueid: this.calldetails.uniqueid,
                         Note: note,
@@ -2028,22 +2061,34 @@ export default {
                         virtualnumber: this.calldetails.callerNumber,
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder ? this.calldetails.Reminder.ReminderAt : '',
-                        reminderPayload: this.calldetails.Reminder ? this.calldetails.Reminder : '',
-                        reminderTime: this.calldetails.Reminder ? moment(this.calldetails.Reminder.ReminderAt).format("D MMM Y hh:mm a") : '',
-                        isBlocked:this.blocked_numbers_.includes( parseInt(this.calldetails.callerNumber)) 
+                        reminder: this.calldetails.Reminder
+                          ? this.calldetails.Reminder.ReminderAt
+                          : "",
+                        reminderPayload: this.calldetails.Reminder
+                          ? this.calldetails.Reminder
+                          : "",
+                        reminderTime: this.calldetails.Reminder
+                          ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                          : "",
+                        isBlocked: this.blocked_numbers_.includes(
+                          parseInt(this.calldetails.callerNumber)
+                        ),
                       });
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
                       console.log("snap1 calllog ", this.realdata);
                       // call details
                     });
-                    const index = this.realdata.findIndex(object => {
-                  return object.uniqueid === this.uniqueId;
-             });
-             this.realdata[index].reminderTime = moment(this.testreminder).format("D MMM Y hh:mm a") 
-            console.log("gfghghgvhgvhgv",this.realdata[index])
-              this.testreminder=""
+                    const index = this.realdata.findIndex((object) => {
+                      return object.uniqueid === this.uniqueId;
+                    });
+                    this.realdata[index].reminderTime = moment(
+                      this.testreminder
+                    ).format("D MMM Y hh:mm a");
+                    console.log("gfghghgvhgvhgv", this.realdata[index]);
+                    this.testreminder = "";
                   })
                   .catch((error) => {
                     console.log("DL error", error);

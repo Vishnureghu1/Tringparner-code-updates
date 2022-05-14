@@ -154,12 +154,9 @@ export default {
         "Name should not contain symbols or digits. Please try again.",
     ],
     gstRules: [
-      (v) => !!v || "GST Number is required",
-      (v) => (v && v.length == 15) || "GST must contain 15 characters",
-      (v) =>
-        /^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[a-zA-Z][0-9a-zA-Z]{1}$/.test(
-          v
-        ) || "GST must be valid",
+      // (v) => !!v || "GST Number is required",
+      (v) => (!v || v.length > 1 && /^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[a-zA-Z][0-9a-zA-Z]{1}$/.test(v)) || "GST must contain 15 characters & Valid",
+      // (v) => /^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[a-zA-Z][0-9a-zA-Z]{1}$/.test(v) || "GST must be valid",
     ],
     businessNameRules: [
       (v) => !!v || "Your Business name is required",
