@@ -595,7 +595,11 @@
                   <v-text-field
                     label="Remind About"
                     v-model="reminderMessage"
-                    outlined
+                    outlined  counter="25"   :rules="[
+              () => !!reminderMessage || 'This field is required',
+              () => !!reminderMessage && reminderMessage.length <= 25 || 'Message must be less than 25 characters',
+              reminderMessageCheck
+            ]"
                   ></v-text-field>
                   <v-radio-group v-model="radio" column>
                     <v-radio
@@ -979,6 +983,13 @@ export default {
     },
   },
   methods: {
+          reminderMessage () {
+        this.errorMessages = this.reminderMessage && !this.name
+          ? `Hey! I'm required`
+          : ''
+
+        return true
+      },
     // Blocked Status
     async blockedStatus(ownerUID) {
       console.log("Owner UID" + ownerUID);
