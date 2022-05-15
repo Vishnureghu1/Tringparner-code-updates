@@ -124,9 +124,9 @@
                                           width="100%"
                                           color="red"
                                           rounded
-                                           @click="filterCalls(dates)"
+                                           @click="filterCallsReport(exportDates)"
                                         >
-                                          Save All
+                                          Save
                                         </v-btn>
                                       </v-col>
                                     </v-row>
@@ -659,6 +659,12 @@ export default {
       this.$refs.menu.save(dates);
       console.log("Filtering calls");
       this.getAllCalls();
+    },
+
+        filterCallsReport(dates) {
+      this.$refs.exportDateMenu.save(dates);
+      console.log("Filtering calls");
+      // this.getAllCalls();
     },
     forceRerenderKey() {
       this.rerenderKey++;
