@@ -979,33 +979,6 @@ export default {
     },
   },
   methods: {
-       emailStatus() {
-      db.collection("users")
-        .where("uid", "==", this.uid)
-        .get()
-        .then(async (snap) => {
-          this.current_email =
-            snap.docs[0].data().role == "OWNER"
-              ? snap.docs[0].data().Email
-              : "";
-          this.hidealert =
-            snap.docs[0].data().role == "OWNER" &&
-            snap.docs[0].data().IsEmailVerified == false
-              ? true
-              : false;
-          // this.hidealert =
-          //   snap.docs[0].data().IsEmailVerified == true ? false : true;
-          this.name =
-            snap.docs[0].data().role == "OWNER"
-              ? snap.docs[0].data().FirstName
-              : snap.docs[0].data().Name;
-          this.number = snap.docs[0].data().PhoneNumber;
-          console.log("test", this.hidealert);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    },
     formatTime(seconds) {
       return [
         parseInt(seconds / 60 / 60),
@@ -1612,7 +1585,30 @@ export default {
 
       return searchCallsConditions;
     },
-
+       emailStatus() {
+      db.collection("users")
+        .where("uid", "==", this.uid)
+        .get()
+        .then(async (snap) => {
+          this.current_email = snap.docs[0].data().Email;
+          this.hidealert =
+            snap.docs[0].data().role == "OWNER" &&
+            snap.docs[0].data().IsEmailVerified == false
+              ? true
+              : false;
+          // this.hidealert =
+          //   snap.docs[0].data().IsEmailVerified == true ? false : true;
+          this.name =
+            snap.docs[0].data().role == "OWNER"
+              ? snap.docs[0].data().FirstName
+              : snap.docs[0].data().Name;
+          this.number = snap.docs[0].data().PhoneNumber;
+          console.log("test", this.hidealert);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
     searchMongo() {
 
       if(this.page > 1) {
