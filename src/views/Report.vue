@@ -102,6 +102,7 @@
                                     no-title
                                     range
                                     show-adjacent-months
+                                    :allowed-dates="disablePastDates"
                                     scrollable
                                     color="red"
                                   >
@@ -123,9 +124,9 @@
                                           width="100%"
                                           color="red"
                                           rounded
-                                          @click="exportDateMenu = false"
+                                           @click="filterCalls(dates)"
                                         >
-                                          Save
+                                          Save All
                                         </v-btn>
                                       </v-col>
                                     </v-row>
@@ -158,13 +159,11 @@
                           </v-form>
                         </v-card>
                       </v-menu>
-                 
                     </v-col>
                   </v-row>
 
                   <v-row>
-                   
-                     <v-col cols="12" sm="4">
+                    <v-col cols="12" sm="4">
                       <v-menu
                         ref="menu"
                         v-model="menu"
@@ -190,6 +189,7 @@
                           no-title
                           range
                           show-adjacent-months
+                          :allowed-dates="disablePastDates"
                           scrollable
                           color="red"
                         >
@@ -220,50 +220,50 @@
                         </v-date-picker>
                       </v-menu>
                     </v-col>
-                    
-                      
-                      <v-col cols="12" sm="8">
-                        <v-row>
 
-                          <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
-                            <v-card outlined color="transparent" class="">
-                              <h3
-                          class="number_heading nunito-font light3"
-                          align="center"
-                        >
-                          {{ callSummary.Total }}
-                        </h3>
-                        <h6 class="comment_heading" align="center">
-                          Total Calls
-                        </h6>
-                      </v-card>
-                    </v-col>
-                    <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
-                      <v-card outlined color="transparent">
-                        <h3
-                          class="number_heading nunito-font light3"
-                          align="center"
-                        >
-                          {{ callSummary.Answered }}
-                        </h3>
-                        <h6 class="comment_heading" align="center">Answered</h6>
-                      </v-card>
-                    </v-col>
-                    <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
-                      <v-card outlined color="transparent">
-                        <h3
-                          class="number_heading nunito-font light3"
-                          align="center"
-                        >
-                          {{ callSummary.Missed }}
-                        </h3>
-                        <h6 class="comment_heading" align="center">
-                          Not Answered
-                        </h6>
-                      </v-card>
-                    </v-col>
+                    <v-col cols="12" sm="8">
+                      <v-row>
+                        <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
+                          <v-card outlined color="transparent" class="">
+                            <h3
+                              class="number_heading nunito-font light3"
+                              align="center"
+                            >
+                              {{ callSummary.Total }}
+                            </h3>
+                            <h6 class="comment_heading" align="center">
+                              Total Calls
+                            </h6>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
+                          <v-card outlined color="transparent">
+                            <h3
+                              class="number_heading nunito-font light3"
+                              align="center"
+                            >
+                              {{ callSummary.Answered }}
+                            </h3>
+                            <h6 class="comment_heading" align="center">
+                              Answered
+                            </h6>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="12" sm="4" align="end" class="mt-0 pt-0">
+                          <v-card outlined color="transparent">
+                            <h3
+                              class="number_heading nunito-font light3"
+                              align="center"
+                            >
+                              {{ callSummary.Missed }}
+                            </h3>
+                            <h6 class="comment_heading" align="center">
+                              Not Answered
+                            </h6>
+                          </v-card>
+                        </v-col>
 
-                    <!-- <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
+                        <!-- <v-col cols="12" sm="3" align="end" class="mt-0 pt-0">
                       <v-card outlined color="transparent">
                         <h3
                           class="number_heading nunito-font light3"
@@ -276,13 +276,8 @@
                         </h6>
                       </v-card>
                     </v-col> -->
-                          </v-row>
-
+                      </v-row>
                     </v-col>
-                      
-
-
-                  
                   </v-row>
                   <br />
                   <br />
@@ -318,10 +313,10 @@
                           <v-expansion-panel-content class="block">
                             <v-row no-gutters>
                               <v-col cols="12" sm="12" id="container">
-                                <div class="chart d-block text-center" id="container2">
-                               
-
-                                  
+                                <div
+                                  class="chart d-block text-center"
+                                  id="container2"
+                                >
                                   <v-menu
                                     open-on-hover
                                     offset-y
@@ -343,7 +338,7 @@
                                             grey--text
                                           "
                                         >
-                                          {{ item.all }}
+                                          <!-- {{ item.all }} -->
                                         </div>
 
                                         <div
@@ -413,7 +408,6 @@
                                       </v-list-item>
                                     </v-list>
                                   </v-menu>
-                                 
                                 </div>
                               </v-col>
                               <v-spacer></v-spacer>
@@ -548,52 +542,7 @@ export default {
         .substr(0, 10),
       new Date().toISOString().substr(0, 10),
     ],
-  customChartData: [
-      {'all':30, 'missed':20, 'answered': 10},
-      {'all':1, 'missed':0, 'answered': 1},
-      {'all':11, 'missed':1, 'answered': 10},
-      {'all':33, 'missed':20, 'answered': 13},
-      {'all':12, 'missed':2, 'answered': 10},
-      {'all':30, 'missed':20, 'answered': 10},
-      {'all':0, 'missed':0, 'answered': 0},
-      {'all':0, 'missed':0, 'answered': 0},
-      {'all':30, 'missed':20, 'answered': 10},
-      {'all':20, 'missed':5, 'answered': 15},
-      {'all':30, 'missed':20, 'answered': 10},
-    ],
-    chartData: [
-      [
-        "Date",
-        "No Calls",
-        { role: "style" },
-        "Answered Calls",
-        { role: "style" },
-        "Missed Calls",
-        { role: "style" },
-      ],
-      ["01", 0, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
-      ["02", 0, "#FAB4B7", 0, "#FAB4B7", 10, "#FAB4B7"],
-      ["03", 0, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
-      ["04", 0, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
-      ["05", 0, "#FAB4B7", 0, "#FAB4B7", 10, "#FAB4B7"],
-      ["06", 0, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
-      ["07", 0, "#E0E0E0", 1, "#13B9A8", 7, "#FAB4B7"],
-      ["08", 0, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
-      ["09", 0, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
-      ["10", 0, "#E0E0E0", 0, "#E0E0E0", 0, "#E0E0E0"],
-    ],
 
-    chartOptions: {
-      // isStacked: true,
-      //  isStacked: 'relative',
-      isStacked: "percent",
-      width: 600,
-      height: 400,
-      bar: { groupWidth: "85%", groupHeight: "100%" },
-      legend: { position: "none" },
-
-      title: "Reports",
-    },
     callSummary: {
       Answered: 0,
       Missed: 0,
@@ -617,10 +566,13 @@ export default {
     AnsweredCallsSelected: false,
     MissedCallsSelected: false,
     OfflineCallsSelected: false,
-    EmailSelected: '',
+    EmailSelected: "",
     IsValidEmailSelected: false,
     dispatchEmailRules: [
-      v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+      (v) =>
+        !v ||
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+        "E-mail must be valid",
     ],
     exportDateMenu: false,
     menu: false,
@@ -663,38 +615,44 @@ export default {
         ? localStorageUserObj.uid
         : localStorageUserObj.OwnerUid;
     this.EmailSelected =
-      localStorageUserObj.role == "OWNER"
-        ? localStorageUserObj.Email
-        : '';
-    this.IsValidEmailSelected =  true;
+      localStorageUserObj.role == "OWNER" ? localStorageUserObj.Email : "";
+    this.IsValidEmailSelected = true;
     this.AccountId = localStorageUserObj.AccountId;
 
     this.getAllCalls();
   },
   methods: {
+      disablePastDates(val) {
+       return val <= new Date().toISOString().substr(0, 10)
+    },
     getDaysArray(start, end) {
-      for (var arr = {}, dt = new Date(start); dt <= new Date(end); dt.setDate(dt.getDate() + 1)) {
-
+      for (
+        var arr = {}, dt = new Date(start);
+        dt <= new Date(end);
+        dt.setDate(dt.getDate() + 1)
+      ) {
         let callDayObj = new Date(dt);
         let call_month = callDayObj.toLocaleString("default", {
-          month: 'short'
+          month: "short",
         });
         let call_day = callDayObj.toLocaleString("default", {
-          day: "numeric"
+          day: "numeric",
         });
         let call_year = callDayObj.toLocaleString("default", {
-          year: "numeric"
+          year: "numeric",
         });
 
         // arr.push(`${call_month}*${call_day}*${call_year}`);
-        arr[`${call_month}*${call_day}*${call_year}`] = { Total: 0, Missed: 0, Answered: 0 };
-        
+        arr[`${call_month}*${call_day}*${call_year}`] = {
+          Total: 0,
+          Missed: 0,
+          Answered: 0,
+        };
       }
       return arr;
     },
-    getHeight(value, total){
-
-      var height = (value/total)*100;
+    getHeight(value, total) {
+      var height = (value / total) * 100;
       return height;
     },
     filterCalls(dates) {
@@ -706,10 +664,10 @@ export default {
       this.rerenderKey++;
     },
     handleAllCallsChange(opn) {
-      console.log('handleAllCallsChange', opn);
+      console.log("handleAllCallsChange", opn);
       this.AllCallsSelected = opn;
 
-      if(opn) {
+      if (opn) {
         this.AnsweredCallsSelected = false;
         this.MissedCallsSelected = false;
         this.OfflineCallsSelected = false;
@@ -720,48 +678,60 @@ export default {
       }
     },
     handleAnsweredCallsChange(opn) {
-      console.log('handleAnsweredCallsChange', opn);
+      console.log("handleAnsweredCallsChange", opn);
       this.AnsweredCallsSelected = opn;
-      if(opn) {
+      if (opn) {
         this.AllCallsSelected = false;
       }
-      if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
+      if (
+        !this.OfflineCallsSelected &&
+        !this.MissedCallsSelected &&
+        !this.AnsweredCallsSelected
+      ) {
         this.AllCallsSelected = true;
       }
     },
     handleMissedCallsChange(opn) {
-      console.log('handleMissedCallsChange', opn);
+      console.log("handleMissedCallsChange", opn);
       this.MissedCallsSelected = opn;
-      if(opn) {
+      if (opn) {
         this.AllCallsSelected = false;
       }
-      if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
+      if (
+        !this.OfflineCallsSelected &&
+        !this.MissedCallsSelected &&
+        !this.AnsweredCallsSelected
+      ) {
         this.AllCallsSelected = true;
       }
     },
     handleOfflineCallsChange(opn) {
-      console.log('handleOfflineCallsChange', opn);
+      console.log("handleOfflineCallsChange", opn);
       this.OfflineCallsSelected = opn;
-      if(opn) {
+      if (opn) {
         this.AllCallsSelected = false;
       }
-      if(!this.OfflineCallsSelected && !this.MissedCallsSelected && !this.AnsweredCallsSelected) {
+      if (
+        !this.OfflineCallsSelected &&
+        !this.MissedCallsSelected &&
+        !this.AnsweredCallsSelected
+      ) {
         this.AllCallsSelected = true;
       }
     },
     handleEmailChange(opn) {
-      console.log('handleEmailChange', opn);
+      console.log("handleEmailChange", opn);
       this.EmailSelected = opn;
-      if(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(opn)) {
-        console.log('Valid Email');
+      if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(opn)) {
+        console.log("Valid Email");
         this.IsValidEmailSelected = true;
       } else {
-        console.log('InValid Email');
+        console.log("InValid Email");
         this.IsValidEmailSelected = false;
       }
     },
     handleApplyFilter() {
-      if(this.IsValidEmailSelected) {
+      if (this.IsValidEmailSelected) {
         this.isUpdating = true;
         // this.filterMongo();
 
@@ -774,25 +744,25 @@ export default {
           // enddate: 1652338880000,
           type: [],
           AccountId: this.AccountId,
-          updated_by: this.ownerUid
+          updated_by: this.ownerUid,
         };
 
-        if(this.AllCallsSelected) {
-          payload.type.push('All');
+        if (this.AllCallsSelected) {
+          payload.type.push("All");
         }
-        if(this.AnsweredCallsSelected) {
-          payload.type.push('Answered');
+        if (this.AnsweredCallsSelected) {
+          payload.type.push("Answered");
         }
-        if(this.MissedCallsSelected) {
-          payload.type.push('Missed');
+        if (this.MissedCallsSelected) {
+          payload.type.push("Missed");
         }
-        if(this.OfflineCallsSelected) {
-          payload.type.push('Offline');
+        if (this.OfflineCallsSelected) {
+          payload.type.push("Offline");
         }
         console.log(payload);
 
         const options = {
-          url: this.$cloudfareApi+"/export",
+          url: this.$cloudfareApi + "/export",
           method: "POST",
           headers: {
             token: localStorage.getItem("token"),
@@ -804,7 +774,7 @@ export default {
         this.$axios(options)
           .then((response) => {
             console.log(response.data);
-            
+
             this.$root.vtoast.show({
               message: "Call Data Dispatched to Email",
               color: "green",
@@ -817,7 +787,6 @@ export default {
           .catch((error) => {
             console.error(error);
           });
-
       } else {
         this.$root.vtoast.show({
           message: "Please Provide a Valid Email!",
@@ -851,8 +820,10 @@ export default {
           if (!snapshot.empty) {
             this.noCalls = false;
 
-
-            let chartPlaceholder = this.getDaysArray(new Date(this.fromDate), new Date(this.toDate));
+            let chartPlaceholder = this.getDaysArray(
+              new Date(this.fromDate),
+              new Date(this.toDate)
+            );
 
             snapshot.docs.forEach((element) => {
               // console.log({
@@ -914,9 +885,10 @@ export default {
                     }
 
                     if ("ClickCount" in call) {
-                      console.log('ClickCount', call.ClickCount);
+                      console.log("ClickCount", call.ClickCount);
                       callSummary.ClickCount++;
-                      agentWiseReport[call.ClickCount.Uid]["summary"].ClickCount++;
+                      agentWiseReport[call.ClickCount.Uid]["summary"]
+                        .ClickCount++;
                     }
 
                     if ([doc.AgentUid] in agentsObj) {
@@ -957,7 +929,8 @@ export default {
                       //     Missed: 0,
                       //     Answered: 0,
                       //   };
-                        agentWiseReport[doc.AgentUid]["agent_report"] = chartPlaceholder;
+                      agentWiseReport[doc.AgentUid]["agent_report"] =
+                        chartPlaceholder;
                       // console.log('setting',agentWiseReport[doc.AgentUid]["agent_report"]);
                     }
 
@@ -998,9 +971,10 @@ export default {
                     }
 
                     if ("ClickCount" in call) {
-                      console.log('ClickCount', call.ClickCount);
+                      console.log("ClickCount", call.ClickCount);
                       callSummary.ClickCount++;
-                      agentWiseReport[call.ClickCount.Uid]["summary"].ClickCount++;
+                      agentWiseReport[call.ClickCount.Uid]["summary"]
+                        .ClickCount++;
                     }
 
                     let callDayObj = new Date(element.data().logDate);
@@ -1031,7 +1005,8 @@ export default {
                       //   Missed: 0,
                       //   Answered: 0,
                       // };
-                      agentWiseReport[doc.AgentUid]["agent_report"] = chartPlaceholder;
+                      agentWiseReport[doc.AgentUid]["agent_report"] =
+                        chartPlaceholder;
                     }
 
                     agentWiseReport[doc.AgentUid]["agent_report"][callDay]
@@ -1064,8 +1039,6 @@ export default {
                   }
                   // console.log(`agentWiseReport -->  ${doc.AgentUid} --> `, JSON.stringify(agentWiseReport[doc.AgentUid]));
                 });
-
-
               } else if ("BusyCalleesAccounts" in call) {
                 console.log("has BusyCalleesAccounts ", call.callstatus);
                 call.agentDetails.forEach(async (doc) => {

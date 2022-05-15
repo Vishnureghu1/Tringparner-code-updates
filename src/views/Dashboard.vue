@@ -229,12 +229,17 @@
                           </v-expansion-panel-header>
 
                           <v-expansion-panel-content
-                            v-for="(reminder, index) in getCallDetailsReminder(agentId)"
+                            v-for="(reminder, index) in getCallDetailsReminder(
+                              agentId
+                            )"
                             :key="index"
                             class="mb-3 mt-5 mt-2 pl-10 ml-5"
                           >
-                            <h4 class="number_heading font-weight-light mr-15" align="left">
-                              {{ reminder.callerNumber }}
+                            <h4
+                              class="number_heading font-weight-light mr-15"
+                              align="left"
+                            >
+                              {{ reminder.CustomerNumber }}
                             </h4>
                             <div class="mr-16">
                               <h5
@@ -246,7 +251,8 @@
                                   mt-1
                                 "
                               >
-                                {{ reminder.Message }}<br>at {{ reminder.ReminderAt }}
+                                {{ reminder.Message }}<br />at
+                                {{ reminder.ReminderAt }}
                               </h5>
                             </div>
                           </v-expansion-panel-content>
@@ -343,7 +349,7 @@ export default {
     c: 1,
     today: new Date().toISOString().substr(0, 10),
     // today: new Date().getTime(),
-    reminderCalls:[]
+    reminderCalls: [],
   }),
 
   async created() {
@@ -394,10 +400,11 @@ export default {
       return this.c++;
     },
     isToday(timestampInMilliseconds) {
-      
-      var todayDate = new Date().toLocaleString().split(',')[0];
-      var reminderDate = new Date(parseInt(timestampInMilliseconds)).toLocaleString().split(',')[0];
-      if(todayDate == reminderDate) {
+      var todayDate = new Date().toLocaleString().split(",")[0];
+      var reminderDate = new Date(parseInt(timestampInMilliseconds))
+        .toLocaleString()
+        .split(",")[0];
+      if (todayDate == reminderDate) {
         return true;
       } else {
         return false;
@@ -418,7 +425,6 @@ export default {
       );
     },
     getCallDetailsReminder(agentId) {
-
       return this.remiderCallsPanel.filter(
         (reminder) => reminder.AgentUid === agentId
       );
@@ -434,7 +440,8 @@ export default {
 
       if (localStorageUserObj) {
         let parsedUser = JSON.parse(localStorageUserObj);
-        this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
+        this.ownerUid =
+          parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
         this.userEmail = parsedUser.Email;
         this.userRole = parsedUser.role;
         console.log("this.today", this.today);
@@ -531,7 +538,8 @@ export default {
       if (localStorageUserObj) {
         let parsedUser = JSON.parse(localStorageUserObj);
 
-        this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
+        this.ownerUid =
+          parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
         this.userEmail = parsedUser.Email;
         this.userRole = parsedUser.role;
 
@@ -607,9 +615,7 @@ export default {
         let parsedUser = JSON.parse(localStorageUserObj);
 
         this.ownerUid =
-          parsedUser.role == "OWNER" ?
-          parsedUser.uid :
-          parsedUser.OwnerUid;
+          parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
 
         this.userEmail = parsedUser.Email;
 
@@ -624,39 +630,49 @@ export default {
               // .get()
               // .then((querySnapshot) => {
               .onSnapshot((querySnapshot) => {
-
-                console.log('querySnapshot.size',querySnapshot.size);
+                console.log("querySnapshot.size", querySnapshot.size);
 
                 this.remiderCallsPanel = [];
                 this.remiderCalls = [];
 
                 querySnapshot.docs.forEach((logs) => {
-
                   if (this.isToday(parseInt(logs.data().ReminderAt))) {
+                    // let callerNumber = logs.data().Number?.toString();
+                    let CallerNo = logs.data().Number?.toString();
 
-                  // let callerNumber = logs.data().Number?.toString();
-                  let CallerNo = logs.data().Number?.toString();
+                    var callerNumber =
+                      "+91 " +
+                      CallerNo.slice(0, 5) +
+                      " " +
+                      CallerNo.slice(5, 7) +
+                      " " +
+                      CallerNo.slice(7, 11);
 
-                  var callerNumber =
-                    "+91 " +
-                    CallerNo.slice(0, 5) +
-                    " " +
-                    CallerNo.slice(5, 7) +
-                    " " +
-                    CallerNo.slice(7, 11);
-                  var timestamp = logs.data().ReminderAt;
-                  var date = new Date(parseInt(timestamp));
-                  var call_time = moment(date).format("DD-MM-YYYY hh:mm a");
-                  console.log("CallId", logs.data().CallId);
+                    let CustomerNo = logs.data().CustomerNumber
+                      ? logs.data().CustomerNumber?.toString()
+                      : logs.data().Number?.toString();
+                    var CustomerNumber =
+                      "+91 " +
+                      CustomerNo.slice(0, 5) +
+                      " " +
+                      CustomerNo.slice(5, 7) +
+                      " " +
+                      CustomerNo.slice(7, 11);
+
+                    var timestamp = logs.data().ReminderAt;
+                    var date = new Date(parseInt(timestamp));
+                    var call_time = moment(date).format("DD-MM-YYYY hh:mm a");
+                    console.log("CallId", logs.data().CallId);
 
                     this.remiderCallsPanel.push({
                       ReminderAt: call_time,
                       callerNumber: callerNumber,
+                      CustomerNumber: CustomerNumber,
                       AgentName: logs.data().Name,
                       AgentUid: logs.data().AgentUid,
                       Message: logs.data().Message,
                       Type: logs.data().Type,
-                    })
+                    });
 
                     //set agent reminder count
                     let AgentUid = logs.data().AgentUid;
@@ -667,7 +683,8 @@ export default {
                         reminder_calls: 1,
                       });
                     } else {
-                      let incrCnt = this.agentReminderNames[AgentUid].reminder_calls + 1;
+                      let incrCnt =
+                        this.agentReminderNames[AgentUid].reminder_calls + 1;
                       console.log("incrCnt", incrCnt);
                       this.$set(this.agentReminderNames, AgentUid, {
                         name: logs.data().Name,
@@ -676,13 +693,11 @@ export default {
                     }
                     //set agent reminder count
                   }
-
-
                 });
-              })
-              // .catch((error) => {
-              //   console.log("Error getting logs: ", error);
-              // });
+              });
+            // .catch((error) => {
+            //   console.log("Error getting logs: ", error);
+            // });
           } else {
             this.uid = user.uid;
             db.collection("Reminders")
@@ -694,23 +709,35 @@ export default {
                   // console.log(logs.data());
 
                   if (this.isToday(parseInt(logs.data().ReminderAt))) {
+                    let CallerNo = logs.data().Number?.toString();
+                    var callerNumber =
+                      "+91 " +
+                      CallerNo.slice(0, 5) +
+                      " " +
+                      CallerNo.slice(5, 7) +
+                      " " +
+                      CallerNo.slice(7, 11);
 
-                  let CallerNo = logs.data().Number?.toString();
-                  var callerNumber =
-                    "+91 " +
-                    CallerNo.slice(0, 5) +
-                    " " +
-                    CallerNo.slice(5, 7) +
-                    " " +
-                    CallerNo.slice(7, 11);
-                  var timestamp = logs.data().ReminderAt;
-                  var date = new Date(timestamp);
-                  var call_time = moment(date).format("hh:mm a");
-                  call_time = moment(date).fromNow();
+                    let CustomerNo = logs.data().CustomerNumber
+                      ? logs.data().CustomerNumber?.toString()
+                      : logs.data().Number?.toString();
+                    var CustomerNumber =
+                      "+91 " +
+                      CustomerNo.slice(0, 5) +
+                      " " +
+                      CustomerNo.slice(5, 7) +
+                      " " +
+                      CustomerNo.slice(7, 11);
+
+                    var timestamp = logs.data().ReminderAt;
+                    var date = new Date(timestamp);
+                    var call_time = moment(date).format("hh:mm a");
+                    call_time = moment(date).fromNow();
 
                     this.remiderCallsPanel.push({
                       ReminderAt: call_time,
                       callerNumber: callerNumber,
+                      CustomerNumber: CustomerNumber,
                       AgentName: logs.data().Name,
                       AgentUid: logs.data().AgentUid,
                       Message: logs.data().Message,
@@ -726,15 +753,14 @@ export default {
                       reminder_calls: 1,
                     });
                   } else {
-                    let incrCnt = this.agentReminderNames[AgentUid].reminder_calls + 1;
+                    let incrCnt =
+                      this.agentReminderNames[AgentUid].reminder_calls + 1;
                     console.log("incrCnt", incrCnt);
                     this.$set(this.agentReminderNames, AgentUid, {
                       name: logs.data().Name,
                       reminder_calls: incrCnt,
                     });
                   }
-
-                    
                 });
               })
               .catch((error) => {

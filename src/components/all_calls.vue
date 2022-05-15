@@ -1866,6 +1866,8 @@ var virtualnumberDisplay =
                     this.realdata[index].reminderTime = moment(
                       this.testreminder
                     ).format("D MMM Y hh:mm a");
+
+                    
                     console.log("gfghghgvhgvhgv", this.realdata[index]);
                     this.testreminder = "";
             })
@@ -2063,7 +2065,7 @@ var virtualnumberDisplay =
                         Note: note,
                         source: this.calldetails.source,
                         virtualnumber: this.calldetails.callerNumber,
-                                      virtualnumberDisplay: virtualnumberDisplay,
+                        virtualnumberDisplay: virtualnumberDisplay,
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder
@@ -2114,21 +2116,3 @@ var virtualnumberDisplay =
 </script>
 
 
-<style scoped>
-.test {
-  border-color: grey !important;
-  height: 100%;
-}
-.v-expansion-panel {
-  border-bottom: 1px solid #ddd;
-}
-.v-expansion-panel-header {
-  line-height: 0.9 !important;
-}
-.v-btn--outlined {
-  border: thin solid #ee1c25;
-}
-.application {
-  font-family: adobe-clean, sans-serif !important;
-}
-</style>
