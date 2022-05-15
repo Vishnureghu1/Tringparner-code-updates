@@ -101,38 +101,32 @@
                         :nudge-width="200"
                         offset-x
                       >
-
-           
-                        <template v-slot:activator="{ on, attrs }" >
-                        
-                          <span  class="pr-7 "
-                            >
+                        <template v-slot:activator="{ on, attrs }">
+                          <span class="pr-7">
                             <v-icon
                               class="mt-0 mb-5 mr-4"
                               color="black"
                               @click="hidden = !hidden"
                               >mdi-magnify</v-icon
                             >
-                            <v-badge v-if="showBadge==true"
-  dot
-  overlap
->    <v-icon
-                              class="mt-0 mb-5 mr-0 "
-                              color="black"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-filter-variant</v-icon
-                            ></v-badge>
-                                                 <span v-if="showBadge==false"
-  
-  overlap
->    <v-icon
-                              class="mt-0 mb-5 mr-0 "
-                              color="black"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-filter-variant</v-icon
-                            ></span>
+                            <v-badge v-if="showBadge == true" dot overlap>
+                              <v-icon
+                                class="mt-0 mb-5 mr-0"
+                                color="black"
+                                v-bind="attrs"
+                                v-on="on"
+                                >mdi-filter-variant</v-icon
+                              ></v-badge
+                            >
+                            <span v-if="showBadge == false" overlap>
+                              <v-icon
+                                class="mt-0 mb-5 mr-0"
+                                color="black"
+                                v-bind="attrs"
+                                v-on="on"
+                                >mdi-filter-variant</v-icon
+                              ></span
+                            >
                           </span>
                         </template>
 
@@ -274,7 +268,7 @@
                   </v-row>
 
                   <div>
-                                        <v-expansion-panels
+                    <v-expansion-panels
                       accordion
                       flat
                       v-if="realdata.length != ''"
@@ -302,13 +296,12 @@
                                     width="24"
                                     height="24"
                                   />+91 {{ details.callerNumber }}
-                                <v-icon
+                                  <v-icon
                                     color="gray"
                                     class="mr-5"
                                     v-if="details.isBlocked == true"
                                     >mdi-shield-lock-outline</v-icon
                                   >
-
 
                                   <v-menu offset-y>
                                     <template v-slot:activator="{ on, attrs }">
@@ -418,7 +411,7 @@
 
                                   <h5 class="font-weight-light">
                                     {{ details.source }} No: (+91
-                                    {{ details.virtualnumber }})
+                                    {{ details.virtualnumberDisplay}})
                                   </h5>
                                   <div
                                     v-for="getNotes in details.Note"
@@ -588,7 +581,7 @@
 
             <v-dialog v-model="dialog" max-width="400px" persistent>
               <v-card max-height>
-                  <v-card-title class="mb-5">
+                <v-card-title class="mb-5">
                   <span class="text-h5">Reminder </span> <v-spacer></v-spacer>
                   <span
                     class="red--text light4 f14 cursor"
@@ -867,12 +860,13 @@ export default {
   },
   data: () => ({
     blocked_numbers_: [],
-    showBadge:false,
+    showBadge: false,
     hidealert: "",
     otp: "",
     addNotesDialog: false,
     notes_data: "",
     virtualNumber: null,
+    virtualnumberDisplay: null,
     uniqueId: null,
     reminder_added: false,
     blocked_number: false,
@@ -979,7 +973,7 @@ export default {
     },
   },
   methods: {
-            // Blocked Status
+    // Blocked Status
     async blockedStatus(ownerUID) {
       console.log("Owner UID" + ownerUID);
       this.blocked_numbers_ = [];
@@ -1450,7 +1444,7 @@ export default {
         results_per_page: parseInt(this.limit),
         conditions: {
           owneruid: this.ownerUid,
-          callstatus: "Answered"
+          callstatus: "Answered",
         },
         sort: {},
       };
@@ -1463,9 +1457,8 @@ export default {
       );
 
       var cfdata = {
-        headers:
-          this.$headerKeyMongo,
-        url: this.$mongoApi+"/api/calllogs/paginate",
+        headers: this.$headerKeyMongo,
+        url: this.$mongoApi + "/api/calllogs/paginate",
         payload: updatedFilterCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
@@ -1475,13 +1468,9 @@ export default {
         token: "tpmongo",
       };
       axios
-        .post(
-          this.$cloudfareApi+"/admin/mongo",
-          raw,
-          {
-            headers: headers,
-          }
-        )
+        .post(this.$cloudfareApi + "/admin/mongo", raw, {
+          headers: headers,
+        })
         .then((response) => {
           console.log("DL response", response.data.data);
           let dataset = response.data.data.dataset;
@@ -1534,12 +1523,12 @@ export default {
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-            // var virtualnumber =
-            //   this.calldetails.virtualnumber.slice(0, 5) +
-            //   " " +
-            //   this.calldetails.virtualnumber.slice(5, 7) +
-            //   " " +
-            //   this.calldetails.virtualnumber.slice(7, 11);
+            var virtualnumberDisplay =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
             this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
@@ -1550,8 +1539,9 @@ export default {
               Note: note,
               source: this.calldetails.source,
               virtualnumber: this.calldetails.callerNumber,
+              virtualnumberDisplay: virtualnumberDisplay,
               called_name: this.called_name,
-                            recordingUrl: this.calldetails.recordingurl,
+              recordingUrl: this.calldetails.recordingurl,
               reminder: this.calldetails.Reminder
                 ? this.calldetails.Reminder.ReminderAt
                 : "",
@@ -1596,15 +1586,15 @@ export default {
           ],
         });
       }
-      if(this.userRole == 'AGENT') {
+      if (this.userRole == "AGENT") {
         Object.assign(searchCallsConditions.conditions, {
-          userid: { "$in" : [this.uid]},
+          userid: { $in: [this.uid] },
         });
       }
 
       return searchCallsConditions;
     },
-       emailStatus() {
+    emailStatus() {
       db.collection("users")
         .where("uid", "==", this.uid)
         .get()
@@ -1629,8 +1619,7 @@ export default {
         });
     },
     searchMongo() {
-
-      if(this.page > 1) {
+      if (this.page > 1) {
         this.page = 1;
       }
       var searchCallsConditions = {
@@ -1638,7 +1627,7 @@ export default {
         results_per_page: parseInt(this.limit),
         conditions: {
           owneruid: this.ownerUid,
-          callstatus: "Answered"
+          callstatus: "Answered",
         },
         sort: {},
       };
@@ -1647,12 +1636,14 @@ export default {
         searchCallsConditions
       );
 
-      console.log("updatedSearchCallsPayload", JSON.stringify(updatedSearchCallsPayload));
+      console.log(
+        "updatedSearchCallsPayload",
+        JSON.stringify(updatedSearchCallsPayload)
+      );
 
       var cfdata = {
-        headers:
-          this.$headerKeyMongo,
-        url: this.$mongoApi+"/api/calllogs/paginate",
+        headers: this.$headerKeyMongo,
+        url: this.$mongoApi + "/api/calllogs/paginate",
         payload: updatedSearchCallsPayload,
       };
       var raw = JSON.stringify(cfdata);
@@ -1662,13 +1653,9 @@ export default {
         token: "tpmongo",
       };
       axios
-        .post(
-          this.$cloudfareApi+"/admin/mongo",
-          raw,
-          {
-            headers: headers,
-          }
-        )
+        .post(this.$cloudfareApi + "/admin/mongo", raw, {
+          headers: headers,
+        })
         .then((response) => {
           console.log("Search DL response", response.data.data);
           let dataset = response.data.data.dataset;
@@ -1721,12 +1708,12 @@ export default {
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-            // var virtualnumber =
-            //   this.calldetails.virtualnumber.slice(0, 5) +
-            //   " " +
-            //   this.calldetails.virtualnumber.slice(5, 7) +
-            //   " " +
-            //   this.calldetails.virtualnumber.slice(7, 11);
+            var virtualnumberDisplay =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
             this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
@@ -1737,8 +1724,9 @@ export default {
               Note: note,
               source: this.calldetails.source,
               virtualnumber: this.calldetails.callerNumber,
+              virtualnumberDisplay: virtualnumberDisplay,
               called_name: this.called_name,
-                            recordingUrl: this.calldetails.recordingurl,
+              recordingUrl: this.calldetails.recordingurl,
               reminder: this.calldetails.Reminder
                 ? this.calldetails.Reminder.ReminderAt
                 : "",
@@ -1779,7 +1767,7 @@ export default {
             results_per_page: parseInt(this.limit),
             conditions: {
               owneruid: this.ownerUid,
-              callstatus: "Answered"
+              callstatus: "Answered",
             },
             sort: {},
           };
@@ -1792,9 +1780,8 @@ export default {
           );
 
           var cfdata = {
-            headers:
-              this.$headerKeyMongo,
-            url: this.$mongoApi+"/api/calllogs/paginate",
+            headers: this.$headerKeyMongo,
+            url: this.$mongoApi + "/api/calllogs/paginate",
             payload: updatedFilterCallsPayload,
           };
           var raw = JSON.stringify(cfdata);
@@ -1804,13 +1791,9 @@ export default {
             token: "tpmongo",
           };
           axios
-            .post(
-              this.$cloudfareApi+"/admin/mongo",
-              raw,
-              {
-                headers: headers,
-              }
-            )
+            .post(this.$cloudfareApi + "/admin/mongo", raw, {
+              headers: headers,
+            })
             .then((response) => {
               console.log("DL response", response.data.data);
               let dataset = response.data.data.dataset;
@@ -1866,12 +1849,12 @@ export default {
                   this.calldetails.callerNumber.slice(5, 7) +
                   " " +
                   this.calldetails.callerNumber.slice(7, 11);
-                // var virtualnumber =
-                //   this.calldetails.virtualnumber.slice(0, 5) +
-                //   " " +
-                //   this.calldetails.virtualnumber.slice(5, 7) +
-                //   " " +
-                //   this.calldetails.virtualnumber.slice(7, 11);
+                var virtualnumberDisplay =
+                  this.calldetails.virtualnumber.slice(0, 5) +
+                  " " +
+                  this.calldetails.virtualnumber.slice(5, 7) +
+                  " " +
+                  this.calldetails.virtualnumber.slice(7, 11);
                 this.detail = Object.assign({}, this.detail, {
                   callstatus: this.calldetails.callstatus,
                   name: this.calldetails.name[0],
@@ -1882,22 +1865,23 @@ export default {
                   Note: note,
                   source: this.calldetails.source,
                   virtualnumber: this.calldetails.callerNumber,
+                  virtualnumberDisplay: virtualnumberDisplay,
                   called_name: this.called_name,
-                                recordingUrl: this.calldetails.recordingurl,
-              reminder: this.calldetails.Reminder
-                ? this.calldetails.Reminder.ReminderAt
-                : "",
-              reminderPayload: this.calldetails.Reminder
-                ? this.calldetails.Reminder
-                : "",
-              reminderTime: this.calldetails.Reminder
-                ? moment(this.calldetails.Reminder.ReminderAt).format(
-                    "D MMM Y hh:mm a"
-                  )
-                : "",
-              isBlocked: this.blocked_numbers_.includes(
-                parseInt(this.calldetails.callerNumber)
-              ),
+                  recordingUrl: this.calldetails.recordingurl,
+                  reminder: this.calldetails.Reminder
+                    ? this.calldetails.Reminder.ReminderAt
+                    : "",
+                  reminderPayload: this.calldetails.Reminder
+                    ? this.calldetails.Reminder
+                    : "",
+                  reminderTime: this.calldetails.Reminder
+                    ? moment(this.calldetails.Reminder.ReminderAt).format(
+                        "D MMM Y hh:mm a"
+                      )
+                    : "",
+                  isBlocked: this.blocked_numbers_.includes(
+                    parseInt(this.calldetails.callerNumber)
+                  ),
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
@@ -1905,14 +1889,14 @@ export default {
                 console.log("getNextCalls calllog ", this.realdata.length);
                 // call details
               });
-               const index = this.realdata.findIndex((object) => {
-                      return object.uniqueid === this.uniqueId;
-                    });
-                    this.realdata[index].reminderTime = moment(
-                      this.testreminder
-                    ).format("D MMM Y hh:mm a");
-                    console.log("gfghghgvhgvhgv", this.realdata[index]);
-                    this.testreminder = "";
+              const index = this.realdata.findIndex((object) => {
+                return object.uniqueid === this.uniqueId;
+              });
+              this.realdata[index].reminderTime = moment(
+                this.testreminder
+              ).format("D MMM Y hh:mm a");
+              console.log("gfghghgvhgvhgv", this.realdata[index]);
+              this.testreminder = "";
             })
             .catch((error) => {
               console.log("DL error", error);
@@ -1929,7 +1913,8 @@ export default {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
       console.log(parsedUser.role);
-      this.ownerUid = parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
+      this.ownerUid =
+        parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
 
       this.userRole = parsedUser.role;
       firebase.auth().onAuthStateChanged((user) => {
@@ -1979,7 +1964,6 @@ export default {
               this.realdata = [];
               this.backuprealdata = [];
               if (!querySnapshot.empty) {
-
                 // querySnapshot.forEach(async (doc) => {
                 //   console.log(doc.id, " => ", doc.data());
                 //   let user_details = doc.data();
@@ -2042,13 +2026,13 @@ export default {
                 //   console.log("snap calllog ", this.realdata);
                 // });
 
-                 // Getting Calls from Mongo on onSnapshot
+                // Getting Calls from Mongo on onSnapshot
                 var filterCallsPayload = {
                   page_number: 1,
                   results_per_page: parseInt(this.limit),
                   conditions: {
                     owneruid: this.ownerUid,
-                    callstatus: "Answered"
+                    callstatus: "Answered",
                   },
                   sort: {},
                 };
@@ -2061,9 +2045,8 @@ export default {
                 );
 
                 var cfdata = {
-                  headers:
-                    this.$headerKeyMongo,
-                  url: this.$mongoApi+"/api/calllogs/paginate",
+                  headers: this.$headerKeyMongo,
+                  url: this.$mongoApi + "/api/calllogs/paginate",
                   payload: updatedFilterCallsPayload,
                 };
                 var raw = JSON.stringify(cfdata);
@@ -2073,13 +2056,9 @@ export default {
                   token: "tpmongo",
                 };
                 axios
-                  .post(
-                    this.$cloudfareApi+"/admin/mongo",
-                    raw,
-                    {
-                      headers: headers,
-                    }
-                  )
+                  .post(this.$cloudfareApi + "/admin/mongo", raw, {
+                    headers: headers,
+                  })
                   .then((response) => {
                     console.log("DL response", response.data.data);
                     let dataset = response.data.data.dataset;
@@ -2091,85 +2070,87 @@ export default {
                     this.realdata = [];
                     this.backuprealdata = [];
                     dataset.forEach((doc) => {
+                      // console.log(doc.id, " => ", doc.data());
+                      // let user_details = doc.data();
+                      let user_details = doc;
+                      this.calldetails = user_details;
+                      var timestamp = this.calldetails.dateTime;
+                      var date = new Date(timestamp);
+                      // console.log("full time",date)
+                      // var call_time = moment(date).format('hh:mm a')
+                      // call_time = moment(date).fromNow();
+                      // console.log("converted time",call_time)
 
-                        // console.log(doc.id, " => ", doc.data());
-                        // let user_details = doc.data();
-                        let user_details = doc;
-                        this.calldetails = user_details;
-                        var timestamp = this.calldetails.dateTime;
-                        var date = new Date(timestamp);
-                        // console.log("full time",date)
-                        // var call_time = moment(date).format('hh:mm a')
-                        // call_time = moment(date).fromNow();
-                        // console.log("converted time",call_time)
+                      var myCurrentDate = new Date();
+                      var missedTresholdDate = new Date(myCurrentDate);
+                      missedTresholdDate.setDate(
+                        missedTresholdDate.getDate() - 2
+                      ); //2 days before
+                      console.log(missedTresholdDate);
 
-                        var myCurrentDate = new Date();
-                        var missedTresholdDate = new Date(myCurrentDate);
-                        missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-                        console.log(missedTresholdDate);
+                      console.log(timestamp); //missed call date
+                      console.log(missedTresholdDate.getTime()); //addon date
+                      console.log(myCurrentDate.getTime()); //today's date
 
-                        console.log(timestamp); //missed call date
-                        console.log(missedTresholdDate.getTime()); //addon date
-                        console.log(myCurrentDate.getTime()); //today's date
-
-                        if (timestamp <= missedTresholdDate.getTime()) {
-                          call_time = moment(date).format("D MMM Y hh:mm a");
-                        } else {
-                          var call_time = moment(date).format("hh:mm a");
-                          call_time = moment(date).fromNow();
-                        }
-                        var note = "";
-                        if (this.calldetails.Notes) {
-                          note = this.calldetails.Notes;
-                        } else {
-                          console.log("no note");
-                          note = [{ Note: "" }];
-                        }
-                        var calledNumber =
-                          this.calldetails.callerNumber.slice(0, 5) +
-                          " " +
-                          this.calldetails.callerNumber.slice(5, 7) +
-                          " " +
-                          this.calldetails.callerNumber.slice(7, 11);
-                        var virtualnumber =
-                          this.calldetails.virtualnumber.slice(0, 5) +
-                          " " +
-                          this.calldetails.virtualnumber.slice(5, 7) +
-                          " " +
-                          this.calldetails.virtualnumber.slice(7, 11);
-                        this.detail = Object.assign({}, this.detail, {
-                          callstatus: this.calldetails.callstatus,
-                          name: this.calldetails.name[0],
-                          dateTime: call_time,
-                          conversationduration: this.calldetails.conversationduration,
-                          callerNumber: calledNumber,
-                          uniqueid: this.calldetails.uniqueid,
-                          Note: note,
-                          source: this.calldetails.source,
-                          virtualnumber: virtualnumber,
-                          called_name: this.called_name,
-                                        recordingUrl: this.calldetails.recordingurl,
-              reminder: this.calldetails.Reminder
-                ? this.calldetails.Reminder.ReminderAt
-                : "",
-              reminderPayload: this.calldetails.Reminder
-                ? this.calldetails.Reminder
-                : "",
-              reminderTime: this.calldetails.Reminder
-                ? moment(this.calldetails.Reminder.ReminderAt).format(
-                    "D MMM Y hh:mm a"
-                  )
-                : "",
-              isBlocked: this.blocked_numbers_.includes(
-                parseInt(this.calldetails.callerNumber)
-              ),
-                        });
-                        this.realdata.push(this.detail);
-                        this.backuprealdata.push(this.detail);
-                        console.log("snap calllog ", this.realdata);
-                      
+                      if (timestamp <= missedTresholdDate.getTime()) {
+                        call_time = moment(date).format("D MMM Y hh:mm a");
+                      } else {
+                        var call_time = moment(date).format("hh:mm a");
+                        call_time = moment(date).fromNow();
+                      }
+                      var note = "";
+                      if (this.calldetails.Notes) {
+                        note = this.calldetails.Notes;
+                      } else {
+                        console.log("no note");
+                        note = [{ Note: "" }];
+                      }
+                      var calledNumber =
+                        this.calldetails.callerNumber.slice(0, 5) +
+                        " " +
+                        this.calldetails.callerNumber.slice(5, 7) +
+                        " " +
+                        this.calldetails.callerNumber.slice(7, 11);
+                      var virtualnumberDisplay =
+                        this.calldetails.virtualnumber.slice(0, 5) +
+                        " " +
+                        this.calldetails.virtualnumber.slice(5, 7) +
+                        " " +
+                        this.calldetails.virtualnumber.slice(7, 11);
+                      this.detail = Object.assign({}, this.detail, {
+                        callstatus: this.calldetails.callstatus,
+                        name: this.calldetails.name[0],
+                        dateTime: call_time,
+                        conversationduration:
+                          this.calldetails.conversationduration,
+                        callerNumber: calledNumber,
+                        uniqueid: this.calldetails.uniqueid,
+                        Note: note,
+                        source: this.calldetails.source,
+                         virtualnumber: this.calldetails.callerNumber,
+                        virtualnumberDisplay: virtualnumberDisplay,
+                        called_name: this.called_name,
+                        recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder
+                          ? this.calldetails.Reminder.ReminderAt
+                          : "",
+                        reminderPayload: this.calldetails.Reminder
+                          ? this.calldetails.Reminder
+                          : "",
+                        reminderTime: this.calldetails.Reminder
+                          ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                          : "",
+                        isBlocked: this.blocked_numbers_.includes(
+                          parseInt(this.calldetails.callerNumber)
+                        ),
+                      });
+                      this.realdata.push(this.detail);
+                      this.backuprealdata.push(this.detail);
+                      console.log("snap calllog ", this.realdata);
                     });
-                     const index = this.realdata.findIndex((object) => {
+                    const index = this.realdata.findIndex((object) => {
                       return object.uniqueid === this.uniqueId;
                     });
                     this.realdata[index].reminderTime = moment(
@@ -2179,11 +2160,10 @@ export default {
                     this.testreminder = "";
                   })
                   .catch((error) => {
-                  console.log("DL error", error);
-                });
-
+                    console.log("DL error", error);
+                  });
               } else {
-                console.log('no calls')
+                console.log("no calls");
               }
             });
         }

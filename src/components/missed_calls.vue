@@ -412,7 +412,7 @@
 
                                   <h5 class="font-weight-light">
                                     {{ details.source }} No: (+91
-                                    {{ details.virtualnumber }})
+                                    {{ details.virtualnumberDisplay}})
                                   </h5>
                                   <div
                                     v-for="getNotes in details.Note"
@@ -868,6 +868,7 @@ export default {
     addNotesDialog: false,
     notes_data: "",
     virtualNumber: null,
+    virtualnumberDisplay:null,
     uniqueId: null,
     reminder_added: false,
     blocked_number: false,
@@ -1572,12 +1573,12 @@ export default {
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-            // var virtualnumber =
-            //   this.calldetails.virtualnumber.slice(0, 5) +
-            //   " " +
-            //   this.calldetails.virtualnumber.slice(5, 7) +
-            //   " " +
-            //   this.calldetails.virtualnumber.slice(7, 11);
+var virtualnumberDisplay =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
             this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
@@ -1588,6 +1589,7 @@ export default {
               Note: note,
               source: this.calldetails.source,
                virtualnumber: this.calldetails.callerNumber,
+                             virtualnumberDisplay: virtualnumberDisplay,
               called_name: this.called_name,
                                       recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder
@@ -1756,12 +1758,12 @@ export default {
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-            // var virtualnumber =
-            //   this.calldetails.virtualnumber.slice(0, 5) +
-            //   " " +
-            //   this.calldetails.virtualnumber.slice(5, 7) +
-            //   " " +
-            //   this.calldetails.virtualnumber.slice(7, 11);
+var virtualnumberDisplay =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
             this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
@@ -1772,6 +1774,7 @@ export default {
               Note: note,
               source: this.calldetails.source,
               virtualnumber: this.calldetails.callerNumber,
+                            virtualnumberDisplay: virtualnumberDisplay,
               called_name: this.called_name,
                                       recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder
@@ -1930,12 +1933,12 @@ export default {
                   this.calldetails.callerNumber.slice(5, 7) +
                   " " +
                   this.calldetails.callerNumber.slice(7, 11);
-                // var virtualnumber =
-                //   this.calldetails.virtualnumber.slice(0, 5) +
-                //   " " +
-                //   this.calldetails.virtualnumber.slice(5, 7) +
-                //   " " +
-                //   this.calldetails.virtualnumber.slice(7, 11);
+var virtualnumberDisplay =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
                 this.detail = Object.assign({}, this.detail, {
                   callstatus: this.calldetails.callstatus,
                   name: this.calldetails.name[0],
@@ -1946,6 +1949,7 @@ export default {
                   Note: note,
                   source: this.calldetails.source,
                   virtualnumber: this.calldetails.callerNumber,
+                                virtualnumberDisplay: virtualnumberDisplay,
                   called_name: this.called_name,
                                           recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder
@@ -2156,12 +2160,12 @@ export default {
                         this.calldetails.callerNumber.slice(5, 7) +
                         " " +
                         this.calldetails.callerNumber.slice(7, 11);
-                      // var virtualnumber =
-                      //   this.calldetails.virtualnumber.slice(0, 5) +
-                      //   " " +
-                      //   this.calldetails.virtualnumber.slice(5, 7) +
-                      //   " " +
-                      //   this.calldetails.virtualnumber.slice(7, 11);
+var virtualnumberDisplay =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
                       this.detail = Object.assign({}, this.detail, {
                         callstatus: this.calldetails.callstatus,
                         name: this.calldetails.name[0],
@@ -2173,6 +2177,7 @@ export default {
                         Note: note,
                         source: this.calldetails.source,
                          virtualnumber: this.calldetails.callerNumber,
+                                       virtualnumberDisplay: virtualnumberDisplay,
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
                         reminder: this.calldetails.Reminder
