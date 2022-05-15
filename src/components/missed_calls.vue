@@ -295,12 +295,14 @@
                                     width="24"
                                     height="24"
                                   />+91 {{ details.callerNumber }}
+                               
                                   <v-icon
                                     color="gray"
                                     class="mr-5"
                                     v-if="details.isBlocked == true"
                                     >mdi-shield-lock-outline</v-icon
                                   >
+
 
                                   <v-menu offset-y>
                                     <template v-slot:activator="{ on, attrs }">
@@ -404,7 +406,7 @@
                         <v-expansion-panel-content>
                           <div>
                             <v-row>
-                              <v-col cols="12" sm="6">
+                              <v-col cols="12" sm="8">
                                 <div class="ml-10">
                                   <h6 class="font-weight-thin">Source</h6>
 
@@ -527,6 +529,7 @@
                                         </v-btn>
                                       </span>
                                     </div>
+                                    
                                     <!-- </div> -->
                                     <!-- Copied from collapsed reminder section -->
                                   </div>
@@ -535,7 +538,7 @@
 
                               <v-col
                                 cols="12"
-                                sm="6"
+                                sm="4"
                                 v-if="details.callstatus != 'Missed'"
                               >
                                 <audio controls>
@@ -858,6 +861,7 @@ export default {
     Icon,
   },
   data: () => ({
+    blocked_numbers_: [],
     showBadge: false,
     hidealert: "",
     otp: "",
@@ -957,6 +961,7 @@ export default {
     page: 1,
     name: "",
     userRole: "",
+    reminder: "",
   }),
   watch: {
     sendInviteLoader(val) {
@@ -969,6 +974,53 @@ export default {
     },
   },
   methods: {
+       emailStatus() {
+      db.collection("users")
+        .where("uid", "==", this.uid)
+        .get()
+        .then(async (snap) => {
+          this.current_email =
+            snap.docs[0].data().role == "OWNER"
+              ? snap.docs[0].data().Email
+              : "";
+          this.hidealert =
+            snap.docs[0].data().role == "OWNER" &&
+            snap.docs[0].data().IsEmailVerified == false
+              ? true
+              : false;
+          // this.hidealert =
+          //   snap.docs[0].data().IsEmailVerified == true ? false : true;
+          this.name =
+            snap.docs[0].data().role == "OWNER"
+              ? snap.docs[0].data().FirstName
+              : snap.docs[0].data().Name;
+          this.number = snap.docs[0].data().PhoneNumber;
+          console.log("test", this.hidealert);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
+        // Blocked Status
+    async blockedStatus(ownerUID) {
+      console.log("Owner UID" + ownerUID);
+      this.blocked_numbers_ = [];
+      db.collection("blockCalls")
+        .where("Uid", "==", ownerUID)
+        .get()
+        .then(async (snap) => {
+          // if(snap.docs){
+          snap.docs.forEach((element) => {
+            this.blocked_numbers_.push(element.data().Number);
+          });
+          console.log("Blocked status" + this.blocked_numbers_);
+          // }
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
+
     formatTime(seconds) {
       return [
         parseInt(seconds / 60 / 60),
@@ -983,7 +1035,14 @@ export default {
       this.changeEmailPopup = true;
     },
 
-    threeDotAction(action, virtualNumber, uniqueId, notes_text) {
+    threeDotAction(
+      action,
+      virtualNumber,
+      uniqueId,
+      notes_text,
+      oldnote,
+      oldradio
+    ) {
       if (action == "add_note") {
         console.log("Add Note");
         this.notes_data = notes_text;
@@ -1003,6 +1062,8 @@ export default {
         this.uniqueId = uniqueId;
         this.addNotesDialog = false;
         this.dialog = true;
+        this.reminderMessage = oldnote;
+        this.radio = oldradio;
       }
       if (action == "block_number") {
         console.log("Block Numebr");
@@ -1014,7 +1075,7 @@ export default {
           url: this.$cloudfareApi + "/blockcall",
           method: "POST",
           data: {
-            number: this.virtualNumber,
+            number: virtualNumber,
             owner_uid: this.ownerUid, //
             status: true,
             UpdatedBy: this.ownerUid, // owner uid
@@ -1026,7 +1087,7 @@ export default {
           },
         };
         console.log(blockNumber);
-        this.$axios(blockNumber)
+        axios(blockNumber)
           .then((response) => {
             this.blocked_number = true;
             this.dialog = false;
@@ -1116,7 +1177,6 @@ export default {
       });
       // this.enterOtpModel = false
     },
-
     verifyOTP() {
       const details = {
         url: this.$cloudfareApi + "/email/verification",
@@ -1201,7 +1261,7 @@ export default {
         },
       };
       console.log(user_data);
-      this.$axios(user_data)
+      axios(user_data)
         .then((response) => {
           if (response.data.status == true) {
             this.notes_added = true;
@@ -1222,16 +1282,18 @@ export default {
       let Id = JSON.parse(tpu);
       let ReminderAt = "";
       if (radio == "10" || radio == "30" || radio == "60") {
-        ReminderAt = new Date(
-          moment(
-            new Date(new Date().getTime() + (parseInt(radio) + 1) * 60000)
-          ).format("YYYY-MM-DD hh:mm")
-        ).getTime();
+        ReminderAt =
+          new Date(
+            moment(
+              new Date(new Date().getTime() + (parseInt(radio) + 1) * 60000)
+            ).format("YYYY-MM-DD hh:mm")
+          ).getTime() +
+          60000 * 60 * 12;
       }
       if (radio == "custom") {
         ReminderAt = new Date(date + " " + time).getTime();
       }
-
+      this.testreminder = ReminderAt;
       const user_data = {
         url: this.$cloudfareApi + "/reminder",
         method: "POST",
@@ -1254,7 +1316,7 @@ export default {
         },
       };
       console.log(user_data);
-      this.$axios(user_data)
+      axios(user_data)
         .then((response) => {
           if (response.data.status == true) {
             this.reminder_added = true;
@@ -1510,12 +1572,12 @@ export default {
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-            var virtualnumber =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
+            // var virtualnumber =
+            //   this.calldetails.virtualnumber.slice(0, 5) +
+            //   " " +
+            //   this.calldetails.virtualnumber.slice(5, 7) +
+            //   " " +
+            //   this.calldetails.virtualnumber.slice(7, 11);
             this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
@@ -1525,14 +1587,36 @@ export default {
               uniqueid: this.calldetails.uniqueid,
               Note: note,
               source: this.calldetails.source,
-              virtualnumber: virtualnumber,
+               virtualnumber: this.calldetails.callerNumber,
               called_name: this.called_name,
-              recordingUrl: this.calldetails.recordingurl,
+                                      recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder
+                          ? this.calldetails.Reminder.ReminderAt
+                          : "",
+                        reminderPayload: this.calldetails.Reminder
+                          ? this.calldetails.Reminder
+                          : "",
+                        reminderTime: this.calldetails.Reminder
+                          ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                          : "",
+                        isBlocked: this.blocked_numbers_.includes(
+                          parseInt(this.calldetails.callerNumber)
+                        ),
             });
             this.realdata.push(this.detail);
             this.backuprealdata.push(this.detail);
             console.log("filterMongo calllog ", this.realdata);
           });
+           const index = this.realdata.findIndex((object) => {
+                      return object.uniqueid === this.uniqueId;
+                    });
+                    this.realdata[index].reminderTime = moment(
+                      this.testreminder
+                    ).format("D MMM Y hh:mm a");
+                    console.log("gfghghgvhgvhgv", this.realdata[index]);
+                    this.testreminder = "";
         })
         .catch((error) => {
           console.log("DL error", error);
@@ -1567,30 +1651,7 @@ export default {
 
       return searchCallsConditions;
     },
-    emailStatus() {
-      db.collection("users")
-        .where("uid", "==", this.uid)
-        .get()
-        .then(async (snap) => {
-          this.current_email = snap.docs[0].data().Email;
-          this.hidealert =
-            snap.docs[0].data().role == "OWNER" &&
-            snap.docs[0].data().IsEmailVerified == false
-              ? true
-              : false;
-          // this.hidealert =
-          //   snap.docs[0].data().IsEmailVerified == true ? false : true;
-          this.name =
-            snap.docs[0].data().role == "OWNER"
-              ? snap.docs[0].data().FirstName
-              : snap.docs[0].data().Name;
-          this.number = snap.docs[0].data().PhoneNumber;
-          console.log("test", this.hidealert);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    },
+
     searchMongo() {
       var searchCallsConditions = {
         page_number: this.page ? parseInt(this.page) : 1,
@@ -1695,12 +1756,12 @@ export default {
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-            var virtualnumber =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
+            // var virtualnumber =
+            //   this.calldetails.virtualnumber.slice(0, 5) +
+            //   " " +
+            //   this.calldetails.virtualnumber.slice(5, 7) +
+            //   " " +
+            //   this.calldetails.virtualnumber.slice(7, 11);
             this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
@@ -1710,14 +1771,36 @@ export default {
               uniqueid: this.calldetails.uniqueid,
               Note: note,
               source: this.calldetails.source,
-              virtualnumber: virtualnumber,
+              virtualnumber: this.calldetails.callerNumber,
               called_name: this.called_name,
-              recordingUrl: this.calldetails.recordingurl,
+                                      recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder
+                          ? this.calldetails.Reminder.ReminderAt
+                          : "",
+                        reminderPayload: this.calldetails.Reminder
+                          ? this.calldetails.Reminder
+                          : "",
+                        reminderTime: this.calldetails.Reminder
+                          ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                          : "",
+                        isBlocked: this.blocked_numbers_.includes(
+                          parseInt(this.calldetails.callerNumber)
+                        ),
             });
             this.realdata.push(this.detail);
             this.backuprealdata.push(this.detail);
             console.log("searchMongo calllog ", this.realdata);
           });
+           const index = this.realdata.findIndex((object) => {
+                      return object.uniqueid === this.uniqueId;
+                    });
+                    this.realdata[index].reminderTime = moment(
+                      this.testreminder
+                    ).format("D MMM Y hh:mm a");
+                    console.log("gfghghgvhgvhgv", this.realdata[index]);
+                    this.testreminder = "";
         })
         .catch((error) => {
           console.log("DL error", error);
@@ -1847,12 +1930,12 @@ export default {
                   this.calldetails.callerNumber.slice(5, 7) +
                   " " +
                   this.calldetails.callerNumber.slice(7, 11);
-                var virtualnumber =
-                  this.calldetails.virtualnumber.slice(0, 5) +
-                  " " +
-                  this.calldetails.virtualnumber.slice(5, 7) +
-                  " " +
-                  this.calldetails.virtualnumber.slice(7, 11);
+                // var virtualnumber =
+                //   this.calldetails.virtualnumber.slice(0, 5) +
+                //   " " +
+                //   this.calldetails.virtualnumber.slice(5, 7) +
+                //   " " +
+                //   this.calldetails.virtualnumber.slice(7, 11);
                 this.detail = Object.assign({}, this.detail, {
                   callstatus: this.calldetails.callstatus,
                   name: this.calldetails.name[0],
@@ -1862,15 +1945,37 @@ export default {
                   uniqueid: this.calldetails.uniqueid,
                   Note: note,
                   source: this.calldetails.source,
-                  virtualnumber: virtualnumber,
+                  virtualnumber: this.calldetails.callerNumber,
                   called_name: this.called_name,
-                  recordingUrl: this.calldetails.recordingurl,
+                                          recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder
+                          ? this.calldetails.Reminder.ReminderAt
+                          : "",
+                        reminderPayload: this.calldetails.Reminder
+                          ? this.calldetails.Reminder
+                          : "",
+                        reminderTime: this.calldetails.Reminder
+                          ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                          : "",
+                        isBlocked: this.blocked_numbers_.includes(
+                          parseInt(this.calldetails.callerNumber)
+                        ),
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
                 console.log("getNextCalls calllog ", this.realdata);
                 // call details
               });
+               const index = this.realdata.findIndex((object) => {
+                      return object.uniqueid === this.uniqueId;
+                    });
+                    this.realdata[index].reminderTime = moment(
+                      this.testreminder
+                    ).format("D MMM Y hh:mm a");
+                    console.log("gfghghgvhgvhgv", this.realdata[index]);
+                    this.testreminder = "";
             })
             .catch((error) => {
               console.log("DL error", error);
@@ -1893,6 +1998,7 @@ export default {
         if (user) {
           this.uid = user.uid;
           this.emailStatus();
+          this.blockedStatus(this.ownerUid);
           console.log("User Id : " + this.ownerUid);
 
           db.collection("users")
@@ -2050,12 +2156,12 @@ export default {
                         this.calldetails.callerNumber.slice(5, 7) +
                         " " +
                         this.calldetails.callerNumber.slice(7, 11);
-                      var virtualnumber =
-                        this.calldetails.virtualnumber.slice(0, 5) +
-                        " " +
-                        this.calldetails.virtualnumber.slice(5, 7) +
-                        " " +
-                        this.calldetails.virtualnumber.slice(7, 11);
+                      // var virtualnumber =
+                      //   this.calldetails.virtualnumber.slice(0, 5) +
+                      //   " " +
+                      //   this.calldetails.virtualnumber.slice(5, 7) +
+                      //   " " +
+                      //   this.calldetails.virtualnumber.slice(7, 11);
                       this.detail = Object.assign({}, this.detail, {
                         callstatus: this.calldetails.callstatus,
                         name: this.calldetails.name[0],
@@ -2066,14 +2172,38 @@ export default {
                         uniqueid: this.calldetails.uniqueid,
                         Note: note,
                         source: this.calldetails.source,
-                        virtualnumber: virtualnumber,
+                         virtualnumber: this.calldetails.callerNumber,
                         called_name: this.called_name,
                         recordingUrl: this.calldetails.recordingurl,
+                        reminder: this.calldetails.Reminder
+                          ? this.calldetails.Reminder.ReminderAt
+                          : "",
+                        reminderPayload: this.calldetails.Reminder
+                          ? this.calldetails.Reminder
+                          : "",
+                        reminderTime: this.calldetails.Reminder
+                          ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                          : "",
+                        isBlocked: this.blocked_numbers_.includes(
+                          parseInt(this.calldetails.callerNumber)
+                        ),
                       });
+                        // console.log('blocked calls'+this.calldetails.callerNumber);
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
-                      console.log("snap calllog ", this.realdata);
+                      console.log("snap1 calllog ", this.realdata);
+                      // call details
                     });
+                    const index = this.realdata.findIndex((object) => {
+                      return object.uniqueid === this.uniqueId;
+                    });
+                    this.realdata[index].reminderTime = moment(
+                      this.testreminder
+                    ).format("D MMM Y hh:mm a");
+                    console.log("gfghghgvhgvhgv", this.realdata[index]);
+                    this.testreminder = "";
                   })
                   .catch((error) => {
                     console.log("DL error", error);
@@ -2095,19 +2225,3 @@ export default {
 </script>
 
 
-<style scoped>
-.test {
-  border-color: grey !important;
-  height: 100%;
-}
-.v-expansion-panel {
-  border-bottom: 1px solid #ddd;
-  border-bottom-spacing: 15px;
-}
-.v-expansion-panel-header {
-  line-height: 0.5 !important;
-}
-.application {
-  font-family: adobe-clean, sans-serif !important;
-}
-</style>

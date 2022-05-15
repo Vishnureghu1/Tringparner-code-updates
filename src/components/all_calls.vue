@@ -406,7 +406,7 @@
                         <v-expansion-panel-content>
                           <div>
                             <v-row>
-                              <v-col cols="12" sm="6">
+                              <v-col cols="12" sm="10">
                                 <div class="ml-10">
                                   <h6 class="font-weight-thin">Source</h6>
 
@@ -528,6 +528,7 @@
                                           Add Reminder
                                         </v-btn>
                                       </span>
+                                    
                                     </div>
                                     <!-- </div> -->
                                     <!-- Copied from collapsed reminder section -->
@@ -537,7 +538,7 @@
 
                               <v-col
                                 cols="12"
-                                sm="6"
+                                sm="4"
                                 v-if="details.callstatus != 'Missed'"
                               >
                                 <audio controls>
@@ -996,16 +997,7 @@ export default {
           console.log(err.message);
         });
     },
-    isBlockedCheck(num) {
-      console.log(this.blocked_numbers_);
-      console.log(num);
-      console.log("blocked numebr");
-      if (this.blocked_numbers_.includes(num)) {
-        return true;
-      } else {
-        return false;
-      }
-    },
+
     formatTime(seconds) {
       return [
         parseInt(seconds / 60 / 60),
@@ -1864,6 +1856,14 @@ export default {
                 console.log("snapq calllog ", this.realdata);
                 // call details
               });
+               const index = this.realdata.findIndex((object) => {
+                      return object.uniqueid === this.uniqueId;
+                    });
+                    this.realdata[index].reminderTime = moment(
+                      this.testreminder
+                    ).format("D MMM Y hh:mm a");
+                    console.log("gfghghgvhgvhgv", this.realdata[index]);
+                    this.testreminder = "";
             })
             .catch((error) => {
               console.log("DL error", error);
@@ -2042,12 +2042,6 @@ export default {
                         this.calldetails.callerNumber.slice(5, 7) +
                         " " +
                         this.calldetails.callerNumber.slice(7, 11);
-                      // var virtualnumber =
-                      //   this.calldetails.virtualnumber.slice(0, 5) +
-                      //   " " +
-                      //   this.calldetails.virtualnumber.slice(5, 7) +
-                      //   " " +
-                      //   this.calldetails.virtualnumber.slice(7, 11);
                       this.detail = Object.assign({}, this.detail, {
                         callstatus: this.calldetails.callstatus,
                         name: this.calldetails.name[0],
