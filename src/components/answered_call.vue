@@ -979,6 +979,25 @@ export default {
     },
   },
   methods: {
+            // Blocked Status
+    async blockedStatus(ownerUID) {
+      console.log("Owner UID" + ownerUID);
+      this.blocked_numbers_ = [];
+      db.collection("blockCalls")
+        .where("Uid", "==", ownerUID)
+        .get()
+        .then(async (snap) => {
+          // if(snap.docs){
+          snap.docs.forEach((element) => {
+            this.blocked_numbers_.push(element.data().Number);
+          });
+          console.log("Blocked status" + this.blocked_numbers_);
+          // }
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    },
     formatTime(seconds) {
       return [
         parseInt(seconds / 60 / 60),
