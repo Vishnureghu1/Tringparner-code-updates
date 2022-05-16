@@ -201,7 +201,7 @@
         </v-card-title>
         <v-card-text class="pt-0">
           <p align="center" class="pb-0 mb-0">
-            Are you sure want to remove this user Sree [9526287163] ?
+            Are you Sure want to remove this user Sree [9526287163] ?
           </p>
         </v-card-text>
 
@@ -385,8 +385,13 @@ export default {
         console.log(response)
         this.dialog2 = false;
         this.add_dialog=false;
-         this.$root.vtoast.show({message: 'added successfully', color: 'green', timer: 5000});
+           if(response.data.status == true){
+         this.$root.vtoast.show({message: 'Added Successfully', color: 'green', timer: 5000});
          this.inital_data();
+        }
+        if(response.data.status == false){
+           this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 5000});
+        }
         close()
             
       })
@@ -415,9 +420,13 @@ export default {
       axios(details).then(async (response) => {
         console.log(response)
         this.edit_dialog = false;
-         this.$root.vtoast.show({message: 'added successfully', color: 'green', timer: 5000});
+        if(response.data.status == true){
+         this.$root.vtoast.show({message: 'Added Successfully', color: 'green', timer: 5000});
          this.inital_data();
-            
+        }
+        if(response.data.status == false){
+           this.$root.vtoast.show({message: response.data.message, color: 'red', timer: 5000});
+        }
       })
     },
     remove_slot(){
@@ -434,7 +443,7 @@ export default {
       axios(details).then(async () => {
         // console.log(response)
          this.initial_data();
-         this.$root.vtoast.show({message: 'slot deleted successfully', color: 'green', timer: 5000});
+         this.$root.vtoast.show({message: 'Slot Deleted Successfully', color: 'green', timer: 5000});
         //  await this.initial_data();
         //  this.dialog2 = false         
       })
@@ -457,7 +466,7 @@ export default {
         console.log(response)
         // this.edit_dialog = false;
         if(response.data.status == true){
-         this.$root.vtoast.show({message: 'deleted successfully', color: 'green', timer: 5000});
+         this.$root.vtoast.show({message: 'Deleted Successfully', color: 'green', timer: 5000});
           this.inital_data();
         }
          if(response.data.status == false){
