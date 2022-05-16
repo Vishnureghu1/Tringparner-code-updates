@@ -521,7 +521,9 @@
                                               'add_reminder',
                                               'virtualNumber',
                                               details.uniqueid,
-                                              ''
+                                              '',
+                                              details.reminderPayload.Message,
+                                              details.reminderPayload.Type
                                             )
                                           "
                                         >
@@ -597,8 +599,7 @@
                     v-model="reminderMessage"
                     outlined  counter="25"   :rules="[
               () => !!reminderMessage || 'This field is required',
-              () => !!reminderMessage && reminderMessage.length <= 25 || 'Message must be less than 25 characters',
-              reminderMessageCheck
+              () => !!reminderMessage && reminderMessage.length <= 25 || 'Message must be less than 25 characters'
             ]"
                   ></v-text-field>
                   <v-radio-group v-model="radio" column>
@@ -983,13 +984,13 @@ export default {
     },
   },
   methods: {
-          reminderMessage () {
-        this.errorMessages = this.reminderMessage && !this.name
-          ? `Hey! I'm required`
-          : ''
+      //     reminderMessage () {
+      //   this.errorMessages = this.reminderMessage && !this.name
+      //     ? `Hey! I'm required`
+      //     : ''
 
-        return true
-      },
+      //   return true
+      // },
     // Blocked Status
     async blockedStatus(ownerUID) {
       console.log("Owner UID" + ownerUID);
@@ -1917,7 +1918,7 @@ var virtualnumberDisplay =
     },
   },
   created() {
-    this.getNextCalls();
+    // this.getNextCalls();
   },
   beforeMount() {
     let localStorageUserObj = localStorage.getItem("tpu");
@@ -2096,15 +2097,17 @@ var virtualnumberDisplay =
                       });
                       this.realdata.push(this.detail);
                       this.backuprealdata.push(this.detail);
-                      console.log("snap1 calllog ", this.realdata);
+                      // console.log("snap1 calllog ", this.realdata);
                       // call details
                     });
                     const index = this.realdata.findIndex((object) => {
                       return object.uniqueid === this.uniqueId;
                     });
-                    this.realdata[index].reminderTime = moment(
+                    console.log("testreminder",this.testreminder);
+                    this.realdata[index].reminderTime = (this.testreminder=="")?"":moment(
                       this.testreminder
                     ).format("D MMM Y hh:mm a");
+                    this.realdata[index].reminder = (this.testreminder=="")?"":this.testreminder
                     console.log("gfghghgvhgvhgv", this.realdata[index]);
                     this.testreminder = "";
                   })
