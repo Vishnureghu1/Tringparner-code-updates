@@ -552,6 +552,7 @@
                             </v-row>
                           </div>
                         </v-expansion-panel-content>
+                        <v-divider></v-divider>
                       </v-expansion-panel>
                     </v-expansion-panels>
                     <v-expansion-panels v-if="realdata.length == ''"
@@ -591,10 +592,10 @@
                   ></v-card-title
                 >
                 <v-card-text>
-                  <v-text-field
+                   <v-text-field
                     label="Remind About"
                     v-model="reminderMessage"
-                    outlined
+                    outlined  counter="25"
                   ></v-text-field>
                   <v-radio-group v-model="radio" column>
                     <v-radio

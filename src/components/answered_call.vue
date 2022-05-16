@@ -590,10 +590,10 @@
                   ></v-card-title
                 >
                 <v-card-text>
-                  <v-text-field
+                   <v-text-field
                     label="Remind About"
                     v-model="reminderMessage"
-                    outlined
+                    outlined  counter="25"
                   ></v-text-field>
                   <v-radio-group v-model="radio" column>
                     <v-radio

@@ -552,6 +552,7 @@
                             </v-row>
                           </div>
                         </v-expansion-panel-content>
+                        <v-divider></v-divider>
                       </v-expansion-panel>
                     </v-expansion-panels>
                     <v-expansion-panels v-if="realdata.length == ''"
@@ -595,11 +596,7 @@
                   <v-text-field
                     label="Remind About"
                     v-model="reminderMessage"
-                    outlined  counter="25"   :rules="[
-              () => !!reminderMessage || 'This field is required',
-              () => !!reminderMessage && reminderMessage.length <= 25 || 'Message must be less than 25 characters',
-              reminderMessageCheck
-            ]"
+                    outlined  counter="25"
                   ></v-text-field>
                   <v-radio-group v-model="radio" column>
                     <v-radio
