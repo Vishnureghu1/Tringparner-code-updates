@@ -328,14 +328,16 @@
                                           v-for="getNotes in details.Note"
                                           :key="getNotes.text"
                                         >
-                                          <v-list-item-title
+                                         <v-list-item-title
                                             :class="item.color"
                                             @click="
                                               threeDotAction(
                                                 item.url,
                                                 details.virtualnumber,
                                                 details.uniqueid,
-                                                getNotes.Note
+                                                getNotes.Note,
+                                                '',
+                                                '10'
                                               )
                                             "
                                           >
@@ -521,7 +523,8 @@
                                               'add_reminder',
                                               'virtualNumber',
                                               details.uniqueid,
-                                              ''
+                                              '',
+                                              '10'
                                             )
                                           "
                                         >

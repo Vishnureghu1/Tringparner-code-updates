@@ -334,7 +334,9 @@
                                                 item.url,
                                                 details.virtualnumber,
                                                 details.uniqueid,
-                                                getNotes.Note
+                                                getNotes.Note,
+                                                '',
+                                                '10'
                                               )
                                             "
                                           >
@@ -523,7 +525,7 @@
                                               details.uniqueid,
                                               '',
                                               details.reminderPayload.Message,
-                                              details.reminderPayload.Type
+                                              '10'
                                             )
                                           "
                                         >
@@ -601,7 +603,7 @@
                     outlined  counter="25"
                   ></v-text-field>
                   <v-radio-group v-model="radio" column>
-                    <v-radio
+                    <v-radio 
                       label="10 minutes"
                       value="10"
                       color="red"
@@ -871,6 +873,7 @@ export default {
     showBadge: false,
     hidealert: "",
     otp: "",
+    radio: "10",
     addNotesDialog: false,
     notes_data: "",
     virtualNumber: null,
@@ -889,6 +892,7 @@ export default {
     changeEmailPopup: false,
     enterOtpModel: false,
     loadingMore: false,
+    
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
@@ -949,7 +953,6 @@ export default {
     column: null,
     menu2: false,
     menu1: false,
-    radio: "10",
     Reminder: "",
     reminderMessage: "",
     date: "",
@@ -1052,6 +1055,7 @@ export default {
         this.dialog = true;
         this.reminderMessage = oldnote;
         this.radio = oldradio;
+        console.log(this.radio);
       }
       if (action == "block_number") {
         console.log("Block Numebr");
