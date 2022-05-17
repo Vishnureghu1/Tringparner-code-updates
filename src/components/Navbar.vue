@@ -263,8 +263,14 @@ import moment from "moment";
 import axios from "axios";
 export default {
   async created() {
-    let localStorageUserObj = localStorage.getItem("tpu");
+
     this.notification_data();
+    this.forceRerenderKey();
+  },
+  data: () => ({
+        world: 'world',
+      get token() {
+            let localStorageUserObj = localStorage.getItem("tpu");
     if (localStorageUserObj) {
       let parsedUser = JSON.parse(localStorageUserObj);
       this.userEmail = parsedUser.Email;
@@ -275,10 +281,12 @@ export default {
       this.isLoggedIn = true;
       this.userFirstName = parsedUser.FirstName;
       this.userPhoneNumber = parsedUser.PhoneNumber;
-      this.forceRerenderKey();
     }
-  },
-  data: () => ({
+         return localStorage.getItem('tpu') || 0;
+      },
+      set token(value) {
+         localStorage.setItem('tpu', value);
+      },
     unreadids: [],
     drawer: false,
     isLoggedIn: false,
@@ -523,7 +531,6 @@ export default {
       firebase.auth().signOut();
       localStorage.removeItem("tpu");
       this.rerenderKey += 1;
-      this.LoggedIn = false;
       this.$router.push("login").catch(() => {});
     },
     dashboard() {
