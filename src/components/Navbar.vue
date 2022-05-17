@@ -417,11 +417,6 @@ export default {
             },
             {
               icon: "",
-              text: "Billing Information",
-              to: "/BillingInformation",
-            },
-            {
-              icon: "",
               text: "Account Info",
               to: "/AccountInformation",
             },
