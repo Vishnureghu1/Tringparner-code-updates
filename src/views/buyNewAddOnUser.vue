@@ -422,7 +422,7 @@ export default {
     this.reveal= true,
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
         const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/prorate',
+						url: this.$cloudfareApi + '/addon/prorate',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},

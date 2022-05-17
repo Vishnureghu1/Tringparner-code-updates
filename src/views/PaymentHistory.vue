@@ -256,7 +256,7 @@ const details = {
     //   var Id = JSON.parse(tpu);
     //   console.log(Id);
     // 		const details = {
-    // 			url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/bill',
+    // 			url: this.$cloudfareApi + '/bill',
     // 			method: 'POST',
     // 			data: {
     // 				uid: this.uid,

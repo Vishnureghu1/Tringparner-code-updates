@@ -318,7 +318,7 @@ export default {
       this.isProgressing = true;
       // let BN = this.bussinessNumber;
       const options = {
-        url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/prompt',
+        url: this.$cloudfareApi + '/callDistribution/prompt',
         method: 'POST',
         headers: {
           'token': localStorage.getItem("token"),
@@ -610,7 +610,7 @@ export default {
         this.renameDialog = false; 
 
         const options = {
-          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/audio',
+          url: this.$cloudfareApi + '/audio',
           method: 'PUT',
           data: {
             updated_by: this.ownerUid,
@@ -644,7 +644,7 @@ export default {
       this.deleteDialog = false; 
 
       const options = {
-          url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/audio',
+          url: this.$cloudfareApi + '/audio',
           method: 'DELETE',
           data: {
             updated_by: this.ownerUid,

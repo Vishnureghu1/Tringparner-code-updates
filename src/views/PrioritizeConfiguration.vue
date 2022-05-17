@@ -207,7 +207,7 @@ this.priorityList();
         // activecall(radiovalue){
       // console.log("test..........")
        const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/activecall',
+						url: this.$cloudfareApi + '/callDistribution/activecall',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},
