@@ -523,6 +523,7 @@ export default {
       firebase.auth().signOut();
       localStorage.removeItem("tpu");
       this.rerenderKey += 1;
+      this.LoggedIn = false;
       this.$router.push("login").catch(() => {});
     },
     dashboard() {
