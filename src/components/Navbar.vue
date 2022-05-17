@@ -277,9 +277,27 @@ export default {
       this.userPhoneNumber = parsedUser.PhoneNumber;
       this.forceRerenderKey();
     }
+
+      //  let localStorageUserObj = localStorage.getItem('tpu');
+    this.lastChange = new Date()
+    this.timer = setInterval(() => {
+      const newVal = localStorage.getItem('tpu');
+      if (newVal !== localStorageUserObj) {
+        localStorageUserObj = newVal;
+        // fireEvent, update state, etc
+        // or update data in your component
+        this.lastChange = new Date()
+      }
+    }, 1000);
+
+  },
+   beforeDestroy() {
+    cleaInterval(this.timer)
   },
   data: () => ({
     unreadids: [],
+      lastChange: null,
+      timer: null,
     drawer: false,
     isLoggedIn: false,
     userRole: "",
