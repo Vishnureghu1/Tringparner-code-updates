@@ -75,6 +75,7 @@ import { db } from '@/main.js';
 			this.initReCaptcha()
 			firebase.auth().onAuthStateChanged(user => {
 				if (user) {
+					
 					this.uid = user.uid
 					this.phno = user.phoneNumber.slice(3)
 					db.collection('users').where("uid", "==", this.uid).get().then((querySnapshot) => {
@@ -108,7 +109,7 @@ import { db } from '@/main.js';
 				}
 			})
 		},
-		methods: {
+		methods: {z
 			sendOtp() {
 				this.otp = 'XXXXXX'
 				if (this.phNo.length != 10) {

@@ -1,6 +1,9 @@
 <template>
   <v-app app>
-  <Navbar />
+    <keep-alive>
+    <Navbar v-bind:is="component" />
+  </keep-alive>
+
 
     <v-main class="ma-4">
     </v-main>
@@ -17,6 +20,11 @@ export default {
   components: {
   Navbar,
   vtoast 
+  },
+    data (){
+    return {
+      component:"Navbar"
+    }
   },
   mounted() {
     this.$root.vtoast = this.$refs.vtoast;
