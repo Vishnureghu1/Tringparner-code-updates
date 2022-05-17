@@ -34,7 +34,7 @@
                       <v-flex xs12 sm12 md12>
                         <v-row no-gutters>
                           <v-col cols="12">
-                            <v-row>
+                            <v-row v-if="isHide">
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7 align-self-center">
                                   Basic Information
@@ -52,8 +52,8 @@
                                 </router-link>
                               </v-col>
                             </v-row>
-                            <v-divider></v-divider>
-                            <v-row>
+                            <v-divider v-if="isHide"></v-divider>
+                            <v-row v-if="isHide">
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7 align-self-center">
                                   Business Information
@@ -74,10 +74,10 @@
                                 </router-link>
                               </v-col>
                             </v-row>
-                            <v-divider></v-divider>
+                            <v-divider v-if="isHide"></v-divider>
 
                             <!-- only if admin -->
-                            <v-row>
+                            <v-row v-if="isHide">
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7">
                                   Change Login Number
@@ -99,7 +99,7 @@
                               </v-col>
                             </v-row>
 
-                            <v-divider></v-divider>
+                            <v-divider v-if="isHide"></v-divider>
 
                             <v-row>
                               <v-col cols="6">
@@ -162,8 +162,11 @@ export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.isHide = (localStorageUserObj.role == "AGENT")?false:true
   },
   data: () => ({
+    isHide:false,
     items: [
       {
         text: "More",
