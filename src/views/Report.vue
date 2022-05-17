@@ -618,6 +618,8 @@ export default {
       localStorageUserObj.role == "OWNER" ? localStorageUserObj.Email : "";
     this.IsValidEmailSelected = true;
     this.AccountId = localStorageUserObj.AccountId;
+    this.userId = localStorageUserObj.uid;
+    this.userRole = localStorageUserObj.role;
 
     this.getAllCalls();
   },
@@ -815,14 +817,23 @@ export default {
 
       console.log(`GETTING CALLS with ${this.fromDate} ${this.toDate}`);
 
-      db.collection("callLogs")
-        .where("owneruid", "==", this.ownerUid)
-        .where("date", ">=", new Date(this.fromDate))
+      let calllogsDb = db.collection("callLogs");
+
+        if(this.userRole != "AGENT") {
+          calllogsDb = calllogsDb.where("owneruid", "==", this.ownerUid);
+        } else {
+          calllogsDb = calllogsDb.where("userid", 'array-contains', this.userId);
+        }
+
+        calllogsDb = calllogsDb.where("date", ">=", new Date(this.fromDate))
         .where("date", "<=", new Date(this.toDate))
         .where("callstatus", "in", ["Answered", "Missed"])
-        .orderBy("date", "desc")
-        .get()
-        .then(async (snapshot) => {
+        .orderBy("date", "desc");
+        
+        calllogsDb
+        // .get()
+        // .then(async (snapshot) => {
+        .onSnapshot((snapshot) => {
           if (!snapshot.empty) {
             this.noCalls = false;
 
