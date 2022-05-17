@@ -496,7 +496,7 @@
                                             'add_reminder',
                                             'virtualNumber',
                                             details.uniqueid,
-                                            '',
+                                            'edit_reminder',
                                             details.reminderPayload.Message,
                                             details.reminderPayload.Type
                                           )
@@ -591,7 +591,7 @@
                 <v-card-title class="mb-5">
                   <span class="text-h5">Reminder </span> <v-spacer></v-spacer>
                   <span
-                    class="red--text light4 f14 cursor"
+                    class="red--text light4 f14 cursor" v-if="removeReminder==true"
                     @click="deleteReminder()"
                     >Remove</span
                   ></v-card-title
@@ -869,6 +869,7 @@ export default {
     Icon,
   },
   data: () => ({
+    removeReminder:false,
     blocked_numbers_: [],
     showBadge: false,
     hidealert: "",
@@ -1056,6 +1057,12 @@ export default {
         this.reminderMessage = oldnote;
         this.radio = oldradio;
         console.log(this.radio);
+          this.removeReminder=false;
+        if(notes_text!=''){
+          this.removeReminder=true;
+        }
+
+        
       }
       if (action == "block_number") {
         console.log("Block Numebr");

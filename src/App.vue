@@ -1,6 +1,6 @@
 <template>
   <v-app app>
-  <Navbar />
+  <Navbar :isLoggedIn="isLoggedIn"/>
 
     <v-main class="ma-4">
     </v-main>
@@ -12,13 +12,32 @@
 <script>
 import Navbar from '@/components/Navbar.vue';
 import vtoast from '@/components/snackbar.vue';
+import EventBus from '@/event-bus.js';
+
 export default {
+  props: ['isLoggedIn'],
   name: 'App',
   components: {
   Navbar,
-  vtoast 
+  vtoast
   },
-  mounted() {
+  data() {
+    return {
+      loggedIn: false
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      if (localStorage.getItem('loggedIn')) return localStorage.getItem("loggedIn") === "true";
+      return this.loggedIn
+    }
+  },
+  created () {
+    EventBus.$on('OnLogin', (isLogin) => {
+      this.loggedIn = isLogin
+    })
+  },
+   mounted() {
     this.$root.vtoast = this.$refs.vtoast;
   }
 };
