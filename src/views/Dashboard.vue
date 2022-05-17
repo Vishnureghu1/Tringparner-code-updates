@@ -444,20 +444,25 @@ export default {
           parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
         this.userEmail = parsedUser.Email;
         this.userRole = parsedUser.role;
+        this.userId = parsedUser.uid;
         console.log("this.today", this.today);
 
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
             this.uid = user.uid;
-            db.collection("callLogs")
-              .where("callstatus", "==", "Missed")
-              .where("owneruid", "==", this.uid)
-              .where("date", ">=", new Date(this.today))
-              .orderBy("date", "desc")
+            let calllogsDb = db.collection("callLogs")
+              .where("callstatus", "==", "Missed");
+              if(this.userRole !== 'AGENT') {
+                calllogsDb = calllogsDb.where("owneruid", "==", this.uid);
+              } else {
+                calllogsDb = calllogsDb.where("userid", 'array-contains', this.userId);
+              }
+              calllogsDb = calllogsDb.where("date", ">=", new Date(this.today))
+              .orderBy("date", "desc");
               // .get()
               // .then((querySnapshot) => {
-              .onSnapshot((querySnapshot) => {
-                querySnapshot.forEach((logs) => {
+              calllogsDb.onSnapshot((querySnapshot) => {
+                querySnapshot.docs.forEach((logs) => {
                   console.log(
                     "logs.data().agentDetails",
                     logs.data().agentDetails
@@ -542,18 +547,24 @@ export default {
           parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
         this.userEmail = parsedUser.Email;
         this.userRole = parsedUser.role;
+        this.userId = parsedUser.uid;
 
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
             this.uid = user.uid;
-            db.collection("callLogs")
-              .where("callstatus", "==", "Answered")
-              .where("owneruid", "==", this.ownerUid)
-              .where("date", ">=", new Date(this.today))
-              .orderBy("date", "asc")
-              .get()
-              .then((querySnapshot) => {
-                querySnapshot.forEach((logs) => {
+            let calllogsDb = db.collection("callLogs")
+              .where("callstatus", "==", "Answered");
+              if(this.userRole !== 'AGENT') {
+                calllogsDb = calllogsDb.where("owneruid", "==", this.ownerUid);
+              } else {
+                calllogsDb = calllogsDb.where("userid", 'array-contains', this.userId);
+              }
+              calllogsDb = calllogsDb.where("date", ">=", new Date(this.today))
+              .orderBy("date", "asc");
+              // .get()
+              // .then((querySnapshot) => {
+                calllogsDb.onSnapshot((querySnapshot) => {
+                querySnapshot.docs.forEach((logs) => {
                   // var agentData = logs.data().agentDetails;
                   //skipped calls needs to check BusyCalleesAccounts
                   var agentData = logs.data().BusyCalleesAccounts;
@@ -627,6 +638,7 @@ export default {
 
             db.collection("Reminders")
               .where("OwnerUid", "==", this.ownerUid)
+              .orderBy('ReminderAt', 'desc')
               // .get()
               // .then((querySnapshot) => {
               .onSnapshot((querySnapshot) => {
@@ -703,6 +715,7 @@ export default {
             db.collection("Reminders")
               .where("AgentUid", "==", this.uid)
               // .where('ReminderAt',"==", new Date().getTime())
+              .orderBy('ReminderAt', 'desc')
               .get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((logs) => {
