@@ -602,7 +602,7 @@ export default {
     activecall(radiovalue){
       console.log("test..........")
        const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/activecall',
+						url: this.$cloudfareApi + '/callDistribution/activecall',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},
@@ -630,7 +630,7 @@ export default {
     repeatedcall(StickyAgent){
       console.log("StickAgent..........",StickyAgent)
        const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/repeatedcall',
+						url: this.$cloudfareApi + '/callDistribution/repeatedcall',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},
@@ -666,7 +666,7 @@ export default {
         this.participants.splice(agentIndex,1)
       }
        const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/addparticipant',
+						url: this.$cloudfareApi + '/callDistribution/addparticipant',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},

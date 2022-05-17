@@ -846,7 +846,7 @@ export default {
       this.pauseupto = new Date(pausevalue).toISOString()
       //  console.log("ddddddd",this.select,status,new Date(dateFormat(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}),"yyyy-mm-dd")).getTime());
       const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/pausenumber',
+						url: this.$cloudfareApi + '/callDistribution/pausenumber',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},

@@ -175,7 +175,7 @@ export default {
       }
       console.log(this.getMissed);
       const user_data = {
-        url: "https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/missedcall",
+        url: this.$cloudfareApi + "/callDistribution/missedcall",
         method: "POST",
         data: {
           owner_uid: this.uid,

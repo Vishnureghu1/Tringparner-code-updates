@@ -178,7 +178,7 @@ export default {
           return
        }
        const details = {
-						url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/callDistribution/missedcall',
+						url: this.$cloudfareApi + '/callDistribution/missedcall',
             // url:"http://localhost:3000/jp",
 						method: 'POST',
             headers:{"token":localStorage.getItem("token")},

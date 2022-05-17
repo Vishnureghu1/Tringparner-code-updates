@@ -151,7 +151,7 @@ import { db } from '@/main.js';
 						console.log('ID', this.uid)
 						console.log('phno', this.phNo)
 						const options = {
-							url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/login',
+							url: this.$cloudfareApi + '/login',
 							method: 'POST',
 							data: {
 								uid: this.uid,
@@ -196,7 +196,7 @@ import { db } from '@/main.js';
 													this.$router.push("/all_calls").catch(() => {});
 												} else {
 													const user_stage = {
-														url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/stage',
+														url: this.$cloudfareApi + '/user/stage',
 														method: 'POST',
 														data: {
 															uid: this.uid,

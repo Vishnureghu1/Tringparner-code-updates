@@ -305,7 +305,7 @@ import { db } from '@/main.js';
 			nextPage(){
 				this.overlay = true
 				const details = {
-					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/owner',
+					url: this.$cloudfareApi + '/user/owner',
 					method: 'POST',
 
 					data: {

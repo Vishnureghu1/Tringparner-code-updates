@@ -261,7 +261,7 @@ export default {
 				}
 				const bill = {
 					//    https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
-					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/bill',
+					url: this.$cloudfareApi + '/bill',
 					method: 'POST',
 
 					data: {
@@ -321,7 +321,7 @@ export default {
 			},
 			updateData(){
 				const user_data = {
-					url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/user/update',
+					url: this.$cloudfareApi + '/user/update',
 					method: 'POST',
 					data: {
 							uid: this.uid,
@@ -350,7 +350,7 @@ export default {
 			recharge(){
 			var token = localStorage.getItem('token');
 			const user_details = {
-				url: 'https://asia-south1-test-tpv2.cloudfunctions.net/tpv2/web/addon/payment',
+				url: this.$cloudfareApi + '/addon/payment',
 				method: 'POST',
 				headers: { 
 					'token': token,
