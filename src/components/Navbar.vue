@@ -417,11 +417,6 @@ export default {
             },
             {
               icon: "",
-              text: "Billing Information",
-              to: "/BillingInformation",
-            },
-            {
-              icon: "",
               text: "Account Info",
               to: "/AccountInformation",
             },
@@ -474,6 +469,11 @@ export default {
           icon: "mdi-dots-horizontal",
           text: "More",
           subLinks: [
+             {
+              icon: "",
+              text: "Account Info",
+              to: "/AccountInformation",
+            },
             {
               icon: "",
               text: "FAQs",

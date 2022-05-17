@@ -158,7 +158,7 @@ const routes = [{
         name: 'AccountInformation',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/AccountInformation.vue'),
-        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN","AGENT"] }
     },
     //Basic Information
     {
@@ -339,7 +339,7 @@ const routes = [{
         name: 'CallerID',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/CallerID.vue'),
-        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN","AGENT"] }
     },
 
     // OfflineMesssage
