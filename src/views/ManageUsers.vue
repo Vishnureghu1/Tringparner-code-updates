@@ -530,8 +530,8 @@ export default {
      const reminingprimary = this.baseusers-assignedprimarycount;
      const remingaddon = this.totalusers-this.baseusers-assignedaddoncount;
   //  console.log("-----------------------",reminingprimary,remingaddon,this.baseusers,this.totalusers,assignedprimarycount);
-        for(let i=0;i<reminingprimary;i++){ this.users.push({Name:"unassigned",cron:true,option:[{"title":"Add User",function:"add_user"}]});}
-         for(let i=0;i<remingaddon;i++){ this.users.push({Name:"unassigned",cron:false,option:[{"title":"Add User",function:"add_user"},{ title: "Remove Slot",function:"remove_slot"}]});}
+        for(let i=0;i<reminingprimary;i++){ this.users.push({Name:"Unassigned",cron:true,option:[{"title":"Add User",function:"add_user"}]});}
+         for(let i=0;i<remingaddon;i++){ this.users.push({Name:"Unassigned",cron:false,option:[{"title":"Add User",function:"add_user"},{ title: "Remove Slot",function:"remove_slot"}]});}
 
 			// console.log("test.........",snapshot.docs.length());
       // const addonsLength = snapshot.docs.length;

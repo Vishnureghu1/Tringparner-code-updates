@@ -216,8 +216,12 @@ export default {
         // console.log("test.........",snap.docs.data());
         snap.docs.forEach((element) => {
           // console.log(element.data())
-          this.virtualnumber.push({"VirtualNumber":element.data().VirtualNumber,"Source":element.data().Source,Cron:element.data().IsPrimary});
-        });
+          if(element.data().IsPrimary == true){
+          this.virtualnumber.unshift({"VirtualNumber":element.data().VirtualNumber,"Source":element.data().Source,Cron:element.data().IsPrimary});
+          }else{
+             this.virtualnumber.push({"VirtualNumber":element.data().VirtualNumber,"Source":element.data().Source,Cron:element.data().IsPrimary});
+          }
+      });
       })
       .catch((err) => {
         console.log(err.message);
