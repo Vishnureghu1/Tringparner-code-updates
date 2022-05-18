@@ -453,7 +453,8 @@ export default {
             let calllogsDb = db.collection("callLogs")
               .where("callstatus", "==", "Missed");
               if(this.userRole !== 'AGENT') {
-                calllogsDb = calllogsDb.where("owneruid", "==", this.uid);
+                calllogsDb = calllogsDb.where("owneruid", "==", this.ownerUid);
+                console.log('this.userRole', this.userRole);
               } else {
                 calllogsDb = calllogsDb.where("userid", 'array-contains', this.userId);
               }
@@ -462,6 +463,9 @@ export default {
               // .get()
               // .then((querySnapshot) => {
               calllogsDb.onSnapshot((querySnapshot) => {
+
+                console.log("GetMissedCall querySnapshot.size", querySnapshot.size);
+
                 querySnapshot.docs.forEach((logs) => {
                   console.log(
                     "logs.data().agentDetails",
@@ -564,6 +568,9 @@ export default {
               // .get()
               // .then((querySnapshot) => {
                 calllogsDb.onSnapshot((querySnapshot) => {
+                
+                console.log("GetSkippedCall querySnapshot.size", querySnapshot.size);
+
                 querySnapshot.docs.forEach((logs) => {
                   // var agentData = logs.data().agentDetails;
                   //skipped calls needs to check BusyCalleesAccounts
@@ -642,7 +649,7 @@ export default {
               // .get()
               // .then((querySnapshot) => {
               .onSnapshot((querySnapshot) => {
-                console.log("querySnapshot.size", querySnapshot.size);
+                console.log("reminder querySnapshot.size", querySnapshot.size);
 
                 this.remiderCallsPanel = [];
                 this.remiderCalls = [];

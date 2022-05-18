@@ -531,13 +531,13 @@ export default {
     // ],
     // dates: ["2021-12-22", "2021-12-25"],
     dates: [
-      new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 6)
+      new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 7)
         .toISOString()
         .substr(0, 10),
       new Date().toISOString().substr(0, 10),
     ],
     exportDates: [
-      new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 6)
+      new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 7)
         .toISOString()
         .substr(0, 10),
       new Date().toISOString().substr(0, 10),
@@ -821,19 +821,30 @@ export default {
 
         if(this.userRole != "AGENT") {
           calllogsDb = calllogsDb.where("owneruid", "==", this.ownerUid);
+          console.log("getAllCalls owneruid ==", this.ownerUid);
         } else {
           calllogsDb = calllogsDb.where("userid", 'array-contains', this.userId);
         }
 
-        calllogsDb = calllogsDb.where("date", ">=", new Date(this.fromDate))
-        .where("date", "<=", new Date(this.toDate))
-        .where("callstatus", "in", ["Answered", "Missed"])
+        calllogsDb = calllogsDb.where("date", ">=", new Date(this.fromDate));
+        calllogsDb = calllogsDb.where("date", "<=", new Date(new Date(this.toDate).getTime() + ((18*60+30)*60000)) );
+        // calllogsDb = calllogsDb.where("date", "<=", new Date(this.toDate));
+        // console.log("getAllCalls this.toDate ==", this.toDate);
+        // console.log("getAllCalls this.toDate ==", new Date(this.toDate));
+        // console.log("getAllCalls this.toDate ==", new Date(new Date(this.toDate).getTime() + ((18*60+30)*60000)));
+
+        calllogsDb = calllogsDb.where("callstatus", "in", ["Answered", "Missed"])
         .orderBy("date", "desc");
         
-        calllogsDb
+        // calllogsDb
         // .get()
         // .then(async (snapshot) => {
+        calllogsDb
         .onSnapshot((snapshot) => {
+
+          console.log("getAllCalls snapshot.size", snapshot.size);
+          
+
           if (!snapshot.empty) {
             this.noCalls = false;
 
@@ -841,6 +852,8 @@ export default {
               new Date(this.fromDate),
               new Date(this.toDate)
             );
+
+            console.log("Reports snapshot.size", snapshot.size);
 
             snapshot.docs.forEach((element) => {
               // console.log({
