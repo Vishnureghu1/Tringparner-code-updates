@@ -547,8 +547,10 @@ export default {
       this.notificationread = [];
       this.notificationunread = [];
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-       this.userRole = localStorageUserObj.role;
-       console.log("now testing",this.userRole);
+      this.userRole = localStorageUserObj.role;
+      this.userFirstName =  (localStorageUserObj.role == "OWNER")?localStorageUserObj.FirstName:localStorageUserObj.Name;
+      this.userPhoneNumber = localStorageUserObj.PhoneNumber;
+      //  console.log("now testing",this.userRole);
       this.isLoggedIn = true;
       const owneruid =
         localStorageUserObj.role == "OWNER"
