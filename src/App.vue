@@ -1,6 +1,7 @@
 <template>
   <v-app app>
-  <Navbar />
+  <!-- <Navbar /> -->
+  <Navbar :key="$route.fullPath"></Navbar>
 
     <v-main class="ma-4">
     </v-main>
