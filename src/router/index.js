@@ -278,7 +278,7 @@ const routes = [{
         name: 'NotificationSettings',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/NotificationSettings.vue'),
-        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN","AGENT"] }
     },
 
     // MissedCallDistribution

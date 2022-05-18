@@ -10,12 +10,12 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 pl-5">
-                        <v-icon class="mr-2" color="black" @click="goBack()"
+                        <v-icon v-if="isHide" class="mr-2" color="black" @click="goBack()"
                           >mdi-arrow-left</v-icon
                         >
                         Notification Settings
                       </h2>
-                      <v-breadcrumbs class="breadcrumbs" :items="items">
+                      <v-breadcrumbs v-if="isHide" class="breadcrumbs" :items="items">
                         <template class="breadcrumbs" v-slot:divider>
                           <v-icon>mdi-chevron-right</v-icon>
                         </template>
@@ -130,6 +130,7 @@ export default {
   created() {
     // this.Active=false
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+           this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
         this.bussinessNumber = this.$route.query.bn;
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
@@ -158,6 +159,7 @@ export default {
   //      Active=true
   // },
   data: () => ({
+    isHide:true,
     owneruid:"",
     uid:"",
     AccountId:"",
