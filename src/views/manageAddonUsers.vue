@@ -28,7 +28,7 @@
                         Add, Modify or Remove Add-On Users
                       </h2>
                     </v-col>
-                    <v-col cols="10" sm="3">
+                    <v-col v-if="isHide" cols="10" sm="3">
                       <v-btn
                         :disabled="dialog"
                         @click="buy()"
@@ -234,6 +234,7 @@ export default {
   this.inital_data()
   },
   data: () => ({
+    isHide:false,
     selected_name:"",
     selected_role:"",
     selected_number:"",
@@ -457,6 +458,7 @@ export default {
     },
     inital_data(){
         let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+           this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
     // console.log(owneruid)

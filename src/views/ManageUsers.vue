@@ -28,7 +28,7 @@
                         Add, Modify or Remove users
                       </h2>
                     </v-col>
-                    <v-col cols="10" sm="3">
+                    <v-col v-if="isHide" cols="10" sm="3">
                       <v-btn
                         :disabled="dialog"
                         :loading="dialog"
@@ -262,6 +262,7 @@ export default {
         this.inital_data()
     },
   data: () => ({
+    isHide:false,
     cron:"",
     IsRole:true,
     IsNumber:true,
@@ -491,6 +492,7 @@ export default {
     inital_data(){
       this.users = [];
        let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+          this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
     // console.log(owneruid)

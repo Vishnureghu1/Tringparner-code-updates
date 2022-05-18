@@ -72,7 +72,7 @@
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
-                             <v-row class="center" justify="center" align="center">
+                             <v-row v-if="isHide" class="center" justify="center" align="center">
                               <v-col cols="6">
                                 <h2 class="name_heading mr-7 regular">
                                  Buy New Number <span class="small primary--text f12 bold">40% Off</span>
@@ -91,8 +91,8 @@
                                 <!-- </router-link> -->
                               </v-col>
                             </v-row>
-                            <v-divider></v-divider>
-                             <v-row class="center" justify="center" align="center">
+                            <v-divider v-if="isHide"></v-divider>
+                             <v-row v-if="isHide" class="center" justify="center" align="center">
                               <v-col cols="6">
                                 <h2 class="name_heading mr-7 regular">
                                   Buy New Add-On User
@@ -110,8 +110,8 @@
                                 </router-link>
                               </v-col>
                             </v-row>
-                            <v-divider></v-divider>
-                             <v-row class="center" justify="center" align="center">
+                            <v-divider v-if="isHide"></v-divider>
+                             <v-row v-if="isHide" class="center" justify="center" align="center">
                               <v-col cols="6">
                                 <h2 class="name_heading mr-7 regular">
                                  Fancy Number Purchasse
@@ -152,9 +152,13 @@ import { db } from '@/main.js';
 export default {
   components: {},
   created() {
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+       this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
     window.scrollTo(0, 0); //scroll to top
   },
   data: () => ({
+    isHide:false,
+    uid:"",
     owneruid:"",
     AccountId:"",
     items: [
@@ -174,6 +178,7 @@ export default {
   methods: {
     buyaddon(){
        let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+       this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
     this.owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
        db.collection("uservirtualNumber").where("Uid","==",this.owneruid).where("IsPurchased","==",false).get().then(async(snap) =>{

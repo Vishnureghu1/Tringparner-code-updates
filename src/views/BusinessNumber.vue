@@ -29,7 +29,7 @@
                         Add, Modify or Remove Number
                       </h2>
                     </v-col>
-                    <v-col cols="10" sm="3">
+                    <v-col v-if="isHide" cols="10" sm="3">
                       <v-btn
                         class="ma-0"
                         color="primary"
@@ -173,6 +173,7 @@ export default {
     this.$root.vtoast = this.$refs.vtoast;
   },
   data: () => ({
+    isHide:false,
     dialog2:false,
     owneruid:"",
     selected_source:"",
@@ -201,6 +202,7 @@ export default {
     initial_value(){
       this.virtualnumber =[];
            let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+              this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
     const owneruid =
       localStorageUserObj.role == "OWNER"
         ? localStorageUserObj.uid

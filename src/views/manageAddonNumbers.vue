@@ -28,7 +28,7 @@
                         Deactivate or modify source of your Business Number
                       </h2>
                     </v-col>
-                    <v-col cols="10" sm="3">
+                    <v-col  v-if="isHide"  cols="10" sm="3">
                       <v-btn
                         :disabled="false"
                         class="ma-0"
@@ -212,6 +212,7 @@ export default {
      this.initial_value()
   },
   data: () => ({
+    isHide:false,
     dialog:"",
     AccountId:"",
     owneruid:"",
@@ -330,7 +331,7 @@ export default {
     },
      initial_value(){
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-    console.log("ndzzb")
+         this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
 	const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
      this.owneruid = owneruid;
