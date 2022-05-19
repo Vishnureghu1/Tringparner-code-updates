@@ -601,7 +601,7 @@
                    <v-text-field
                     label="Remind About"
                     v-model="reminderMessage"
-                    outlined  counter="25"
+                    outlined  counter="20"
                   ></v-text-field>
                   <v-radio-group v-model="radio" column>
                     <v-radio
