@@ -262,31 +262,29 @@ import firebase from "firebase";
 import moment from "moment";
 import axios from "axios";
 export default {
-  async created() {
-
+   created() {    
+     console.log("ii",this.drawer)
+    console.log("i do now");
     this.notification_data();
     this.forceRerenderKey();
   },
   data: () => ({
-        world: 'world',
-      get token() {
-            let localStorageUserObj = localStorage.getItem("tpu");
-    if (localStorageUserObj) {
-      let parsedUser = JSON.parse(localStorageUserObj);
-      this.userEmail = parsedUser.Email;
-      console.log("Navbar-user-FirstName", parsedUser.FirstName);
-      console.log("Navbar-user-Email", parsedUser.Email);
-      console.log(parsedUser);
-      this.userRole = parsedUser.role;
-      this.isLoggedIn = true;
-      this.userFirstName = parsedUser.FirstName;
-      this.userPhoneNumber = parsedUser.PhoneNumber;
-    }
-         return localStorage.getItem('tpu') || 0;
-      },
-      set token(value) {
-         localStorage.setItem('tpu', value);
-      },
+        // world: 'world',
+      // get token() {
+    //         let localStorageUserObj = localStorage.getItem("tpu");
+    // if (localStorageUserObj) {
+    //   let parsedUser = JSON.parse(localStorageUserObj);
+    //   this.userEmail = parsedUser.Email;
+    //   this.userRole = parsedUser.role;
+    //   this.isLoggedIn = true;
+    //   this.userFirstName = parsedUser.FirstName;
+    //   this.userPhoneNumber = parsedUser.PhoneNumber;
+    // }
+    //      return localStorage.getItem('tpu') || 0;
+    //   },
+    //   set token(value) {
+    //      localStorage.setItem('tpu', value);
+    //   },
     unreadids: [],
     drawer: false,
     isLoggedIn: false,
@@ -512,8 +510,9 @@ export default {
       this.drawer = false;
     },
     isLoggedIn() {
-      console.log("forceRerenderKey watch");
-      this.forceRerenderKey();
+      // console.log("forceRerenderKey watch");
+      // this.$forceUpdate();
+      // this.forceRerenderKey();
     },
   },
   methods: {
@@ -553,6 +552,11 @@ export default {
       this.notificationread = [];
       this.notificationunread = [];
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      this.userRole = localStorageUserObj.role;
+      this.userFirstName =  (localStorageUserObj.role == "OWNER")?localStorageUserObj.FirstName:localStorageUserObj.Name;
+      this.userPhoneNumber = localStorageUserObj.PhoneNumber;
+      //  console.log("now testing",this.userRole);
+      this.isLoggedIn = true;
       const owneruid =
         localStorageUserObj.role == "OWNER"
           ? localStorageUserObj.uid

@@ -1491,7 +1491,7 @@ export default {
 
       const headers = {
         "Content-Type": "application/json",
-        token: "tpmongo",
+        token: localStorage.getItem("token"),
       };
       axios
         .post(this.$cloudfareApi + "/admin/mongo", raw, {
@@ -1646,7 +1646,7 @@ export default {
 
       const headers = {
         "Content-Type": "application/json",
-        token: "tpmongo",
+        token: localStorage.getItem("token"),
       };
       axios
         .post(this.$cloudfareApi + "/admin/mongo", raw, {
@@ -1784,7 +1784,7 @@ var virtualnumberDisplay =
 
           const headers = {
             "Content-Type": "application/json",
-            token: "tpmongo",
+            token: localStorage.getItem("token"),
           };
           axios
             .post(this.$cloudfareApi + "/admin/mongo", raw, {
@@ -1796,6 +1796,13 @@ var virtualnumberDisplay =
 
               this.totalPage = response.data.data.totalPages;
               this.totalItems = response.data.data.totalItems;
+
+              console.log('getNextCalls dataset.length', dataset.length);
+              if(!dataset.length) {
+                this.page--;
+              } else {
+
+
 
               // let List = [];
               // this.realdata = [];
@@ -1881,6 +1888,8 @@ var virtualnumberDisplay =
                 console.log("snapq calllog ", this.realdata);
                 // call details
               });
+
+              }
                const index = this.realdata.findIndex((object) => {
                       return object.uniqueid === this.uniqueId;
                     });
@@ -2008,7 +2017,7 @@ var virtualnumberDisplay =
 
                 const headers = {
                   "Content-Type": "application/json",
-                  token: "tpmongo",
+                  token: localStorage.getItem("token"),
                 };
                 axios
                   .post(this.$cloudfareApi + "/admin/mongo", raw, {
@@ -2133,7 +2142,7 @@ var virtualnumberDisplay =
     }
   },
   mounted() {
-    // this.getNextCalls();
+    this.getNextCalls();
   },
 };
 </script>

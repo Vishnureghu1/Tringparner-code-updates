@@ -23,7 +23,7 @@
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
-                  <v-row align="center" justify="center">
+                  <v-row align="center" v-if="isHide" justify="center">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
                         Add, Modify or Remove Number
@@ -216,8 +216,12 @@ export default {
         // console.log("test.........",snap.docs.data());
         snap.docs.forEach((element) => {
           // console.log(element.data())
-          this.virtualnumber.push({"VirtualNumber":element.data().VirtualNumber,"Source":element.data().Source,Cron:element.data().IsPrimary});
-        });
+          if(element.data().IsPrimary == true){
+          this.virtualnumber.unshift({"VirtualNumber":element.data().VirtualNumber,"Source":element.data().Source,Cron:element.data().IsPrimary});
+          }else{
+             this.virtualnumber.push({"VirtualNumber":element.data().VirtualNumber,"Source":element.data().Source,Cron:element.data().IsPrimary});
+          }
+      });
       })
       .catch((err) => {
         console.log(err.message);
