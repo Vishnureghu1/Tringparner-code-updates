@@ -505,8 +505,8 @@ export default {
       this.drawer = false;
     },
     isLoggedIn() {
-      console.log("forceRerenderKey watch");
-      this.$forceUpdate();
+      // console.log("forceRerenderKey watch");
+      // this.$forceUpdate();
       // this.forceRerenderKey();
     },
   },

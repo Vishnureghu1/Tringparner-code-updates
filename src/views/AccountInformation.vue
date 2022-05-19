@@ -10,8 +10,8 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 ml-5">
-                        <v-icon class="mr-2" color="black" @click="goBack()"
-                          >mdi-arrow-left</v-icon
+                        <!-- <v-icon class="mr-2" color="black" @click="goBack()"
+                          >mdi-arrow-left</v-icon -->
                         >
                         Account Information
                       </h2>
@@ -183,7 +183,7 @@ export default {
 
   methods: {
     goBack() {
-      this.$router.push("/dashboard");
+      this.$router.push("/");
     },
     callPauseNumber() {
       this.$router.push("/PauseNumber");
