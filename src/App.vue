@@ -19,6 +19,7 @@ export default {
   vtoast 
   },
   mounted() {
+     
     this.$root.vtoast = this.$refs.vtoast;
   }
 };

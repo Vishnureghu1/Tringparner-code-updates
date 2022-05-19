@@ -503,6 +503,11 @@ export default {
     },
   }),
   watch: {
+  input: function () {
+    if (isLocalStorage() /* function to detect if localstorage is supported*/) {
+      localStorage.setItem('storedData', this.input)
+    }
+  },
     group() {
       this.drawer = false;
     },
