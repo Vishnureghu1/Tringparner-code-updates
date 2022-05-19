@@ -2142,7 +2142,7 @@ var virtualnumberDisplay =
     }
   },
   mounted() {
-    // this.getNextCalls();
+    this.getNextCalls();
   },
 };
 </script>

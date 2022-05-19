@@ -507,7 +507,7 @@ export default {
     isLoggedIn() {
       console.log("forceRerenderKey watch");
       this.$forceUpdate();
-      this.forceRerenderKey();
+      // this.forceRerenderKey();
     },
   },
   methods: {
