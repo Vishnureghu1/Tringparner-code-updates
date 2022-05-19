@@ -268,6 +268,13 @@
                   </v-row>
 
                   <div>
+                      <v-progress-linear  v-if="!realdata.length != '' "
+                            color="#ee1c25 "
+                            indeterminate
+                            rounded
+                            height="6"
+                          ></v-progress-linear>
+                          <div v-if="realdata==[]">No Calls to show! </div>
                     <v-expansion-panels
                       accordion
                       flat
@@ -555,9 +562,7 @@
                         </v-expansion-panel-content>
                       </v-expansion-panel>
                     </v-expansion-panels>
-                    <v-expansion-panels v-if="realdata.length == ''"
-                      >No Calls Found!</v-expansion-panels
-                    >
+               
                     <v-container v-if="loadingMore">
                       <v-row
                         class="fill-height"
@@ -569,7 +574,7 @@
                         </v-col>
                         <v-col cols="12">
                           <v-progress-linear
-                            color="red darken-4"
+                            color="#ee1c25 "
                             indeterminate
                             rounded
                             height="6"

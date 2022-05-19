@@ -484,7 +484,7 @@
                           class="number_heading nunito-font light3"
                           align="center"
                         >
-                          No Calls
+                          No Records Available
                         </h3>
                       </div>
                     </v-col>

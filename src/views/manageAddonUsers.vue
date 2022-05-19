@@ -22,7 +22,7 @@
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
-                  <v-row align="center" justify="center">
+                  <v-row align="center" justify="">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
                         Add, Modify or Remove Add-On Users
@@ -42,7 +42,7 @@
                       </v-btn>
                     </v-col>
                   </v-row>
-
+<div v-if="users.length!=0">
                   <v-card
                     color="transparent"
                     outlined
@@ -113,6 +113,25 @@
                       </v-flex>
                     </v-layout>
                     <!-- STEPPER2 -->
+                  </v-card>
+                                                  </div>
+                                                             <v-card v-else  color="transparent"
+                    outlined
+                    class="mt-5"
+                    max-width="1069">
+                    <v-layout>
+                      <v-flex xs12 sm12 md12>
+                        <v-row no-gutters>
+                          <v-col cols="12">
+                            <v-card :elevation="0" class="ml-5">
+                              <v-col cols="12" sm="10" align="center">
+                      No Add-on Numbers!
+                      </v-col>
+                      </v-card>
+                      </v-col>
+                      </v-row>
+                      </v-flex>
+                    </v-layout>
                   </v-card>
                 </div>
               </v-col>

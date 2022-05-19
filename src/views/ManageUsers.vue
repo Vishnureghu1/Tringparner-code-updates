@@ -22,7 +22,7 @@
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
-                  <v-row align="center" justify="center">
+                  <v-row align="center" justify="">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
                         Add, Modify or Remove users
@@ -52,7 +52,7 @@
                       <v-flex xs12 sm12 md12>
                         <v-row no-gutters>
                           <v-col cols="12">
-                            <v-card :elevation="0" class="ml-5">
+                            <v-card :elevation="0" class="ml-2">
                               <v-col cols="12" sm="10" align="center">
                                 <v-row>
                                   <v-col cols="12" sm="12" align="center">

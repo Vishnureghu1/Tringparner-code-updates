@@ -31,7 +31,7 @@
                       <h4 class="heading mt-0 mb-2"></h4>
                       <v-row v-if="!missedCallPanel.length">
                         <v-col cols="12" align="left" class="pl-15">
-                          Nothing to show
+                          No Calls to Show
                         </v-col>
                       </v-row>
 
@@ -115,7 +115,7 @@
                       </h4>
                       <v-row v-if="!skippedCallPanel.length">
                         <v-col cols="12" align="left" class="pl-15">
-                          Nothing to show
+                          No Calls to Show
                         </v-col>
                       </v-row>
                       <v-expansion-panels
@@ -183,7 +183,7 @@
 
                       <v-row v-if="!reminderCalls.length">
                         <v-col cols="12" align="left" class="pl-15">
-                          <div class="mb-3 mt-0 pl-5 ml-5">Nothing to show</div>
+                          <div class="mb-3 mt-0 pl-5 ml-5">No Reminders to Show</div>
                         </v-col>
                       </v-row>
 

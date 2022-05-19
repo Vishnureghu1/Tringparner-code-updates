@@ -40,22 +40,12 @@
                   
                   <!-- UPLOAD SECTION -->
                   <v-row align="center" justify="center">
-                    <v-col cols="12" sm="9">
+                    <v-col cols="12" sm="8">
                       <h2 class="comment_heading ml-5">
                         Play caller tune to customerswhile the call gets diverted to your agents. Select and audio file from the below list or add a new audio.
                       </h2>
                     </v-col>
-                    <v-col cols="10" sm="3">
-                      <v-btn
-                        :disabled="isActiveUploadBtn"
-                        :loading="dialog"
-                        @click="uploadGreetingMessage()"
-                        class="ma-2"
-                        color="primary"
-                        dark
-                      >
-                        + Upload Media
-                      </v-btn>
+                    <v-col cols="10" sm="4" class="d-flex">
                       <v-file-input
                         :rules="rules"
                         accept=".mp3, .wav"
@@ -66,6 +56,17 @@
                         ref="myfile" 
                         v-model="file"
                       ></v-file-input>
+                      <v-btn
+                        :disabled="isActiveUploadBtn"
+                        :loading="dialog"
+                        @click="uploadGreetingMessage()"
+                        class="ma-2"
+                        color="primary"
+                        dark
+                      >
+                        + Upload Media
+                      </v-btn>
+                      
                       <v-progress-linear
                         color="primary "
                         buffer-value="0"

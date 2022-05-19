@@ -395,7 +395,7 @@
         </v-col>
         <v-col cols="12">
           <v-progress-linear
-            color="red darken-4"
+            color="#ee1c25 "
             indeterminate
             rounded
             height="6"

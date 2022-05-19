@@ -22,7 +22,7 @@
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
-                  <v-row align="center" justify="center">
+                  <v-row align="center" justify="">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
                         Deactivate or modify source of your Business Number
@@ -40,7 +40,8 @@
                       </v-btn>
                     </v-col>
                   </v-row>
-                  <v-card
+                <div v-if="addonNumbers.length!=0">
+                  <v-card 
                     color="transparent"
                     outlined
                     class="mt-5"
@@ -51,7 +52,7 @@
                       <v-flex xs12 sm12 md12>
                         <v-row no-gutters>
                           <v-col cols="12">
-                            <v-card :elevation="0" class="ml-5">
+                            <v-card :elevation="0" class="ml-2">
                               <v-col cols="12" sm="10" align="center">
                                 <v-row>
                                   <v-col cols="12" sm="12" align="center">
@@ -100,62 +101,33 @@
                                     <v-divider></v-divider>
                                   </v-col>
                                 </v-row>
-                                <!-- <v-row>
-                                  <v-col cols="12" sm="12" align="center">
-                                    <v-row justify="space-between">
-                                      <v-col cols="6" sm="6" align="left">
-                                        <v-card
-                                          outlined
-                                          color="transparent"
-                                          class="mb-3"
-                                        >
-                                          <div class="agent_name">General  </div>
-                                    
-                                          <div class="agent_number">
-                                            +91 989999 9900
-                                          </div>
-                                        </v-card>
-                                      </v-col>
-                                      <v-col cols="6" sm="2" align="end">
-                                        <v-menu offset-y>
-                                          <template
-                                            v-slot:activator="{ on, attrs }"
-                                          >
-                                            <v-icon
-                                              v-bind="attrs"
-                                              v-on="on"
-                                              color="black"
-                                              >mdi-dots-vertical</v-icon
-                                            >
-                                          </template>
-                                          <v-list>
-                                            <v-list-item
-                                              v-for="(item, index) in options"
-                                              :key="index"
-                                              active-class="pink--text"
-                                            >
-                                              <v-list-item-title
-                                                :class="item.color"
-                                                @click="blockCall()"
-                                                >{{
-                                                  item.title
-                                                }}</v-list-item-title
-                                              >
-                                            </v-list-item>
-                                          </v-list>
-                                        </v-menu>
-                                      </v-col>
-                                    </v-row>
-                                    <v-divider></v-divider>
-                                  </v-col>
-                                </v-row>                 -->
+  
                               </v-col>
                             </v-card>
                           </v-col>
                         </v-row>
                       </v-flex>
                     </v-layout>
-                    <!-- STEPPER2 -->
+                  </v-card>
+                      </div>
+                                       <v-card v-else  color="transparent"
+                    outlined
+                    class="mt-5"
+                    max-width="1069">
+                    <v-layout>
+                      <v-flex xs12 sm12 md12>
+                        <v-row no-gutters>
+                          <v-col cols="12">
+                            <v-card :elevation="0" class="ml-2">
+                              <v-col cols="12" sm="10" align="center">
+                      No Add-on Numbers!
+                      </v-col>
+                      </v-card>
+                      </v-col>
+                      </v-row>
+                      </v-flex>
+                      </v-layout>
+
                   </v-card>
                 </div>
               </v-col>
