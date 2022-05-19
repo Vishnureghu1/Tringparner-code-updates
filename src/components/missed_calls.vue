@@ -1864,6 +1864,11 @@ var virtualnumberDisplay =
               this.totalPage = response.data.data.totalPages;
               this.totalItems = response.data.data.totalItems;
 
+              console.log('getNextCalls dataset.length', dataset.length);
+              if(!dataset.length) {
+                this.page--;
+              } else {
+
               // let List = [];
               // this.realdata = [];
               dataset.forEach((doc) => {
@@ -1905,7 +1910,9 @@ var virtualnumberDisplay =
                   note = this.calldetails.Notes;
                 } else {
                   console.log("no note");
-                  note = [{ Note: "" }];
+                  note = [{
+                    Note: ""
+                  }];
                 }
                 if (this.calldetails.ClickCount) {
                   uid = this.calldetails.ClickCount.Uid;
@@ -1937,12 +1944,12 @@ var virtualnumberDisplay =
                   this.calldetails.callerNumber.slice(5, 7) +
                   " " +
                   this.calldetails.callerNumber.slice(7, 11);
-var virtualnumberDisplay =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
+                var virtualnumberDisplay =
+                  this.calldetails.virtualnumber.slice(0, 5) +
+                  " " +
+                  this.calldetails.virtualnumber.slice(5, 7) +
+                  " " +
+                  this.calldetails.virtualnumber.slice(7, 11);
                 this.detail = Object.assign({}, this.detail, {
                   callstatus: this.calldetails.callstatus,
                   name: this.calldetails.name[0],
@@ -1953,29 +1960,31 @@ var virtualnumberDisplay =
                   Note: note,
                   source: this.calldetails.source,
                   virtualnumber: this.calldetails.callerNumber,
-                                virtualnumberDisplay: virtualnumberDisplay,
+                  virtualnumberDisplay: virtualnumberDisplay,
                   called_name: this.called_name,
-                                          recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder
-                          ? this.calldetails.Reminder.ReminderAt
-                          : "",
-                        reminderPayload: this.calldetails.Reminder
-                          ? this.calldetails.Reminder
-                          : "",
-                        reminderTime: this.calldetails.Reminder
-                          ? moment(this.calldetails.Reminder.ReminderAt).format(
-                              "D MMM Y hh:mm a"
-                            )
-                          : "",
-                        isBlocked: this.blocked_numbers_.includes(
-                          parseInt(this.calldetails.callerNumber)
-                        ),
+                  recordingUrl: this.calldetails.recordingurl,
+                  reminder: this.calldetails.Reminder ?
+                    this.calldetails.Reminder.ReminderAt :
+                    "",
+                  reminderPayload: this.calldetails.Reminder ?
+                    this.calldetails.Reminder :
+                    "",
+                  reminderTime: this.calldetails.Reminder ?
+                    moment(this.calldetails.Reminder.ReminderAt).format(
+                      "D MMM Y hh:mm a"
+                    ) :
+                    "",
+                  isBlocked: this.blocked_numbers_.includes(
+                    parseInt(this.calldetails.callerNumber)
+                  ),
                 });
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
                 console.log("getNextCalls calllog ", this.realdata);
                 // call details
               });
+
+            }
                const index = this.realdata.findIndex((object) => {
                       return object.uniqueid === this.uniqueId;
                     });

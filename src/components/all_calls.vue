@@ -1797,6 +1797,13 @@ var virtualnumberDisplay =
               this.totalPage = response.data.data.totalPages;
               this.totalItems = response.data.data.totalItems;
 
+              console.log('getNextCalls dataset.length', dataset.length);
+              if(!dataset.length) {
+                this.page--;
+              } else {
+
+
+
               // let List = [];
               // this.realdata = [];
               dataset.forEach((doc) => {
@@ -1881,6 +1888,8 @@ var virtualnumberDisplay =
                 console.log("snapq calllog ", this.realdata);
                 // call details
               });
+
+              }
                const index = this.realdata.findIndex((object) => {
                       return object.uniqueid === this.uniqueId;
                     });
