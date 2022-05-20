@@ -370,7 +370,10 @@ export default {
         //    https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
         url: this.$cloudfareApi+"/bill",
         method: "POST",
-
+        headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
         data: {
           uid: this.uid,
           PlanId: PlanId,
@@ -428,6 +431,10 @@ export default {
       const user_data = {
         url: this.$cloudfareApi+"/user/update",
         method: "POST",
+        headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
         data: {
           uid: this.uid,
           phoneNumber: this.phno,

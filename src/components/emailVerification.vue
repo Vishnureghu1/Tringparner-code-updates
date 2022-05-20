@@ -147,7 +147,10 @@ import { db } from '@/main.js';
 				const options = {
 					url: this.$cloudfareApi + '/email/otp',
 					method: 'POST',
-
+                    headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 					data: {
 						uid: this.uid,
 						email: this.email,
@@ -174,7 +177,10 @@ import { db } from '@/main.js';
 					const options = {
 					url: this.$cloudfareApi + '/email/verification',
 					method: 'POST',
-
+                headers: { 
+					'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 					data: {
 						uid: this.uid,
 						email: this.email,

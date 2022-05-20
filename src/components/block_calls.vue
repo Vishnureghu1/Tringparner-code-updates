@@ -135,6 +135,10 @@ import moment from 'moment'
 				const blocked_data = {
 					url: this.$cloudfareApi + '/blockcall',
 					method: 'POST',
+						headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 					data: {
 						owner_uid: this.uid,
 						status: true,
@@ -157,6 +161,10 @@ import moment from 'moment'
 				const blocked_data = {
 					url: this.$cloudfareApi + '/blockcall',
 					method: 'POST',
+						headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 					data: {
 						owner_uid: this.uid,
 						status: false,

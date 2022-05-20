@@ -147,6 +147,10 @@ import { db } from '@/main.js';
 				const user_data = {
 				url: this.$cloudfareApi + '/callDistribution/activecall',
 				method: 'POST',
+				headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 				data: {
 					owner_uid: this.uid,
 					updated_by: this.uid,
