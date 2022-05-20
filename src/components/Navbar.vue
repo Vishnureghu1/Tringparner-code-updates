@@ -425,6 +425,11 @@ export default {
             },
             {
               icon: "",
+              text: "Billing Information",
+              to: "/BillingInformation",
+            },
+            {
+              icon: "",
               text: "Account Info",
               to: "/AccountInformation",
             },
@@ -479,16 +484,6 @@ export default {
           subLinks: [
             {
               icon: "",
-              text: "Notification Settings",
-              to: "/NotificationSettings",
-            },
-             {
-              icon: "",
-              text: "Account Info",
-              to: "/AccountInformation",
-            },
-            {
-              icon: "",
               text: "FAQs",
               to: "/FAQs",
             },
@@ -496,14 +491,13 @@ export default {
               icon: "",
               text: "Get Support",
               to: "/GetSupport",
-            }
+            },
           ],
         },
       ],
     },
   }),
   watch: {
-
     group() {
       this.drawer = false;
     },
