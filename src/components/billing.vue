@@ -333,7 +333,7 @@ import { db } from '@/main.js';
 
 
 				var options = {
-					key: "rzp_test_ThdwdEPh3QCHbo",
+					key: this.$razorpaykey,
 					
 					order_id: this.order_id,
 					name: this.name,

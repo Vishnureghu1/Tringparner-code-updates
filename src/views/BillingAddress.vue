@@ -475,7 +475,7 @@ export default {
           console.log(response.data.order_id);
           this.order_id = response.data.order_id;
           var options = {
-            key: "rzp_test_ThdwdEPh3QCHbo",
+            key: this.$razorpaykey,
             order_id: this.order_id,
             name: this.name,
             currency: "INR", // Optional. Same as the Order currency

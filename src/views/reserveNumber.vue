@@ -433,7 +433,7 @@ export default {
         console.log(responsevalue);
         if (responsevalue.data.status == true) {
           var options = {
-            key: "rzp_test_ThdwdEPh3QCHbo",
+            key: this.$razorpaykey,
             order_id: responsevalue.data.order_id,
             name: this.Name,
             currency: "INR", // Optional. Same as the Order currency
