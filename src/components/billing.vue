@@ -304,7 +304,10 @@ import { db } from '@/main.js';
 				const details = {
 					url: this.$cloudfareApi + '/user/owner',
 					method: 'POST',
-
+                    headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 					data: {
 								uid: this.uid,
 								phoneNumber: this.phno,

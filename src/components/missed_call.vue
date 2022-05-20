@@ -177,6 +177,10 @@ export default {
       const user_data = {
         url: this.$cloudfareApi + "/callDistribution/missedcall",
         method: "POST",
+        headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
         data: {
           owner_uid: this.uid,
           updated_by: this.uid,

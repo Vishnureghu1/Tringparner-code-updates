@@ -143,6 +143,10 @@ import { db } from '@/main.js';
 					const details = {
 						url: this.$cloudfareApi + '/virtualNumber/list',
 						method: 'POST',
+							headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 						data: {
 							uid: this.uid,
 							phoneNumber: this.phno
@@ -183,7 +187,10 @@ import { db } from '@/main.js';
 				const reserve = {
 					url: this.$cloudfareApi + '/virtualNumber/reserve',
 					method: 'POST',
-
+                    headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 					data: {
 						uid: this.uid,
 						phoneNumber: this.phno,
@@ -204,7 +211,10 @@ import { db } from '@/main.js';
 						const user_stage = {
 						url: this.$cloudfareApi + '/user/stage',
 						method: 'POST',
-
+                        headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 						data: {
 							uid: this.uid,
 							phoneNumber: this.phno,

@@ -323,9 +323,9 @@ export default {
         (v) => !!v || "Your Name is required",
         (v) =>
           (v && v.length < 50) || "Too many characters.Please try again !!",
-        (v) =>
-          /^[a-zA-Z][a-zA-Z ]+$/.test(v) ||
-          "Name should not contain symbols or digits. Please try again.",
+        // (v) =>
+        //   /^[a-zA-Z][a-zA-Z ]+$/.test(v) ||
+        //   "Name should not contain symbols or digits. Please try again.",
       ],
       gstRules: [
         (v) => !!v || "GST Number is required",
@@ -339,9 +339,9 @@ export default {
         (v) => !!v || "Your Business name is required",
         (v) =>
           (v && v.length < 100) || "Too many characters.Please try again !!",
-        (v) =>
-          /[a-zA-Z][a-zA-Z ]*/.test(v) ||
-          "Business Name should not contain symbols or digits. Please try again.",
+        // (v) =>
+        //   /[a-zA-Z][a-zA-Z ]*/.test(v) ||
+        //   "Business Name should not contain symbols or digits. Please try again.",
       ],
       addressRules: [
         (v) => !!v || "Your Address is required",
@@ -370,7 +370,10 @@ export default {
         //    https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
         url: this.$cloudfareApi+"/bill",
         method: "POST",
-
+        headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
         data: {
           uid: this.uid,
           PlanId: PlanId,
@@ -428,6 +431,10 @@ export default {
       const user_data = {
         url: this.$cloudfareApi+"/user/update",
         method: "POST",
+        headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
         data: {
           uid: this.uid,
           phoneNumber: this.phno,
@@ -436,7 +443,7 @@ export default {
           Address: this.address,
           City: this.city,
           State: this.state,
-          Gstin: this.gst,
+          Gstin: this.gst?this.gst:"",
           CompanyName: this.businessName,
           Pincode: this.pincode,
         },

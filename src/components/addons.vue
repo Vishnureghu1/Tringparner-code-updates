@@ -411,6 +411,10 @@ import moment from 'moment'
 				const details = {
 						url: this.$cloudfareApi + '/virtualNumber/list',
 						method: 'POST',
+							headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
 						data: {
 							uid: this.uid,
 							phoneNumber: this.phno
