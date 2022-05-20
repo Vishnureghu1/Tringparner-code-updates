@@ -353,7 +353,7 @@ export default {
 
   methods: {
     goBack() {
-      this.$router.push("/dashboard");
+      this.$router.push("/AccountInformation");
     },
     callPauseNumber() {
       this.$router.push("/PauseNumber");

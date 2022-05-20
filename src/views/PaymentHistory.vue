@@ -132,7 +132,7 @@ export default {
      db.collection("paymentTransaction").where("Uid","==",owneruid).where("Status","==",true).get().then(async(snap) =>{
        if(snap){
          snap.docs.forEach(element => {this.paymentHistory.push({
-            name: new Date(element.data().HookDate.seconds *1000).toLocaleString(),
+            name: new Date(element.data().Date.seconds *1000).toLocaleString(),
             amount:element.data().InvoiceAmount,
             payment: element.data().Type,
             invoice:element.data().Invoice,

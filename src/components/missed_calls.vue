@@ -1504,7 +1504,7 @@ export default {
 
       const headers = {
         "Content-Type": "application/json",
-        token: "tpmongo",
+        token: localStorage.getItem("token"),
       };
       axios
         .post(this.$cloudfareApi + "/admin/mongo", raw, {
@@ -1689,7 +1689,7 @@ var virtualnumberDisplay =
 
       const headers = {
         "Content-Type": "application/json",
-        token: "tpmongo",
+        token: localStorage.getItem("token"),
       };
       axios
         .post(this.$cloudfareApi + "/admin/mongo", raw, {
@@ -1856,7 +1856,7 @@ var virtualnumberDisplay =
 
           const headers = {
             "Content-Type": "application/json",
-            token: "tpmongo",
+            token: localStorage.getItem("token"),
           };
           axios
             .post(this.$cloudfareApi + "/admin/mongo", raw, {
@@ -2091,7 +2091,7 @@ var virtualnumberDisplay =
 
                 const headers = {
                   "Content-Type": "application/json",
-                  token: "tpmongo",
+                  token: localStorage.getItem("token"),
                 };
                 axios
                   .post(this.$cloudfareApi + "/admin/mongo", raw, {

@@ -135,7 +135,7 @@ export default {
   methods: {
 
     goBack() {
-      this.$router.push("/CallFlowSettings");
+      this.$router.push("/AccountInformation");
     },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
