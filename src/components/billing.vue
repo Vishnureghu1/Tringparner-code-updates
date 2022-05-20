@@ -290,7 +290,7 @@ import { db } from '@/main.js';
 			},
 
 			uppercase(){
-				this.gst = this.gst.toUpperCase();
+				this.gst = this.gst?this.gst.toUpperCase():"";
 			},
 
 			validate () {
@@ -317,7 +317,7 @@ import { db } from '@/main.js';
 								Address: this.address,
 								City: this.city,
 								State: this.state,
-								Gstin: this.gst,
+								Gstin: this.gst?this.gst:"",
 								CompanyName: this.businessName,
 								Pincode: this.pincode,
 								PlanId : this.radio,
@@ -333,7 +333,7 @@ import { db } from '@/main.js';
 
 
 				var options = {
-					key: this.$razorpaykey,
+					key: "rzp_test_ThdwdEPh3QCHbo",
 					
 					order_id: this.order_id,
 					name: this.name,

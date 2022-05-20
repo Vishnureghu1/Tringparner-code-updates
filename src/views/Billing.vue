@@ -246,7 +246,6 @@ export default {
       const details = {
         url: this.$cloudfareApi+"/user/owner",
         method: "POST",
-
         data: {
           uid: this.uid,
           phoneNumber: this.phno,
@@ -256,7 +255,7 @@ export default {
           Address: this.address,
           City: this.city,
           State: this.state,
-          Gstin: this.gst,
+          Gstin: this.gst?this.gst:"",
           CompanyName: this.businessName,
           Pincode: this.pincode,
           PlanId: this.planId,
