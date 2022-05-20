@@ -51,7 +51,10 @@
                     <h4 class="name_heading mt-4" align="start">Enter OTP</h4>
                     <v-otp-input length="6" v-model="otp"></v-otp-input>
                     <div class="mt-4">
-                      <a
+                      <span class=" gray--text"  v-if="countDown>0"
+                    > You can resend OTP within  ({{ countDown }}s)</span
+                  >
+                      <a v-else 
                         class="link_style text-decoration-underline"
                         @click.prevent="sendOtp()"
                       >
@@ -110,6 +113,7 @@ export default {
     firstName: "",
     Email: "",
     PhoneNumber: "",
+    countDown: 10,
     props: ["userFirstNameEmitted"],
     emits: ["userFirstNameEmitted"],
   }),
@@ -168,6 +172,17 @@ export default {
     });
   },
   methods: {
+     countDownTimer () {
+       
+                if (this.countDown > 0) {
+                    setTimeout(() => {
+                        this.countDown -= 1
+                        this.countDownTimer()
+                    }, 1000)
+                }else{
+                  this.countDown=0
+                }
+            },
     onSignIn() {
       localStorage.setItem("loggedIn", true);
       EventBus.$emit("OnLogin", true);
@@ -197,6 +212,8 @@ export default {
           color: "green",
           timer: 5000,
         });
+        this.countDown=60
+        this.countDownTimer();
       }
     },
     changeLoginNumber() {
