@@ -148,7 +148,10 @@ this.forceRerenderKey();
       const user_stage = {
         url: this.$cloudfareApi+"/user/stage",
         method: "POST",
-
+        headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
         data: {
           uid: this.uid,
           phoneNumber: this.phno,

@@ -329,6 +329,10 @@ export default {
         const details = {
           url: this.$cloudfareApi+"/virtualNumber/list",
           method: "POST",
+          headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
           data: {
             uid: this.uid,
             phoneNumber: this.phno,
@@ -380,7 +384,10 @@ export default {
       const reserve = {
         url: this.$cloudfareApi+"/virtualNumber/reserve",
         method: "POST",
-
+        headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
         data: {
           uid: this.uid,
           phoneNumber: this.phno,
@@ -400,7 +407,10 @@ export default {
           const user_stage = {
             url: this.$cloudfareApi+"/user/stage",
             method: "POST",
-
+            headers: { 
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
             data: {
               uid: this.uid,
               phoneNumber: this.phno,
