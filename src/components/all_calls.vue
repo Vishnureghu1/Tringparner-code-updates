@@ -1344,6 +1344,25 @@ export default {
       console.log("this.searchTerm.length", this.searchTerm.length);
       if (this.searchTerm !== "") {
         this.searchMongo();
+
+// $.each('.expansion-panel', function(key, value) {
+     
+
+//       var checkString = $this.text()
+//     var start = $this.text().toLowerCase().indexOf(query);
+//     var end = query.slice().length
+//     var matchWord = checkString.substring(start,start+end);
+    
+//     if (checkString.toLowerCase().match(query)) {
+//       $this.html(checkString.replace(matchWord,'<b>'+matchWord+'</b>'))
+//     }
+//    });
+
+
+  
+   
+ 
+        
       } else {
         console.log("searchTerm is empty");
         this.realdata = this.backuprealdata;
