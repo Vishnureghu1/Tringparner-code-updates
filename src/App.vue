@@ -43,7 +43,7 @@
             <v-card-subtitle  class="center justify-center
 ">You can now download our app from Playstore / Appstore by clicking the following link.</v-card-subtitle>
 
-          <v-btn href="https://d28mmsju4zsyhy.cloudfront.net"  class="text-capitalize ma-3 rounded-pill red_button"
+          <v-btn href="https://bit.ly/3oZEIp5"  class="text-capitalize ma-3 rounded-pill red_button"
                             min-width="140px"
                             color="white"
                             outlined>
