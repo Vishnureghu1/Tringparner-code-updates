@@ -183,7 +183,9 @@
 
                       <v-row v-if="!reminderCalls.length">
                         <v-col cols="12" align="left" class="pl-15">
-                          <div class="mb-3 mt-0 pl-5 ml-5">No Reminders to Show</div>
+                          <div class="mb-3 mt-0 pl-5 ml-5">
+                            No Reminders to Show
+                          </div>
                         </v-col>
                       </v-row>
 
@@ -258,59 +260,6 @@
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>
-
-                      <!-- <v-expansion-panels accordion flat>
-                        <v-expansion-panel>
-                          <v-expansion-panel-header>
-                            <div>
-                              <v-row no-gutters>
-                                <v-col cols="5" flex align="left">
-                                  <h4
-                                    class="
-                                      name_heading
-                                      font-weight-light
-                                      mt-2
-                                      pl-10
-                                      ml-5
-                                    "
-                                  >
-                                    Agent Name (12)
-                                  </h4>
-                                  <br />
-                                </v-col>
-                                <v-spacer></v-spacer>
-                                <v-col cols="7" flex>
-                                  <v-divider class="mt-5 mb-0"></v-divider>
-                                </v-col>
-                              </v-row>
-                            </div>
-                          </v-expansion-panel-header>
-
-                          <v-expansion-panel-content
-                            class="mb-3 mt-5 mt-2 pl-10 ml-5"
-                          >
-                            <h4
-                              class="number_heading font-weight-light mr-15"
-                              align="left"
-                            >
-                              +91 0012345678
-                            </h4>
-                            <div class="mr-16">
-                              <h5
-                                align="left"
-                                class="
-                                  comment_heading
-                                  font-weight-light
-                                  mr-16
-                                  mt-1
-                                "
-                              >
-                                Sample reminder text here <br>at 12/05/2022 11:00 AM
-                              </h5>
-                            </div>
-                          </v-expansion-panel-content>
-                        </v-expansion-panel>
-                      </v-expansion-panels> -->
                     </v-col>
                   </v-row>
                 </div>
@@ -382,18 +331,7 @@ export default {
       return (agentId, type) =>
         `${this.agentReminderNames[agentId]["name"]} (${this.agentReminderNames[agentId][type]})`;
     },
-    // reminderCalls() {
-    //   const reminderCalls = new Set();
-    //   // if(this.remiderCallsPanel) {
-    //     // this.remiderCallsPanel.forEach((reminder) => reminderCalls.add(reminder.AgentUid));
 
-    //     for (reminder in this.remiderCallsPanel) {
-    //       reminderCalls.add(reminder.AgentUid);
-    //     }
-    //     console.log('reminderCalls called---->', reminderCalls);
-    //   // }
-    //   return Array.from(reminderCalls);
-    // },
   },
   methods: {
     getCount() {
@@ -450,21 +388,30 @@ export default {
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
             this.uid = user.uid;
-            let calllogsDb = db.collection("callLogs")
+            let calllogsDb = db
+              .collection("callLogs")
               .where("callstatus", "==", "Missed");
-              if(this.userRole !== 'AGENT') {
-                calllogsDb = calllogsDb.where("owneruid", "==", this.ownerUid);
-                console.log('this.userRole', this.userRole);
-              } else {
-                calllogsDb = calllogsDb.where("userid", 'array-contains', this.userId);
-              }
-              calllogsDb = calllogsDb.where("date", ">=", new Date(this.today))
+            if (this.userRole !== "AGENT") {
+              calllogsDb = calllogsDb.where("owneruid", "==", this.ownerUid);
+              console.log("this.userRole", this.userRole);
+            } else {
+              calllogsDb = calllogsDb.where(
+                "userid",
+                "array-contains",
+                this.userId
+              );
+            }
+            calllogsDb = calllogsDb
+              .where("date", ">=", new Date(this.today))
               .orderBy("date", "desc");
-              // .get()
-              // .then((querySnapshot) => {
-              calllogsDb.onSnapshot((querySnapshot) => {
-
-                console.log("GetMissedCall querySnapshot.size", querySnapshot.size);
+            // .get()
+            // .then((querySnapshot) => {
+            calllogsDb
+              .onSnapshot((querySnapshot) => {
+                console.log(
+                  "GetMissedCall querySnapshot.size",
+                  querySnapshot.size
+                );
 
                 querySnapshot.docs.forEach((logs) => {
                   console.log(
@@ -491,18 +438,7 @@ export default {
 
                     //
                     if (agentName != "") {
-                      // this.agentPanel.push(agentID)
-                      // this.agentPanel.indexOf(agentID) === -1
-                      //   ? this.agentPanel.push(agentID)
-                      //   : this.missedCallPanel.push({
-                      //       id: this.nextTodoId++,
-                      //       callTime: call_time,
-                      //       callerNumber: callerNumber,
-                      //       ringduration: "00:" + logs.data().ringduration,
-                      //       agentId: agentID,
-                      //       agentName: agentName,
-                      //       callCount: this.callCount++,
-                      //     });
+
                       this.missedCallPanel.push({
                         id: this.nextTodoId++,
                         callTime: call_time,
@@ -513,7 +449,6 @@ export default {
                         callCount: this.callCount++,
                       });
                     }
-                    // this.$set(this.agentNames, agentID, {name : agentName, missed_calls: 1});
 
                     if (!([agentID] in this.agentNames)) {
                       this.$set(this.agentNames, agentID, {
@@ -556,20 +491,29 @@ export default {
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
             this.uid = user.uid;
-            let calllogsDb = db.collection("callLogs")
+            let calllogsDb = db
+              .collection("callLogs")
               .where("callstatus", "==", "Answered");
-              if(this.userRole !== 'AGENT') {
-                calllogsDb = calllogsDb.where("owneruid", "==", this.ownerUid);
-              } else {
-                calllogsDb = calllogsDb.where("userid", 'array-contains', this.userId);
-              }
-              calllogsDb = calllogsDb.where("date", ">=", new Date(this.today))
+            if (this.userRole !== "AGENT") {
+              calllogsDb = calllogsDb.where("owneruid", "==", this.ownerUid);
+            } else {
+              calllogsDb = calllogsDb.where(
+                "userid",
+                "array-contains",
+                this.userId
+              );
+            }
+            calllogsDb = calllogsDb
+              .where("date", ">=", new Date(this.today))
               .orderBy("date", "asc");
-              // .get()
-              // .then((querySnapshot) => {
-                calllogsDb.onSnapshot((querySnapshot) => {
-                
-                console.log("GetSkippedCall querySnapshot.size", querySnapshot.size);
+            // .get()
+            // .then((querySnapshot) => {
+            calllogsDb
+              .onSnapshot((querySnapshot) => {
+                console.log(
+                  "GetSkippedCall querySnapshot.size",
+                  querySnapshot.size
+                );
 
                 querySnapshot.docs.forEach((logs) => {
                   // var agentData = logs.data().agentDetails;
@@ -586,7 +530,6 @@ export default {
                       " " +
                       logs.data().callerNumber.slice(7, 11);
                     // console.log(callerNumber);
-                    // var virtualnumber = this.calldetails.virtualnumber.slice(0, 5) + ' ' + this.calldetails.virtualnumber.slice(5, 7) + ' ' + this.calldetails.virtualnumber.slice(7, 11)
                     var timestamp = logs.data().dateTime;
                     var date = new Date(timestamp);
                     var call_time = moment(date).format("hh:mm a");
@@ -645,7 +588,7 @@ export default {
 
             db.collection("Reminders")
               .where("OwnerUid", "==", this.ownerUid)
-              .orderBy('ReminderAt', 'desc')
+              .orderBy("ReminderAt", "desc")
               // .get()
               // .then((querySnapshot) => {
               .onSnapshot((querySnapshot) => {
@@ -722,7 +665,7 @@ export default {
             db.collection("Reminders")
               .where("AgentUid", "==", this.uid)
               // .where('ReminderAt',"==", new Date().getTime())
-              .orderBy('ReminderAt', 'desc')
+              .orderBy("ReminderAt", "desc")
               .get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((logs) => {

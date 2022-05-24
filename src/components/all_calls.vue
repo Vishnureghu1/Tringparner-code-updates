@@ -267,7 +267,7 @@
                     </v-col>
                   </v-row>
 
-                  <div>
+                  <div  id="layoutCallLog">
                     
                             <v-progress-linear  v-if="!realdata.length != '' "
                             color="#ee1c25 "
@@ -285,7 +285,7 @@
                         v-for="details in realdata"
                         :key="details.text"
                       >
-                        <v-expansion-panel-header>
+                        <v-expansion-panel-header  v-if="details.callstatus != 'Offline'">
                           <div>
                             <v-row class="calls_list">
                               <v-col cols="12" sm="10">
@@ -548,6 +548,7 @@
                                 </div>
                               </v-col>
 
+                        
                               <v-col
                                 cols="12"
                                 sm="4"
@@ -2175,3 +2176,16 @@ var virtualnumberDisplay =
 </script>
 
 
+<!-- const $box = document.getElementById('layoutCallLog');
+// const $search = document.getElementById('search');
+
+// $search.addEventListener('input', (event) => {
+  const searchText = '2022';
+  const regex = new RegExp(searchText, 'gi');
+
+  let text = $box.innerHTML;
+//   text = text.replace(/(<mark class="highlight">|<\/mark>)/gim, '');
+
+  const newText = text.replace(regex, '<mark class="highlight">$&</mark>');
+  $box.innerHTML = newText;
+// }); -->
