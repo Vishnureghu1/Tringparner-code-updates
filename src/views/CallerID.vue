@@ -44,7 +44,7 @@
                                       <h2 class="light4 pb-5" align="center">
                                         02235195219
                                       </h2>
-                                      <v-btn icon>
+                                      <v-btn icon  @click="CopyData()">
                                         <v-icon color="red"
                                           >mdi-content-copy</v-icon
                                         >
@@ -67,7 +67,7 @@
                                       <h2 class="light4 pb-5" align="center">
                                         02235195219
                                       </h2>
-                                      <v-btn icon>
+                                      <v-btn icon  @click="CopyData()">
                                         <v-icon color="red" 
                                           >mdi-content-copy</v-icon
                                         >
@@ -87,7 +87,7 @@
                                       <h2 class="light4 pb-5" align="center">
                                         02235195219
                                       </h2>
-                                      <v-btn icon>
+                                      <v-btn icon  @click="CopyData()">
                                         <v-icon color="red"
                                           >mdi-content-copy</v-icon
                                         >
