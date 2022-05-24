@@ -130,8 +130,8 @@
                           </span>
                         </template>
 
-                        <v-card min-width="378">
-                          <v-form ref="form" v-model="valid" lazy-validation>
+                        <v-card min-width="378" class="fixed_filter">
+                          <v-form ref="form" v-model="valid" lazy-validation >
                             <v-card-title class="black--text white darken-1">
                               Filter Content
                               <v-spacer></v-spacer>
@@ -148,7 +148,7 @@
                                 <v-icon>mdi-close</v-icon>
                               </span>
                             </v-card-title>
-                            <v-card height="400px" class="scroll">
+                            <v-card height="400px" class="scroll" >
                               <v-list>
                                 <v-list-item>
                                   <h4 class="mb-0">Sort By</h4>
@@ -1339,6 +1339,7 @@ export default {
       // this.isUpdating = true;
       this.filterMongo();
       this.showBadge = true;
+      this.filtermenu=false;
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
