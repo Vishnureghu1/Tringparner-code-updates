@@ -2176,16 +2176,3 @@ var virtualnumberDisplay =
 </script>
 
 
-<!-- const $box = document.getElementById('layoutCallLog');
-// const $search = document.getElementById('search');
-
-// $search.addEventListener('input', (event) => {
-  const searchText = '2022';
-  const regex = new RegExp(searchText, 'gi');
-
-  let text = $box.innerHTML;
-//   text = text.replace(/(<mark class="highlight">|<\/mark>)/gim, '');
-
-  const newText = text.replace(regex, '<mark class="highlight">$&</mark>');
-  $box.innerHTML = newText;
-// }); -->
