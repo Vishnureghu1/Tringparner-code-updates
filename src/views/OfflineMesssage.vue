@@ -124,6 +124,7 @@
                                   </h2>
                                 </v-col>
                               </v-row>
+                                <v-card class="ml-5 mt-5 text--red" elevation="0" v-if="!radioGroup">No Greeting message found!</v-card>
                                <v-radio-group v-model="radioGroup" 
                               :mandatory="false" 
                               v-on:change="$emit('greeting_message_changed', $event)">

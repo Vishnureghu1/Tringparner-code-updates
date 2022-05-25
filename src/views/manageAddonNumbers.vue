@@ -143,7 +143,7 @@
           <!-- <h2 class="center">edit source</h3> -->
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field label="Edit Source" outlined v-model="source"></v-text-field>
+          <v-text-field label="Change Title" outlined v-model="source"></v-text-field>
           <!-- <v-select :items="types" label="Role" outlined></v-select>
           <v-text-field label="Mobile Number*" outlined></v-text-field> -->
         </v-card-text>
@@ -313,7 +313,7 @@ export default {
       db.collection("uservirtualNumber").where("Uid","==",owneruid).where("IsPrimary","==",false).get().then(async(snap) =>{
 			// console.log("test.........",snap.docs.data());
 			snap.docs.reverse().forEach((element)=> {
-        this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Edit Source", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]       
+        this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]       
         })
 			});
       // console.log(this.addonNumbers)

@@ -294,7 +294,7 @@
                             </h2>
                           </v-col>
                           <v-col cols="6" align="end">
-                            <router-link :to="{ name: 'BillingAddress' }">
+                            <router-link :to="{ name: 'BillingAddress' }" class="">
                               <span
                                 ><v-icon class="mt-6 mb-5 mr-7" color="#EE1C25"
                                   >mdi-arrow-right</v-icon
@@ -314,7 +314,7 @@
                             </h2>
                           </v-col>
                           <v-col cols="6" align="end">
-                            <router-link :to="{ name: 'PaymentHistory' }">
+                            <router-link :to="{ name: 'PaymentHistory' }" >
                               <span
                                 ><v-icon class="mt-6 mb-5 mr-7" color="#EE1C25"
                                   >mdi-arrow-right</v-icon

@@ -1141,6 +1141,7 @@ export default {
       // this.isUpdating = true;
       this.filterMongo();
       this.showBadge = true;
+       this.filtermenu=false;
     },
     updateSearchTerm() {
       console.log(this.searchTerm);

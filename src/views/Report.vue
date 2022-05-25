@@ -741,6 +741,7 @@ export default {
     handleApplyFilter() {
       if (this.IsValidEmailSelected) {
         this.isUpdating = true;
+         this.filtermenu=false;
         // this.filterMongo();
 
         let payload = {

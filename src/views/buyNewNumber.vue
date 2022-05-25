@@ -75,10 +75,11 @@
                               <div class="ml-3 mt-5 text-center flex">
                                 <v-row>
                                   <v-col cols="12" sm="12" md="12">
-                                    <v-radio-group
+                                    <v-radio-group v-if="V_numbers.length!=0"
                                       v-model="toggle_none"
                                       class="radio_set"
                                     >
+                                    
                                       <v-radio
                                         v-for="item in V_numbers"
                                         class="radio_border"
@@ -90,6 +91,14 @@
                                         </template></v-radio
                                       >
                                     </v-radio-group>
+
+                                                                                                 <v-card  elevation="0" v-else>
+          <v-card-text >
+            <div class="text-h6 mt-4 primary--text">Please wait!</div>
+            <div class="text-h6 mt-2 primary--text">Or Try after sometime !!</div>
+          </v-card-text>
+  
+        </v-card>
                                      <v-card-text class="pt-4 text-center">
 
   
@@ -120,7 +129,9 @@
                                         Next
                                       </v-btn>
                                     </div>
+            
                                   </v-col>
+     
                                 </v-row>
                               </div>
                             </v-card>

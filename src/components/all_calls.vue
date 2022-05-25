@@ -130,8 +130,8 @@
                           </span>
                         </template>
 
-                        <v-card min-width="378">
-                          <v-form ref="form" v-model="valid" lazy-validation>
+                        <v-card min-width="378" class="fixed_filter">
+                          <v-form ref="form" v-model="valid" lazy-validation >
                             <v-card-title class="black--text white darken-1">
                               Filter Content
                               <v-spacer></v-spacer>
@@ -148,7 +148,7 @@
                                 <v-icon>mdi-close</v-icon>
                               </span>
                             </v-card-title>
-                            <v-card height="400px" class="scroll">
+                            <v-card height="400px" class="scroll" >
                               <v-list>
                                 <v-list-item>
                                   <h4 class="mb-0">Sort By</h4>
@@ -267,7 +267,7 @@
                     </v-col>
                   </v-row>
 
-                  <div>
+                  <div  id="layoutCallLog">
                     
                             <v-progress-linear  v-if="!realdata.length != '' "
                             color="#ee1c25 "
@@ -285,7 +285,7 @@
                         v-for="details in realdata"
                         :key="details.text"
                       >
-                        <v-expansion-panel-header>
+                        <v-expansion-panel-header  v-if="details.callstatus != 'Offline'">
                           <div>
                             <v-row class="calls_list">
                               <v-col cols="12" sm="10">
@@ -548,6 +548,7 @@
                                 </div>
                               </v-col>
 
+                        
                               <v-col
                                 cols="12"
                                 sm="4"
@@ -1338,6 +1339,7 @@ export default {
       // this.isUpdating = true;
       this.filterMongo();
       this.showBadge = true;
+      this.filtermenu=false;
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
