@@ -33,10 +33,22 @@
                         type="text"
                         :rules="numberRules"
                         required
+                        @keyup="validatePhone"
                         class="mt-4"
                       ></v-text-field>
+                    
                       <v-btn
-                        class="btn_text mt-15 white--text text-capitalize"
+                        class="btn_text mt-15 white--text text-capitalize" v-if="phoneNumberValid==false" disabled
+                        width="70%"
+                        rounded
+                        @click.prevent="sendOtp()"
+                        color="#EE1C25
+													"
+                      >
+                        Next
+                      </v-btn>
+                      <v-btn
+                        class="btn_text mt-15 white--text text-capitalize" v-if="phoneNumberValid==true" 
                         width="70%"
                         rounded
                         @click.prevent="sendOtp()"
@@ -70,7 +82,7 @@
                       </a>
                     </div>
                     <v-btn
-                      class="btn_text mt-15 white--text text-capitalize"
+                      class="btn_text mt-15 white--text text-capitalize" 
                       width="70%"
                       rounded
                       @click.prevent="verifyOtp()"
@@ -101,6 +113,7 @@ export default {
   data: () => ({
     otp: "XXXXXX",
     getNumber: true,
+    phoneNumberValid:false,
     getOtp: false,
     numberRules: [(v) => /^[0-9]*$/.test(v) || "No characters Allowed"],
     phNo: "",
@@ -191,8 +204,10 @@ export default {
       this.otp = "XXXXXX";
       if (this.phNo.length != 10) {
         alert("Invalid Phone Number Format !");
+        this.phoneNumberValid =false;
       } else {
         this.getNumber = false;
+        this.phoneNumberValid =true;
         this.getOtp = true;
         let countryCode = "+91";
         let phoneNumber = countryCode + this.phNo;
@@ -215,6 +230,13 @@ export default {
         this.countDown=60
         this.countDownTimer();
       }
+    },
+    validatePhone(){
+ if (this.phNo.length < 10) {
+    this.phoneNumberValid =false;
+ }else{
+ this.phoneNumberValid =true;
+ }
     },
     changeLoginNumber() {
       // this.phNo = ''
