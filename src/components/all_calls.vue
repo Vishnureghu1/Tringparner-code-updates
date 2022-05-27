@@ -92,6 +92,7 @@
                         label="Search"
                         v-model="searchTerm"
                         @input="updateSearchTerm"
+               
                         single-line
                       ></v-text-field>
 
@@ -268,15 +269,17 @@
                   </v-row>
 
                   <div  id="layoutCallLog" @scroll="onScroll">
-                    {{noSearchData}}
-                    {{realdata.length}}
-                            <v-progress-linear  v-if="!realdata.length != '' && noSearchData==false"
+
+                    <v-progress-linear  v-if=" realdata.length == 0 && this.searchTerm.length==0"
                             color="#ee1c25 "
                             indeterminate
                             rounded
                             height="6"
                           ></v-progress-linear>
-                          <div v-if="noSearchData==true">No Calls to show! </div>
+                    
+                            
+                          <div v-if="this.searchTerm.length != 0 && totalItems==0" align="center" class="center">No Calls to show!</div>
+                   
                     <v-expansion-panels
                       accordion
                       flat
@@ -1373,24 +1376,6 @@ if(this.totalItems==0){
       console.log("this.searchTerm.length", this.searchTerm.length);
       if (this.searchTerm !== "") {
         this.searchMongo();
-
-// $.each('.expansion-panel', function(key, value) {
-     
-
-//       var checkString = $this.text()
-//     var start = $this.text().toLowerCase().indexOf(query);
-//     var end = query.slice().length
-//     var matchWord = checkString.substring(start,start+end);
-    
-//     if (checkString.toLowerCase().match(query)) {
-//       $this.html(checkString.replace(matchWord,'<b>'+matchWord+'</b>'))
-//     }
-//    });
-
-
-  
-   
- 
         
       } else {
         console.log("searchTerm is empty");
@@ -2010,11 +1995,11 @@ var virtualnumberDisplay =
             }
 
         // note replace
-          this.detail.Note.forEach(Note => {
-              console.log(Note);
-              this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+          // this.detail.Note.forEach(Note => {
+          //     console.log(Note);
+          //     this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
         
-            });
+          //   });
 
             this.detail.callerNumber = this.calldetails.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
 
