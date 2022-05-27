@@ -380,9 +380,9 @@ export default {
                 this.currentPage == "onboarding_billing" ||
                 this.currentPage == "onboarding_revisiting"
               ) {
-                // this.$router.push("/Billing");
+                this.$router.push("/Billing");
               } else if (this.currentPage == "onboarding_review") {
-                // this.$router.push("/Review")
+                this.$router.push("/Review")
               } else if (this.currentPage == "onboarding_dashboard") {
                 this.$router.push("/Dashboard");
               }
@@ -468,7 +468,7 @@ export default {
       this.changePlanArea = true;
       
 
-      //  this.$router.push("/SelectPlan");
+       this.$router.push("/SelectPlan");
     },
     changeAddress() {
       this.$router.push("/Billing");

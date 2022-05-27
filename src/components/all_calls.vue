@@ -267,15 +267,16 @@
                     </v-col>
                   </v-row>
 
-                  <div  id="layoutCallLog">
-                    
-                            <v-progress-linear  v-if="!realdata.length != '' "
+                  <div  id="layoutCallLog" @scroll="onScroll">
+                    {{noSearchData}}
+                    {{realdata.length}}
+                            <v-progress-linear  v-if="!realdata.length != '' && noSearchData==false"
                             color="#ee1c25 "
                             indeterminate
                             rounded
                             height="6"
                           ></v-progress-linear>
-                          <div v-if="realdata==[]">No Calls to show! </div>
+                          <div v-if="noSearchData==true">No Calls to show! </div>
                     <v-expansion-panels
                       accordion
                       flat
@@ -984,6 +985,7 @@ export default {
     name: "",
     userRole: "",
     reminder: "",
+    noSearchData:false,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -996,6 +998,11 @@ export default {
     },
   },
   methods: {
+    onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
+      if (scrollTop + clientHeight >= scrollHeight) {
+        this.loadMorePosts()
+      }
+    },
     async getInitialCalls(){
       this.$vuetify.goTo(0)
          let localStorageUserObj = localStorage.getItem("tpu");
@@ -1088,7 +1095,12 @@ export default {
 
                     this.totalPage = response.data.data.totalPages;
                     this.totalItems = response.data.data.totalItems;
-
+if(this.totalItems==0){
+  this.noSearchData==true;
+  // console.log('no result found!')
+}else{
+  this.noSearchData==false;
+}
                     // let List = [];
                     this.realdata = [];
                     this.backuprealdata = [];
@@ -1465,11 +1477,7 @@ export default {
       this.filterMongo();
       this.showBadge = false;
     },
-    handleScroll: function (e) {
-      if (e.target.scrollHeight - 300 <= e.target.scrollTop) {
-        alert("oi sou Eduardo Martins");
-      }
-    },
+
 
     addNote(unique_id, message) {
       var token = localStorage.getItem("token");
@@ -1732,7 +1740,12 @@ export default {
 
           this.totalPage = response.data.data.totalPages;
           this.totalItems = response.data.data.totalItems;
-
+if(this.totalItems==0){
+  this.noSearchData==true;
+  // console.log('no result found!')
+}else{
+  this.noSearchData==false;
+}
           // let List = [];
           this.realdata = [];
           dataset.forEach((doc) => {
@@ -1887,7 +1900,12 @@ export default {
 
           this.totalPage = response.data.data.totalPages;
           this.totalItems = response.data.data.totalItems;
-
+if(this.totalItems==0){
+  this.noSearchData==true;
+  // console.log('no result found!')
+}else{
+  this.noSearchData==false;
+}
           // let List = [];
           this.realdata = [];
           dataset.forEach((doc) => {
@@ -1977,11 +1995,8 @@ var virtualnumberDisplay =
         });
     },
     getNextCalls() {
-      window.onscroll = () => {
-        let bottomOfWindow =
-          document.documentElement.scrollTop + window.innerHeight ===
-          document.documentElement.offsetHeight;
-        if (bottomOfWindow) {
+     
+     
           console.log("getting Next Calls");
           console.log("this.lastrecord", this.lastrecord);
 
@@ -2025,7 +2040,12 @@ var virtualnumberDisplay =
 
               this.totalPage = response.data.data.totalPages;
               this.totalItems = response.data.data.totalItems;
-
+if(this.totalItems==0){
+  this.noSearchData==true;
+  // console.log('no result found!')
+}else{
+  this.noSearchData==false;
+}
               console.log('getNextCalls dataset.length', dataset.length);
               if(!dataset.length) {
                 this.page--;
@@ -2133,8 +2153,8 @@ var virtualnumberDisplay =
             .catch((error) => {
               console.log("DL error", error);
             });
-        }
-      };
+        
+   
     },
     emailStatus() {
       db.collection("users")
@@ -2165,15 +2185,17 @@ var virtualnumberDisplay =
     },
   },
   created() {
+ this.getInitialCalls();
 
   },
   beforeMount() {
  this.getInitialCalls();
   },
   mounted() {
-    this.getNextCalls();
+    // this.getNextCalls();
   },
 };
 </script>
 
 
+<!-- getNextCalls -->
