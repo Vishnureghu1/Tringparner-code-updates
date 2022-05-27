@@ -304,7 +304,8 @@
                                     icon="mdi:call-missed"
                                     width="24"
                                     height="24"
-                                  />+91 {{ details.callerNumber }}
+                                  />
+                                  <span v-html="callerNumberSpan(details.callerNumber)" /> 
                                   <v-icon
                                     color="gray"
                                     class="mr-5"
@@ -388,12 +389,15 @@
                               :key="getNotes.text"
                             >
                               <div>
+                                
                                 <span
                                   v-if="getNotes.Note != ''"
                                   class="mdi mdi-note grey--text"
                                 >
                                 </span>
-                                {{ getNotes.Note }}
+                                
+                                <span v-html="callNote(getNotes.Note)" /> 
+                               
                               </div>
                             </div>
 
@@ -408,8 +412,10 @@
                               <div>
                                 <span class="mdi mdi-alarm grey--text"> </span>
                                 <!-- Sample reminder here -->
-                                <!-- {{ details.reminderPayload.Message }},  -->
-                                {{ details.reminderTime }}
+                                 <span v-html="callReminder(details.reminderPayload.Message)" /> ,
+                                        {{ details.reminderTime }}
+                                     
+                              
                               </div>
                             </div>
                           </div>
@@ -432,7 +438,7 @@
                                     <span v-if="getNotes.Note != ''">
                                       <span class="mdi mdi-note grey--text">
                                       </span>
-                                      {{ getNotes.Note }}
+                                      <span v-html="callNote(getNotes.Note)" /> 
                                       <span
                                         class="mdi mdi-pencil grey--text"
                                         @click="
@@ -491,7 +497,7 @@
                                         "
                                         class="mdi mdi-alarm grey--text"
                                       >
-                                        {{ details.reminderPayload.Message }},
+                                        <span v-html="callReminder(details.reminderPayload.Message)" /> ,
                                         {{ details.reminderTime }}
                                       </span>
                                       <span
@@ -1002,6 +1008,15 @@ export default {
       if (scrollTop + clientHeight >= scrollHeight) {
         this.loadMorePosts()
       }
+    },
+    callerNumberSpan(text) {
+      return `+91 ${text}`;
+    },
+    callNote(text) {
+      return `${text}`;
+    },
+    callReminder(text) {
+      return `${text}`;
     },
     async getInitialCalls(){
       this.$vuetify.goTo(0)
@@ -1865,7 +1880,8 @@ if(this.totalItems==0){
     },
     searchMongo() {
       var searchCallsConditions = {
-        page_number: this.page ? parseInt(this.page) : 1,
+        // page_number: this.page ? parseInt(this.page) : 1,
+        page_number: 1,
         results_per_page: parseInt(this.limit),
         conditions: {
           owneruid: this.ownerUid,
@@ -1940,6 +1956,7 @@ if(this.totalItems==0){
             var note = "";
             if (this.calldetails.Notes) {
               note = this.calldetails.Notes;
+              // note = note.toString().replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
             } else {
               console.log("no note");
               note = [{ Note: "" }];
@@ -1985,6 +2002,23 @@ var virtualnumberDisplay =
                 parseInt(this.calldetails.callerNumber)
               ),
             });
+
+            // if("Message" in this.detail.reminderPayload) {
+            // if(this.detail.reminderPayload.hasOwnProperty("Message")) {
+            if(Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
+              this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+            }
+
+        // note replace
+          this.detail.Note.forEach(Note => {
+              console.log(Note);
+              this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+        
+            });
+
+            this.detail.callerNumber = this.calldetails.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+
+
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
             // call details
@@ -2014,8 +2048,12 @@ var virtualnumberDisplay =
 
           let updatedFilterCallsPayload =
             this.getCallsFilterPayload(filterCallsPayload);
+
+            updatedFilterCallsPayload = this.getCallsSearchPayload(
+              filterCallsPayload
+            );
           console.log(
-            "updatedFilterCallsPayload",
+            "getNextCalls updatedFilterCallsPayload",
             JSON.stringify(updatedFilterCallsPayload)
           );
 
@@ -2132,9 +2170,19 @@ var virtualnumberDisplay =
                     parseInt(this.calldetails.callerNumber)
                   ),
                 });
+
+
+                if(this.searchTerm !== "") {
+                if (Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
+                  this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+                }
+
+                this.detail.callerNumber = this.detail.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+                }
+
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
-                console.log("snapq calllog ", this.realdata);
+                console.log("getNextCalls snap calllog ", this.realdata);
                 // call details
               });
 
