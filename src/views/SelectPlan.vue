@@ -125,23 +125,24 @@ import firebase from "firebase";
 export default {
   data: () => ({
     radio: "",
-    radio1: true,
+    radio1: false,
     radio2: false,
     radio3: false,
     overlay: false,
+    planId: 0,
   }),
   components: {},
 
-  created() {
+  mounted() {
     window.scrollTo(0, 0); //scroll to top
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("logged user details", user);
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
-        // db.collection("plan_details").get().then((snap)=>{
-
-        // })
+        this.planId = localStorage.getItem("planId");
+console.log(this.planId);
+this.colorChange(this.planId);
       }
     });
   },

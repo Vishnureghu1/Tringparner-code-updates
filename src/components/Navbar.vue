@@ -80,14 +80,14 @@
         <v-spacer></v-spacer>
 
         <div v-if="isLoggedIn">
-          <v-btn v-on="on" icon>
+          <v-btn v-on="on" icon v-if="Stage=='INPROGRESS'">
                 
                   <v-icon color="black"  @click="logout">mdi-logout</v-icon>
                
                 
               </v-btn>
           <!-- NOTIFICATION MENU -->
-          <v-menu bottom width="378px" height="504px" rounded offset-y>
+          <v-menu bottom width="378px" height="504px" rounded offset-y v-if="Stage!='INPROGRESS'">
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" icon>
                 <v-badge color="red" content="0" overlap  v-if="notificationunread.length==0">
@@ -164,7 +164,7 @@
           </v-menu>
           <!-- NOTIFICATION MENU -->
           <!-- DROP DOWM MENU FROM AVATAR   -->
-          <v-menu bottom max-width="247px" min-height="218px" rounded offset-y>
+          <v-menu bottom max-width="247px" min-height="218px" rounded offset-y  v-if="Stage!='INPROGRESS'">
             <template v-slot:activator="{ on }">
               <v-avatar v-on="on" class="ml-5" size="40">
                 <v-img src="/img1.png"></v-img>
@@ -178,7 +178,7 @@
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title>{{ userFirstName }}</v-list-item-title>
+                    <v-list-item-title>{{ userFirstName }} </v-list-item-title>
                     <v-list-item-subtitle
                       >+91 {{ userPhoneNumber }}</v-list-item-subtitle
                     >
@@ -237,6 +237,7 @@ export default {
       this.isLoggedIn = true;
       this.userFirstName = parsedUser.FirstName;
       this.userPhoneNumber = parsedUser.PhoneNumber;
+      this.Stage = parsedUser.Stage;
     }
          return localStorage.getItem('tpu') || 0;
       },
@@ -249,6 +250,7 @@ export default {
     userRole: "",
     userFirstName: "",
     userPhoneNumber: "",
+    Stage:"",
     rerenderKey: 0,
     group: null,
     role: "",

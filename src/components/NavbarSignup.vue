@@ -80,12 +80,12 @@
         <v-spacer></v-spacer>
 
        
-          <v-btn v-on="on" icon>
+          <!-- <v-btn v-on="on" icon>
                 
                   <v-icon color="black"  @click="logout">mdi-logout</v-icon>
                
                 
-              </v-btn>
+              </v-btn> -->
           
       
       </v-app-bar>
