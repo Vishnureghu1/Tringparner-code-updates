@@ -268,7 +268,7 @@
                     </v-col>
                   </v-row>
 
-                  <div  id="layoutCallLog" @scroll="onScroll">
+                  <div  id="layoutCallLog" >
 
                     <v-progress-linear  v-if=" realdata.length == 0 && this.searchTerm.length==0"
                             color="#ee1c25 "
@@ -1007,11 +1007,20 @@ export default {
     },
   },
   methods: {
-    onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
-      if (scrollTop + clientHeight >= scrollHeight) {
-        this.loadMorePosts()
+
+    handleScroll () {
+      window.onscroll = () => {
+        let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+
+        if (bottomOfWindow) {
+console.log('bottom of the page');
+this.getNextCalls();
+this.handleScroll();
+        //  this.scrolledToBottom = true // replace it with your code
+        }
       }
-    },
+      },
+
     callerNumberSpan(text) {
       return `+91 ${text}`;
     },
@@ -2015,7 +2024,7 @@ var virtualnumberDisplay =
     },
     getNextCalls() {
      
-     
+     this.loadingMore=true;
           console.log("getting Next Calls");
           console.log("this.lastrecord", this.lastrecord);
 
@@ -2060,11 +2069,13 @@ var virtualnumberDisplay =
             .then((response) => {
               console.log("DL response", response.data.data);
               let dataset = response.data.data.dataset;
+     this.loadingMore=false;
 
               this.totalPage = response.data.data.totalPages;
               this.totalItems = response.data.data.totalItems;
 if(this.totalItems==0){
   this.noSearchData==true;
+
   // console.log('no result found!')
 }else{
   this.noSearchData==false;
@@ -2072,6 +2083,7 @@ if(this.totalItems==0){
               console.log('getNextCalls dataset.length', dataset.length);
               if(!dataset.length) {
                 this.page--;
+
               } else {
 
 
@@ -2219,6 +2231,11 @@ var virtualnumberDisplay =
   },
   created() {
  this.getInitialCalls();
+    window.addEventListener("scroll", this.handleScroll);
+
+  },
+  destroyed(){
+    window.removeEventListener("scroll", this.handleScroll);
 
   },
   beforeMount() {
