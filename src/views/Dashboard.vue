@@ -49,23 +49,23 @@
                           >
                             <div>
                               <v-row no-gutters>
-                                <v-col cols="2" flex>
+                                <v-col cols="12" flex>
                                   <h4
-                                    class="name_heading font-weight-light mt-2"
+                                    class="name_heading background font-weight-light mt-2"
                                   >
-                                    {{
-                                      getAgentNameAndCalls(
-                                        agentId,
+                                    <span>
+
+                                      {{
+                                        getAgentNameAndCalls(
+                                          agentId,
                                         "missed_calls"
                                       )
                                     }}
+                                        </span>
                                   </h4>
-                                  <br />
+                                 
                                 </v-col>
-                                <v-spacer></v-spacer>
-                                <v-col cols="10" flex>
-                                  <v-divider class="mt-5 mb-0"></v-divider>
-                                </v-col>
+                           
                               </v-row>
                             </div>
                           </v-expansion-panel-header>
@@ -132,14 +132,17 @@
                               <v-row no-gutters>
                                 <v-col cols="2" flex>
                                   <h4
-                                    class="name_heading font-weight-light mt-2"
+                                    class="name_heading background font-weight-light mt-2"
                                   >
-                                    {{
-                                      getAgentNameAndCalls(
-                                        agentId,
+                                   <span>
+
+                                     {{
+                                       getAgentNameAndCalls(
+                                         agentId,
                                         "skipped_calls"
                                       )
                                     }}
+                                        </span>
                                   </h4>
                                   <br />
                                 </v-col>
@@ -203,29 +206,27 @@
                           >
                             <div>
                               <v-row no-gutters>
-                                <v-col cols="5" flex>
+                                <v-col cols="12" flex>
                                   <h4
                                     class="
-                                      name_heading
+                                      name_heading background
                                       font-weight-light
                                       mt-2
-                                      pl-10
-                                      ml-5
+                                      ml-15
                                     "
-                                  >
+                                  ><span>
+
                                     {{
                                       getAgentNameAndReminders(
                                         agentId,
                                         "reminder_calls"
                                       )
                                     }}
+                                        </span>
                                   </h4>
-                                  <br />
                                 </v-col>
-                                <v-spacer></v-spacer>
-                                <v-col cols="7" flex>
-                                  <v-divider class="mt-5 mb-0"></v-divider>
-                                </v-col>
+                              
+                               
                               </v-row>
                             </div>
                           </v-expansion-panel-header>
@@ -331,7 +332,6 @@ export default {
       return (agentId, type) =>
         `${this.agentReminderNames[agentId]["name"]} (${this.agentReminderNames[agentId][type]})`;
     },
-
   },
   methods: {
     getCount() {
@@ -438,7 +438,6 @@ export default {
 
                     //
                     if (agentName != "") {
-
                       this.missedCallPanel.push({
                         id: this.nextTodoId++,
                         callTime: call_time,

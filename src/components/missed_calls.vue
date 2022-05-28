@@ -1250,7 +1250,7 @@ export default {
     },
     handleScroll: function (e) {
       if (e.target.scrollHeight - 300 <= e.target.scrollTop) {
-        alert("oi sou Eduardo Martins");
+        alert("Bottom page");
       }
     },
 
