@@ -142,7 +142,16 @@ export default {
         this.phno = user.phoneNumber.slice(3);
         this.planId = localStorage.getItem("planId");
 console.log(this.planId);
-this.colorChange(this.planId);
+if(this.planId!=''){
+
+  this.colorChange(this.planId);
+setTimeout(()=>{
+  this.colorChange(this.planId);
+    this.radio=this.planId;
+},1000);
+  }
+
+
       }
     });
   },
@@ -152,6 +161,7 @@ this.colorChange(this.planId);
       if (i == 1) {
         this.radio1 = true;
         this.radio2 = this.radio3 = false;
+        
       } else if (i == 2) {
         this.radio2 = true;
         this.radio1 = this.radio3 = false;
