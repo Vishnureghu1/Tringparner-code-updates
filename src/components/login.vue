@@ -266,6 +266,7 @@ export default {
               data: {
                 uid: this.uid,
                 phoneNumber: this.phNo,
+                webtoken: localStorage.getItem('webtoken')
               },
             };
             console.log(options);
