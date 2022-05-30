@@ -219,9 +219,13 @@ import moment from "moment";
 import axios from "axios";
 export default {
   async created() {
-
-    this.notification_data();
+    // this.notification_data();
+    this.noti()
     this.forceRerenderKey();
+    
+  },
+  mounted(){
+      // this.noti()
   },
   data: () => ({
         world: 'world',
@@ -562,6 +566,38 @@ export default {
           console.error(error);
         });
     },
+    noti(){
+       firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          //  console.log("1234vel",user.uid)
+        db.collection("NotificationCenter")
+        .where("Uid", "==", user.uid)
+        // .where("IsRead", "==", false)
+        .onSnapshot((snapshot) => {
+          // this.unreadids = [];
+          // this.notificationunread =[];
+          // console.log("123vel",snapshot.docChanges().length)
+              snapshot.docChanges().forEach((change) => {
+                if(change.doc.data().IsRead == false){
+                  this.unreadids.push(change.doc.id);
+                this.notificationunread.push({
+                id: change.doc.id,
+                content: change.doc.data().Message,
+                type: change.doc.data().Type,
+                time: moment(new Date(change.doc.data().FormDate)).format(
+                  "D MMM Y hh:mm a"
+                ),
+              });
+                }
+                if(change.doc.data().IsRead == true){
+                  console.log(change.doc.id)
+                    this.unreadids.pop();
+                }
+              })
+        }).catch(err =>(console.log(err)));
+        }
+       })
+    }
   },
 };
 </script>

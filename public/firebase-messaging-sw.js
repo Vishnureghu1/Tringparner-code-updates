@@ -28,9 +28,10 @@ messaging.onBackgroundMessage((payload) => {
   // messaging.onMessage((payload) => {
     console.log("[firebase-messaging-sw.js] Received background message ", payload.data.notification);
     // Customize notification here
-    const notificationTitle = "Tring Partner";
+    const getdata = payload.data.notification
+    const notificationTitle = getdata.title;
     const notificationOptions = {
-      body: "Tring Partner",
+      body: getdata.body,
       icon:  "/tring-logo.png"
     };
   
