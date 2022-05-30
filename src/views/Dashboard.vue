@@ -12,7 +12,6 @@
                       <h2 class="page_title mt-6 mb-0">Dashboard</h2>
                     </v-col>
                   </v-row>
-
                   <v-row>
                     <v-col cols="6" c>
                       <v-row class="heading mt-0 mb-2 pl-4" align="center">
@@ -303,9 +302,14 @@ export default {
   }),
 
   async created() {
+    window.addEventListener("scroll", this.handleScroll, false);
     this.GetMissedCall();
     this.GetSkippedCall();
     this.GetRemiders();
+  },
+    destroyed(){
+    window.removeEventListener("scroll", this.handleScroll, false);
+
   },
   computed: {
     missedCalls() {
@@ -327,13 +331,28 @@ export default {
 
       return (agentId, type) =>
         `${this.agentNames[agentId]["name"]} (${this.agentNames[agentId][type]})`;
-    },
+  },
     getAgentNameAndReminders() {
       return (agentId, type) =>
         `${this.agentReminderNames[agentId]["name"]} (${this.agentReminderNames[agentId][type]})`;
     },
   },
+
   methods: {
+        handleScroll () {
+      window.onscroll = () => {
+        let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+
+        if (bottomOfWindow) {
+console.log('bottom of the page');
+if(this.totalPage>0){
+
+return false;
+
+}
+        //  this.scrolledToBottom = true // replace it with your code
+        }
+      }},
     getCount() {
       return this.c++;
     },

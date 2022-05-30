@@ -80,7 +80,7 @@
         <v-spacer></v-spacer>
 
         <div v-if="isLoggedIn">
-          <v-btn v-on="on" icon v-if="Stage=='INPROGRESS'">
+          <v-btn v-on="on" icon v-if="Stage=='INPROGRESS' || userRole =='' ">
                 
                   <v-icon color="black"  @click="logout">mdi-logout</v-icon>
                

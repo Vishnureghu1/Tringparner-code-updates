@@ -76,20 +76,20 @@ export default {
               this.Udata = user_details;
               this.currentPage = this.Udata.currentPage;
               console.log(this.currentPage);
-              if (this.currentPage == "onboarding_listing") {
-                this.$router.push("/ChooseNumbers");
-              } else if (this.currentPage == "onboarding_plan_details") {
-                this.$router.push("/SelectPlan");
-              } else if (
-                this.currentPage == "onboarding_billing" ||
-                this.currentPage == "onboarding_revisiting"
-              ) {
-                // this.$router.push("/Billing");
-              } else if (this.currentPage == "onboarding_review") {
-                // this.$router.push("/Review")
-              } else if (this.currentPage == "onboarding_dashboard") {
-                this.$router.push("/Dashboard");
-              }
+              // if (this.currentPage == "onboarding_listing") {
+              //   this.$router.push("/ChooseNumbers");
+              // } else if (this.currentPage == "onboarding_plan_details") {
+              //   this.$router.push("/SelectPlan");
+              // } else if (
+              //   this.currentPage == "onboarding_billing" ||
+              //   this.currentPage == "onboarding_revisiting"
+              // ) {
+               
+              // } else if (this.currentPage == "onboarding_review") {
+                
+              // } else if (this.currentPage == "onboarding_dashboard") {
+              //   this.$router.push("/Dashboard");
+              // }
             });
           })
           .catch((error) => {

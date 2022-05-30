@@ -2234,11 +2234,11 @@ var virtualnumberDisplay =
   },
   created() {
  this.getInitialCalls();
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll, false);
 
   },
   destroyed(){
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll, false);
 
   },
   beforeMount() {
