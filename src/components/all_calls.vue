@@ -1014,8 +1014,11 @@ export default {
 
         if (bottomOfWindow) {
 console.log('bottom of the page');
-this.getNextCalls();
-this.handleScroll();
+if(this.totalPage>0){
+
+  this.getNextCalls();
+
+}
         //  this.scrolledToBottom = true // replace it with your code
         }
       }
