@@ -1953,7 +1953,7 @@ if(this.totalItems==0){
             var note = "";
             if (this.calldetails.Notes) {
               note = this.calldetails.Notes;
-              // note = note.toString().replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+              // note = note.toString().replace(new RegExp(`${this.searchTerm}`, 'gi'), `<  >${this.searchTerm}</mark>`);
             } else {
               console.log("no note");
               note = [{ Note: "" }];
@@ -2245,7 +2245,6 @@ var virtualnumberDisplay =
  this.getInitialCalls();
   },
   mounted() {
-    // this.getNextCalls();
   },
 };
 </script>
