@@ -267,14 +267,16 @@
                     </v-col>
                   </v-row>
                   <div>
-                      <v-progress-linear  v-if="!realdata.length != '' "
+                     <v-progress-linear  v-if=" realdata.length == 0 && this.searchTerm.length==0"
                             color="#ee1c25 "
                             indeterminate
                             rounded
                             height="6"
                           ></v-progress-linear>
-                          <div v-if="realdata==[]">No Calls to show! </div>
-                    <v-expansion-panels
+                    
+                            
+                          <div v-if="this.searchTerm.length != 0 && totalItems==0" align="center" class="center">No Calls to show!</div>
+        <v-expansion-panels
                       accordion
                       flat
                       v-if="realdata.length != ''"
@@ -301,15 +303,13 @@
                                     icon="mdi:call-missed"
                                     width="24"
                                     height="24"
-                                  />+91 {{ details.callerNumber }}
-                               
+                                  /><span v-html="callerNumberSpan(details.callerNumber)" /> 
                                   <v-icon
                                     color="gray"
                                     class="mr-5"
                                     v-if="details.isBlocked == true"
                                     >mdi-shield-lock-outline</v-icon
                                   >
-
 
                                   <v-menu offset-y>
                                     <template v-slot:activator="{ on, attrs }">
@@ -392,7 +392,7 @@
                                   class="mdi mdi-note grey--text"
                                 >
                                 </span>
-                                {{ getNotes.Note }}
+                                 <span v-html="callNote(getNotes.Note)" /> 
                               </div>
                             </div>
                             <!-- {{details.reminder}} -->
@@ -406,8 +406,8 @@
                               <div>
                                 <span class="mdi mdi-alarm grey--text"> </span>
                                 <!-- Sample reminder here -->
-                                <!-- {{ details.reminderPayload.Message }},  -->
-                                {{ details.reminderTime }}
+                                <span v-html="callReminder(details.reminderPayload.Message)" /> ,
+                                        {{ details.reminderTime }}
                               </div>
                             </div>
                           </div>
@@ -430,7 +430,7 @@
                                     <span v-if="getNotes.Note != ''">
                                       <span class="mdi mdi-note grey--text">
                                       </span>
-                                      {{ getNotes.Note }}
+                                      <span v-html="callNote(getNotes.Note)" /> 
                                       <span
                                         class="mdi mdi-pencil grey--text"
                                         @click="
@@ -489,7 +489,7 @@
                                         "
                                         class="mdi mdi-alarm grey--text"
                                       >
-                                        {{ details.reminderPayload.Message }},
+                                        <span v-html="callReminder(details.reminderPayload.Message)" /> ,
                                         {{ details.reminderTime }}
                                       </span>
                                       <span
@@ -539,7 +539,6 @@
                                         </v-btn>
                                       </span>
                                     </div>
-                                    
                                     <!-- </div> -->
                                     <!-- Copied from collapsed reminder section -->
                                   </div>
@@ -562,11 +561,12 @@
                             </v-row>
                           </div>
                         </v-expansion-panel-content>
-                        <v-divider></v-divider>
+                         <v-divider></v-divider>
                       </v-expansion-panel>
                     </v-expansion-panels>
+               
                     
-                    <v-container v-if="loadingMore">
+          <v-container v-if="loadingMore">
                       <v-row
                         class="fill-height"
                         align-content="center"
@@ -972,6 +972,7 @@ export default {
     name: "",
     userRole: "",
     reminder: "",
+    noSearchData:false,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -984,6 +985,31 @@ export default {
     },
   },
   methods: {
+        handleScroll () {
+      window.onscroll = () => {
+        let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+
+        if (bottomOfWindow) {
+console.log('bottom of the page');
+if(this.totalPage>0 && this.totalItems>=this.limit){
+
+  this.getNextCalls();
+
+}
+        //  this.scrolledToBottom = true // replace it with your code
+        }
+      }
+      },
+
+    callerNumberSpan(text) {
+      return `+91 ${text}`;
+    },
+    callNote(text) {
+      return `${text}`;
+    },
+    callReminder(text) {
+      return `${text}`;
+    },
        emailStatus() {
       db.collection("users")
         .where("uid", "==", this.uid)
@@ -1248,11 +1274,7 @@ export default {
       this.filterMongo();
       this.showBadge = false;
     },
-    handleScroll: function (e) {
-      if (e.target.scrollHeight - 300 <= e.target.scrollTop) {
-        alert("Bottom page");
-      }
-    },
+
 
     addNote(unique_id, message) {
       var token = localStorage.getItem("token");
@@ -1802,6 +1824,22 @@ var virtualnumberDisplay =
                           parseInt(this.calldetails.callerNumber)
                         ),
             });
+
+                   // if("Message" in this.detail.reminderPayload) {
+            // if(this.detail.reminderPayload.hasOwnProperty("Message")) {
+            if(Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
+              this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+            }
+
+        // note replace
+          // this.detail.Note.forEach(Note => {
+          //     console.log(Note);
+          //     this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+        
+          //   });
+
+            this.detail.callerNumber = this.calldetails.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+
             this.realdata.push(this.detail);
             this.backuprealdata.push(this.detail);
             console.log("searchMongo calllog ", this.realdata);
@@ -1819,195 +1857,7 @@ var virtualnumberDisplay =
           console.log("DL error", error);
         });
     },
-    getNextCalls() {
-      window.onscroll = () => {
-        let bottomOfWindow =
-          document.documentElement.scrollTop + window.innerHeight ===
-          document.documentElement.offsetHeight;
-        if (bottomOfWindow) {
-          console.log("getting Next Calls");
-          console.log("this.lastrecord", this.lastrecord);
-
-          // getting Next calls
-          this.page++;
-          console.log("Filtering Calls.....");
-          var filterCallsPayload = {
-            page_number: this.page ? parseInt(this.page) : 1,
-            results_per_page: parseInt(this.limit),
-            conditions: {
-              owneruid: this.ownerUid,
-              callstatus: "Missed",
-            },
-            sort: {},
-          };
-
-          let updatedFilterCallsPayload =
-            this.getCallsFilterPayload(filterCallsPayload);
-          console.log(
-            "updatedFilterCallsPayload",
-            JSON.stringify(updatedFilterCallsPayload)
-          );
-
-          var cfdata = {
-            headers: this.$headerKeyMongo,
-            url: this.$mongoApi + "/api/calllogs/paginate",
-            payload: updatedFilterCallsPayload,
-          };
-          var raw = JSON.stringify(cfdata);
-
-          const headers = {
-            "Content-Type": "application/json",
-            token: localStorage.getItem("token"),
-          };
-          axios
-            .post(this.$cloudfareApi + "/admin/mongo", raw, {
-              headers: headers,
-            })
-            .then((response) => {
-              console.log("DL response", response.data.data);
-              let dataset = response.data.data.dataset;
-
-              this.totalPage = response.data.data.totalPages;
-              this.totalItems = response.data.data.totalItems;
-
-              console.log('getNextCalls dataset.length', dataset.length);
-              if(!dataset.length) {
-                this.page--;
-              } else {
-
-              // let List = [];
-              // this.realdata = [];
-              dataset.forEach((doc) => {
-                // let callObj = {
-
-                // };
-
-                // call details
-                let user_details = doc;
-                this.calldetails = user_details;
-                var timestamp = this.calldetails.dateTime;
-                var date = new Date(timestamp);
-                console.log("full time", date);
-                // var call_time = moment(date).format('hh:mm a')
-                // call_time = moment(date).fromNow();
-                // console.log("converted time",call_time)
-
-                var myCurrentDate = new Date();
-                var missedTresholdDate = new Date(myCurrentDate);
-                missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-                console.log(missedTresholdDate);
-
-                console.log(timestamp); //missed call date
-                console.log(missedTresholdDate.getTime()); //addon date
-                console.log(myCurrentDate.getTime()); //today's date
-
-                if (timestamp <= missedTresholdDate.getTime()) {
-                  call_time = moment(date).format("D MMM Y hh:mm a");
-                } else {
-                  var call_time = moment(date).format("hh:mm a");
-                  call_time = moment(date).fromNow();
-                }
-
-                var note = "";
-                var uid = "";
-                var user_name = "";
-                var owneruid = "";
-                if (this.calldetails.Notes) {
-                  note = this.calldetails.Notes;
-                } else {
-                  console.log("no note");
-                  note = [{
-                    Note: ""
-                  }];
-                }
-                if (this.calldetails.ClickCount) {
-                  uid = this.calldetails.ClickCount.Uid;
-                  user_name = this.calldetails.name;
-                  owneruid = this.calldetails.owneruid;
-                  // console.log('user id ', this.click_details.user_name)
-                  if (
-                    uid == owneruid &&
-                    this.calldetails.callstatus == "Missed"
-                  ) {
-                    this.called_name = "You";
-                  } else if (
-                    uid == owneruid &&
-                    this.calldetails.callstatus == "Answered"
-                  ) {
-                    this.called_name = user_name;
-                  }
-                } else {
-                  console.log("no callback");
-
-                  uid = "";
-                  user_name = "";
-                  owneruid = "";
-                  this.called_name = "";
-                }
-                var calledNumber =
-                  this.calldetails.callerNumber.slice(0, 5) +
-                  " " +
-                  this.calldetails.callerNumber.slice(5, 7) +
-                  " " +
-                  this.calldetails.callerNumber.slice(7, 11);
-                var virtualnumberDisplay =
-                  this.calldetails.virtualnumber.slice(0, 5) +
-                  " " +
-                  this.calldetails.virtualnumber.slice(5, 7) +
-                  " " +
-                  this.calldetails.virtualnumber.slice(7, 11);
-                this.detail = Object.assign({}, this.detail, {
-                  callstatus: this.calldetails.callstatus,
-                  name: this.calldetails.name[0],
-                  dateTime: call_time,
-                  conversationduration: this.calldetails.conversationduration,
-                  callerNumber: calledNumber,
-                  uniqueid: this.calldetails.uniqueid,
-                  Note: note,
-                  source: this.calldetails.source,
-                  virtualnumber: this.calldetails.callerNumber,
-                  virtualnumberDisplay: virtualnumberDisplay,
-                  called_name: this.called_name,
-                  recordingUrl: this.calldetails.recordingurl,
-                  reminder: this.calldetails.Reminder ?
-                    this.calldetails.Reminder.ReminderAt :
-                    "",
-                  reminderPayload: this.calldetails.Reminder ?
-                    this.calldetails.Reminder :
-                    "",
-                  reminderTime: this.calldetails.Reminder ?
-                    moment(this.calldetails.Reminder.ReminderAt).format(
-                      "D MMM Y hh:mm a"
-                    ) :
-                    "",
-                  isBlocked: this.blocked_numbers_.includes(
-                    parseInt(this.calldetails.callerNumber)
-                  ),
-                });
-                this.realdata.push(this.detail);
-                this.backuprealdata.push(this.detail);
-                console.log("getNextCalls calllog ", this.realdata);
-                // call details
-              });
-
-            }
-               const index = this.realdata.findIndex((object) => {
-                      return object.uniqueid === this.uniqueId;
-                    });
-                    this.realdata[index].reminderTime = moment(
-                      this.testreminder
-                    ).format("D MMM Y hh:mm a");
-                    console.log("gfghghgvhgvhgv", this.realdata[index]);
-                    this.testreminder = "";
-            })
-            .catch((error) => {
-              console.log("DL error", error);
-            });
-        }
-      };
-    },
-  },
-  beforeMount() {
+      getInitialCalls() {
     let localStorageUserObj = localStorage.getItem("tpu");
 
     if (localStorageUserObj) {
@@ -2242,8 +2092,208 @@ var virtualnumberDisplay =
       });
     }
   },
+    getNextCalls() {
+
+this.loadingMore=true;
+          // getting Next calls
+          this.page++;
+          console.log("Filtering Calls.....");
+          var filterCallsPayload = {
+            page_number: this.page ? parseInt(this.page) : 1,
+            results_per_page: parseInt(this.limit),
+            conditions: {
+              owneruid: this.ownerUid,
+              callstatus: "Missed",
+            },
+            sort: {},
+          };
+
+          let updatedFilterCallsPayload =
+            this.getCallsFilterPayload(filterCallsPayload);
+          console.log(
+            "updatedFilterCallsPayload",
+            JSON.stringify(updatedFilterCallsPayload)
+          );
+
+          var cfdata = {
+            headers: this.$headerKeyMongo,
+            url: this.$mongoApi + "/api/calllogs/paginate",
+            payload: updatedFilterCallsPayload,
+          };
+          var raw = JSON.stringify(cfdata);
+
+          const headers = {
+            "Content-Type": "application/json",
+            token: localStorage.getItem("token"),
+          };
+          axios
+            .post(this.$cloudfareApi + "/admin/mongo", raw, {
+              headers: headers,
+            })
+            .then((response) => {
+              console.log("DL response", response.data.data);
+              let dataset = response.data.data.dataset;
+
+              this.totalPage = response.data.data.totalPages;
+              this.totalItems = response.data.data.totalItems;
+
+              console.log('getNextCalls dataset.length', dataset.length);
+              if(!dataset.length) {
+                this.page--;
+              } else {
+
+              // let List = [];
+              // this.realdata = [];
+              dataset.forEach((doc) => {
+                // let callObj = {
+
+                // };
+
+                // call details
+                let user_details = doc;
+                this.calldetails = user_details;
+                var timestamp = this.calldetails.dateTime;
+                var date = new Date(timestamp);
+                console.log("full time", date);
+                // var call_time = moment(date).format('hh:mm a')
+                // call_time = moment(date).fromNow();
+                // console.log("converted time",call_time)
+
+                var myCurrentDate = new Date();
+                var missedTresholdDate = new Date(myCurrentDate);
+                missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+                console.log(missedTresholdDate);
+
+                console.log(timestamp); //missed call date
+                console.log(missedTresholdDate.getTime()); //addon date
+                console.log(myCurrentDate.getTime()); //today's date
+
+                if (timestamp <= missedTresholdDate.getTime()) {
+                  call_time = moment(date).format("D MMM Y hh:mm a");
+                } else {
+                  var call_time = moment(date).format("hh:mm a");
+                  call_time = moment(date).fromNow();
+                }
+
+                var note = "";
+                var uid = "";
+                var user_name = "";
+                var owneruid = "";
+                if (this.calldetails.Notes) {
+                  note = this.calldetails.Notes;
+                } else {
+                  console.log("no note");
+                  note = [{
+                    Note: ""
+                  }];
+                }
+                if (this.calldetails.ClickCount) {
+                  uid = this.calldetails.ClickCount.Uid;
+                  user_name = this.calldetails.name;
+                  owneruid = this.calldetails.owneruid;
+                  // console.log('user id ', this.click_details.user_name)
+                  if (
+                    uid == owneruid &&
+                    this.calldetails.callstatus == "Missed"
+                  ) {
+                    this.called_name = "You";
+                  } else if (
+                    uid == owneruid &&
+                    this.calldetails.callstatus == "Answered"
+                  ) {
+                    this.called_name = user_name;
+                  }
+                } else {
+                  console.log("no callback");
+
+                  uid = "";
+                  user_name = "";
+                  owneruid = "";
+                  this.called_name = "";
+                }
+                var calledNumber =
+                  this.calldetails.callerNumber.slice(0, 5) +
+                  " " +
+                  this.calldetails.callerNumber.slice(5, 7) +
+                  " " +
+                  this.calldetails.callerNumber.slice(7, 11);
+                var virtualnumberDisplay =
+                  this.calldetails.virtualnumber.slice(0, 5) +
+                  " " +
+                  this.calldetails.virtualnumber.slice(5, 7) +
+                  " " +
+                  this.calldetails.virtualnumber.slice(7, 11);
+                this.detail = Object.assign({}, this.detail, {
+                  callstatus: this.calldetails.callstatus,
+                  name: this.calldetails.name[0],
+                  dateTime: call_time,
+                  conversationduration: this.calldetails.conversationduration,
+                  callerNumber: calledNumber,
+                  uniqueid: this.calldetails.uniqueid,
+                  Note: note,
+                  source: this.calldetails.source,
+                  virtualnumber: this.calldetails.callerNumber,
+                  virtualnumberDisplay: virtualnumberDisplay,
+                  called_name: this.called_name,
+                  recordingUrl: this.calldetails.recordingurl,
+                  reminder: this.calldetails.Reminder ?
+                    this.calldetails.Reminder.ReminderAt :
+                    "",
+                  reminderPayload: this.calldetails.Reminder ?
+                    this.calldetails.Reminder :
+                    "",
+                  reminderTime: this.calldetails.Reminder ?
+                    moment(this.calldetails.Reminder.ReminderAt).format(
+                      "D MMM Y hh:mm a"
+                    ) :
+                    "",
+                  isBlocked: this.blocked_numbers_.includes(
+                    parseInt(this.calldetails.callerNumber)
+                  ),
+                });
+                   if(this.searchTerm !== "") {
+                if (Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
+                  this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+                }
+
+                this.detail.callerNumber = this.detail.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+                }
+                this.realdata.push(this.detail);
+                this.backuprealdata.push(this.detail);
+                console.log("getNextCalls calllog ", this.realdata);
+                // call details
+              });
+
+            }
+               const index = this.realdata.findIndex((object) => {
+                      return object.uniqueid === this.uniqueId;
+                    });
+                    this.realdata[index].reminderTime = moment(
+                      this.testreminder
+                    ).format("D MMM Y hh:mm a");
+                    console.log("gfghghgvhgvhgv", this.realdata[index]);
+                    this.testreminder = "";
+            })
+            .catch((error) => {
+              console.log("DL error", error);
+            });
+     
+    },
+  },
+
+  created() {
+ this.getInitialCalls();
+    window.addEventListener("scroll", this.handleScroll, false);
+
+  },
+  destroyed(){
+    window.removeEventListener("scroll", this.handleScroll, false);
+
+  },
+  beforeMount() {
+ this.getInitialCalls();
+  },
   mounted() {
-    this.getNextCalls();
   },
 };
 </script>

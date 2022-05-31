@@ -268,13 +268,15 @@
                   </v-row>
 
                   <div>
-                      <v-progress-linear  v-if="!realdata.length != '' "
+                      <v-progress-linear  v-if=" realdata.length == 0 && this.searchTerm.length==0"
                             color="#ee1c25 "
                             indeterminate
                             rounded
                             height="6"
                           ></v-progress-linear>
-                          <div v-if="realdata==[]">No Calls to show! </div>
+                    
+                            
+                          <div v-if="this.searchTerm.length != 0 && totalItems==0" align="center" class="center">No Calls to show!</div>
                     <v-expansion-panels
                       accordion
                       flat
@@ -302,7 +304,7 @@
                                     icon="mdi:call-missed"
                                     width="24"
                                     height="24"
-                                  />+91 {{ details.callerNumber }}
+                                  /><span v-html="callerNumberSpan(details.callerNumber)" /> 
                                   <v-icon
                                     color="gray"
                                     class="mr-5"
@@ -391,7 +393,7 @@
                                   class="mdi mdi-note grey--text"
                                 >
                                 </span>
-                                {{ getNotes.Note }}
+                                 <span v-html="callNote(getNotes.Note)" /> 
                               </div>
                             </div>
                             <!-- {{details.reminder}} -->
@@ -405,8 +407,8 @@
                               <div>
                                 <span class="mdi mdi-alarm grey--text"> </span>
                                 <!-- Sample reminder here -->
-                                <!-- {{ details.reminderPayload.Message }},  -->
-                                {{ details.reminderTime }}
+                                <span v-html="callReminder(details.reminderPayload.Message)" /> ,
+                                        {{ details.reminderTime }}
                               </div>
                             </div>
                           </div>
@@ -429,7 +431,7 @@
                                     <span v-if="getNotes.Note != ''">
                                       <span class="mdi mdi-note grey--text">
                                       </span>
-                                      {{ getNotes.Note }}
+                                      <span v-html="callNote(getNotes.Note)" /> 
                                       <span
                                         class="mdi mdi-pencil grey--text"
                                         @click="
@@ -488,7 +490,7 @@
                                         "
                                         class="mdi mdi-alarm grey--text"
                                       >
-                                        {{ details.reminderPayload.Message }},
+                                        <span v-html="callReminder(details.reminderPayload.Message)" /> ,
                                         {{ details.reminderTime }}
                                       </span>
                                       <span
@@ -560,6 +562,7 @@
                             </v-row>
                           </div>
                         </v-expansion-panel-content>
+                         <v-divider></v-divider>
                       </v-expansion-panel>
                     </v-expansion-panels>
                
@@ -989,7 +992,7 @@ export default {
 
         if (bottomOfWindow) {
 console.log('bottom of the page');
-if(this.totalPage>0){
+if(this.totalPage>0 && this.totalItems>=this.limit){
 
   this.getNextCalls();
 
@@ -1789,6 +1792,15 @@ if(this.totalPage>0){
           console.log("DL error", error);
         });
     },
+        callerNumberSpan(text) {
+      return `+91 ${text}`;
+    },
+    callNote(text) {
+      return `${text}`;
+    },
+    callReminder(text) {
+      return `${text}`;
+    },
 getInitialCalls(){
 let localStorageUserObj = localStorage.getItem("tpu");
 
@@ -2172,20 +2184,3 @@ let localStorageUserObj = localStorage.getItem("tpu");
 </script>
 
 
-<style scoped>
-.test {
-  border-color: grey !important;
-  height: 100%;
-}
-.v-expansion-panel {
-  border-bottom: 1px solid #ddd;
-  border-bottom-spacing: 15px;
-  :100px ;
-}
-.v-expansion-panel-header {
-  line-height: 0.5 !important;
-}
-.application {
-  font-family: adobe-clean, sans-serif !important;
-}
-</style>
