@@ -266,6 +266,7 @@ export default {
               data: {
                 uid: this.uid,
                 phoneNumber: this.phNo,
+                webtoken: localStorage.getItem('webtoken')
               },
             };
             console.log(options);
@@ -373,6 +374,7 @@ export default {
       setTimeout(() => {
         let vm = this;
         console.log("render on create", vm);
+        console.log("Role", vm.role);
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
           "recaptcha-container",
           {

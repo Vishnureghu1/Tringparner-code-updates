@@ -428,6 +428,9 @@ export default {
   },
 
   methods: {
+    goBack() {
+      this.$router.push("/dashboard");
+    },
     getBill(status, planid) {
       const token = localStorage.getItem("token");
       if (this.twelvemonths == true && this.sixmonths == true && planid == 3) {
