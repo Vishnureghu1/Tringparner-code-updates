@@ -590,7 +590,7 @@ export default {
               });
                 }
                 if(change.doc.data().IsRead == true){
-                  console.log(change.doc.id)
+                  // console.log(change.doc.id)
                     this.unreadids.pop();
                 }
               })
