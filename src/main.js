@@ -8,6 +8,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import AxiosPlugin from 'vue-axios-cors'
 import VueGoogleCharts from 'vue-google-charts'
+import 'firebase/firebase-messaging'
 
 
 Vue.prototype.$http = AxiosPlugin;
@@ -30,6 +31,14 @@ firebase.initializeApp({
 });
 
 export const db = firebase.firestore();
+const messaging = firebase.messaging();
+messaging.requestPermission()
+.then(()=>{console.log("have perm")
+return messaging.getToken({vapidKey:"BJw0IaMJiCU895t7oCswxP06NhxLlfV39whGDSelluOBGzextq0WJ1oeaVQwc8gvVFh5HMXzshm_0QCIcJU_TNU"})})
+.then(token=>{
+    console.log("token",token)
+    localStorage.setItem("webtoken",token);
+}).catch((err)=>{console.log("1",err)})
 
 new Vue({
     router,

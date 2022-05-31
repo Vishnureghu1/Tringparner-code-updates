@@ -335,7 +335,7 @@ import PlanSelect from "@/components/select_plan.vue";
 export default {
   data: () => ({
     radio: "",
-    radio1: true,
+    radio1: false,
     radio2: false,
     radio3: false,
     address: "",
@@ -361,7 +361,7 @@ export default {
         console.log("logged user details", user);
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
-
+    
         db.collection("users")
           .where("uid", "==", this.uid)
           .get()
@@ -371,21 +371,23 @@ export default {
               let user_details = doc.data();
               this.Udata = user_details;
               this.currentPage = this.Udata.currentPage;
+              // planId
+
               console.log(this.currentPage);
-              if (this.currentPage == "onboarding_listing") {
-                this.$router.push("/ChooseNumbers");
-              } else if (this.currentPage == "onboarding_plan_details") {
-                this.$router.push("/SelectPlan");
-              } else if (
-                this.currentPage == "onboarding_billing" ||
-                this.currentPage == "onboarding_revisiting"
-              ) {
-                // this.$router.push("/Billing");
-              } else if (this.currentPage == "onboarding_review") {
-                // this.$router.push("/Review")
-              } else if (this.currentPage == "onboarding_dashboard") {
-                this.$router.push("/Dashboard");
-              }
+              // if (this.currentPage == "onboarding_listing") {
+              //   this.$router.push("/ChooseNumbers");
+              // } else if (this.currentPage == "onboarding_plan_details") {
+              //   this.$router.push("/SelectPlan"); remove this
+              // } else if (
+              //   this.currentPage == "onboarding_billing" ||
+              //   this.currentPage == "onboarding_revisiting"
+              // ) {
+              //   this.$router.push("/Billing");
+              // } else if (this.currentPage == "onboarding_review") {
+              //   this.$router.push("/Review")
+              // } else if (this.currentPage == "onboarding_dashboard") {
+              //   this.$router.push("/Dashboard");
+              // }
             });
           })
           .catch((error) => {
@@ -408,7 +410,6 @@ export default {
               this.planId = user_details.PlanId;
               this.orderId = user_details.OrderId;
 
-              console.log(user_details.virtualNumber);
             });
           })
           .catch((error) => {
@@ -468,7 +469,7 @@ export default {
       this.changePlanArea = true;
       
 
-      //  this.$router.push("/SelectPlan");
+       this.$router.push("/SelectPlan");
     },
     changeAddress() {
       this.$router.push("/Billing");

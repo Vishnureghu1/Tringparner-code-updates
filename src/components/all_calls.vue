@@ -92,6 +92,7 @@
                         label="Search"
                         v-model="searchTerm"
                         @input="updateSearchTerm"
+               
                         single-line
                       ></v-text-field>
 
@@ -267,15 +268,18 @@
                     </v-col>
                   </v-row>
 
-                  <div  id="layoutCallLog">
-                    
-                            <v-progress-linear  v-if="!realdata.length != '' "
+                  <div  id="layoutCallLog" >
+
+                    <v-progress-linear  v-if=" realdata.length == 0 && this.searchTerm.length==0"
                             color="#ee1c25 "
                             indeterminate
                             rounded
                             height="6"
                           ></v-progress-linear>
-                          <div v-if="realdata==[]">No Calls to show! </div>
+                    
+                            
+                          <div v-if="this.searchTerm.length != 0 && totalItems==0" align="center" class="center">No Calls to show!</div>
+                   
                     <v-expansion-panels
                       accordion
                       flat
@@ -303,7 +307,8 @@
                                     icon="mdi:call-missed"
                                     width="24"
                                     height="24"
-                                  />+91 {{ details.callerNumber }}
+                                  />
+                                  <span v-html="callerNumberSpan(details.callerNumber)" /> 
                                   <v-icon
                                     color="gray"
                                     class="mr-5"
@@ -387,12 +392,15 @@
                               :key="getNotes.text"
                             >
                               <div>
+                                
                                 <span
                                   v-if="getNotes.Note != ''"
                                   class="mdi mdi-note grey--text"
                                 >
                                 </span>
-                                {{ getNotes.Note }}
+                                
+                                <span v-html="callNote(getNotes.Note)" /> 
+                               
                               </div>
                             </div>
 
@@ -407,8 +415,10 @@
                               <div>
                                 <span class="mdi mdi-alarm grey--text"> </span>
                                 <!-- Sample reminder here -->
-                                <!-- {{ details.reminderPayload.Message }},  -->
-                                {{ details.reminderTime }}
+                                 <span v-html="callReminder(details.reminderPayload.Message)" /> ,
+                                        {{ details.reminderTime }}
+                                     
+                              
                               </div>
                             </div>
                           </div>
@@ -431,7 +441,7 @@
                                     <span v-if="getNotes.Note != ''">
                                       <span class="mdi mdi-note grey--text">
                                       </span>
-                                      {{ getNotes.Note }}
+                                      <span v-html="callNote(getNotes.Note)" /> 
                                       <span
                                         class="mdi mdi-pencil grey--text"
                                         @click="
@@ -490,7 +500,7 @@
                                         "
                                         class="mdi mdi-alarm grey--text"
                                       >
-                                        {{ details.reminderPayload.Message }},
+                                        <span v-html="callReminder(details.reminderPayload.Message)" /> ,
                                         {{ details.reminderTime }}
                                       </span>
                                       <span
@@ -984,6 +994,7 @@ export default {
     name: "",
     userRole: "",
     reminder: "",
+    noSearchData:false,
   }),
   watch: {
     sendInviteLoader(val) {
@@ -996,6 +1007,32 @@ export default {
     },
   },
   methods: {
+
+    handleScroll () {
+      window.onscroll = () => {
+        let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+
+        if (bottomOfWindow) {
+console.log('bottom of the page');
+if(this.totalPage>0){
+
+  this.getNextCalls();
+
+}
+        //  this.scrolledToBottom = true // replace it with your code
+        }
+      }
+      },
+
+    callerNumberSpan(text) {
+      return `+91 ${text}`;
+    },
+    callNote(text) {
+      return `${text}`;
+    },
+    callReminder(text) {
+      return `${text}`;
+    },
     async getInitialCalls(){
       this.$vuetify.goTo(0)
          let localStorageUserObj = localStorage.getItem("tpu");
@@ -1088,7 +1125,12 @@ export default {
 
                     this.totalPage = response.data.data.totalPages;
                     this.totalItems = response.data.data.totalItems;
-
+if(this.totalItems==0){
+  this.noSearchData==true;
+  // console.log('no result found!')
+}else{
+  this.noSearchData==false;
+}
                     // let List = [];
                     this.realdata = [];
                     this.backuprealdata = [];
@@ -1346,24 +1388,6 @@ export default {
       console.log("this.searchTerm.length", this.searchTerm.length);
       if (this.searchTerm !== "") {
         this.searchMongo();
-
-// $.each('.expansion-panel', function(key, value) {
-     
-
-//       var checkString = $this.text()
-//     var start = $this.text().toLowerCase().indexOf(query);
-//     var end = query.slice().length
-//     var matchWord = checkString.substring(start,start+end);
-    
-//     if (checkString.toLowerCase().match(query)) {
-//       $this.html(checkString.replace(matchWord,'<b>'+matchWord+'</b>'))
-//     }
-//    });
-
-
-  
-   
- 
         
       } else {
         console.log("searchTerm is empty");
@@ -1465,11 +1489,7 @@ export default {
       this.filterMongo();
       this.showBadge = false;
     },
-    handleScroll: function (e) {
-      if (e.target.scrollHeight - 300 <= e.target.scrollTop) {
-        alert("oi sou Eduardo Martins");
-      }
-    },
+
 
     addNote(unique_id, message) {
       var token = localStorage.getItem("token");
@@ -1732,7 +1752,12 @@ export default {
 
           this.totalPage = response.data.data.totalPages;
           this.totalItems = response.data.data.totalItems;
-
+if(this.totalItems==0){
+  this.noSearchData==true;
+  // console.log('no result found!')
+}else{
+  this.noSearchData==false;
+}
           // let List = [];
           this.realdata = [];
           dataset.forEach((doc) => {
@@ -1852,7 +1877,8 @@ export default {
     },
     searchMongo() {
       var searchCallsConditions = {
-        page_number: this.page ? parseInt(this.page) : 1,
+        // page_number: this.page ? parseInt(this.page) : 1,
+        page_number: 1,
         results_per_page: parseInt(this.limit),
         conditions: {
           owneruid: this.ownerUid,
@@ -1887,7 +1913,12 @@ export default {
 
           this.totalPage = response.data.data.totalPages;
           this.totalItems = response.data.data.totalItems;
-
+if(this.totalItems==0){
+  this.noSearchData==true;
+  // console.log('no result found!')
+}else{
+  this.noSearchData==false;
+}
           // let List = [];
           this.realdata = [];
           dataset.forEach((doc) => {
@@ -1922,6 +1953,7 @@ export default {
             var note = "";
             if (this.calldetails.Notes) {
               note = this.calldetails.Notes;
+              // note = note.toString().replace(new RegExp(`${this.searchTerm}`, 'gi'), `<  >${this.searchTerm}</mark>`);
             } else {
               console.log("no note");
               note = [{ Note: "" }];
@@ -1967,6 +1999,23 @@ var virtualnumberDisplay =
                 parseInt(this.calldetails.callerNumber)
               ),
             });
+
+            // if("Message" in this.detail.reminderPayload) {
+            // if(this.detail.reminderPayload.hasOwnProperty("Message")) {
+            if(Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
+              this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+            }
+
+        // note replace
+          // this.detail.Note.forEach(Note => {
+          //     console.log(Note);
+          //     this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+        
+          //   });
+
+            this.detail.callerNumber = this.calldetails.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+
+
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
             // call details
@@ -1977,11 +2026,8 @@ var virtualnumberDisplay =
         });
     },
     getNextCalls() {
-      window.onscroll = () => {
-        let bottomOfWindow =
-          document.documentElement.scrollTop + window.innerHeight ===
-          document.documentElement.offsetHeight;
-        if (bottomOfWindow) {
+     
+     this.loadingMore=true;
           console.log("getting Next Calls");
           console.log("this.lastrecord", this.lastrecord);
 
@@ -1999,8 +2045,12 @@ var virtualnumberDisplay =
 
           let updatedFilterCallsPayload =
             this.getCallsFilterPayload(filterCallsPayload);
+
+            updatedFilterCallsPayload = this.getCallsSearchPayload(
+              filterCallsPayload
+            );
           console.log(
-            "updatedFilterCallsPayload",
+            "getNextCalls updatedFilterCallsPayload",
             JSON.stringify(updatedFilterCallsPayload)
           );
 
@@ -2022,13 +2072,21 @@ var virtualnumberDisplay =
             .then((response) => {
               console.log("DL response", response.data.data);
               let dataset = response.data.data.dataset;
+     this.loadingMore=false;
 
               this.totalPage = response.data.data.totalPages;
               this.totalItems = response.data.data.totalItems;
+if(this.totalItems==0){
+  this.noSearchData==true;
 
+  // console.log('no result found!')
+}else{
+  this.noSearchData==false;
+}
               console.log('getNextCalls dataset.length', dataset.length);
               if(!dataset.length) {
                 this.page--;
+
               } else {
 
 
@@ -2112,9 +2170,19 @@ var virtualnumberDisplay =
                     parseInt(this.calldetails.callerNumber)
                   ),
                 });
+
+
+                if(this.searchTerm !== "") {
+                if (Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
+                  this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+                }
+
+                this.detail.callerNumber = this.detail.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+                }
+
                 this.realdata.push(this.detail);
                 this.backuprealdata.push(this.detail);
-                console.log("snapq calllog ", this.realdata);
+                console.log("getNextCalls snap calllog ", this.realdata);
                 // call details
               });
 
@@ -2133,8 +2201,8 @@ var virtualnumberDisplay =
             .catch((error) => {
               console.log("DL error", error);
             });
-        }
-      };
+        
+   
     },
     emailStatus() {
       db.collection("users")
@@ -2165,15 +2233,21 @@ var virtualnumberDisplay =
     },
   },
   created() {
+ this.getInitialCalls();
+    window.addEventListener("scroll", this.handleScroll, false);
+
+  },
+  destroyed(){
+    window.removeEventListener("scroll", this.handleScroll, false);
 
   },
   beforeMount() {
  this.getInitialCalls();
   },
   mounted() {
-    this.getNextCalls();
   },
 };
 </script>
 
 
+<!-- getNextCalls -->
