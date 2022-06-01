@@ -267,8 +267,7 @@
                       </v-menu>
                     </v-col>
                   </v-row>
-
-                  <div  id="layoutCallLog" >
+              <div  id="layoutCallLog" >
 
                     <v-progress-linear  v-if=" realdata.length == 0 && this.searchTerm.length==0"
                             color="#ee1c25 "
@@ -581,6 +580,7 @@
 
 
                     
+
                     <v-container v-if="loadingMore">
                       <v-row
                         class="fill-height"
@@ -1014,7 +1014,7 @@ export default {
 
         if (bottomOfWindow) {
 console.log('bottom of the page');
-if(this.totalPage>0){
+if(this.totalPage>0 && this.totalItems>=this.limit){
 
   this.getNextCalls();
 
@@ -1511,12 +1511,12 @@ if(this.totalItems==0){
       console.log(user_data);
       axios(user_data)
         .then((response) => {
+         
           if (response.data.status == true) {
             this.notes_added = true;
             this.addNotesDialog = false;
             this.uniqueId = "";
-            // setTimeout(this.getNextCalls(), 3000);
-            // this.getNextCalls();
+           this.getInitialCalls();
           }
         })
         .catch((error) => {
@@ -2008,10 +2008,13 @@ var virtualnumberDisplay =
 
         // note replace
           // this.detail.Note.forEach(Note => {
-          //     console.log(Note);
-          //     this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+          //     console.log(Note.Note);
+          //     this.Note = this.Note.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
         
           //   });
+// Note
+
+// this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
 
             this.detail.callerNumber = this.calldetails.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
 
@@ -2026,7 +2029,8 @@ var virtualnumberDisplay =
         });
     },
     getNextCalls() {
-     
+    //  {{realdata.length}}  {{totalItems}}  
+   
      this.loadingMore=true;
           console.log("getting Next Calls");
           console.log("this.lastrecord", this.lastrecord);
