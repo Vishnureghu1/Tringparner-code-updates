@@ -26,7 +26,7 @@
                   <v-row align="center" v-if="isHide" justify="center">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
-                        Add, Modify or Remove Number
+                        Select how your incoming calls are managed between your users
                       </h2>
                     </v-col>
                     <v-col v-if="isHide" cols="10" sm="3">
@@ -86,7 +86,7 @@
                           class="link_style mt-1 ml-5"
                           @click="ManageAgents(item1.VirtualNumber,'active')"
                         >
-                          Manage Agents
+                          Call and IVR Configurations
                         </div>
                       </v-col>
                       <v-col cols="12" sm="6" align="end">
@@ -103,7 +103,7 @@
                           class="link_style mt-1 ml-5 mb-5"
                           @click="CallFlowSettings(item1.VirtualNumber,'active')"
                         >
-                          Call Flow Settings
+                         Advanced Options
                         </div>
                       </v-col>
                       <v-col cols="12" sm="6" align="end">
