@@ -17,8 +17,38 @@
                 <h2 class="lato-font f23 mt-16 mb-4">
                   Select your Tring Partner Payments Plan
                 </h2>
+
+                <v-col cols="12" sm="6" class="py-2">
+                  <p>Please choose your plan</p>
+
+                  <v-btn-toggle 
+                    v-model="toggle_IVR"
+                    rounded
+                    elivation="5"
+                    class="toggle_IVR"
+                    borderless 
+                  >
+                     <v-btn
+                      width="200"
+                      @click="isIvr(2)"
+                      v-class="{ active: isActive }"
+                    >
+                     Basic (No IVR)
+                    </v-btn>
+                    <v-btn
+                      width="200"
+                      @click="isIvr(1)"
+                      v-class="{ active: isActive }"
+                    >
+                      IVR
+                    </v-btn>
+
+                 
+                  </v-btn-toggle>
+                </v-col>
                 <h2 class="sub_title mt-2 mb-16"><br /></h2>
-                <div>
+                                <div v-if="IvrPlan==1">
+                                IVR plans
                   <v-radio-group mandatory v-model="radio">
                     <v-row>
                       <v-col cols="12" sm="4">
@@ -34,7 +64,9 @@
                           <v-radio color="red" value="1" class="ml-4">
                             <span slot="label" class="black--text ml-3">
                               <h2 class="page_title mt-3 ml-2 mb-5">1 month</h2>
-                              <h2 class="price_title mt-1 ml-2 mb-3"><sup class="rupees">₹</sup>500</h2>
+                              <h2 class="price_title mt-1 ml-2 mb-3">
+                                <sup class="rupees">₹</sup>500
+                              </h2>
                               <h2 class="sub_title mt-1 ml-2">
                                 Monthly Small Bussiness(Truly Unlimited)
                               </h2>
@@ -54,14 +86,17 @@
                               : 'border: 1px solid #B4B4B4;border-radius: 10px;'
                           "
                         >
-                          <span class="top-right badge red">BEST VALUE</span>
+                          <span class="top-right badge red">BEST VALUE IVR</span>
                           <v-radio color="red" value="2" class="ml-4">
                             <span slot="label" class="black--text ml-3">
                               <h2 class="page_title mt-3 ml-2 mb-5">
                                 6 months
                               </h2>
                               <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>2700 <strike> <sup class="rupees">₹</sup>3000</strike>
+                                <sup class="rupees">₹</sup>2700
+                                <strike>
+                                  <sup class="rupees">₹</sup>3000</strike
+                                >
                               </h2>
                               <h2 class="sub_title mt-1 ml-2 mb-3">
                                 HalfYearly Small Bussiness(Truly Unlimited)
@@ -87,7 +122,10 @@
                                 12 months
                               </h2>
                               <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>4800 <strike> <sup class="rupees">₹</sup>6000</strike>
+                                <sup class="rupees">₹</sup>4800
+                                <strike>
+                                  <sup class="rupees">₹</sup>6000</strike
+                                >
                               </h2>
                               <h2 class="sub_title mt-1 ml-2 mb-3">
                                 Yearly Small Bussiness(Truly Unlimited)
@@ -99,8 +137,100 @@
                       </v-col>
                     </v-row>
                   </v-radio-group>
-                </div>
-                <v-btn
+                </div><div v-else-if="IvrPlan==2">
+                NO IVR plans
+                <v-radio-group mandatory v-model="radio">
+                    <v-row>
+                      <v-col cols="12" sm="4">
+                        <v-card
+                          class=""
+                          @click="colorChange(radio)"
+                          :style="
+                            radio1
+                              ? 'border: 1px solid #EE1C25;border-radius: 10px;'
+                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
+                          "
+                        >
+                          <v-radio color="red" value="1" class="ml-4">
+                            <span slot="label" class="black--text ml-3">
+                              <h2 class="page_title mt-3 ml-2 mb-5">1 month</h2>
+                              <h2 class="price_title mt-1 ml-2 mb-3">
+                                <sup class="rupees">₹</sup>500
+                              </h2>
+                              <h2 class="sub_title mt-1 ml-2">
+                                Monthly Small Bussiness(Truly Unlimited)
+                              </h2>
+                              <br /><br />
+                            </span>
+                          </v-radio>
+                        </v-card>
+                      </v-col>
+
+                      <v-col cols="12" sm="4" class="">
+                        <v-card
+                          class="badge-overlay overflow_data"
+                          @click="colorChange(radio)"
+                          :style="
+                            radio2
+                              ? 'border:1px solid #EE1C25;border-radius: 10px;'
+                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
+                          "
+                        >
+                          <span class="top-right badge red">BEST VALUE (No IVR)</span>
+                          <v-radio color="red" value="2" class="ml-4">
+                            <span slot="label" class="black--text ml-3">
+                              <h2 class="page_title mt-3 ml-2 mb-5">
+                                6 months
+                              </h2>
+                              <h2 class="price_title mt-1 ml-2 mb-3">
+                                <sup class="rupees">₹</sup>2700
+                                <strike>
+                                  <sup class="rupees">₹</sup>3000</strike
+                                >
+                              </h2>
+                              <h2 class="sub_title mt-1 ml-2 mb-3">
+                                HalfYearly Small Bussiness(Truly Unlimited)
+                              </h2>
+                              <h2 class="offer_title ml-2 mb-2">10% off</h2>
+                            </span>
+                          </v-radio>
+                        </v-card>
+                      </v-col>
+                      <v-col cols="12" sm="4">
+                        <v-card
+                          class=""
+                          @click="colorChange(radio)"
+                          :style="
+                            radio3
+                              ? 'border: 1px solid #EE1C25;border-radius: 10px;'
+                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
+                          "
+                        >
+                          <v-radio color="red" value="3" class="ml-4">
+                            <span slot="label" class="black--text ml-3">
+                              <h2 class="page_title mt-3 ml-2 mb-5">
+                                12 months
+                              </h2>
+                              <h2 class="price_title mt-1 ml-2 mb-3">
+                                <sup class="rupees">₹</sup>4800
+                                <strike>
+                                  <sup class="rupees">₹</sup>6000</strike
+                                >
+                              </h2>
+                              <h2 class="sub_title mt-1 ml-2 mb-3">
+                                Yearly Small Bussiness(Truly Unlimited)
+                              </h2>
+                              <h2 class="offer_title ml-2 mb-2">20% off</h2>
+                            </span>
+                          </v-radio>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-radio-group>
+                </div><div v-else>   <v-alert type="warning">
+     No Plan selected
+    </v-alert></div>
+                <v-btn v-if="IvrPlan!=0"
                   class="btn_text mt-15 white--text text-capitalize"
                   width="12%"
                   rounded
@@ -130,6 +260,7 @@ export default {
     radio3: false,
     overlay: false,
     planId: 0,
+    IvrPlan: 0,
   }),
   components: {},
 
@@ -141,27 +272,27 @@ export default {
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
         this.planId = localStorage.getItem("planId");
-console.log(this.planId);
-if(this.planId!=''){
-
-  this.colorChange(this.planId);
-setTimeout(()=>{
-  this.colorChange(this.planId);
-    this.radio=this.planId;
-},1000);
-  }
-
-
+        console.log(this.planId);
+        if (this.planId != "") {
+          this.colorChange(this.planId);
+          setTimeout(() => {
+            this.colorChange(this.planId);
+            this.radio = this.planId;
+          }, 1000);
+        }
       }
     });
   },
   methods: {
+    isIvr(i) {
+     this.IvrPlan=i;
+     console.log(i);
+    },
     colorChange(i) {
       console.log(i);
       if (i == 1) {
         this.radio1 = true;
         this.radio2 = this.radio3 = false;
-        
       } else if (i == 2) {
         this.radio2 = true;
         this.radio1 = this.radio3 = false;
@@ -173,12 +304,12 @@ setTimeout(()=>{
     nextPage() {
       this.overlay = true;
       const user_stage = {
-        url: this.$cloudfareApi+"/user/stage",
+        url: this.$cloudfareApi + "/user/stage",
         method: "POST",
-        headers: { 
-						'token': localStorage.getItem("token"),
-						'Content-Type': 'application/json'
-					},
+        headers: {
+          token: localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
         data: {
           uid: this.uid,
           phoneNumber: this.phno,
@@ -204,41 +335,36 @@ setTimeout(()=>{
 
 <style scoped>
 .page_title {
-
   font-size: 23px;
   font-weight: 400;
   color: #3b3b3b;
 }
-.price_title .rupees{
-	font-size: 14px;
+.price_title .rupees {
+  font-size: 14px;
 }
 .price_title strike {
-    color: #B4B4B4;
-	font-family: 'Nunito', sans-serif;
+  color: #b4b4b4;
+  font-family: "Nunito", sans-serif;
 }
 .price_title {
-
   font-size: 23px;
   color: #3b3b3b;
 }
 .sub_title {
- font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   font-size: 14px;
-  color: #3B3B3B;
+  color: #3b3b3b;
   font-weight: 400;
 }
 .name_heading {
-
   font-size: 14px;
   color: #3b3b3b;
 }
 .number_heading {
-
   font-size: 24px;
   color: #3b3b3b;
 }
 .offer_title {
-
   font-size: 14px;
   color: #ee1c25;
 }
