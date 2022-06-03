@@ -251,7 +251,7 @@
 
 <script>
 import firebase from "firebase";
-// import { db } from '@/main.js';
+import { db } from '@/main.js';
 export default {
   data: () => ({
     radio: "",
@@ -264,7 +264,13 @@ export default {
   }),
   components: {},
 
-  mounted() {
+  async mounted() {
+
+       let planDetails = await db.collection("plan_details").get();
+           planDetails.docs.forEach(element => {
+               console.log(element.data());
+             });     
+
     window.scrollTo(0, 0); //scroll to top
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {

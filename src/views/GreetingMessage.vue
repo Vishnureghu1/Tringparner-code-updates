@@ -491,11 +491,11 @@ export default {
           route: { name: "BusinessNumber", query: {} },
         },
         {
-          text: "Call Flow Settings",
+          text: "Call and IVR Configuration",
           disabled: false,
-          to: { name: "CallFlowSettings", query: { ...{ bn: 1111111 } } },
-          href: `CallFlowSettings?bn=`,
-          route: { name: "CallFlowSettings", query: { bn: [bussinessNumber] } },
+          to: { name: "CallandIVRConfig", query: { ...{ bn: 1111111 } } },
+          href: `CallandIVRConfig?bn=`,
+          route: { name: "CallandIVRConfig", query: { bn: [bussinessNumber] } },
         },
         {
           text: "Greeting Message",

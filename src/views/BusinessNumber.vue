@@ -81,7 +81,24 @@
                           </v-list>
                         </v-menu>
                       </v-col>
-                      <v-col cols="12" sm="6">
+                             <v-col cols="12" sm="6">
+                        <div
+                          class="link_style mt-1 ml-5"
+                          @click="CallandIVRConfiguration(item1.VirtualNumber,'active')"
+                        >
+                          Call and IVR Configurations
+                        </div>
+                      </v-col>
+                      <v-col cols="12" sm="6" align="end">
+                        <v-icon
+                          v-bind="attrs"
+                          v-on="on"
+                          color="#EE1C25"
+                          @click="CallandIVRConfiguration(item1.VirtualNumber,'active')"
+                          >mdi-arrow-right</v-icon
+                        >
+                      </v-col>
+                      <!-- <v-col cols="12" sm="6">
                         <div
                           class="link_style mt-1 ml-5"
                           @click="ManageAgents(item1.VirtualNumber,'active')"
@@ -97,7 +114,7 @@
                           @click="ManageAgents(item1.VirtualNumber,'active')"
                           >mdi-arrow-right</v-icon
                         >
-                      </v-col>
+                      </v-col> -->
                       <v-col cols="12" sm="6">
                         <div
                           class="link_style mt-1 ml-5 mb-5"
@@ -276,6 +293,16 @@ export default {
       }else{
 
         this.$router.push("/CallPreference?bn=" + vn);
+      }
+      
+    },
+        CallandIVRConfiguration(vn,status) {
+
+      if(status=='expired'){
+          this.$root.vtoast.show({message: 'Hello there!', color: 'red', timer: 5000})
+      }else{
+
+        this.$router.push("/CallandIVRConfig?bn=" + vn);
       }
       
     },

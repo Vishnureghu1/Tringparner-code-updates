@@ -13,7 +13,7 @@
                         <v-icon class="mr-2" color="black" @click="goBack()"
                           >mdi-arrow-left</v-icon
                         >
-                        Call Flow Settings
+                        Call and IVR Configuration
                       </h2>
 
                       <v-breadcrumbs class="breadcrumbs" :items="items">
@@ -34,108 +34,10 @@
                       <v-flex xs12 sm12 md12>
                         <v-row no-gutters>
                           <v-col cols="12">
-                            <v-row>
-                              <v-col cols="6">
-                                <h2 class="name_heading mr-7">
-                                  Notification Settings
-                                </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Manage how you get notifications for each type
-                                  of vent on your Virtual Number
-                                </h2>
-                              </v-col>
-                              <v-col cols="6" align="end">
-                                <!-- <router-link
-                                  :to="{ name: 'NotificationSettings', params: { bn: this.bussinessNumber }}"
-                                > -->
-                                  <span
-                                    ><v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="NotificationSettings()"
-                                      >mdi-arrow-right</v-icon
-                                    >
-                                  </span>
-                                <!-- </router-link> -->
-                              </v-col>
-                            </v-row>
-                            <v-divider></v-divider>
-                            <v-row>
+ <v-row>
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7">
-                                  Call Routing
-                                </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Configure how incoming calls are redirected
-                                  between your agents.
-                                </h2>
-                              </v-col>
-                              <v-col cols="6" align="end">
-                                <!-- <router-link :to="{ name: 'CallRouting' }"> -->
-                                  <span
-                                    ><v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25" 
-                                      @click="callRouting()"
-                                      >mdi-arrow-right</v-icon
-                                    >
-                                  </span>
-                                <!-- </router-link> -->
-                              </v-col>
-                            </v-row>
-                            <v-divider></v-divider>
-                            <v-row>
-                              <v-col cols="6">
-                                <h2 class="name_heading mt-4 mr-7">
-                                  Missed Call Distribution
-                                </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Configure how missed calls are managed between
-                                  your agents.
-                                </h2>
-                              </v-col>
-                              <v-col cols="6" align="end">
-                                <!-- <router-link
-                                  :to="{ name: 'MissedCallDistribution' }"
-                                > -->
-                                  <span
-                                    ><v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="MissedCallRouting()"
-                                      >mdi-arrow-right</v-icon
-                                    >
-                                  </span>
-                                <!-- </router-link> -->
-                              </v-col>
-                            </v-row>
-                            <v-divider></v-divider>
-                            <v-row>
-                              <v-col cols="6">
-                                <h2 class="name_heading mt-4 mr-7">
-                                  Blocked Numbers
-                                </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Block unwanted incoming and spam callers.
-                                </h2>
-                              </v-col>
-                              <v-col cols="6" align="end">
-                                <router-link :to="{ name: 'BlockedNumbers', query: { bn: this.bussinessNumber } }">
-                                  <span
-                                    ><v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      >mdi-arrow-right</v-icon
-                                    >
-                                  </span>
-                                </router-link>
-                              </v-col>
-                            </v-row>
-                            <v-divider></v-divider>
-                            <v-row>
-                              <v-col cols="6">
-                                <h2 class="name_heading mt-4 mr-7">
-                                  Greeting Message
+                                  Greeting Message Audio
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
                                   Welcome users with pre-recorded audio clips.
@@ -157,7 +59,7 @@
                             <v-row>
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7">
-                                  Caller Tune
+                                  Caller Tune Audio
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
                                   Configure to play pre-recorded audio clips
@@ -177,10 +79,60 @@
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
+                            <!-- <v-row>
+                              <v-col cols="6">
+                                <h2 class="name_heading mt-4 mr-7">
+                                 IVR and Call Routing
+                                </h2>
+                                <h2 class="comment_heading mt-1 mb-5 mr-7">
+                                  Configure how incoming calls are redirected
+                                  between your agents.
+                                </h2>
+                              </v-col>
+                              <v-col cols="6" align="end">
+                               
+                                  <span
+                                    ><v-icon
+                                      class="mt-6 mb-5 mr-7"
+                                      color="#EE1C25" 
+                                      @click="callRouting()"
+                                      >mdi-arrow-right</v-icon
+                                    >
+                                  </span>
+                              
+                              </v-col>
+                            </v-row>
+                            <v-divider></v-divider> -->
+         
+                       <v-row>
+                              <v-col cols="6">
+                                <h2 class="name_heading mt-4 mr-7">
+                                 IVR and Call Routing
+                                </h2>
+                                <h2 class="comment_heading mt-1 mb-5 mr-7">
+                                  Configure how incoming calls are redirected
+                                  between your agents.
+                                </h2>
+                              </v-col>
+                              <v-col cols="6" align="end">
+                               
+                                  <span
+                                    ><v-icon
+                                      class="mt-6 mb-5 mr-7"
+                                      color="#EE1C25" 
+                                      @click="IVRandcallRouting()"
+                                      >mdi-arrow-right</v-icon
+                                    >
+                                  </span>
+                              
+                              </v-col>
+                            </v-row>
+                            <v-divider></v-divider>
+                            
                             <v-row>
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7">
-                                  Set Working Hours
+                                  Set Working Hours and Offline Audio
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
                                   Set a duration for which this number will be
@@ -207,14 +159,12 @@
                                   class="name_heading mt-4 mr-7"
                                   @click="callPauseNumber()"
                                 >
-                                  Pause Virtual Number
+                                 No Answer Audio
                                 </h2>
                                 <h2
                                   class="comment_heading mt-1 mb-5 mr-7"
                                   @click="callPauseNumber()"
-                                >
-                                  Temporarily pause receiving calls on this
-                                  virtual number.
+                                >Set audio customers will hear when the call is not answered
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -265,7 +215,7 @@ export default {
         to: { name: "BusinessNumber" },
       },
       {
-        text: "Call Flow Settings",
+        text: "Call and IVR Configuration",
         disabled: true,
       },
     ],
@@ -285,6 +235,10 @@ export default {
     callRouting() {
        // const getNumber =  Object.keys(this.$route.query)[0]
        this.$router.push("/CallPreference?bn="+this.bussinessNumber);
+    },
+
+    IVRandcallRouting(){
+    this.$router.push("/IVRandCallRouting?bn="+this.bussinessNumber);
     },
     MissedCallRouting() {
       // const getNumber =  Object.keys(this.$route.query)[0]
