@@ -763,7 +763,13 @@ h4.background span {
     z-index: 99;
 }
 
-.toggle_IVR .v-item--active {
+.toggle_IVR .v-btn {
+    box-shadow: 1px 3px 19px #9b9b9b !important;
+    text-transform: inherit !important;
+}
+
+.toggle_IVR .v-item--active,
+.toggle_IVR button.active {
     color: #fff !important;
     background-color: #ee1c25 !important;
     opacity: 1 !important;
