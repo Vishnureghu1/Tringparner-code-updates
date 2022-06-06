@@ -33,8 +33,9 @@
                 </v-col>
                 <h2 class="sub_title mt-2 mb-16"><br /></h2>
 
-                <div v-if="IvrPlan == 1">
-                  <v-radio-group mandatory v-model="radio">
+
+                <div v-if="SelectPlan == 1">
+                  <v-radio-group mandatory v-model="IVRPlanradio">
                     <v-row>
                       <v-col
                         cols="12"
@@ -42,19 +43,16 @@
                         v-for="ivrData in ivrPlanArray"
                         :key="ivrData.Code"
                       >
+                   
                         <v-card
                           class="badge-overlay overflow_data"
-                          @click="colorChange(ivrData.PlanId)"
-                          :style="
-                            ivrData.PlanId
-                              ? 'border: 1px solid #EE1C25;border-radius: 10px;'
-                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                          "
+                          @click="colorChange(ivrData.PlanId)" v-bind:class="{ active: isActive }"
+                         
                         >
-                          <span class="top-right badge red"
+                          <span class="top-right badge red" v-if=" ivrData.PlanId ==bestPlanIvr"
                             >BEST VALUE IVR</span
                           >
-                          <v-radio color="red" value="1" class="ml-4">
+                          <v-radio color="red" :value="ivrData.PlanId" class="ml-4">
                             <span slot="label" class="black--text ml-3">
                               <h2
                                 class="page_title mt-3 ml-2 mb-5"
@@ -93,8 +91,8 @@
                   </v-radio-group>
                   <p class="text--red" @click="ivrFeatureBox=true">Plan Details</p>
                 </div>
-                <div v-else-if="IvrPlan == 2">
-                  <v-radio-group mandatory v-model="radio">
+                <div v-else-if="SelectPlan == 2">
+                  <v-radio-group mandatory v-model="nonIVRPlanradio">
                     <v-row>
                       <v-col
                         cols="12"
@@ -105,16 +103,12 @@
                         <v-card
                           class="badge-overlay overflow_data"
                           @click="colorChange(nonivrData.PlanId)"
-                          :style="
-                            nonivrData.PlanId
-                              ? 'border: 1px solid #EE1C25;border-radius: 10px;'
-                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                          "
+                          
                         >
-                          <span class="top-right badge red"
+                          <span class="top-right badge red" v-if=" nonivrData.PlanId ==bestPlanNonIvr"
                             >BEST VALUE IVR</span
                           >
-                          <v-radio color="red" value="1" class="ml-4">
+                          <v-radio color="red" :value="nonivrData.PlanId" class="ml-4">
                             <span slot="label" class="black--text ml-3">
                               <h2
                                 class="page_title mt-3 ml-2 mb-5"
@@ -157,7 +151,7 @@
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
                 <v-btn
-                  v-if="IvrPlan != 0"
+                  v-if="SelectPlan != 0"
                   class="btn_text mt-15 white--text text-capitalize"
                   width="12%"
                   rounded
@@ -264,20 +258,24 @@ import firebase from "firebase";
 import { db } from "@/main.js";
 export default {
   data: () => ({
-    radio: "",
-    radio1: false,
-    radio2: false,
-    radio3: false,
+    Planradio: 1,
     overlay: false,
     planId: 0,
-    IvrPlan: 2,
+    SelectPlan: 0, // to set value on click based on plan type
     ivrFeatureBox: false,
     planDetails: "",
+    bestPlanIvr:4, // 4, 5, 6
+    IVRPlanradio:4,
+    bestPlanNonIvr:1, //1 ,2, 3
+    nonIVRPlanradio:1,
+    isActive: false,
+
   }),
   components: {},
 
-  async mounted() {
-    this.planDetails = await db
+   created() {
+    
+    this.planDetails =  db
       .collection("plan_details")
       .get()
       .then((querySnapshot) => {
@@ -289,6 +287,7 @@ export default {
             let plan = doc.data();
             this.plan = plan;
             console.log(plan.Name);
+          
             if (plan.IsIvr == true) {
               this.ivrobject = Object.assign({}, this.ivrobject, {
                 planName: plan.Name,
@@ -299,6 +298,7 @@ export default {
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
               });
               this.ivrPlanArray.push(this.ivrobject);
+             
             } else {
               this.nonivrobject = Object.assign({}, this.nonivrobject, {
                 planName: plan.Name,
@@ -309,9 +309,11 @@ export default {
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
               });
               this.nonIvrPlanArray.push(this.nonivrobject);
+             
             }
             // var timestamp = this.calldetails.dateTime
           });
+            this.checkData();
         }
       });
     // planDetails.docs.forEach((element) => {
@@ -319,40 +321,34 @@ export default {
     // });
 
     window.scrollTo(0, 0); //scroll to top
-    firebase.auth().onAuthStateChanged((user) => {
+
+  },
+  mounted(){
+   setTimeout(() => {
+      this.SelectPlan=2;
+          }, 300);
+  },
+  methods: {
+   async checkData(){
+          firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("logged user details", user);
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
         this.planId = localStorage.getItem("planId");
         console.log(this.planId);
-        if (this.planId != "") {
-          this.colorChange(this.planId);
-          setTimeout(() => {
-            this.colorChange(this.planId);
-            this.radio = this.planId;
-          }, 1000);
-        }
+        this.IVRPlanradio = Number(this.planId),
+        this.nonIVRPlanradio = Number(this.planId);
+        
       }
     });
-  },
-  methods: {
+    },
     isIvr(i) {
-      this.IvrPlan = i;
+      this.SelectPlan = i;
       console.log(i);
     },
     colorChange(i) {
-      console.log(i);
-      if (i == 1) {
-        this.radio1 = true;
-        this.radio2 = this.radio3 = false;
-      } else if (i == 2) {
-        this.radio2 = true;
-        this.radio1 = this.radio3 = false;
-      } else if (i == 3) {
-        this.radio3 = true;
-        this.radio1 = this.radio2 = false;
-      }
+      this.radio=i;
     },
     nextPage() {
       this.overlay = true;
@@ -373,7 +369,7 @@ export default {
       console.log(user_stage);
       this.$axios(user_stage)
         .then((response) => {
-          localStorage.setItem("planId", this.radio);
+          localStorage.setItem("planId", this.nonIVRPlanradio?this.IVRPlanradio:'0');
           console.log(response);
           //this.$analytics.logEvent("Web Billing page");
           this.$router.push("/Billing");
