@@ -26,7 +26,7 @@
                   <v-row align="center" v-if="isHide" justify="center">
                     <v-col cols="12" sm="9">
                       <h2 class="comment_heading ml-5">
-                        Add, Modify or Remove Number
+                        Select how your incoming calls are managed between your users
                       </h2>
                     </v-col>
                     <v-col v-if="isHide" cols="10" sm="3">
@@ -81,12 +81,29 @@
                           </v-list>
                         </v-menu>
                       </v-col>
-                      <v-col cols="12" sm="6">
+                             <v-col cols="12" sm="6">
+                        <div
+                          class="link_style mt-1 ml-5"
+                          @click="CallandIVRConfiguration(item1.VirtualNumber,'active')"
+                        >
+                          Call and IVR Configurations
+                        </div>
+                      </v-col>
+                      <v-col cols="12" sm="6" align="end">
+                        <v-icon
+                          v-bind="attrs"
+                          v-on="on"
+                          color="#EE1C25"
+                          @click="CallandIVRConfiguration(item1.VirtualNumber,'active')"
+                          >mdi-arrow-right</v-icon
+                        >
+                      </v-col>
+                      <!-- <v-col cols="12" sm="6">
                         <div
                           class="link_style mt-1 ml-5"
                           @click="ManageAgents(item1.VirtualNumber,'active')"
                         >
-                          Manage Agents
+                          Call and IVR Configurations
                         </div>
                       </v-col>
                       <v-col cols="12" sm="6" align="end">
@@ -97,13 +114,13 @@
                           @click="ManageAgents(item1.VirtualNumber,'active')"
                           >mdi-arrow-right</v-icon
                         >
-                      </v-col>
+                      </v-col> -->
                       <v-col cols="12" sm="6">
                         <div
                           class="link_style mt-1 ml-5 mb-5"
                           @click="CallFlowSettings(item1.VirtualNumber,'active')"
                         >
-                          Call Flow Settings
+                         Advanced Options
                         </div>
                       </v-col>
                       <v-col cols="12" sm="6" align="end">
@@ -276,6 +293,16 @@ export default {
       }else{
 
         this.$router.push("/CallPreference?bn=" + vn);
+      }
+      
+    },
+        CallandIVRConfiguration(vn,status) {
+
+      if(status=='expired'){
+          this.$root.vtoast.show({message: 'Hello there!', color: 'red', timer: 5000})
+      }else{
+
+        this.$router.push("/CallandIVRConfig?bn=" + vn);
       }
       
     },

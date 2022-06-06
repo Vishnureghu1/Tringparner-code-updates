@@ -139,7 +139,39 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/BusinessNumber.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
+
+    // 
     {
+        path: '/CallandIVRConfig',
+        name: 'CallandIVRConfig',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/CallandIVRConfig.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
+    {
+        path: '/IVRandCallRouting',
+        name: 'IVRandCallRouting',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/IVRandCallRouting.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
+    // keyPressAudio
+    {
+        path: '/keyPressDepartment',
+        name: 'keyPressDepartment',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/keyPressDepartment.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
+    // basicIvrAudio.vue 
+
+    {
+        path: '/basicIvrAudio',
+        name: 'basicIvrAudio',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/basicIvrAudio.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    }, {
         path: '/ManageUsers',
         name: 'ManageUsers',
         component: () =>
@@ -152,13 +184,12 @@ const routes = [{
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/FAQs.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
-    },
-    {
+    }, {
         path: '/AccountInformation',
         name: 'AccountInformation',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/AccountInformation.vue'),
-        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN","AGENT"] }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
     //Basic Information
     {
@@ -192,36 +223,31 @@ const routes = [{
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/GetSupport.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
-    },
-    {
+    }, {
         path: '/ChooseNumbers',
         name: 'ChooseNumbers',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/ChooseNumbers.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
-    },
-    {
+    }, {
         path: '/SelectPlan',
         name: 'SelectPlan',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/SelectPlan.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
-    },
-    {
+    }, {
         path: '/Billing',
         name: 'Billing',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/Billing.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
-    },
-    {
+    }, {
         path: '/Review',
         name: 'Review',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/Review.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
-    },
-    {
+    }, {
         path: '/CallFlowSettings',
         name: 'CallFlowSettings',
         component: () =>
@@ -278,7 +304,7 @@ const routes = [{
         name: 'NotificationSettings',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/NotificationSettings.vue'),
-        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN","AGENT"] }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
 
     // MissedCallDistribution
@@ -333,13 +359,12 @@ const routes = [{
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/SetWorkingHours.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
-    },
-    {
+    }, {
         path: '/CallerID',
         name: 'CallerID',
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/CallerID.vue'),
-        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN","AGENT"] }
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
 
     // OfflineMesssage

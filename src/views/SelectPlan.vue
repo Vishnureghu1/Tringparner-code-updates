@@ -15,84 +15,137 @@
               </v-overlay>
               <v-card color="transparent" outlined class="" max-width="1200">
                 <h2 class="lato-font f23 mt-16 mb-4">
-                  Select your Tring Partner Payments Plan
+                  Select your Tring Partner Subscription Plan
                 </h2>
+
+                <v-col cols="12" sm="6" class="py-2">
+                  <v-btn-toggle
+                    rounded
+                    elivation="5"
+                    class="toggle_IVR"
+                    borderless
+                  >
+                    <v-btn width="200" @click="isIvr(2)">
+                      Basic (No IVR)
+                    </v-btn>
+                    <v-btn width="200" @click="isIvr(1)"> IVR </v-btn>
+                  </v-btn-toggle>
+                </v-col>
                 <h2 class="sub_title mt-2 mb-16"><br /></h2>
-                <div>
+
+                <div v-if="IvrPlan == 1">
                   <v-radio-group mandatory v-model="radio">
                     <v-row>
-                      <v-col cols="12" sm="4">
-                        <v-card
-                          class=""
-                          @click="colorChange(radio)"
-                          :style="
-                            radio1
-                              ? 'border: 1px solid #EE1C25;border-radius: 10px;'
-                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                          "
-                        >
-                          <v-radio color="red" value="1" class="ml-4">
-                            <span slot="label" class="black--text ml-3">
-                              <h2 class="page_title mt-3 ml-2 mb-5">1 month</h2>
-                              <h2 class="price_title mt-1 ml-2 mb-3"><sup class="rupees">₹</sup>500</h2>
-                              <h2 class="sub_title mt-1 ml-2">
-                                Monthly Small Bussiness(Truly Unlimited)
-                              </h2>
-                              <br /><br />
-                            </span>
-                          </v-radio>
-                        </v-card>
-                      </v-col>
-
-                      <v-col cols="12" sm="4" class="">
+                      <v-col
+                        cols="12"
+                        sm="4"
+                        v-for="ivrData in ivrPlanArray"
+                        :key="ivrData.Code"
+                      >
                         <v-card
                           class="badge-overlay overflow_data"
-                          @click="colorChange(radio)"
+                          @click="colorChange(ivrData.PlanId)"
                           :style="
-                            radio2
-                              ? 'border:1px solid #EE1C25;border-radius: 10px;'
-                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                          "
-                        >
-                          <span class="top-right badge red">BEST VALUE</span>
-                          <v-radio color="red" value="2" class="ml-4">
-                            <span slot="label" class="black--text ml-3">
-                              <h2 class="page_title mt-3 ml-2 mb-5">
-                                6 months
-                              </h2>
-                              <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>2700 <strike> <sup class="rupees">₹</sup>3000</strike>
-                              </h2>
-                              <h2 class="sub_title mt-1 ml-2 mb-3">
-                                HalfYearly Small Bussiness(Truly Unlimited)
-                              </h2>
-                              <h2 class="offer_title ml-2 mb-2">10% off</h2>
-                            </span>
-                          </v-radio>
-                        </v-card>
-                      </v-col>
-                      <v-col cols="12" sm="4">
-                        <v-card
-                          class=""
-                          @click="colorChange(radio)"
-                          :style="
-                            radio3
+                            ivrData.PlanId
                               ? 'border: 1px solid #EE1C25;border-radius: 10px;'
                               : 'border: 1px solid #B4B4B4;border-radius: 10px;'
                           "
                         >
-                          <v-radio color="red" value="3" class="ml-4">
+                          <span class="top-right badge red"
+                            >BEST VALUE IVR</span
+                          >
+                          <v-radio color="red" value="1" class="ml-4">
                             <span slot="label" class="black--text ml-3">
-                              <h2 class="page_title mt-3 ml-2 mb-5">
-                                12 months
+                              <h2
+                                class="page_title mt-3 ml-2 mb-5"
+                                v-if="ivrData.Validity > 1"
+                              >
+                                {{ ivrData.Validity }} months
                               </h2>
+                              <h2 class="page_title mt-3 ml-2 mb-5" v-else>
+                                {{ ivrData.Validity }} month
+                              </h2>
+
                               <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>4800 <strike> <sup class="rupees">₹</sup>6000</strike>
+                                <sup class="rupees">₹</sup>{{ ivrData.price }}
+                                <strike v-if="ivrData.Discount != 0">
+                                  <sup class="rupees">₹</sup
+                                  >{{ ivrData.ActualPrice }}</strike
+                                >
                               </h2>
                               <h2 class="sub_title mt-1 ml-2 mb-3">
-                                Yearly Small Bussiness(Truly Unlimited)
+                                {{ ivrData.planName }}
                               </h2>
-                              <h2 class="offer_title ml-2 mb-2">20% off</h2>
+                              <h2
+                                class="offer_title ml-2 mb-2"
+                                v-if="ivrData.Discount > 0"
+                              >
+                                {{ ivrData.Discount }}% off
+                              </h2>
+                              <h2 class="offer_title ml-2 mb-2" v-else>
+                                <br />
+                              </h2>
+                            </span>
+                          </v-radio>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-radio-group>
+                  <p class="text--red" @click="ivrFeatureBox=true">Plan Details</p>
+                </div>
+                <div v-else-if="IvrPlan == 2">
+                  <v-radio-group mandatory v-model="radio">
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="4"
+                        v-for="nonivrData in nonIvrPlanArray"
+                        :key="nonivrData.Code"
+                      >
+                        <v-card
+                          class="badge-overlay overflow_data"
+                          @click="colorChange(nonivrData.PlanId)"
+                          :style="
+                            nonivrData.PlanId
+                              ? 'border: 1px solid #EE1C25;border-radius: 10px;'
+                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
+                          "
+                        >
+                          <span class="top-right badge red"
+                            >BEST VALUE IVR</span
+                          >
+                          <v-radio color="red" value="1" class="ml-4">
+                            <span slot="label" class="black--text ml-3">
+                              <h2
+                                class="page_title mt-3 ml-2 mb-5"
+                                v-if="nonivrData.Validity > 1"
+                              >
+                                {{ nonivrData.Validity }} months
+                              </h2>
+                              <h2 class="page_title mt-3 ml-2 mb-5" v-else>
+                                {{ nonivrData.Validity }} month
+                              </h2>
+
+                              <h2 class="price_title mt-1 ml-2 mb-3">
+                                <sup class="rupees">₹</sup
+                                >{{ nonivrData.price }}
+                                <strike v-if="nonivrData.Discount != 0">
+                                  <sup class="rupees">₹</sup
+                                  >{{ nonivrData.ActualPrice }}</strike
+                                >
+                              </h2>
+                              <h2 class="sub_title mt-1 ml-2 mb-3">
+                                {{ nonivrData.planName }}
+                              </h2>
+                              <h2
+                                class="offer_title ml-2 mb-2"
+                                v-if="nonivrData.Discount > 0"
+                              >
+                                {{ nonivrData.Discount }}% off
+                              </h2>
+                              <h2 class="offer_title ml-2 mb-2" v-else>
+                                <br />
+                              </h2>
                             </span>
                           </v-radio>
                         </v-card>
@@ -100,7 +153,11 @@
                     </v-row>
                   </v-radio-group>
                 </div>
+                <div v-else>
+                  <v-alert type="warning"> No Plan selected </v-alert>
+                </div>
                 <v-btn
+                  v-if="IvrPlan != 0"
                   class="btn_text mt-15 white--text text-capitalize"
                   width="12%"
                   rounded
@@ -115,13 +172,96 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <!-- Plan Details  -->
+    <v-dialog v-model="ivrFeatureBox" max-width="400px">
+      <v-card v-model="ivrFeatureBox" class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Plan Details</h3>
+        </v-card-title>
+        <v-list>
+          <v-list-item class="pt-0 mb-0 pb-0 mt-0">
+            <v-list-item-content>
+              <v-list-item-title class="gray--text bulletpoints"   color="primary">
+                <v-icon color="red"> mdi-check-circle </v-icon>
+                <strong>1 </strong>Cloud Business Number</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item class="pt-0 mb-0 pb-0 mt-0">
+            <v-list-item-content>
+              <v-list-item-title class="gray--text bulletpoints" >
+                <v-icon color="red"> mdi-check-circle </v-icon>
+                <strong>3</strong> Users</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item class="pt-0 mb-0 pb-0 mt-0">
+            <v-list-item-content>
+              <v-list-item-title class="gray--text bulletpoints" >
+                <v-icon color="red"> mdi-check-circle </v-icon>
+                <strong>Advanced</strong> Call Distribution</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item class="pt-0 mb-0 pb-0 mt-0">
+            <v-list-item-content>
+              <v-list-item-title class="gray--text bulletpoints" >
+                <v-icon color="red"> mdi-check-circle </v-icon>
+                <strong>Missed Call</strong> Management</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item class="pt-0 mb-0 pb-0 mt-0">
+            <v-list-item-content>
+              <v-list-item-title class="gray--text bulletpoints" >
+                <v-icon color="red"> mdi-check-circle </v-icon>
+                <strong>Admin</strong> App</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item class="pt-0 mb-0 pb-0 mt-0">
+            <v-list-item-content>
+              <v-list-item-title class="gray--text bulletpoints" >
+                <v-icon color="red"> mdi-check-circle </v-icon>
+                <strong>Agent</strong> App</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        <v-list-item class="pt-0 mb-0 pb-0 mt-0">
+          <v-list-item-content>
+            <v-list-item-title class="gray--text bulletpoints" >
+              <v-icon color="red"> mdi-check-circle </v-icon>
+              <strong>Productivity</strong> Dashboard</v-list-item-title
+            >
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-card-actions class="center justify-center">
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="150px"
+            color="white"
+            outlined
+          
+            @click="ivrFeatureBox = false"
+          >
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- RENAME MEDIA SECTION -->
   </v-app>
 </template>
 
 
 <script>
 import firebase from "firebase";
-// import { db } from '@/main.js';
+import { db } from "@/main.js";
 export default {
   data: () => ({
     radio: "",
@@ -130,10 +270,54 @@ export default {
     radio3: false,
     overlay: false,
     planId: 0,
+    IvrPlan: 2,
+    ivrFeatureBox: false,
+    planDetails: "",
   }),
   components: {},
 
-  mounted() {
+  async mounted() {
+    this.planDetails = await db
+      .collection("plan_details")
+      .get()
+      .then((querySnapshot) => {
+        this.ivrPlanArray = [];
+        this.nonIvrPlanArray = [];
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach(async (doc) => {
+            console.log(doc.id, " => ", doc.data());
+            let plan = doc.data();
+            this.plan = plan;
+            console.log(plan.Name);
+            if (plan.IsIvr == true) {
+              this.ivrobject = Object.assign({}, this.ivrobject, {
+                planName: plan.Name,
+                price: plan.Price,
+                Validity: plan.Validity,
+                Discount: plan.Discount,
+                PlanId: plan.Id,
+                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+              });
+              this.ivrPlanArray.push(this.ivrobject);
+            } else {
+              this.nonivrobject = Object.assign({}, this.nonivrobject, {
+                planName: plan.Name,
+                price: plan.Price,
+                Validity: plan.Validity,
+                Discount: plan.Discount,
+                PlanId: plan.Id,
+                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+              });
+              this.nonIvrPlanArray.push(this.nonivrobject);
+            }
+            // var timestamp = this.calldetails.dateTime
+          });
+        }
+      });
+    // planDetails.docs.forEach((element) => {
+    //   console.log(element.data());
+    // });
+
     window.scrollTo(0, 0); //scroll to top
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -141,27 +325,27 @@ export default {
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
         this.planId = localStorage.getItem("planId");
-console.log(this.planId);
-if(this.planId!=''){
-
-  this.colorChange(this.planId);
-setTimeout(()=>{
-  this.colorChange(this.planId);
-    this.radio=this.planId;
-},1000);
-  }
-
-
+        console.log(this.planId);
+        if (this.planId != "") {
+          this.colorChange(this.planId);
+          setTimeout(() => {
+            this.colorChange(this.planId);
+            this.radio = this.planId;
+          }, 1000);
+        }
       }
     });
   },
   methods: {
+    isIvr(i) {
+      this.IvrPlan = i;
+      console.log(i);
+    },
     colorChange(i) {
       console.log(i);
       if (i == 1) {
         this.radio1 = true;
         this.radio2 = this.radio3 = false;
-        
       } else if (i == 2) {
         this.radio2 = true;
         this.radio1 = this.radio3 = false;
@@ -173,12 +357,12 @@ setTimeout(()=>{
     nextPage() {
       this.overlay = true;
       const user_stage = {
-        url: this.$cloudfareApi+"/user/stage",
+        url: this.$cloudfareApi + "/user/stage",
         method: "POST",
-        headers: { 
-						'token': localStorage.getItem("token"),
-						'Content-Type': 'application/json'
-					},
+        headers: {
+          token: localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
         data: {
           uid: this.uid,
           phoneNumber: this.phno,
@@ -204,41 +388,36 @@ setTimeout(()=>{
 
 <style scoped>
 .page_title {
-
   font-size: 23px;
   font-weight: 400;
   color: #3b3b3b;
 }
-.price_title .rupees{
-	font-size: 14px;
+.price_title .rupees {
+  font-size: 14px;
 }
 .price_title strike {
-    color: #B4B4B4;
-	font-family: 'Nunito', sans-serif;
+  color: #b4b4b4;
+  font-family: "Nunito", sans-serif;
 }
 .price_title {
-
   font-size: 23px;
   color: #3b3b3b;
 }
 .sub_title {
- font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   font-size: 14px;
-  color: #3B3B3B;
+  color: #3b3b3b;
   font-weight: 400;
 }
 .name_heading {
-
   font-size: 14px;
   color: #3b3b3b;
 }
 .number_heading {
-
   font-size: 24px;
   color: #3b3b3b;
 }
 .offer_title {
-
   font-size: 14px;
   color: #ee1c25;
 }
