@@ -71,7 +71,7 @@
                               </v-col>
                               <v-col cols="6" align="end">
                                 <router-link :to="{
-                                  name: 'basicIvrAudio',
+                                  name: 'IntroductionandDepartmentsAudio',
                                   query: { key: 'intro', bn: this.bussinessNumber },
                                 }">
                                   <span>
@@ -89,7 +89,7 @@
                               </v-col>
                               <v-col cols="6" align="end">
                                 <router-link :to="{
-                                  name: 'basicIvrAudio',
+                                  name: 'NoKeypressAudio',
                                   query: { key: 'nokeypress', bn: this.bussinessNumber },
                                 }">
                                   <span>
@@ -107,7 +107,7 @@
                               </v-col>
                               <v-col cols="6" align="end">
                                 <router-link :to="{
-                                  name: 'basicIvrAudio',
+                                  name: 'WrongKeypressAudio',
                                   query: { key: 'wrongkeypress', bn: this.bussinessNumber },
                                 }">
                                   <span>

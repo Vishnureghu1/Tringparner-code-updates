@@ -484,6 +484,11 @@ export default {
     setBreadcrumbs(bussinessNumber) {
       this.items = [
         {
+          text: "More",
+          disabled: false,
+          route: { name: 'dashboard', query: { }  }
+        },
+        {
           text: "Business Numbers",
           disabled: false,
           to: { name: "BusinessNumber" },
