@@ -395,9 +395,16 @@ const routes = [{
         component: () =>
             import ( /* webpackChunkName: "missed_call" */ '../views/WrongKeypressAudio.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
+    {
+        path: '/NoAnswerAudio',
+        name: 'NoAnswerAudio',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/NoAnswerAudio.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     }
 
-]
+]    
 
 const router = new VueRouter({
     mode: 'history',
