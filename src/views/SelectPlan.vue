@@ -46,13 +46,13 @@
                    
                         <v-card
                           class="badge-overlay overflow_data"
-                          @click="colorChange(ivrData.PlanId)" v-bind:class="{ active: isActive }"
+                          @click="colorChange(ivrData.PlanId)" 
                          
                         >
                           <span class="top-right badge red" v-if=" ivrData.PlanId ==bestPlanIvr"
                             >BEST VALUE IVR</span
                           >
-                          <v-radio color="red" :value="ivrData.PlanId" class="ml-4">
+                          <v-radio color="red" :value="ivrData.PlanId" class="pl-4 radio_classs" active-class="planActive">
                             <span slot="label" class="black--text ml-3">
                               <h2
                                 class="page_title mt-3 ml-2 mb-5"
@@ -108,7 +108,7 @@
                           <span class="top-right badge red" v-if=" nonivrData.PlanId ==bestPlanNonIvr"
                             >BEST VALUE IVR</span
                           >
-                          <v-radio color="red" :value="nonivrData.PlanId" class="ml-4">
+                          <v-radio color="red" :value="nonivrData.PlanId" class="pl-4 radio_classs" active-class="planActive">
                             <span slot="label" class="black--text ml-3">
                               <h2
                                 class="page_title mt-3 ml-2 mb-5"
@@ -335,11 +335,22 @@ export default {
         console.log("logged user details", user);
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
-        this.planId = localStorage.getItem("planId");
-        console.log(this.planId);
-        this.IVRPlanradio = Number(this.planId),
-        this.nonIVRPlanradio = Number(this.planId);
+        this.nonIVRPlanradio = localStorage.getItem("nonIVRPlanradio");
+        this.IVRPlanradio = localStorage.getItem("IVRPlanradio");
         
+        console.log(this.nonIVRPlanradio);
+        console.log(this.IVRPlanradio);
+        // this.IVRPlanradio = Number(this.IVRPlanradio),
+        // this.nonIVRPlanradio = Number(this.nonIVRPlanradio);
+        if(this.IVRPlanradio==null||this.IVRPlanradio ==0 || this.IVRPlanradio==''){
+          this.IVRPlanradio = this.bestPlanIvr;
+        }
+
+         if(this.nonIVRPlanradio==2 || this.nonIVRPlanradio==0 || this.nonIVRPlanradio==''){
+          this.nonIVRPlanradio = this.bestPlanNonIvr;
+        }
+        // this.nonIVRPlanradio = this.planId;
+
       }
     });
     },
@@ -369,7 +380,9 @@ export default {
       console.log(user_stage);
       this.$axios(user_stage)
         .then((response) => {
-          localStorage.setItem("planId", this.nonIVRPlanradio?this.IVRPlanradio:'0');
+          localStorage.setItem("nonIVRPlanradio", this.nonIVRPlanradio);
+          localStorage.setItem("IVRPlanradio", this.IVRPlanradio);
+       
           console.log(response);
           //this.$analytics.logEvent("Web Billing page");
           this.$router.push("/Billing");
