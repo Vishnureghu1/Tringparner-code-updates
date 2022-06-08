@@ -157,13 +157,13 @@
                               <v-col cols="6">
                                 <h2
                                   class="name_heading mt-4 mr-7"
-                                  @click="callPauseNumber()"
+                                  @click="callNoAnswerAudio()"
                                 >
                                  No Answer Audio
                                 </h2>
                                 <h2
                                   class="comment_heading mt-1 mb-5 mr-7"
-                                  @click="callPauseNumber()"
+                                  @click="callNoAnswerAudio()"
                                 >Set audio customers will hear when the call is not answered
                                 </h2>
                               </v-col>
@@ -171,7 +171,7 @@
                                 <span
                                   ><v-icon
                                     class="mt-6 mb-5 mr-7"
-                                    @click="callPauseNumber()"
+                                    @click="callNoAnswerAudio()"
                                     color="#EE1C25"
                                     >mdi-arrow-right</v-icon
                                   >
@@ -228,9 +228,9 @@ export default {
        // const getNumber =  Object.keys(this.$route.query)[0]
       this.$router.push("/BusinessNumber?bn="+this.bussinessNumber);
     },
-    callPauseNumber() {
+    callNoAnswerAudio() {
        // const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/PauseNumber?bn="+this.bussinessNumber);
+      this.$router.push("/NoAnswerAudio?bn="+this.bussinessNumber);
     },
     callRouting() {
        // const getNumber =  Object.keys(this.$route.query)[0]

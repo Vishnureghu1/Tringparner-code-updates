@@ -375,8 +375,36 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/OfflineMesssage.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
+    {
+        path: '/IntroductionandDepartmentsAudio',
+        name: 'IntroductionandDepartmentsAudio',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/IntroductionandDepartmentsAudio.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
+    {
+        path: '/NoKeypressAudio',
+        name: 'NoKeypressAudio',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/NoKeypressAudio.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
+    {
+        path: '/WrongKeypressAudio',
+        name: 'WrongKeypressAudio',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/WrongKeypressAudio.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
+    {
+        path: '/NoAnswerAudio',
+        name: 'NoAnswerAudio',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/NoAnswerAudio.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    }
 
-]
+]    
 
 const router = new VueRouter({
     mode: 'history',

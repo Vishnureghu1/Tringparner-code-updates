@@ -483,14 +483,19 @@ export default {
     setBreadcrumbs(bussinessNumber) {
       this.items = [
         {
+          text: "More",
+          disabled: false,
+          route: { name: 'dashboard', query: { }  }
+        },
+        {
           text: "Business Numbers",
           disabled: false,
           route: { name: 'BusinessNumber', query: { }  }
         },
         {
-          text: "Call Flow Settings",
+          text: "Call and IVR Configuration",
           disabled: false,
-          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+          route: { name: 'CallandIVRConfig', query: { bn: [bussinessNumber]}  }
         },
         {
           text: "Caller Tune",

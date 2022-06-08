@@ -16,7 +16,7 @@
                           @click="goBack(bussinessNumber)"
                           >mdi-arrow-left</v-icon
                         >
-                        Greeting Message
+                        No Answer Audio
                       </h2>
                       <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
                         <template v-slot:item="{ item }">
@@ -126,7 +126,7 @@
                                   </h2>
                                 </v-col>
                               </v-row>
-                             <v-card class="ml-5 mt-5 text--red" elevation="0" v-if="!radioGroup">No Greeting message found!</v-card>
+                             <v-card class="ml-5 mt-5 text--red" elevation="0" v-if="!uploadCount">No Greeting message found!</v-card>
                               <v-radio-group
                                 v-model="radioGroup"
                                 :mandatory="false"
@@ -332,7 +332,7 @@ export default {
           owner_uid: this.ownerUid,
           updated_by: this.ownerUid,
           virtual_number: this.bussinessNumber,
-          prompt_type: "WelcomeMessage",
+          prompt_type: "NoAnswerPrompt",
           prompt: id,
           AccountId: this.AccountId,
         },
@@ -364,7 +364,7 @@ export default {
         if (!snapshot.empty) {
           snapshot.docs.forEach((element) => {
             console.log("element.data()", element.data());
-            this.radioGroup = element.data().WelcomeMessage;
+            this.radioGroup = element.data().NoAnswerPrompt;
           });
         } else {
           console.log("uservirtualNumber empty");
@@ -503,11 +503,11 @@ export default {
           route: { name: "CallandIVRConfig", query: { bn: [bussinessNumber] } },
         },
         {
-          text: "Greeting Message",
+          text: "No Answer Prompt",
           disabled: true,
-          to: { name: "GreetingMessage" },
-          href: `GreetingMessage`,
-          route: { name: "GreetingMessage", query: { bn: [bussinessNumber] } },
+          to: { name: "NoAnswerPrompt" },
+          href: `NoAnswerPrompt`,
+          route: { name: "NoAnswerPrompt", query: { bn: [bussinessNumber] } },
         },
       ];
     },
