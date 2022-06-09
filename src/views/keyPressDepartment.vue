@@ -88,7 +88,7 @@
                                                                             Department Title *
                                                                         </h2>
                                                                         <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                                                            Sales Enquiry
+                                                                            {{departmentTitle}}
                                                                         </h2>
                                                                     </v-col>
                                                                     <v-col cols="6" align="end">
@@ -242,6 +242,7 @@
 
 <script>
 import { db } from "@/main.js";
+import axios from "axios";
 // import firebase from "firebase";
 export default {
     components: {},
@@ -258,9 +259,7 @@ export default {
         this.bussinessNumber = this.$route.query.bn;
         this.key = this.$route.query.key;
         if (this.key == 'intro') {
-
             this.pageTitle = 'Introduction and Departments Audio';
-
         } else if (this.key == 'nokeypress') {
             this.pageTitle = 'No Keypress Audio';
 
@@ -299,7 +298,7 @@ export default {
                 },
             };
             console.log(options);
-            this.$axios(options)
+            axios(options)
                 .then((response) => {
                     console.log(response.data);
                     // this.newPopupAudioName = '';
@@ -316,7 +315,7 @@ export default {
                     console.error(error);
                 });
         });
-        this.getAllUserGreetingMessages(); //get all user audios
+        // this.getAllUserGreetingMessages(); //get all user audios
         db.collection("uservirtualNumber")
             .where("Uid", "==", this.ownerUid)
             .where("VirtualNumber", "==", parseInt(this.bussinessNumber))
@@ -325,6 +324,7 @@ export default {
                 if (!snapshot.empty) {
                     snapshot.docs.forEach((element) => {
                         console.log("element.data()", element.data());
+                        this.departmentTitle = element.data().Ivr[this.key.toString()].Source,
                         this.radioGroup = element.data().WelcomeMessage;
                     });
                 } else {
@@ -333,6 +333,7 @@ export default {
             });
     },
     data: () => ({
+        departmentTitle:"",
         dialog: false,
         dialog2: false,
         isActive: true,
@@ -423,7 +424,7 @@ export default {
                 },
             };
             console.log(options);
-            this.$axios(options)
+            axios(options)
                 .then((response) => {
                     console.log(response.data);
                     // this.newPopupAudioName = '';

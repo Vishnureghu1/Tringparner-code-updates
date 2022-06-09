@@ -51,10 +51,7 @@
                       v-class="{ active: isActive }"
                     >
                      Direct (No IVR)
-                    </v-btn>
-                  
-
-                 
+                    </v-btn>    
                   </v-btn-toggle>
                             </div> 
                             <div v-if="IvrPlan==1">
@@ -131,7 +128,7 @@
                                   Keypress "1"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                  {{source1}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -148,7 +145,7 @@
                                   Keypress"2"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                  {{source2}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -165,7 +162,7 @@
                                   Keypress "3"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                  {{source3}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -182,7 +179,7 @@
                                   Keypress "4"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                 {{source4}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -199,7 +196,7 @@
                                   Keypress "5"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                 {{source5}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -216,7 +213,7 @@
                                   Keypress "6"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                 {{source6}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -233,7 +230,7 @@
                                   Keypress "7"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                 {{source7}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -250,7 +247,7 @@
                                   Keypress "8"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                 {{source8}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -267,7 +264,7 @@
                                   Keypress "9"
                                 </h2>
                                 <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Sales Enquiry
+                                {{source9}}
                                 </h2>
                               </v-col>
                               <v-col cols="6" align="end">
@@ -278,7 +275,7 @@
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
-                            <v-row>
+                            <!-- <v-row>
                               <v-col cols="6">
                                 <h2 class="name_heading mt-4 mr-7 light4">
                                   Keypress "0"
@@ -327,7 +324,7 @@
                                     mdi-arrow-right</v-icon>
                                 </span>
                               </v-col>
-                            </v-row>
+                            </v-row> -->
                             <v-divider></v-divider>
                             </div>
                              <div v-else-if="IvrPlan==2">
@@ -416,14 +413,28 @@
 
 <script>
 // import NotificationSettingsVue from './NotificationSettings.vue';
+import { db } from "@/main.js";
+// import axios from "axios";
 export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
     this.bussinessNumber = this.$route.query.bn;
+    this.initial_value()
   },
   data: () => ({
-      IvrPlan: 1,
+    source1:"",
+    source2:"",
+    source3:"",
+    source4:"",
+    source5:"",
+    source6:"",
+    source7:"",
+    source8:"",
+    source9:"",
+    owneruid:"",
+    uid:"",
+    IvrPlan: "",
     items: [
       {
         text: "More",
@@ -451,7 +462,40 @@ export default {
   methods: {
        isIvr(i) {
      this.IvrPlan=i;
-     console.log(i);
+     console.log("jgrj",i);
+    },
+      initial_value(){
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+        //  this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
+	const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+		// console.log("vetri",owneruid)
+     this.owneruid = owneruid;
+      this.AccountId=  (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    this.uid = localStorageUserObj.uid;
+    // this.addonNumbers=[]
+      db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.bussinessNumber)).get().then(async(snap) =>{
+			// console.log("test.........",snap.docs.data());
+      const data = snap.docs[0].data();
+      console.log(data)
+      this.source1 = (data.Ivr['1'].IsActive == true)?data.Ivr['1'].Source:"Not Used";
+      this.source2 = (data.Ivr['2'].IsActive == true)?data.Ivr['2'].Source:"Not Used";
+      this.source3 = (data.Ivr['3'].IsActive == true)?data.Ivr['3'].Source:"Not Used";
+      this.source4 = (data.Ivr['4'].IsActive == true)?data.Ivr['4'].Source:"Not Used";
+      this.source5 = (data.Ivr['5'].IsActive == true)?data.Ivr['5'].Source:"Not Used";
+      this.source6 = (data.Ivr['6'].IsActive == true)?data.Ivr['6'].Source:"Not Used";
+      this.source7 = (data.Ivr['7'].IsActive == true)?data.Ivr['7'].Source:"Not Used";
+      this.source8 = (data.Ivr['8'].IsActive == true)?data.Ivr['8'].Source:"Not Used";
+      this.source9 = (data.Ivr['9'].IsActive == true)?data.Ivr['9'].Source:"Not Used";
+      // this.isIvr(data.IsIvr==false?2:1)
+      this.IvrPlan = (data.IsIvr==false?2:1);
+			// snap.docs.forEach((element)=> {
+      //   // this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]       
+      //   // })
+			// });
+      // console.log(this.addonNumbers)
+		}).catch((err)=>{
+			console.log(err.message)
+		});
     },
     goBack() {
       // const getNumber =  Object.keys(this.$route.query)[0]
