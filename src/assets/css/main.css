@@ -784,3 +784,12 @@ h4.background span {
     padding-left: 8px;
     color: #3f3f3f;
 }
+
+.radio_classs {
+    border: thin solid #b4b4b4;
+    border-radius: 6px;
+}
+
+.radio_classs.planActive {
+    border: thin solid #ee1c25;
+}
