@@ -621,14 +621,14 @@
                           >
                             <v-btn
                               width="200"
-                              @click="isIvr(1)"
+                              @click="isIvr(3)"
                               :class="{ active: directActive }"
                             >
                              Basic Plan
                             </v-btn>
                             <v-btn
                               width="200"
-                              @click="isIvr(2)"
+                              @click="isIvr(4)"
                               class=""
                               :class="{ active: ivrActive }"
                             >
@@ -636,7 +636,7 @@
                             </v-btn>
                           </v-btn-toggle>
                         </div>
-                        <div v-if="IvrPlan == 1" class="row">
+                        <div v-if="IvrPlan == 3" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
                               <p class="redtext bold">
@@ -904,7 +904,7 @@
                             </v-expand-transition>
                           </v-card>
                         </div>
-                        <div v-else-if="IvrPlan == 2" class="row">
+                        <div v-else-if="IvrPlan == 4" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
                               <p class="redtext bold">
