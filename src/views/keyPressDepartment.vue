@@ -95,7 +95,7 @@
                                                                         <!-- <router-link :to="{ name: 'CallRouting' }"> -->
                                                                         <span>
                                                                             <v-icon class="mt-6 mb-5 mr-7"
-                                                                                color="#EE1C25" @click="callRouting()">
+                                                                                color="#EE1C25" @click="callRoutin()">
                                                                                 mdi-pencil</v-icon>
                                                                         </span>
                                                                         <!-- </router-link> -->
@@ -162,7 +162,7 @@
                                                                         <span>
                                                                             <v-icon class="mt-6 mb-5 mr-7"
                                                                                 color="#EE1C25"
-                                                                                @click="MissedCallRouting()">
+                                                                                @click="missedcallRouting()">
                                                                                 mdi-arrow-right</v-icon>
                                                                         </span>
                                                                         <!-- </router-link> -->
@@ -393,6 +393,7 @@ export default {
             (v) => !!v || "Name is required",
             (v) => v.length > 3 || "Name must be greate than 3 characters",
         ],
+        key:"",
         bussinessNumber: "",
     }),
     watch: {
@@ -497,8 +498,12 @@ export default {
             this.curr = 5;
         },
 
-
-
+        callRouting(){
+         this.$router.push("/IvrCallPreference?key=" + this.key + "&bn=" + this.bussinessNumber);
+        },
+         missedcallRouting(){
+         this.$router.push("/IvrMissedCallDistribution?key=" + this.key + "&bn=" + this.bussinessNumber);
+        },
         threeDotAction(m, greetingsId) {
             console.log("m.actionSlug", m.actionSlug);
             console.log("greetingsId", greetingsId);
