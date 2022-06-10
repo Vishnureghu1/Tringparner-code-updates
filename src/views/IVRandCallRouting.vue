@@ -40,15 +40,15 @@
                   >
                     <v-btn
                       width="200"
-                      @click="isIvr(1)" class="active"
-                      v-class="{ active: isActive }"
+                      @click="isIvr(1)" class=""
+                      :class="{ active: ivrActive }"
                     >
                       IVR
                     </v-btn>
                      <v-btn
                       width="200"
                       @click="isIvr(2)"
-                      v-class="{ active: isActive }"
+                      :class="{ active: directActive }"
                     >
                      Direct (No IVR)
                     </v-btn>    
@@ -414,7 +414,7 @@
 <script>
 // import NotificationSettingsVue from './NotificationSettings.vue';
 import { db } from "@/main.js";
-// import axios from "axios";
+import axios from "axios";
 export default {
   components: {},
   created() {
@@ -423,6 +423,8 @@ export default {
     this.initial_value()
   },
   data: () => ({
+    ivrActive:false,
+    directActive:false,
     source1:"",
     source2:"",
     source3:"",
@@ -457,12 +459,43 @@ export default {
       },
     ],
     bussinessNumber: "",
+    AccountId:"",
   }),
 
   methods: {
        isIvr(i) {
      this.IvrPlan=i;
-     console.log("jgrj",i);
+       this.ivrActive = (i==1)?true:false;
+      this.directActive = (i==1)?false:true;
+       const options = {
+                url: this.$cloudfareApi + "/callDistribution/ivr/status",
+                method: "POST",
+                headers: {
+                    token: localStorage.getItem("token"),
+                    "Content-Type": "application/json;charset=UTF-8",
+                },
+                data: {
+                    owner_uid: this.owneruid,
+                    updated_by: this.uid,
+                    virtual_number: this.bussinessNumber,
+                    AccountId: this.AccountId,
+                    IsIvr: (i==1)?true:false
+                },
+            };
+            console.log(options);
+            axios(options)
+                .then((response) => {
+                    console.log(response.data);
+                    this.$root.vtoast.show({
+                        message: "Updated Successfully!",
+                        color: "#07C421",
+                        timer: 2000,
+                    });
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+    //  console.log("jgrj",i);
     },
       initial_value(){
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
@@ -487,6 +520,8 @@ export default {
       this.source8 = (data.Ivr['8'].IsActive == true)?data.Ivr['8'].Source:"Not Used";
       this.source9 = (data.Ivr['9'].IsActive == true)?data.Ivr['9'].Source:"Not Used";
       // this.isIvr(data.IsIvr==false?2:1)
+      this.ivrActive = (data.IsIvr==true)?true:false;
+      this.directActive = (data.IsIvr==true)?false:true;
       this.IvrPlan = (data.IsIvr==false?2:1);
 			// snap.docs.forEach((element)=> {
       //   // this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]       
