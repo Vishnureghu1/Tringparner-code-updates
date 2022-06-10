@@ -33,19 +33,24 @@
                                         </v-col>
                                     </v-row>
                                     <v-row class="mt-0" align="center" justify="center">
-                                        <v-col cols="12" sm="8">
+                                        <v-col cols="12" sm="10">
                                             <h2 class="comment_heading ml-5">
                                                 Configure {{ pageTitle }}.
                                             </h2>
                                         </v-col>
-                                        <v-col cols="10" sm="4" class="d-flex">
-
-                                            <v-btn @click="disableKey()" class="ma-2" color="primary" dark>
+                                        <v-col cols="10" sm="2" >
+<v-switch @click="disableEnable()"
+      v-model="enableDisable"
+      :label="` `"
+    ></v-switch>
+    <span v-if="enableDisable==true" class="center" >Enabled</span>
+    <span v-else>Disabled</span>
+                                            <!-- <v-btn @click="disableKey()" class="ma-2" color="primary" dark>
                                                 Disable
                                             </v-btn>
                                             <v-btn @click="enableKey()" class="ma-2" color="success" dark>
                                                 Enable
-                                            </v-btn>
+                                            </v-btn> -->
 
                                         </v-col>
                                     </v-row>
@@ -102,7 +107,7 @@
                                                                     </v-col>
                                                                 </v-row>
                                                                 <v-divider></v-divider>
-                                                                <v-row>
+                                                                   <v-row>
                                                                     <v-col cols="6">
                                                                         <h2 class="name_heading mt-4 mr-7">
                                                                             Select Agents
@@ -342,6 +347,7 @@ export default {
         repeatCallerSettings: false,
         curr: 1,
         lastStep: 4,
+        enableDisable:false,
         steps: [
             { name: "Manage User", rules: [(v) => !!v || "Required."], valid: true },
             {
@@ -402,6 +408,18 @@ export default {
         },
     },
     methods: {
+          callRouting() {
+      // const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/CallPreference?bn=" + this.bussinessNumber);
+    },
+
+    IVRandcallRouting() {
+      this.$router.push("/IVRandCallRouting?bn=" + this.bussinessNumber);
+    },
+    MissedCallRouting() {
+      // const getNumber =  Object.keys(this.$route.query)[0]
+      this.$router.push("/MissedCallDistribution?bn=" + this.bussinessNumber);
+    },
         triggerUnselectAudio(greetingAudioAccountId) {
             console.log("triggerUnselectAudio", greetingAudioAccountId);
             this.dialog = true;
