@@ -263,6 +263,7 @@ export default {
                 : localStorageUserObj.OwnerAccountId;
         this.bussinessNumber = this.$route.query.bn;
         this.key = this.$route.query.key;
+        this.uid= localStorageUserObj.uid;
         if (this.key == 'intro') {
             this.pageTitle = 'Introduction and Departments Audio';
         } else if (this.key == 'nokeypress') {
@@ -330,6 +331,7 @@ export default {
                     snapshot.docs.forEach((element) => {
                         console.log("element.data()", element.data());
                         this.departmentTitle = element.data().Ivr[this.key.toString()].Source,
+                        this.enableDisable = element.data().Ivr[this.key.toString()].IsActive,
                         this.radioGroup = element.data().WelcomeMessage;
                     });
                 } else {
@@ -338,12 +340,14 @@ export default {
             });
     },
     data: () => ({
+        key:"",
         departmentTitle:"",
         dialog: false,
         dialog2: false,
         isActive: true,
         pageTitle: '',
         e2: 1,
+        uid:"",
         repeatCallerSettings: false,
         curr: 1,
         lastStep: 4,
@@ -399,7 +403,6 @@ export default {
             (v) => !!v || "Name is required",
             (v) => v.length > 3 || "Name must be greate than 3 characters",
         ],
-        key:"",
         bussinessNumber: "",
     }),
     watch: {
@@ -409,18 +412,42 @@ export default {
         },
     },
     methods: {
-          callRouting() {
-      // const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/CallPreference?bn=" + this.bussinessNumber);
-    },
+        disableEnable(){
+        //   console.log("enableDisable",this.enableDisable)
+              const details = {
+						url: this.$cloudfareApi + '/callDistribution/ivr/status',
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+					data: {
+                    owner_uid: this.ownerUid,
+                    updated_by: this.uid,
+                    virtual_number: this.bussinessNumber,
+                    AccountId: this.AccountId,
+                    IsIvr: this.enableDisable,
+                    key:this.key
+                },
+					}      
+					axios(details)
+						.then((response) => {
+                            console.log(response)
+                     this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 2000});
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+        },
+    //       callRouting() {
+    //   // const getNumber =  Object.keys(this.$route.query)[0]
+    //   this.$router.push("/CallPreference?bn=" + this.bussinessNumber);
+    // },
 
-    IVRandcallRouting() {
-      this.$router.push("/IVRandCallRouting?bn=" + this.bussinessNumber);
-    },
-    MissedCallRouting() {
-      // const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/MissedCallDistribution?bn=" + this.bussinessNumber);
-    },
+    // IVRandcallRouting() {
+    //   this.$router.push("/IVRandCallRouting?bn=" + this.bussinessNumber);
+    // },
+    // MissedCallRouting() {
+    //   // const getNumber =  Object.keys(this.$route.query)[0]
+    //   this.$router.push("/MissedCallDistribution?bn=" + this.bussinessNumber);
+    // },
         triggerUnselectAudio(greetingAudioAccountId) {
             console.log("triggerUnselectAudio", greetingAudioAccountId);
             this.dialog = true;
