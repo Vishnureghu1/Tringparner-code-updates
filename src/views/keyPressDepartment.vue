@@ -88,19 +88,27 @@
 
                                                             <v-col cols="12" class="ml-2">
                                                                 <v-row>
-                                                                    <v-col cols="6">
+                                                                    <v-col cols="8">
                                                                         <h2 class="name_heading mt-4 mr-7">
-                                                                            Department Title *
+                                                                            <div v-if="isEditTitle==false ">
+
+                                                                                <span v-if="departmentTitle">{{departmentTitle}}</span><span v-else>Department Title *</span>
+                                                                            </div><div v-if="isEditTitle==true">    <v-text-field
+      label="Department Title" class="pt-0 mt-0"
+     :value="departmentTitle"
+      single-line
+      full-width
+      hide-details
+    ></v-text-field>
+</div>
                                                                         </h2>
-                                                                        <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                                                            {{departmentTitle}}
-                                                                        </h2>
+                                                                        
                                                                     </v-col>
-                                                                    <v-col cols="6" align="end">
+                                                                    <v-col cols="4" align="end">
                                                                         <!-- <router-link :to="{ name: 'CallRouting' }"> -->
                                                                         <span>
                                                                             <v-icon class="mt-6 mb-5 mr-7"
-                                                                                color="#EE1C25" @click="callRoutin()">
+                                                                                color="#EE1C25" @click="toggleEditTitle">
                                                                                 mdi-pencil</v-icon>
                                                                         </span>
                                                                         <!-- </router-link> -->
@@ -352,6 +360,9 @@ export default {
         curr: 1,
         lastStep: 4,
         enableDisable:false,
+        dptTitle:false,
+        dptHead:true,
+        isEditTitle:false,
         steps: [
             { name: "Manage User", rules: [(v) => !!v || "Required."], valid: true },
             {
@@ -412,6 +423,10 @@ export default {
         },
     },
     methods: {
+        toggleEditTitle(){
+               this.isEditTitle = !this.isEditTitle;
+
+        },
         disableEnable(){
         //   console.log("enableDisable",this.enableDisable)
               const details = {
