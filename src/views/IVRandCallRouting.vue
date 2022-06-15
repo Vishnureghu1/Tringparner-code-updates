@@ -559,9 +559,10 @@ export default {
 
   methods: {
     proccedToIVR(i){
-      
+      if(i==1){
+
         const options = {
-        url: this.$cloudfareApi + "/callDistribution/ivr/status",
+          url: this.$cloudfareApi + "/callDistribution/ivr/status",
         method: "POST",
         headers: {
           token: localStorage.getItem("token"),
@@ -589,6 +590,12 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+          }else{
+             this.dialog = false;
+            this.IvrPlan =i;
+            this.ivrActive=false;
+             this.directActive=true;
+          }
     },
     isIvr(i) {
        this.dialog = true;
