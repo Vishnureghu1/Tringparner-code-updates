@@ -278,7 +278,14 @@
                     
                             
                           <div v-if="this.searchTerm.length != 0 && totalItems==0" align="center" class="center">No Calls to show!</div>
-                   
+                    
+                      <!-- <v-icon
+                                class="mt-0 mb-5 mr-0"
+                                color="blue"
+                                
+                                >mdi-swap-vertical-variant</v-icon
+                              > -->
+                               <!-- IVR icon here -->
                     <v-expansion-panels
                       accordion
                       flat
@@ -288,6 +295,7 @@
                         v-for="details in realdata"
                         :key="details.text"
                       >
+
                         <v-expansion-panel-header  v-if="details.callstatus != 'Offline'">
                           <div>
                             <v-row class="calls_list">

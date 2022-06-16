@@ -610,6 +610,9 @@ export default {
     initial_value() {
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
       //  this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
+
+      // local storage isIV get data here
+      // if false then noIVR
       const owneruid =
         localStorageUserObj.role == "OWNER"
           ? localStorageUserObj.uid
