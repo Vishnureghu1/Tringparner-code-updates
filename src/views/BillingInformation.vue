@@ -6,20 +6,13 @@
           <v-row no-gutters>
             <v-col cols="12">
               <v-overlay :value="overlay">
-                <v-progress-circular
-                  indeterminate
-                  color="red"
-                  size="40"
-                  :width="3"
-                ></v-progress-circular>
+                <v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
               </v-overlay>
               <div class="ml-8">
                 <v-row>
                   <v-col cols="12" sm="10">
                     <h2 class="page_title mt-6 ml-5">
-                      <v-icon class="mr-2" color="black" @click="goBack()"
-                        >mdi-arrow-left</v-icon
-                      >
+                      <v-icon class="mr-2" color="black" @click="goBack()">mdi-arrow-left</v-icon>
                       Billing Information
                     </h2>
 
@@ -34,33 +27,12 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        <div
-                          class="center align-center"
-                          align="center"
-                          v-if="IvrPlan == 1 || IvrPlan == 2"
-                        >
-                          
-
-                          <v-btn-toggle
-                            v-model="toggle_IVR"
-                            rounded
-                            elivation="5"
-                            class="toggle_IVR mb-10"
-                            borderless
-                          >
-                            <v-btn
-                              width="200"
-                              @click="isIvr(1)"
-                              :class="{ active: directActive }"
-                            >
+                        <div class="center align-center" align="center" v-if="IvrPlan == 1 || IvrPlan == 2">
+                          <v-btn-toggle rounded elivation="5" class="toggle_IVR mb-10" borderless>
+                            <v-btn width="200" @click="isIvr(1)" >
                               Current Plan
                             </v-btn>
-                            <v-btn
-                              width="200"
-                              @click="isIvr(2)"
-                              class=""
-                              :class="{ active: ivrActive }"
-                            >
+                            <v-btn width="200" @click="isIvr(2)" >
                               Upgrade
                             </v-btn>
                           </v-btn-toggle>
@@ -86,74 +58,63 @@
                               </div>
 
                               <div class="membership_details">
-                                <v-checkbox
-                                  v-model="sixmonths"
-                                  color="red darken-3"
-                                  hide-details
-                                  @click="getBill(sixmonths, 2)"
-                                >
+
+                               
+<v-radio-group>
+
+  <v-radio color="red darken-3" hide-details v-for="nonivrData in nonIvrPlanArray"
+                        :key="nonivrData.PlanId" :value="nonivrData.PlanId" 
+       
+                                  @click="getBill(nonivrData.price, nonivrData.PlanId)"  @change="check($event)">
+                                  <template v-slot:label >
+                                   
+                                    <div class="black--text">
+                                      Pay for
+                                      <strong class="black--text darken-4">
+                                        {{ nonivrData.Validity }} months <span v-if="nonivrData.Discount>0">and save {{ nonivrData.Discount }}%</span></strong>
+                                    </div>
+                                  </template>
+  </v-radio>
+                                        </v-radio-group>
+
+                            <!-- <v-checkbox v-model="sixmonths" color="red darken-3" hide-details
+                                  @click="getBill(sixmonths, 2)" >
                                   <template v-slot:label>
                                     <div class="black--text">
                                       Pay for
                                       <strong class="black--text darken-4">
-                                        6 months and save 10%</strong
-                                      >
+                                        6 months and save 10%</strong>
                                     </div>
-                                  </template></v-checkbox
-                                >
-                                <v-checkbox
-                                  v-model="twelvemonths"
-                                  color="red darken-3"
-                                  hide-details
-                                  @click="getBill(twelvemonths, 3)"
-                                >
+                                  </template>
+                                </v-checkbox>
+                                <v-checkbox v-model="twelvemonths" color="red darken-3" hide-details
+                                  @click="getBill(twelvemonths, 3)"  @change="uniqueCheck">
                                   <template v-slot:label>
                                     <div class="black--text">
                                       Pay for
                                       <strong class="black--text darken-4">
-                                        12 months and save 20%</strong
-                                      >
+                                        12 months and save 20%</strong>
                                     </div>
-                                  </template></v-checkbox
-                                >
+                                  </template>
+                                </v-checkbox> -->
                                 <div v-if="false">
                                   <v-radio-group v-model="plans" column>
-                                    <v-radio
-                                      value="2"
-                                      color="red"
-                                      class="mb-5 ml-5 pl-3"
-                                      @click="getBill('radio', 2)"
-                                    >
+                                    <v-radio value="2" color="red" class="mb-5 ml-5 pl-3" @click="getBill('radio', 2)">
                                       <template v-slot:label>
                                         <div class="black--text">
-                                          Pay for 6 Months and<strong
-                                            class="black--text darken-4"
-                                          >
-                                            Save 10%</strong
-                                          ><br /><span
-                                            class="grey--text light-3"
-                                            >Rs 450/month. Save Rs 300</span
-                                          >
+                                          Pay for 6 Months and<strong class="black--text darken-4">
+                                            Save 10%</strong><br /><span class="grey--text light-3">Rs 450/month. Save
+                                            Rs 300</span>
                                         </div>
                                       </template>
                                     </v-radio>
-                                    <v-radio
-                                      value="3"
-                                      color="red"
-                                      class="mb-0 ml-5 pl-3"
-                                      @click="getBill('radio', 3)"
-                                    >
+                                    <v-radio value="3" color="red" class="mb-0 ml-5 pl-3" @click="getBill('radio', 3)">
                                       <template v-slot:label>
                                         <div class="black--text">
-                                          Pay for 12 Months and<strong
-                                            class="black--text darken-4"
-                                          >
-                                            Save 10%</strong
-                                          ><br /><span
-                                            class="grey--text light-3"
-                                            >Rs {{ 450 }}/month. Save Rs
-                                            300</span
-                                          >
+                                          Pay for 12 Months and<strong class="black--text darken-4">
+                                            Save 10%</strong><br /><span class="grey--text light-3">Rs {{ 450 }}/month.
+                                            Save Rs
+                                            300</span>
                                         </div>
                                       </template>
                                     </v-radio>
@@ -166,66 +127,42 @@
                                       ₹ 9558.0 for 6 Months
                                     </div>
                                   </v-row>
-                                  <p
-                                    class="redtext center f16 bold"
-                                    align="center"
-                                  >
+                                  <p class="redtext center f16 bold" align="center">
                                     (Your Total Saving ₹900.0)
                                   </p>
                                 </div>
                               </div>
                             </v-card-text>
                             <v-card-actions align="center" class="center">
-                              <v-btn
-                                text
-                                class="
+                              <v-btn text class="
                                   text-capitalize
                                   ma-3
                                   rounded-pill
                                   red_button
-                                "
-                                min-width="140px"
-                                color="white"
-                                outlined
-                                @click="paynow()"
-                              >
+                                " min-width="140px" color="white" outlined @click="paynow()">
                                 Pay Now
                               </v-btn>
-                              <v-btn
-                                color="red"
-                                text
-                                class="
+                              <v-btn color="red" text class="
                                   ma-2
                                   text-capitalize
                                   rounded-pill
                                   p-3
                                   red_button_outline
-                                "
-                                min-width="140px"
-                                @click="facebook_info = true"
-                              >
+                                " min-width="140px" @click="facebook_info = true">
                                 View Detail
                               </v-btn>
                             </v-card-actions>
 
                             <v-expand-transition>
-                              <v-card
-                                v-if="facebook_info"
-                                class="
+                              <v-card v-if="facebook_info" class="
                                   transition-fast-in-fast-out
                                   v-card--reveal
-                                "
-                                style="height: 100%"
-                              >
+                                " style="height: 100%">
                                 <v-row>
                                   <v-col cols="12" sm="10">
                                     <h6 class="f16 mt-6 ml-5">
-                                      <v-icon
-                                        class="mr-2"
-                                        color="black"
-                                        @click="facebook_info = false"
-                                        >mdi-arrow-left</v-icon
-                                      >
+                                      <v-icon class="mr-2" color="black" @click="facebook_info = false">mdi-arrow-left
+                                      </v-icon>
                                       Details
                                     </h6>
                                   </v-col>
@@ -235,20 +172,13 @@
                                     <template v-slot:default>
                                       <tbody class="ma-0 pa-0" border="0">
                                         <tr v-for="d in sublist" :key="d.name">
-                                          <td
-                                            class="ma-0 pa-0 pr-0 mr-0"
-                                            :class="d.class"
-                                          >
+                                          <td class="ma-0 pa-0 pr-0 mr-0" :class="d.class">
                                             {{ d.title }}
                                           </td>
                                           <td :class="d.class" align="center">
                                             {{ d.qty }}
                                           </td>
-                                          <td
-                                            :class="d.class"
-                                            align="right"
-                                            class="ma-0 pa-0"
-                                          >
+                                          <td :class="d.class" align="right" class="ma-0 pa-0">
                                             ₹ {{ d.amount }}
                                           </td>
                                         </tr>
@@ -258,11 +188,7 @@
                                             Sub Total
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
                                             ₹ {{ SubTotal }}
                                           </td>
                                         </tr>
@@ -271,28 +197,16 @@
                                             Discount
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
                                             {{ Discount }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
-                                          <td
-                                            class="ma-0 pa-0 bold primary--text"
-                                            colspan="1"
-                                            color="red"
-                                          >
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
                                             Cost after Discount
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0 bold primary--text"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="2" align="right">
                                             {{ CostAfterDiscount }}
                                           </td>
                                         </tr>
@@ -301,33 +215,22 @@
                                             GST
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
                                             {{ Gst.toFixed(2) }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
-                                          <td
-                                            class="ma-0 pa-0 bold"
-                                            colspan="1"
-                                          >
+                                          <td class="ma-0 pa-0 bold" colspan="1">
                                             Total
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0 bold"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0 bold" colspan="2" align="right">
                                             ₹ {{ invoice_amount }}
                                           </td>
                                         </tr>
                                       </tbody>
-                                    </template></v-simple-table
-                                  >
+                                    </template>
+                                  </v-simple-table>
                                 </v-card-text>
                               </v-card>
                             </v-expand-transition>
@@ -355,74 +258,44 @@
                               </div>
 
                               <div class="membership_details">
-                                <v-checkbox
-                                  v-model="sixmonths"
-                                  color="red darken-3"
-                                  hide-details
-                                  @click="getBill(sixmonths, 2)"
-                                >
+                                <v-checkbox v-model="sixmonths" color="red darken-3" hide-details
+                                  @click="getBill(sixmonths, 2)">
                                   <template v-slot:label>
                                     <div class="black--text">
                                       Pay for
                                       <strong class="black--text darken-4">
-                                        6 months and save 10%</strong
-                                      >
+                                        6 months and save 10%</strong>
                                     </div>
-                                  </template></v-checkbox
-                                >
-                                <v-checkbox
-                                  v-model="twelvemonths"
-                                  color="red darken-3"
-                                  hide-details
-                                  @click="getBill(twelvemonths, 3)"
-                                >
+                                  </template>
+                                </v-checkbox>
+                                <v-checkbox v-model="twelvemonths" color="red darken-3" hide-details
+                                  @click="getBill(twelvemonths, 3)">
                                   <template v-slot:label>
                                     <div class="black--text">
                                       Pay for
                                       <strong class="black--text darken-4">
-                                        12 months and save 20%</strong
-                                      >
+                                        12 months and save 20%</strong>
                                     </div>
-                                  </template></v-checkbox
-                                >
+                                  </template>
+                                </v-checkbox>
                                 <div v-if="false">
                                   <v-radio-group v-model="plans" column>
-                                    <v-radio
-                                      value="2"
-                                      color="red"
-                                      class="mb-5 ml-5 pl-3"
-                                      @click="getBill('radio', 2)"
-                                    >
+                                    <v-radio value="2" color="red" class="mb-5 ml-5 pl-3" @click="getBill('radio', 2)">
                                       <template v-slot:label>
                                         <div class="black--text">
-                                          Pay for 6 Months and<strong
-                                            class="black--text darken-4"
-                                          >
-                                            Save 10%</strong
-                                          ><br /><span
-                                            class="grey--text light-3"
-                                            >Rs 450/month. Save Rs 300</span
-                                          >
+                                          Pay for 6 Months and<strong class="black--text darken-4">
+                                            Save 10%</strong><br /><span class="grey--text light-3">Rs 450/month. Save
+                                            Rs 300</span>
                                         </div>
                                       </template>
                                     </v-radio>
-                                    <v-radio
-                                      value="3"
-                                      color="red"
-                                      class="mb-0 ml-5 pl-3"
-                                      @click="getBill('radio', 3)"
-                                    >
+                                    <v-radio value="3" color="red" class="mb-0 ml-5 pl-3" @click="getBill('radio', 3)">
                                       <template v-slot:label>
                                         <div class="black--text">
-                                          Pay for 12 Months and<strong
-                                            class="black--text darken-4"
-                                          >
-                                            Save 10%</strong
-                                          ><br /><span
-                                            class="grey--text light-3"
-                                            >Rs {{ 450 }}/month. Save Rs
-                                            300</span
-                                          >
+                                          Pay for 12 Months and<strong class="black--text darken-4">
+                                            Save 10%</strong><br /><span class="grey--text light-3">Rs {{ 450 }}/month.
+                                            Save Rs
+                                            300</span>
                                         </div>
                                       </template>
                                     </v-radio>
@@ -435,66 +308,42 @@
                                       ₹ 9558.0 for 6 Months
                                     </div>
                                   </v-row>
-                                  <p
-                                    class="redtext center f16 bold"
-                                    align="center"
-                                  >
+                                  <p class="redtext center f16 bold" align="center">
                                     (Your Total Saving ₹900.0)
                                   </p>
                                 </div>
                               </div>
                             </v-card-text>
                             <v-card-actions align="center" class="center">
-                              <v-btn
-                                text
-                                class="
+                              <v-btn text class="
                                   text-capitalize
                                   ma-3
                                   rounded-pill
                                   red_button
-                                "
-                                min-width="140px"
-                                color="white"
-                                outlined
-                                @click="paynow()"
-                              >
+                                " min-width="140px" color="white" outlined @click="paynow()">
                                 Pay Now
                               </v-btn>
-                              <v-btn
-                                color="red"
-                                text
-                                class="
+                              <v-btn color="red" text class="
                                   ma-2
                                   text-capitalize
                                   rounded-pill
                                   p-3
                                   red_button_outline
-                                "
-                                min-width="140px"
-                                @click="facebook_info = true"
-                              >
+                                " min-width="140px" @click="facebook_info = true">
                                 View Detail
                               </v-btn>
                             </v-card-actions>
 
                             <v-expand-transition>
-                              <v-card
-                                v-if="facebook_info"
-                                class="
+                              <v-card v-if="facebook_info" class="
                                   transition-fast-in-fast-out
                                   v-card--reveal
-                                "
-                                style="height: 100%"
-                              >
+                                " style="height: 100%">
                                 <v-row>
                                   <v-col cols="12" sm="10">
                                     <h6 class="f16 mt-6 ml-5">
-                                      <v-icon
-                                        class="mr-2"
-                                        color="black"
-                                        @click="facebook_info = false"
-                                        >mdi-arrow-left</v-icon
-                                      >
+                                      <v-icon class="mr-2" color="black" @click="facebook_info = false">mdi-arrow-left
+                                      </v-icon>
                                       Details
                                     </h6>
                                   </v-col>
@@ -504,20 +353,13 @@
                                     <template v-slot:default>
                                       <tbody class="ma-0 pa-0" border="0">
                                         <tr v-for="d in sublist" :key="d.name">
-                                          <td
-                                            class="ma-0 pa-0 pr-0 mr-0"
-                                            :class="d.class"
-                                          >
+                                          <td class="ma-0 pa-0 pr-0 mr-0" :class="d.class">
                                             {{ d.title }}
                                           </td>
                                           <td :class="d.class" align="center">
                                             {{ d.qty }}
                                           </td>
-                                          <td
-                                            :class="d.class"
-                                            align="right"
-                                            class="ma-0 pa-0"
-                                          >
+                                          <td :class="d.class" align="right" class="ma-0 pa-0">
                                             ₹ {{ d.amount }}
                                           </td>
                                         </tr>
@@ -527,11 +369,7 @@
                                             Sub Total
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
                                             ₹ {{ SubTotal }}
                                           </td>
                                         </tr>
@@ -540,28 +378,16 @@
                                             Discount
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
                                             {{ Discount }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
-                                          <td
-                                            class="ma-0 pa-0 bold primary--text"
-                                            colspan="1"
-                                            color="red"
-                                          >
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
                                             Cost after Discount
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0 bold primary--text"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="2" align="right">
                                             {{ CostAfterDiscount }}
                                           </td>
                                         </tr>
@@ -570,33 +396,22 @@
                                             GST
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
                                             {{ Gst.toFixed(2) }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
-                                          <td
-                                            class="ma-0 pa-0 bold"
-                                            colspan="1"
-                                          >
+                                          <td class="ma-0 pa-0 bold" colspan="1">
                                             Total
                                           </td>
 
-                                          <td
-                                            class="ma-0 pa-0 bold"
-                                            colspan="2"
-                                            align="right"
-                                          >
+                                          <td class="ma-0 pa-0 bold" colspan="2" align="right">
                                             ₹ {{ invoice_amount }}
                                           </td>
                                         </tr>
                                       </tbody>
-                                    </template></v-simple-table
-                                  >
+                                    </template>
+                                  </v-simple-table>
                                 </v-card-text>
                               </v-card>
                             </v-expand-transition>
@@ -604,576 +419,6 @@
                         </div>
 
 
-
-                         <div
-                          class="center align-center"
-                          align="center"
-                          v-if="IvrPlan ==0"
-                        >
-                          <p>Please choose your plan</p>
-
-                          <v-btn-toggle
-                            v-model="toggle_IVR"
-                            rounded
-                            elivation="5"
-                            class="toggle_IVR mb-10"
-                            borderless
-                          >
-                            <v-btn
-                              width="200"
-                              @click="isIvr(3)"
-                              :class="{ active: directActive }"
-                            >
-                             Basic Plan
-                            </v-btn>
-                            <v-btn
-                              width="200"
-                              @click="isIvr(4)"
-                              class=""
-                              :class="{ active: ivrActive }"
-                            >
-                              IVR Plan
-                            </v-btn>
-                          </v-btn-toggle>
-                        </div>
-                        <div v-if="IvrPlan == 3" class="row">
-                          <v-card class="ml-8" min-width="700" min-height="400">
-                            <v-card-text class="pb-0">
-                              <p class="redtext bold">
-                                Next Recharge Due on {{ Rechargeday }}
-                              </p>
-                              <v-row no-gutters>
-                                <div class="col-8 membership_heading">
-                                  Total Cost (Inclusive of GST)
-                                </div>
-                                <div class="col-4 membership_heading">
-                                  ₹ {{ permonth }}/Month
-                                </div>
-                              </v-row>
-
-                              <div class="membership_price">
-                                {{ invoice_amount
-                                }}<span class="currency_symbol">INR</span>
-                              </div>
-
-                              <div class="membership_details">
-                                <v-checkbox
-                                  v-model="sixmonths"
-                                  color="red darken-3"
-                                  hide-details
-                                  @click="getBill(sixmonths, 2)"
-                                >
-                                  <template v-slot:label>
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        6 months and save 10%</strong
-                                      >
-                                    </div>
-                                  </template></v-checkbox
-                                >
-                                <v-checkbox
-                                  v-model="twelvemonths"
-                                  color="red darken-3"
-                                  hide-details
-                                  @click="getBill(twelvemonths, 3)"
-                                >
-                                  <template v-slot:label>
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        12 months and save 20%</strong
-                                      >
-                                    </div>
-                                  </template></v-checkbox
-                                >
-                                <div v-if="false">
-                                  <v-radio-group v-model="plans" column>
-                                    <v-radio
-                                      value="2"
-                                      color="red"
-                                      class="mb-5 ml-5 pl-3"
-                                      @click="getBill('radio', 2)"
-                                    >
-                                      <template v-slot:label>
-                                        <div class="black--text">
-                                          Pay for 6 Months and<strong
-                                            class="black--text darken-4"
-                                          >
-                                            Save 10%</strong
-                                          ><br /><span
-                                            class="grey--text light-3"
-                                            >Rs 450/month. Save Rs 300</span
-                                          >
-                                        </div>
-                                      </template>
-                                    </v-radio>
-                                    <v-radio
-                                      value="3"
-                                      color="red"
-                                      class="mb-0 ml-5 pl-3"
-                                      @click="getBill('radio', 3)"
-                                    >
-                                      <template v-slot:label>
-                                        <div class="black--text">
-                                          Pay for 12 Months and<strong
-                                            class="black--text darken-4"
-                                          >
-                                            Save 10%</strong
-                                          ><br /><span
-                                            class="grey--text light-3"
-                                            >Rs {{ 450 }}/month. Save Rs
-                                            300</span
-                                          >
-                                        </div>
-                                      </template>
-                                    </v-radio>
-                                  </v-radio-group>
-                                  <v-row no-gutters>
-                                    <div class="col-8 membership_heading">
-                                      Cost After Discount
-                                    </div>
-                                    <div class="col-4 membership_heading">
-                                      ₹ 9558.0 for 6 Months
-                                    </div>
-                                  </v-row>
-                                  <p
-                                    class="redtext center f16 bold"
-                                    align="center"
-                                  >
-                                    (Your Total Saving ₹900.0)
-                                  </p>
-                                </div>
-                              </div>
-                            </v-card-text>
-                            <v-card-actions align="center" class="center">
-                              <v-btn
-                                text
-                                class="
-                                  text-capitalize
-                                  ma-3
-                                  rounded-pill
-                                  red_button
-                                "
-                                min-width="140px"
-                                color="white"
-                                outlined
-                                @click="paynow()"
-                              >
-                                Pay Now
-                              </v-btn>
-                              <v-btn
-                                color="red"
-                                text
-                                class="
-                                  ma-2
-                                  text-capitalize
-                                  rounded-pill
-                                  p-3
-                                  red_button_outline
-                                "
-                                min-width="140px"
-                                @click="facebook_info = true"
-                              >
-                                View Detail
-                              </v-btn>
-                            </v-card-actions>
-
-                            <v-expand-transition>
-                              <v-card
-                                v-if="facebook_info"
-                                class="
-                                  transition-fast-in-fast-out
-                                  v-card--reveal
-                                "
-                                style="height: 100%"
-                              >
-                                <v-row>
-                                  <v-col cols="12" sm="10">
-                                    <h6 class="f16 mt-6 ml-5">
-                                      <v-icon
-                                        class="mr-2"
-                                        color="black"
-                                        @click="facebook_info = false"
-                                        >mdi-arrow-left</v-icon
-                                      >
-                                      Details
-                                    </h6>
-                                  </v-col>
-                                </v-row>
-                                <v-card-text class="pb-0">
-                                  <v-simple-table dense>
-                                    <template v-slot:default>
-                                      <tbody class="ma-0 pa-0" border="0">
-                                        <tr v-for="d in sublist" :key="d.name">
-                                          <td
-                                            class="ma-0 pa-0 pr-0 mr-0"
-                                            :class="d.class"
-                                          >
-                                            {{ d.title }}
-                                          </td>
-                                          <td :class="d.class" align="center">
-                                            {{ d.qty }}
-                                          </td>
-                                          <td
-                                            :class="d.class"
-                                            align="right"
-                                            class="ma-0 pa-0"
-                                          >
-                                            ₹ {{ d.amount }}
-                                          </td>
-                                        </tr>
-
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            Sub Total
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            ₹ {{ SubTotal }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            Discount
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            {{ Discount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td
-                                            class="ma-0 pa-0 bold primary--text"
-                                            colspan="1"
-                                            color="red"
-                                          >
-                                            Cost after Discount
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0 bold primary--text"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            {{ CostAfterDiscount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            GST
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            {{ Gst.toFixed(2) }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td
-                                            class="ma-0 pa-0 bold"
-                                            colspan="1"
-                                          >
-                                            Total
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0 bold"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            ₹ {{ invoice_amount }}
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </template></v-simple-table
-                                  >
-                                </v-card-text>
-                              </v-card>
-                            </v-expand-transition>
-                          </v-card>
-                        </div>
-                        <div v-else-if="IvrPlan == 4" class="row">
-                          <v-card class="ml-8" min-width="700" min-height="400">
-                            <v-card-text class="pb-0">
-                              <p class="redtext bold">
-                                This is Ivr plan
-                                {{ Rechargeday }}
-                              </p>
-                              <v-row no-gutters>
-                                <div class="col-8 membership_heading">
-                                  Total Cost (Inclusive of GST)
-                                </div>
-                                <div class="col-4 membership_heading">
-                                  ₹ {{ permonth }}/Month
-                                </div>
-                              </v-row>
-
-                              <div class="membership_price">
-                                {{ invoice_amount
-                                }}<span class="currency_symbol">INR</span>
-                              </div>
-
-                              <div class="membership_details">
-                                <v-checkbox
-                                  v-model="sixmonths"
-                                  color="red darken-3"
-                                  hide-details
-                                  @click="getBill(sixmonths, 2)"
-                                >
-                                  <template v-slot:label>
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        6 months and save 10%</strong
-                                      >
-                                    </div>
-                                  </template></v-checkbox
-                                >
-                                <v-checkbox
-                                  v-model="twelvemonths"
-                                  color="red darken-3"
-                                  hide-details
-                                  @click="getBill(twelvemonths, 3)"
-                                >
-                                  <template v-slot:label>
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        12 months and save 20%</strong
-                                      >
-                                    </div>
-                                  </template></v-checkbox
-                                >
-                                <div v-if="false">
-                                  <v-radio-group v-model="plans" column>
-                                    <v-radio
-                                      value="2"
-                                      color="red"
-                                      class="mb-5 ml-5 pl-3"
-                                      @click="getBill('radio', 2)"
-                                    >
-                                      <template v-slot:label>
-                                        <div class="black--text">
-                                          Pay for 6 Months and<strong
-                                            class="black--text darken-4"
-                                          >
-                                            Save 10%</strong
-                                          ><br /><span
-                                            class="grey--text light-3"
-                                            >Rs 450/month. Save Rs 300</span
-                                          >
-                                        </div>
-                                      </template>
-                                    </v-radio>
-                                    <v-radio
-                                      value="3"
-                                      color="red"
-                                      class="mb-0 ml-5 pl-3"
-                                      @click="getBill('radio', 3)"
-                                    >
-                                      <template v-slot:label>
-                                        <div class="black--text">
-                                          Pay for 12 Months and<strong
-                                            class="black--text darken-4"
-                                          >
-                                            Save 10%</strong
-                                          ><br /><span
-                                            class="grey--text light-3"
-                                            >Rs {{ 450 }}/month. Save Rs
-                                            300</span
-                                          >
-                                        </div>
-                                      </template>
-                                    </v-radio>
-                                  </v-radio-group>
-                                  <v-row no-gutters>
-                                    <div class="col-8 membership_heading">
-                                      Cost After Discount
-                                    </div>
-                                    <div class="col-4 membership_heading">
-                                      ₹ 9558.0 for 6 Months
-                                    </div>
-                                  </v-row>
-                                  <p
-                                    class="redtext center f16 bold"
-                                    align="center"
-                                  >
-                                    (Your Total Saving ₹900.0)
-                                  </p>
-                                </div>
-                              </div>
-                            </v-card-text>
-                            <v-card-actions align="center" class="center">
-                              <v-btn
-                                text
-                                class="
-                                  text-capitalize
-                                  ma-3
-                                  rounded-pill
-                                  red_button
-                                "
-                                min-width="140px"
-                                color="white"
-                                outlined
-                                @click="paynow()"
-                              >
-                                Pay Now
-                              </v-btn>
-                              <v-btn
-                                color="red"
-                                text
-                                class="
-                                  ma-2
-                                  text-capitalize
-                                  rounded-pill
-                                  p-3
-                                  red_button_outline
-                                "
-                                min-width="140px"
-                                @click="facebook_info = true"
-                              >
-                                View Detail
-                              </v-btn>
-                            </v-card-actions>
-
-                            <v-expand-transition>
-                              <v-card
-                                v-if="facebook_info"
-                                class="
-                                  transition-fast-in-fast-out
-                                  v-card--reveal
-                                "
-                                style="height: 100%"
-                              >
-                                <v-row>
-                                  <v-col cols="12" sm="10">
-                                    <h6 class="f16 mt-6 ml-5">
-                                      <v-icon
-                                        class="mr-2"
-                                        color="black"
-                                        @click="facebook_info = false"
-                                        >mdi-arrow-left</v-icon
-                                      >
-                                      Details
-                                    </h6>
-                                  </v-col>
-                                </v-row>
-                                <v-card-text class="pb-0">
-                                  <v-simple-table dense>
-                                    <template v-slot:default>
-                                      <tbody class="ma-0 pa-0" border="0">
-                                        <tr v-for="d in sublist" :key="d.name">
-                                          <td
-                                            class="ma-0 pa-0 pr-0 mr-0"
-                                            :class="d.class"
-                                          >
-                                            {{ d.title }}
-                                          </td>
-                                          <td :class="d.class" align="center">
-                                            {{ d.qty }}
-                                          </td>
-                                          <td
-                                            :class="d.class"
-                                            align="right"
-                                            class="ma-0 pa-0"
-                                          >
-                                            ₹ {{ d.amount }}
-                                          </td>
-                                        </tr>
-
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            Sub Total
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            ₹ {{ SubTotal }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            Discount
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            {{ Discount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td
-                                            class="ma-0 pa-0 bold primary--text"
-                                            colspan="1"
-                                            color="red"
-                                          >
-                                            Cost after Discount
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0 bold primary--text"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            {{ CostAfterDiscount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            GST
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            {{ Gst.toFixed(2) }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td
-                                            class="ma-0 pa-0 bold"
-                                            colspan="1"
-                                          >
-                                            Total
-                                          </td>
-
-                                          <td
-                                            class="ma-0 pa-0 bold"
-                                            colspan="2"
-                                            align="right"
-                                          >
-                                            ₹ {{ invoice_amount }}
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </template></v-simple-table
-                                  >
-                                </v-card-text>
-                              </v-card>
-                            </v-expand-transition>
-                          </v-card>
-                        </div>
-                      
                       </div>
                     </v-row>
                   </v-flex>
@@ -1189,14 +434,9 @@
                             </h2>
                           </v-col>
                           <v-col cols="6" align="end">
-                            <router-link
-                              :to="{ name: 'BillingAddress' }"
-                              class=""
-                            >
-                              <span
-                                ><v-icon class="mt-6 mb-5 mr-7" color="#EE1C25"
-                                  >mdi-arrow-right</v-icon
-                                >
+                            <router-link :to="{ name: 'BillingAddress' }" class="">
+                              <span>
+                                <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25">mdi-arrow-right</v-icon>
                               </span>
                             </router-link>
                           </v-col>
@@ -1213,10 +453,8 @@
                           </v-col>
                           <v-col cols="6" align="end">
                             <router-link :to="{ name: 'PaymentHistory' }">
-                              <span
-                                ><v-icon class="mt-6 mb-5 mr-7" color="#EE1C25"
-                                  >mdi-arrow-right</v-icon
-                                >
+                              <span>
+                                <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25">mdi-arrow-right</v-icon>
                               </span>
                             </router-link>
                           </v-col>
@@ -1238,12 +476,14 @@ table.v-table tbody td {
   height: 40px;
   border: none;
 }
+
 .theme--light.v-table tbody tr:not(:last-child) {
   border-bottom: none;
 }
 </style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
          <script>
+import firebase from "firebase";
 import { db } from "@/main.js";
 import axios from "axios";
 export default {
@@ -1284,7 +524,7 @@ export default {
     Name: "",
     overlay: false,
     Rechargeday: "",
-
+    nonIVRPlanradio:1,
     IvrPlan: 1,
   }),
   computed: {
@@ -1308,26 +548,69 @@ export default {
     // this.PlanId = localStorageUserObj.PlanId == 3 ? 3 : 2;
     this.twelvemonths = this.PlanId == 3 ? true : false;
     this.sixmonths = this.PlanId == 2 ? true : false;
-    //  db.collection("plan_details").get().then(async(snap) =>{
+  this.planDetails =  db
+      .collection("plan_details")
+      .get()
+      .then((querySnapshot) => {
+        this.ivrPlanArray = [];
+        this.nonIvrPlanArray = [];
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach(async (doc) => {
+            console.log(doc.id, " => ", doc.data());
+            let plan = doc.data();
+            this.plan = plan;
+            console.log(plan.Name);
+          
+            if (plan.IsIvr == true) {
+              this.ivrobject = Object.assign({}, this.ivrobject, {
+                planName: plan.Name,
+                price: plan.Price,
+                Validity: plan.Validity,
+                Discount: plan.Discount,
+                PlanId: plan.Id,
+                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+              });
+              this.ivrPlanArray.push(this.ivrobject);
+             
+            } else {
+              this.nonivrobject = Object.assign({}, this.nonivrobject, {
+                planName: plan.Name,
+                price: plan.Price,
+                Validity: plan.Validity,
+                Discount: plan.Discount,
+                PlanId: plan.Id,
+                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+              });
+              this.nonIvrPlanArray.push(this.nonivrobject);
+             
+            }
+            // var timestamp = this.calldetails.dateTime
+          });
+            this.checkData();
+        }
+      });
+    // planDetails.docs.forEach((element) => {
+    //   console.log(element.data());
+    // });
 
-    //  })
-    // this.uid = localStorageUserObj.uid;
-
-    // this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
-    //   db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
-    // 	// console.log("test.........",snap.docs.data());
-    // 	snap.docs.forEach((element)=> {
-    // 		// console.log(element.data())
-    // 		this.agents.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,active:true});
-    // 	});
-    // }).catch((err)=>{
-    // 	console.log(err.message)
-    // })
+    window.scrollTo(0, 0); //scroll to top
     this.getBill("inital", this.PlanId);
+    
     //  this.getOrderIdforPayment()
   },
 
   methods: {
+      async checkData(){
+          firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log("logged user details", user);
+        this.uid = user.uid;
+        this.phno = user.phoneNumber.slice(3);
+        this.nonIVRPlanradio = localStorage.getItem("nonIVRPlanradio");
+        this.IVRPlanradio = localStorage.getItem("IVRPlanradio");
+      }
+          });
+      },
     isIvr(i) {
       this.IvrPlan = i;
     },
@@ -1335,15 +618,9 @@ export default {
       this.$router.push("/dashboard");
     },
     getBill(status, planid) {
+      console.log(status,planid)
       const token = localStorage.getItem("token");
-      if (this.twelvemonths == true && this.sixmonths == true && planid == 3) {
-        // this.twelvemonths = (planid == 3)
-        this.sixmonths = false;
-      }
-      if (this.twelvemonths == true && this.sixmonths == true && planid == 2) {
-        this.twelvemonths = false;
-        // this.sixmonths = false
-      }
+     
       let plan =
         this.twelvemonths == false && this.sixmonths == false
           ? 1
@@ -1351,7 +628,7 @@ export default {
           ? 3
           : 2;
       // this.PlanId = (radio == "inital")?this.PlanId:planid;
-      this.PlanId = plan;
+      this.PlanId = planid;
       this.sublist = [];
       const details = {
         // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
@@ -1359,7 +636,7 @@ export default {
         method: "POST",
         data: {
           uid: this.owneruid,
-          PlanId: plan,
+          PlanId: planid,
         },
         headers: {
           token: token,

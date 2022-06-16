@@ -10,9 +10,7 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 ml-5">
-                        <v-icon class="mr-2" color="black" @click="goBack()"
-                          >mdi-arrow-left</v-icon
-                        >
+                        <v-icon class="mr-2" color="black" @click="goBack()">mdi-arrow-left</v-icon>
                         IVR and Call Routing
                       </h2>
 
@@ -24,12 +22,7 @@
                     </v-col>
                   </v-row>
 
-                  <v-card
-                    color="transparent"
-                    outlined
-                    class="mt-5 pl-5"
-                    max-width="1069"
-                  >
+                  <v-card color="transparent" outlined class="mt-5 pl-5" max-width="1069">
                     <v-layout>
                       <v-flex xs12 sm12 md12>
                         <v-row no-gutters>
@@ -37,26 +30,19 @@
                             <div class="center align-center" align="center">
                               <p>Please choose your plan</p>
 
-                              <v-btn-toggle
-                                v-model="toggle_IVR"
-                                rounded
-                                elivation="5"
-                                class="toggle_IVR"
-                                borderless
-                              >
-                                <v-btn
-                                  width="200"
-                                  @click="isIvr(1)"
-                                  class=""
-                                  :class="{ active: ivrActive }"
-                                >
+                              <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless>
+                                <v-btn v-if="checkIvrStatus == false" width="200" @click="MovetoBilling(1)">
                                   IVR
                                 </v-btn>
-                                <v-btn
-                                  width="200"
-                                  @click="isIvr(2)"
-                                  :class="{ active: directActive }"
-                                >
+                                <v-btn v-else width="200" @click="isIvr(1)" :class="{ active: checkIvrStatus == true }">
+                                  IVR
+                                </v-btn>
+
+                                <v-btn v-if="checkIvrStatus == true" width="200" @click="isIvr(2)" disabled>
+                                  Direct (No IVR)
+                                </v-btn>
+                                <v-btn v-else width="200" @click="isIvr(2)"
+                                  :class="{ active: checkIvrStatus == false }">
                                   Direct (No IVR)
                                 </v-btn>
                               </v-btn-toggle>
@@ -68,35 +54,27 @@
 
                               <v-row>
                                 <v-col cols="6">
-                                  <h2
-                                    class="
+                                  <h2 class="
                                       light3
                                       nunito-font
                                       mt-4
                                       mr-7
                                       text--red
                                       f18
-                                    "
-                                  >
+                                    ">
                                     Introduction and Departments Audio
                                   </h2>
                                 </v-col>
                                 <v-col cols="6" align="end">
-                                  <router-link
-                                    :to="{
-                                      name: 'IntroductionandDepartmentsAudio',
-                                      query: {
-                                        key: 'intro',
-                                        bn: this.bussinessNumber,
-                                      },
-                                    }"
-                                  >
+                                  <router-link :to="{
+                                    name: 'IntroductionandDepartmentsAudio',
+                                    query: {
+                                      key: 'intro',
+                                      bn: this.bussinessNumber,
+                                    },
+                                  }">
                                     <span>
-                                      <v-icon
-                                        class="mt-3 mb-4 mr-7"
-                                        color="#EE1C25"
-                                        >mdi-arrow-right</v-icon
-                                      >
+                                      <v-icon class="mt-3 mb-4 mr-7" color="#EE1C25">mdi-arrow-right</v-icon>
                                     </span>
                                   </router-link>
                                 </v-col>
@@ -104,35 +82,27 @@
                               <v-divider></v-divider>
                               <v-row>
                                 <v-col cols="6">
-                                  <h2
-                                    class="
+                                  <h2 class="
                                       light3
                                       nunito-font
                                       mt-4
                                       mr-7
                                       text--red
                                       f18
-                                    "
-                                  >
+                                    ">
                                     No Keypress Audio
                                   </h2>
                                 </v-col>
                                 <v-col cols="6" align="end">
-                                  <router-link
-                                    :to="{
-                                      name: 'NoKeypressAudio',
-                                      query: {
-                                        key: 'nokeypress',
-                                        bn: this.bussinessNumber,
-                                      },
-                                    }"
-                                  >
+                                  <router-link :to="{
+                                    name: 'NoKeypressAudio',
+                                    query: {
+                                      key: 'nokeypress',
+                                      bn: this.bussinessNumber,
+                                    },
+                                  }">
                                     <span>
-                                      <v-icon
-                                        class="mt-3 mb-4 mr-7"
-                                        color="#EE1C25"
-                                        >mdi-arrow-right</v-icon
-                                      >
+                                      <v-icon class="mt-3 mb-4 mr-7" color="#EE1C25">mdi-arrow-right</v-icon>
                                     </span>
                                   </router-link>
                                 </v-col>
@@ -140,35 +110,27 @@
                               <v-divider></v-divider>
                               <v-row>
                                 <v-col cols="6">
-                                  <h2
-                                    class="
+                                  <h2 class="
                                       light3
                                       nunito-font
                                       mt-4
                                       mr-7
                                       text--red
                                       f18
-                                    "
-                                  >
+                                    ">
                                     Wrong Keypress Audio
                                   </h2>
                                 </v-col>
                                 <v-col cols="6" align="end">
-                                  <router-link
-                                    :to="{
-                                      name: 'WrongKeypressAudio',
-                                      query: {
-                                        key: 'wrongkeypress',
-                                        bn: this.bussinessNumber,
-                                      },
-                                    }"
-                                  >
+                                  <router-link :to="{
+                                    name: 'WrongKeypressAudio',
+                                    query: {
+                                      key: 'wrongkeypress',
+                                      bn: this.bussinessNumber,
+                                    },
+                                  }">
                                     <span>
-                                      <v-icon
-                                        class="mt-3 mb-4 mr-7"
-                                        color="#EE1C25"
-                                        >mdi-arrow-right</v-icon
-                                      >
+                                      <v-icon class="mt-3 mb-4 mr-7" color="#EE1C25">mdi-arrow-right</v-icon>
                                     </span>
                                   </router-link>
                                 </v-col>
@@ -190,13 +152,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('1')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('1')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -212,13 +169,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('2')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('2')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -234,13 +186,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('3')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('3')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -256,13 +203,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('4')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('4')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -278,13 +220,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('5')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('5')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -300,13 +237,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('6')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('6')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -322,13 +254,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('7')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('7')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -344,13 +271,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('8')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('8')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -366,13 +288,8 @@
                                 </v-col>
                                 <v-col cols="6" align="end">
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="keyPressDepartment('9')"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="keyPressDepartment('9')">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                 </v-col>
                               </v-row>
@@ -392,13 +309,8 @@
                                 <v-col cols="6" align="end">
                                   <!-- <router-link :to="{ name: 'CallRouting' }"> -->
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="callRouting()"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="callRouting()">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                   <!-- </router-link> -->
                                 </v-col>
@@ -417,13 +329,8 @@
                                 <v-col cols="6" align="end">
                                   <!-- <router-link :to="{ name: 'CallRouting' }"> -->
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="callRouting()"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="callRouting()">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                   <!-- </router-link> -->
                                 </v-col>
@@ -444,13 +351,8 @@
                                   :to="{ name: 'MissedCallDistribution' }"
                                 > -->
                                   <span>
-                                    <v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      @click="MissedCallRouting()"
-                                    >
-                                      mdi-arrow-right</v-icon
-                                    >
+                                    <v-icon class="mt-6 mb-5 mr-7" color="#EE1C25" @click="MissedCallRouting()">
+                                      mdi-arrow-right</v-icon>
                                   </span>
                                   <!-- </router-link> -->
                                 </v-col>
@@ -480,23 +382,12 @@
           </h4>
         </v-card-body>
         <v-card-actions>
-          <v-btn
-            color="red"
-            text
-            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-            min-width="140px"
-           @click="proccedToIVR(2)"
-          >
+          <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
+            @click="proccedToIVR(2)">
             Cancel
           </v-btn>
-          <v-btn
-            text
-            class="text-capitalize ma-3 rounded-pill red_button"
-            min-width="140px"
-            color="white"
-            outlined
-            @click="proccedToIVR(1)"
-          >
+          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
+            @click="proccedToIVR(1)">
             Proceed
           </v-btn>
         </v-card-actions>
@@ -558,51 +449,61 @@ export default {
   }),
 
   methods: {
-    proccedToIVR(i){
-      if(i==1){
-
+    proccedToIVR(i) {
+      if (i == 1) {
         const options = {
           url: this.$cloudfareApi + "/callDistribution/ivr/status",
-        method: "POST",
-        headers: {
-          token: localStorage.getItem("token"),
-          "Content-Type": "application/json;charset=UTF-8",
-        },
-        data: {
-          owner_uid: this.owneruid,
-          updated_by: this.uid,
-          virtual_number: this.bussinessNumber,
-          AccountId: this.AccountId,
-          IsIvr: i == 1 ? true : false,
-        },
-      };
-     
-      axios(options)
-        .then((response) => {
-          this.dialog = false;
-          console.log(response.data);
-          this.$root.vtoast.show({
-            message: "Updated Successfully!",
-            color: "#07C421",
-            timer: 2000,
+          method: "POST",
+          headers: {
+            token: localStorage.getItem("token"),
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+          data: {
+            owner_uid: this.owneruid,
+            updated_by: this.uid,
+            virtual_number: this.bussinessNumber,
+            AccountId: this.AccountId,
+            IsIvr: i == 1 ? true : false,
+          },
+        };
+
+        axios(options)
+          .then((response) => {
+            this.dialog = false;
+            console.log(response.data);
+            this.$root.vtoast.show({
+              message: "Updated Successfully!",
+              color: "#07C421",
+              timer: 2000,
+            });
+
+            this.$router.push(
+              "/BillingInformation?upgrade=" +
+              i +
+              "&bn=" +
+              this.bussinessNumber
+            );
+          })
+          .catch((error) => {
+            console.error(error);
           });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-          }else{
-             this.dialog = false;
-            this.IvrPlan =i;
-            this.ivrActive=false;
-             this.directActive=true;
-          }
+      } else {
+        this.dialog = false;
+        this.IvrPlan = i;
+        this.ivrActive = false;
+        this.directActive = true;
+      }
+    },
+    MovetoBilling(i) {
+      if (i == 1) {
+        this.dialog = true;
+      }
     },
     isIvr(i) {
-       this.dialog = true;
-      this.IvrPlan = i;  // 1 for ivr plan
+      this.IvrPlan = i; // 1 for ivr plan
       this.ivrActive = i == 1 ? true : false;
       this.directActive = i == 1 ? false : true;
-   
+
       // console.log(options);
 
       //  console.log("jgrj",i);
@@ -613,6 +514,8 @@ export default {
 
       // local storage isIV get data here
       // if false then noIVR
+      this.checkIvrStatus = localStorageUserObj.IsIvr;
+
       const owneruid =
         localStorageUserObj.role == "OWNER"
           ? localStorageUserObj.uid
