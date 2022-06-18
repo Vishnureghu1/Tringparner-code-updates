@@ -27,15 +27,37 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        <div class="center align-center" align="center" v-if="IvrPlan == 1 || IvrPlan == 2">
-                          <v-btn-toggle rounded elivation="5" class="toggle_IVR mb-10" borderless>
-                            <v-btn width="200" @click="isIvr(1)" >
-                              Current Plan
-                            </v-btn>
-                            <v-btn width="200" @click="isIvr(2)" >
-                              Upgrade
-                            </v-btn>
-                          </v-btn-toggle>
+                       
+                        <div class="center align-center" align="center" v-if="IvrPlan == 2">
+
+                         <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
+                              
+
+                            
+                                <v-btn  width="200" @click="isIvr(2)"
+                                  :class="{ active: checkIvrStatus == false }">
+                                  Current Plan
+                                </v-btn>
+                                  <v-btn  width="200" @click="MovetoBilling(1)">
+                                  Upgrade
+                                </v-btn>
+                               
+                              </v-btn-toggle>
+                    
+                        </div>
+                        <div class="center align-center" align="center" v-else>
+                                 <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
+                              
+
+                                <v-btn  width="200" @click="isIvr(2)" disabled>
+                                  Basic Plan
+                                </v-btn>
+                         
+                            
+                                <v-btn width="200" @click="isIvr(1)" :class="{ active: checkIvrStatus == true }">
+                                  IVR Plan
+                                </v-btn>
+                              </v-btn-toggle>
                         </div>
                         <div v-if="IvrPlan == 1" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
@@ -59,44 +81,30 @@
 
                               <div class="membership_details">
 
-                               
-<v-radio-group>
 
-  <v-radio color="red darken-3" hide-details v-for="nonivrData in nonIvrPlanArray"
-                        :key="nonivrData.PlanId" :value="nonivrData.PlanId" 
-       
-                                  @click="getBill(nonivrData.price, nonivrData.PlanId)"  @change="check($event)">
-                                  <template v-slot:label >
-                                   
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        {{ nonivrData.Validity }} months <span v-if="nonivrData.Discount>0">and save {{ nonivrData.Discount }}%</span></strong>
-                                    </div>
-                                  </template>
-  </v-radio>
-                                        </v-radio-group>
 
-                            <!-- <v-checkbox v-model="sixmonths" color="red darken-3" hide-details
-                                  @click="getBill(sixmonths, 2)" >
-                                  <template v-slot:label>
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        6 months and save 10%</strong>
-                                    </div>
-                                  </template>
-                                </v-checkbox>
-                                <v-checkbox v-model="twelvemonths" color="red darken-3" hide-details
-                                  @click="getBill(twelvemonths, 3)"  @change="uniqueCheck">
-                                  <template v-slot:label>
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        12 months and save 20%</strong>
-                                    </div>
-                                  </template>
-                                </v-checkbox> -->
+
+                                <v-radio-group mandatory v-model="nonIVRPlanradio">
+                                  <v-radio color="red darken-3" hide-details v-for="nonivrData in nonIvrPlanArray"
+                                    :key="nonivrData.PlanId" :value="nonivrData.PlanId" @click="
+                                      getBill(
+                                        nonivrData.price,
+                                        nonivrData.PlanId
+                                      )
+                                    " @change="check($event)" >
+                                    <template v-slot:label >
+                                      <div class="black--text">
+                                        Pay for
+                                        <strong class="black--text darken-4">
+                                          {{ nonivrData.Validity }} months
+                                          <span v-if="nonivrData.Discount > 0">and save
+                                            {{ nonivrData.Discount }}%</span></strong>
+                                      </div>
+                                    </template>
+                                  </v-radio>
+                                </v-radio-group>
+
+
                                 <div v-if="false">
                                   <v-radio-group v-model="plans" column>
                                     <v-radio value="2" color="red" class="mb-5 ml-5 pl-3" @click="getBill('radio', 2)">
@@ -236,6 +244,7 @@
                             </v-expand-transition>
                           </v-card>
                         </div>
+
                         <div v-else-if="IvrPlan == 2" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
@@ -258,60 +267,25 @@
                               </div>
 
                               <div class="membership_details">
-                                <v-checkbox v-model="sixmonths" color="red darken-3" hide-details
-                                  @click="getBill(sixmonths, 2)">
-                                  <template v-slot:label>
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        6 months and save 10%</strong>
-                                    </div>
-                                  </template>
-                                </v-checkbox>
-                                <v-checkbox v-model="twelvemonths" color="red darken-3" hide-details
-                                  @click="getBill(twelvemonths, 3)">
-                                  <template v-slot:label>
-                                    <div class="black--text">
-                                      Pay for
-                                      <strong class="black--text darken-4">
-                                        12 months and save 20%</strong>
-                                    </div>
-                                  </template>
-                                </v-checkbox>
-                                <div v-if="false">
-                                  <v-radio-group v-model="plans" column>
-                                    <v-radio value="2" color="red" class="mb-5 ml-5 pl-3" @click="getBill('radio', 2)">
-                                      <template v-slot:label>
-                                        <div class="black--text">
-                                          Pay for 6 Months and<strong class="black--text darken-4">
-                                            Save 10%</strong><br /><span class="grey--text light-3">Rs 450/month. Save
-                                            Rs 300</span>
-                                        </div>
-                                      </template>
-                                    </v-radio>
-                                    <v-radio value="3" color="red" class="mb-0 ml-5 pl-3" @click="getBill('radio', 3)">
-                                      <template v-slot:label>
-                                        <div class="black--text">
-                                          Pay for 12 Months and<strong class="black--text darken-4">
-                                            Save 10%</strong><br /><span class="grey--text light-3">Rs {{ 450 }}/month.
-                                            Save Rs
-                                            300</span>
-                                        </div>
-                                      </template>
-                                    </v-radio>
-                                  </v-radio-group>
-                                  <v-row no-gutters>
-                                    <div class="col-8 membership_heading">
-                                      Cost After Discount
-                                    </div>
-                                    <div class="col-4 membership_heading">
-                                      ₹ 9558.0 for 6 Months
-                                    </div>
-                                  </v-row>
-                                  <p class="redtext center f16 bold" align="center">
-                                    (Your Total Saving ₹900.0)
-                                  </p>
-                                </div>
+                                <v-radio-group mandatory v-model="IVRPlanradio">
+                                  <v-radio color="red darken-3" hide-details v-for="ivrData in ivrPlanArray"
+                                    :key="ivrData.PlanId" :value="ivrData.PlanId" @click="
+                                      getBill(
+                                        ivrData.price,
+                                        ivrData.PlanId
+                                      )
+                                    " @change="check($event)">
+                                    <template v-slot:label>
+                                      <div class="black--text">
+                                        Pay for
+                                        <strong class="black--text darken-4">
+                                          {{ ivrData.Validity }} months
+                                          <span v-if="ivrData.Discount > 0">and save
+                                            {{ ivrData.Discount }}%</span></strong>
+                                      </div>
+                                    </template>
+                                  </v-radio>
+                                </v-radio-group>
                               </div>
                             </v-card-text>
                             <v-card-actions align="center" class="center">
@@ -417,8 +391,6 @@
                             </v-expand-transition>
                           </v-card>
                         </div>
-
-
                       </div>
                     </v-row>
                   </v-flex>
@@ -469,6 +441,28 @@
         </v-flex>
       </v-layout>
     </v-container>
+      <v-dialog v-model="dialog" persistent max-width="400px">
+      <v-card>
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Are you Sure!</h3>
+        </v-card-title>
+        <v-card-body>
+          <h4 class="mb-3 mt-3 text-center">
+            Do you want to Upgrade the plan?
+          </h4>
+        </v-card-body>
+        <v-card-actions>
+          <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
+            @click="proccedToIVR(2)">
+            Cancel
+          </v-btn>
+          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
+            @click="proccedToIVR(1)">
+            Proceed
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 <style scoped>
@@ -489,6 +483,8 @@ import axios from "axios";
 export default {
   components: {},
   data: () => ({
+    ivrActive: false,
+    directActive: false,
     sixmonths: false,
     twelvemonths: false,
     invoice_amount: "",
@@ -524,8 +520,11 @@ export default {
     Name: "",
     overlay: false,
     Rechargeday: "",
-    nonIVRPlanradio:1,
-    IvrPlan: 1,
+    nonIVRPlanradio: 1,
+    IvrPlan: "",
+    dialog:false,
+    bussinessNumber: "",
+    AccountId: "",
   }),
   computed: {
     computedPrice() {
@@ -533,6 +532,8 @@ export default {
     },
   },
   async created() {
+       this.bussinessNumber = this.$route.query.bn;
+  
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     //  this.bussinessNumber = this.$route.query.bn;
     // this.setBreadcrumbs(this.bussinessNumber);
@@ -545,10 +546,8 @@ export default {
     this.Name = localStorageUserObj.FirstName;
     this.owneruid = owneruid;
     this.PlanId = localStorageUserObj.PlanId;
-    // this.PlanId = localStorageUserObj.PlanId == 3 ? 3 : 2;
-    this.twelvemonths = this.PlanId == 3 ? true : false;
-    this.sixmonths = this.PlanId == 2 ? true : false;
-  this.planDetails =  db
+
+    this.planDetails = db
       .collection("plan_details")
       .get()
       .then((querySnapshot) => {
@@ -560,7 +559,7 @@ export default {
             let plan = doc.data();
             this.plan = plan;
             console.log(plan.Name);
-          
+
             if (plan.IsIvr == true) {
               this.ivrobject = Object.assign({}, this.ivrobject, {
                 planName: plan.Name,
@@ -570,8 +569,9 @@ export default {
                 PlanId: plan.Id,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
               });
+              if( plan.Validity>1){
               this.ivrPlanArray.push(this.ivrobject);
-             
+              }
             } else {
               this.nonivrobject = Object.assign({}, this.nonivrobject, {
                 planName: plan.Name,
@@ -581,12 +581,14 @@ export default {
                 PlanId: plan.Id,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
               });
-              this.nonIvrPlanArray.push(this.nonivrobject);
-             
+              if( plan.Validity>1){
+
+                this.nonIvrPlanArray.push(this.nonivrobject);
+              }
             }
             // var timestamp = this.calldetails.dateTime
           });
-            this.checkData();
+          this.checkData();
         }
       });
     // planDetails.docs.forEach((element) => {
@@ -595,32 +597,89 @@ export default {
 
     window.scrollTo(0, 0); //scroll to top
     this.getBill("inital", this.PlanId);
-    
+
     //  this.getOrderIdforPayment()
   },
 
   methods: {
-      async checkData(){
-          firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log("logged user details", user);
-        this.uid = user.uid;
-        this.phno = user.phoneNumber.slice(3);
-        this.nonIVRPlanradio = localStorage.getItem("nonIVRPlanradio");
-        this.IVRPlanradio = localStorage.getItem("IVRPlanradio");
-      }
-          });
-      },
-    isIvr(i) {
-      this.IvrPlan = i;
+    async checkData() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          console.log("logged user details", user);
+          this.uid = user.uid;
+          this.phno = user.phoneNumber.slice(3);
+                let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+          this.nonIVRPlanradio = localStorage.getItem("nonIVRPlanradio");
+          this.IVRPlanradio = localStorage.getItem("IVRPlanradio");
+        // this.checkIvrStatus = false;
+        this.checkIvrStatus = localStorageUserObj.IsIvr;
+              this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
+          this.directActive = localStorageUserObj.IsIvr == true ? false : true;
+          this.IvrPlan = localStorageUserObj.IsIvr == false ? 2 : 1;
+        }
+      });
     },
+    isIvr(i) {
+      this.IvrPlan =i;
+    },
+    proccedToIVR(i) {
+         if (i == 1) {
+        const options = {
+          url: this.$cloudfareApi + "/callDistribution/ivr/status",
+          method: "POST",
+          headers: {
+            token: localStorage.getItem("token"),
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+          data: {
+            owner_uid: this.owneruid,
+            updated_by: this.uid,
+            virtual_number: this.bussinessNumber,
+            AccountId: this.AccountId,
+            IsIvr: i == 1 ? true : false,
+          },
+        };
+
+        axios(options)
+          .then((response) => {
+            this.dialog = false;
+            console.log(response.data);
+            this.$root.vtoast.show({
+              message: "Updated Successfully!",
+              color: "#07C421",
+              timer: 2000,
+            });
+
+            this.$router.push(
+              "/BillingInformation?upgrade=" +
+              i +
+              "&bn=" +
+              this.bussinessNumber
+            );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        this.dialog = false;
+        this.IvrPlan = i;
+        this.ivrActive = false;
+        this.directActive = true;
+      }
+    },
+
     goBack() {
       this.$router.push("/dashboard");
     },
+        MovetoBilling(i) {
+      if (i == 1) {
+        this.dialog = true;
+      }
+    },
     getBill(status, planid) {
-      console.log(status,planid)
+      console.log(status, planid);
       const token = localStorage.getItem("token");
-     
+
       let plan =
         this.twelvemonths == false && this.sixmonths == false
           ? 1
