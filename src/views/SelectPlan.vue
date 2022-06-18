@@ -19,17 +19,25 @@
                 </h2>
 
                 <v-col cols="12" sm="6" class="py-2">
-                  <v-btn-toggle
-                    rounded
-                    elivation="5"
-                    class="toggle_IVR"
-                    borderless
-                  >
-                    <v-btn width="200" @click="isIvr(2)">
-                      Basic (No IVR)
-                    </v-btn>
-                    <v-btn width="200" @click="isIvr(1)"> IVR </v-btn>
-                  </v-btn-toggle>
+             
+
+                   <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless>
+                      <v-btn v-if="checkIvrStatus == true" width="200" @click="isIvr(2)" disabled>
+                                  Direct (No IVR)
+                                </v-btn>
+                                <v-btn v-else width="200" @click="isIvr(2)"
+                                  :class="{ active: checkIvrStatus == false }">
+                                  Direct (No IVR)
+                                </v-btn>
+                                <v-btn v-if="checkIvrStatus == false" width="200" @click="isIvr(1)">
+                                  IVR
+                                </v-btn>
+                                <v-btn v-else width="200" @click="isIvr(1)" :class="{ active: checkIvrStatus == true }">
+                                  IVR
+                                </v-btn>
+
+                              
+                              </v-btn-toggle>
                 </v-col>
                 <h2 class="sub_title mt-2 mb-16"><br /></h2>
 
@@ -274,7 +282,7 @@ export default {
   components: {},
 
    created() {
-    
+    this.initial_value();
     this.planDetails =  db
       .collection("plan_details")
       .get()
@@ -354,6 +362,14 @@ export default {
       }
     });
     },
+       initial_value() {
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      //  this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
+
+      // local storage isIV get data here
+      // if false then noIVR
+      this.checkIvrStatus = localStorageUserObj.IsIvr;
+       },
     isIvr(i) {
       this.SelectPlan = i;
       console.log(i);
