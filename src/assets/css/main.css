@@ -769,11 +769,14 @@ h4.background span {
     text-transform: inherit !important;
 } */
 
-.toggle_IVR .v-btn--active,
 .toggle_IVR .active {
     color: #fff !important;
     background-color: #ee1c25 !important;
     opacity: 1 !important;
+}
+
+.mytable .v-table tbody tr:not(:last-child) {
+    border-bottom: none;
 }
 
 .toggle_IVR .v-btn {
