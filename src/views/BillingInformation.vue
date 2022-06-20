@@ -227,6 +227,7 @@
                               </div>
 
                               <div class="membership_details">
+                               
                                 <v-radio-group mandatory v-model="IVRPlanradio">
                                   <v-radio color="red darken-3" hide-details v-for="ivrData in ivrPlanArray"
                                     :key="ivrData.PlanId" :value="ivrData.PlanId" @click="
