@@ -305,6 +305,13 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/PrioritizeConfiguration.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
+    {
+        path: '/PrioritizeConfigurationIvr',
+        name: 'PrioritizeConfigurationIvr',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/PrioritizeConfigurationIvr.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
 
     {
         path: '/NotificationSettings',
