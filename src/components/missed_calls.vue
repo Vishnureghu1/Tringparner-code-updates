@@ -194,6 +194,11 @@
                                 </v-list-item>
 
                                 <v-list-item>
+                                  <v-select v-model="selectedIvrOption" :items="IvrOptions" label="IVR"
+                                    @change="handleIvrOptionChange" outlined></v-select>
+                                </v-list-item>
+
+                                <v-list-item>
                                   <v-select
                                     v-model="selectedReminders"
                                     :items="Reminders"
@@ -913,6 +918,8 @@ export default {
     selectedDurationOfCall: "",
     ViewByType: ["Calls", "Notes", "Reminder"],
     selectedViewByType: "Calls",
+    IvrOptions: ["All", "Yes", "No"],
+    selectedIvrOption: "All",
     Reminders: ["Not Specified", "Yes"],
     selectedReminders: "Not Specified",
     Notes: ["Not Specified", "Yes"],
@@ -1147,6 +1154,10 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
       this.selectedViewByType = opn;
       console.log(this.selectedViewByType);
     },
+    handleIvrOptionChange(opn) {
+      this.selectedIvrOption = opn;
+      console.log(this.selectedIvrOption);
+    },
     handleRemindersChange(opn) {
       this.selectedReminders = opn;
       console.log(this.selectedReminders);
@@ -1267,6 +1278,7 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
       this.selectedTimeOfCall = "Descending";
       this.selectedDurationOfCall = "";
       this.selectedViewByType = "Calls";
+      this.selectedIvrOption = "All";
       this.selectedReminders = "Not Specified";
       this.selectedNotes = "Not Specified";
       this.selectedUser = "All";
@@ -1464,6 +1476,19 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
         Object.assign(filterCallsConditions.conditions, {
           Reminder: { $exists: true },
         });
+      }
+      console.log("this.selectedIvrOption", this.selectedIvrOption);
+      if (this.selectedIvrOption !== "All") {
+
+        if (this.selectedIvrOption === "Yes") {
+          Object.assign(filterCallsConditions.conditions, {
+            IsIvr: true
+          });
+        } else {
+          Object.assign(filterCallsConditions.conditions, {
+            IsIvr: { $exists: false },
+          });
+        }
       }
       console.log("this.selectedReminders", this.selectedReminders);
       if (this.selectedReminders !== "Not Specified") {

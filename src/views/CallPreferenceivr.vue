@@ -729,7 +729,7 @@ export default {
     },
      PrioritizeConfiguration() {
         // const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/PrioritizeConfiguration?bn="+this.$route.query.bn);
+      this.$router.push("/PrioritizeConfigurationIvr?bn="+this.$route.query.bn+"&key="+this.$route.query.key);
     },
     // goBack(){
     //    const getNumber =  Object.keys(this.$route.query)[0]
