@@ -457,7 +457,7 @@ export default {
             // this.$router.push("/CallFlowSettings?bn=" + bussinessNumber);
             // alert(bussinessNumber);
             let newQuery = { bn: bussinessNumber };
-            this.$router.push({ path: "/CallFlowSettings", query: { ...newQuery } });
+            this.$router.push({ path: "/IVRandCallRouting", query: { ...newQuery } });
         },
         validate(n) {
             this.steps[n].valid = false;

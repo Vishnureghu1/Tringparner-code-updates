@@ -16,10 +16,21 @@
                         IVR and Call Routing
                       </h2>
 
-                      <v-breadcrumbs class="breadcrumbs" :items="items">
-                        <template class="breadcrumbs" v-slot:divider>
-                          <v-icon>mdi-chevron-right</v-icon>
-                        </template>
+                      <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
+                          <template v-slot:item="{ item }">
+                              <router-link style="text-decoration: none" v-if="!item.disabled"
+                                  :to="item.route">
+                                  <v-breadcrumbs-item :disabled="item.disabled">
+                                      {{ item.text }}
+                                  </v-breadcrumbs-item>
+                              </router-link>
+
+                              <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
+                              <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
+                                  {{ item.text }}
+                              </v-breadcrumbs-item>
+                              <!-- </router-link> -->
+                          </template>
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
@@ -512,6 +523,7 @@ export default {
   created() {
     window.scrollTo(0, 0); //scroll to top
     this.bussinessNumber = this.$route.query.bn;
+    this.setBreadcrumbs(this.bussinessNumber);
     this.initial_value();
   },
   data: () => ({
@@ -533,31 +545,41 @@ export default {
     IvrPlan: "",
     dialog: false,
     items: [
-      {
-        text: "More",
-        disabled: false,
-        href: "Dashboard",
-      },
-      {
-        text: "Business Numbers",
-        disabled: false,
-        to: { name: "BusinessNumber" },
-      },
-      {
-        text: "Call and IVR Configuration",
-        disabled: false,
-        to: { name: "CallandIVRConfig" },
-      },
-      {
-        text: " IVR and Call Routing",
-        disabled: true,
-      },
+      
     ],
     bussinessNumber: "",
     AccountId: "",
   }),
 
   methods: {
+    setBreadcrumbs(bussinessNumber) {
+        this.items = [
+            {
+              text: "More",
+              disabled: false,
+              href: "Dashboard",
+              route: { name: "Dashboard", query: {} },
+            },
+            {
+              text: "Business Numbers",
+              disabled: false,
+              route: { name: "BusinessNumber", query: {} },
+            },
+            {
+              text: "Call and IVR Configuration",
+              disabled: false,
+              // to: { name: "CallandIVRConfig" },
+              route: {
+                  name: "CallandIVRConfig",
+                  query: { bn: [bussinessNumber] },
+              },
+            },
+            {
+              text: " IVR and Call Routing",
+              disabled: true,
+            },
+        ];
+    },
     proccedToIVR(i) {
       if (i == 1) {
         const options = {
@@ -678,7 +700,7 @@ export default {
     },
     goBack() {
       // const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/BusinessNumber?bn=" + this.bussinessNumber);
+      this.$router.push("/CallandIVRConfig?bn=" + this.bussinessNumber);
     },
     callPauseNumber() {
       // const getNumber =  Object.keys(this.$route.query)[0]

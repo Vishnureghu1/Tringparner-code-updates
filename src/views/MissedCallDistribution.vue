@@ -318,17 +318,29 @@ export default {
         {
           text: "More",
           disabled: false,
-          route: { name: 'BusinessNumber', query: { }  }
+          href: "Dashboard",
+          route: { name: "Dashboard", query: {} },
         },
         {
           text: "Business Numbers",
           disabled: false,
-          route: { name: 'BusinessNumber', query: { }  }
+          route: { name: "BusinessNumber", query: {} },
         },
         {
-          text: "Call Flow Settings",
+          text: "Call and IVR Configuration",
           disabled: false,
-          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+          route: {
+              name: "CallandIVRConfig",
+              query: { bn: [bussinessNumber] },
+          },
+        },
+        {
+            text: "IVR and Call Routing",
+            disabled: false,
+            route: {
+                name: "IVRandCallRouting",
+                query: { bn: [bussinessNumber] },
+            },
         },
          {
           text: "Missed Call Distribution",
@@ -339,7 +351,7 @@ export default {
     },
     goBack(bussinessNumber) {
       let newQuery = {bn: bussinessNumber};
-      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+      this.$router.push({ path: '/IVRandCallRouting', query: { ...newQuery } });
     },
     SelectSpecificAgent() {
       this.$router.push("/SelectSpecificAgent?bn="+parseInt(this.$route.query.bn));

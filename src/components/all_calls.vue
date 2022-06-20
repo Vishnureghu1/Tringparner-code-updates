@@ -266,13 +266,24 @@
                           <div>
                             <v-row>
                               <v-col cols="12" sm="8">
+ 
                                 <div class="ml-10">
-                                  <h6 class="font-weight-thin">Source</h6>
+                                  <div class="row">
+                                    <div class="col-6"><h6 class="font-weight-thin">Source</h6>
 
                                   <h5 class="font-weight-light">
                                     {{ details.source }} No: (+91
                                     {{ details.virtualnumberDisplay }})
-                                  </h5>
+                                  </h5></div>
+                                  
+                                   <div class="col-6" v-if="details.Key!='' && details.Department!=null"> <h6 class="font-weight-thin">Department Selected</h6>
+
+                                  <h5 class="font-weight-light">
+                                     {{details.Department}}
+                                  </h5>                            
+</div>
+                                  </div>
+                                  
                                   <div v-for="getNotes in details.Note" :key="getNotes.text">
                                     <span v-if="getNotes.Note != ''">
                                       <span class="mdi mdi-note grey--text">
@@ -669,6 +680,8 @@ export default {
     userRole: "",
     reminder: "",
     noSearchData: false,
+    Department:"",
+    Key:"",
   }),
   watch: {
     sendInviteLoader(val) {
@@ -887,6 +900,8 @@ export default {
                           isBlocked: this.blocked_numbers_.includes(
                             parseInt(this.calldetails.callerNumber)
                           ),
+                                          Department:this.calldetails.Department,
+                Key:this.calldetails.Key,
                         });
                         this.realdata.push(this.detail);
                         this.backuprealdata.push(this.detail);
@@ -1528,6 +1543,8 @@ export default {
               isBlocked: this.blocked_numbers_.includes(
                 parseInt(this.calldetails.callerNumber)
               ),
+                              Department:this.calldetails.Department,
+                Key:this.calldetails.Key,
             });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
@@ -1690,6 +1707,8 @@ export default {
               isBlocked: this.blocked_numbers_.includes(
                 parseInt(this.calldetails.callerNumber)
               ),
+                              Department:this.calldetails.Department,
+                Key:this.calldetails.Key,
             });
 
             // if("Message" in this.detail.reminderPayload) {
@@ -1865,6 +1884,8 @@ export default {
                 isBlocked: this.blocked_numbers_.includes(
                   parseInt(this.calldetails.callerNumber)
                 ),
+                Department:this.calldetails.Department,
+                Key:this.calldetails.Key,
               });
 
 

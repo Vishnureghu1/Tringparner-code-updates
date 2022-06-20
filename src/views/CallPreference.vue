@@ -693,24 +693,35 @@ export default {
     setBreadcrumbs(bussinessNumber) {
       this.items = [
         {
-          text: "Business Numbers",
+          text: "More",
           disabled: false,
-          to: { name: "BusinessNumber" },
-          href: `BusinessNumber?bn=`,
-          route: { name: 'BusinessNumber', query: { }  }
+          href: "Dashboard",
+          route: { name: "Dashboard", query: {} },
         },
         {
-          text: "Call Flow Settings",
+          text: "Business Numbers",
           disabled: false,
-          to: { name: "CallFlowSettings", query: { ...{bn: bussinessNumber}} },
-          href: `CallFlowSettings?bn=`,
-          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+          route: { name: "BusinessNumber", query: {} },
+        },
+        {
+          text: "Call and IVR Configuration",
+          disabled: false,
+          route: {
+              name: "CallandIVRConfig",
+              query: { bn: [bussinessNumber] },
+          },
+        },
+        {
+            text: "IVR and Call Routing",
+            disabled: false,
+            route: {
+                name: "IVRandCallRouting",
+                query: { bn: [bussinessNumber] },
+            },
         },
          {
           text: "Call Preference",
           disabled: true,
-          to: { name: "CallPreference", query: { ...{bn: bussinessNumber}} },
-          href: `CallPreference?bn=`,
           route: { name: 'CallPreference', query: { bn: [bussinessNumber]}  }
         },
       ]
@@ -719,7 +730,7 @@ export default {
       // this.$router.push("/CallFlowSettings?bn=" + bussinessNumber);
       // alert(bussinessNumber);
       let newQuery = {bn: bussinessNumber};
-      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+      this.$router.push({ path: '/IVRandCallRouting', query: { ...newQuery } });
     },
      PrioritizeConfiguration() {
         // const getNumber =  Object.keys(this.$route.query)[0]
