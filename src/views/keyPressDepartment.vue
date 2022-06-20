@@ -95,6 +95,7 @@
                                                                                 <span v-if="departmentTitle">{{departmentTitle}}</span><span v-else>Department Title *</span>
                                                                             </div><div v-if="isEditTitle==true">    <v-text-field
       label="Department Title" class="pt-0 mt-0"
+      v-model = "departmentTitle"
      :value="departmentTitle"
       single-line
       full-width
@@ -425,6 +426,30 @@ export default {
     methods: {
         toggleEditTitle(){
                this.isEditTitle = !this.isEditTitle;
+               console.log(this.isEditTitle)
+            //    console.log("testing vet")
+                if(this.isEditTitle == true)return
+                const details = {
+						url: this.$cloudfareApi + '/callDistribution/ivr/source',
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+					data: {
+                    owner_uid: this.ownerUid,
+                    updated_by: this.uid,
+                    virtual_number: this.bussinessNumber,
+                    AccountId: this.AccountId,
+                    source: this.departmentTitle,
+                    key:this.key
+                },
+					}      
+					axios(details)
+						.then((response) => {
+                            console.log(response)
+                     this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 2000});
+						})
+						.catch((error) => {
+							console.error(error);
+						})
 
         },
         disableEnable(){
