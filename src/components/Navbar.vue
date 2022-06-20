@@ -288,6 +288,11 @@ export default {
           ],
         },
         {
+          to: "/contacts",
+          icon: "mdi-account-box-outline",
+          text: "Contacts",
+        },
+          {
           to: "/report",
           icon: "mdi-chart-bar",
           text: "Report",

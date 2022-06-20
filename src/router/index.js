@@ -60,6 +60,14 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/Report.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
     },
+
+    {
+        path: '/contacts',
+        name: 'contacts',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/Contacts.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN", "AGENT"] }
+    },
     {
         path: '/Addons',
         name: 'Addons',
@@ -424,7 +432,7 @@ const routes = [{
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     }
 
-]    
+]
 
 const router = new VueRouter({
     mode: 'history',
