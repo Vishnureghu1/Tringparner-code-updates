@@ -27,11 +27,11 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        Plan: {{ IvrPlan }}<br>
+                        <!-- Plan: {{ IvrPlan }}<br>
                         Status: {{ checkIvrStatus }}
                         <br>
                         upgrade: {{ upgrade }}
-                        <br>
+                        <br> -->
                         <div class="center align-center" align="center" v-if="checkIvrStatus == false">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
@@ -227,12 +227,12 @@
                               </div>
 
                               <div class="membership_details">
-                               
-                                <v-radio-group mandatory v-model="IVRPlanradio">
+                               <!-- {{PlanId}} -->
+                                <v-radio-group mandatory v-model="IVRPlanradio" v-if="PlanId>3">
                                   <v-radio color="red darken-3" hide-details v-for="ivrData in ivrPlanArray"
                                     :key="ivrData.PlanId" :value="ivrData.PlanId" @click="
                                       getBill(ivrData.price, ivrData.PlanId)
-                                    " @change="check($event)">
+                                    " >
                                     <template v-slot:label>
                                       <div class="black--text">
                                         Pay for
@@ -240,6 +240,22 @@
                                           {{ ivrData.Validity }} months
                                           <span v-if="ivrData.Discount > 0">and save
                                             {{ ivrData.Discount }}%</span></strong>
+                                      </div>
+                                    </template>
+                                  </v-radio>
+                                </v-radio-group>
+                                 <v-radio-group mandatory v-model="nonIVRPlanradio" v-else>
+                                  <v-radio color="red darken-3" hide-details v-for="nonivrData in nonIvrPlanArray"
+                                    :key="nonivrData.PlanId" :value="nonivrData.PlanId" @click="
+                                      getBill(nonivrData.price, nonivrData.PlanId)
+                                    " >
+                                    <template v-slot:label>
+                                      <div class="black--text">
+                                        Pay for
+                                        <strong class="black--text darken-4">
+                                          {{ nonivrData.Validity }} months
+                                          <span v-if="ivrData.Discount > 0">and save
+                                            {{ nonivrData.Discount }}%</span></strong>
                                       </div>
                                     </template>
                                   </v-radio>
@@ -498,9 +514,9 @@ export default {
                 PlanId: plan.Id,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
               });
-              // if( plan.Validity>1){
+              if( plan.Validity>1){
               this.ivrPlanArray.push(this.ivrobject);
-              // }
+              }
             } else {
               this.nonivrobject = Object.assign({}, this.nonivrobject, {
                 planName: plan.Name,
@@ -510,10 +526,10 @@ export default {
                 PlanId: plan.Id,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
               });
-              // if( plan.Validity>1){
+              if( plan.Validity>1){
 
               this.nonIvrPlanArray.push(this.nonivrobject);
-              // }
+              }
             }
             // var timestamp = this.calldetails.dateTime
           });
@@ -526,6 +542,7 @@ export default {
 
     window.scrollTo(0, 0); //scroll to top
     this.getBill("inital", this.PlanId);
+    
 
     //  this.getOrderIdforPayment()
   },
@@ -631,6 +648,7 @@ export default {
 
       axios(details)
         .then((response) => {
+          
           this.invoice_amount = response.data.invoice_amount;
           const permonthdivison = plan == 1 ? 1 : plan == 2 ? 6 : 12;
           this.permonth = parseInt(
