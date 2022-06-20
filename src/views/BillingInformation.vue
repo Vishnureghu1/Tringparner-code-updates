@@ -261,6 +261,20 @@
                                   </v-radio>
                                 </v-radio-group>
                               </div>
+                               <v-row no-gutters>
+                                <div class="col-8 membership_heading red--text">
+                                  Cost After Discount
+                                </div>
+                                <div class="col-4 membership_heading" align="right">
+                                  ₹ {{ invoice_amount }} for {{}} Months
+                                </div>
+                              </v-row>
+                               <v-row no-gutters>
+                                <div class="col-12  red--text" align="center">
+                                 ( Your Total Saving ₹ {{ Discount }})
+                                </div>
+                                
+                              </v-row>
                             </v-card-text>
                             <v-card-actions align="center" class="center">
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
@@ -648,9 +662,9 @@ export default {
 
       axios(details)
         .then((response) => {
-          
+          console.log( response.data);
           this.invoice_amount = response.data.invoice_amount;
-          const permonthdivison = plan == 1 ? 1 : plan == 2 ? 6 : 12;
+          const permonthdivison = this.PlanId == 1 ? 1 : this.PlanId == 5 ? 6 : 12;
           this.permonth = parseInt(
             response.data.invoice_amount / permonthdivison
           );
