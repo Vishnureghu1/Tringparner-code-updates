@@ -19,20 +19,27 @@
                 </h2>
 
                 <v-col cols="12" sm="6" class="py-2">
-                  <v-btn-toggle
-                    rounded
-                    elivation="5"
-                    class="toggle_IVR"
-                    borderless
-                  >
-                    <v-btn width="200" @click="isIvr(2)">
-                      Basic (No IVR)
-                    </v-btn>
-                    <v-btn width="200" @click="isIvr(1)"> IVR </v-btn>
-                  </v-btn-toggle>
+             
+
+                   <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless>
+                      <v-btn v-if="checkIvrStatus == true" width="200" @click="isIvr(2)" disabled>
+                                  Direct (No IVR)
+                                </v-btn>
+                                <v-btn v-else width="200" @click="isIvr(2)"
+                                  :class="{ active: checkIvrStatus == false }">
+                                  Direct (No IVR)
+                                </v-btn>
+                                <v-btn v-if="checkIvrStatus == false" width="200" @click="isIvr(1)">
+                                  IVR
+                                </v-btn>
+                                <v-btn v-else width="200" @click="isIvr(1)" :class="{ active: checkIvrStatus == true }">
+                                  IVR
+                                </v-btn>
+
+                              
+                              </v-btn-toggle>
                 </v-col>
                 <h2 class="sub_title mt-2 mb-16"><br /></h2>
-
 
                 <div v-if="SelectPlan == 1">
                   <v-radio-group mandatory v-model="IVRPlanradio">
@@ -49,7 +56,7 @@
                           @click="colorChange(ivrData.PlanId)" 
                          
                         >
-                          <span class="top-right badge red" v-if=" ivrData.PlanId ==bestPlanIvr"
+                          <span class="top-right badge red" v-if=" bestPlanIvr==true"
                             >BEST VALUE IVR</span
                           >
                           <v-radio color="red" :value="ivrData.PlanId" class="pl-4 radio_classs" active-class="planActive">
@@ -105,7 +112,7 @@
                           @click="colorChange(nonivrData.PlanId)"
                           
                         >
-                          <span class="top-right badge red" v-if=" nonivrData.PlanId ==bestPlanNonIvr"
+                          <span class="top-right badge red" v-if=" bestPlanNonIvr==true"
                             >BEST VALUE IVR</span
                           >
                           <v-radio color="red" :value="nonivrData.PlanId" class="pl-4 radio_classs" active-class="planActive">
@@ -264,9 +271,9 @@ export default {
     SelectPlan: 0, // to set value on click based on plan type
     ivrFeatureBox: false,
     planDetails: "",
-    bestPlanIvr:4, // 4, 5, 6
+    bestPlanIvr:false,
     IVRPlanradio:4,
-    bestPlanNonIvr:1, //1 ,2, 3
+    bestPlanNonIvr:false,
     nonIVRPlanradio:1,
     isActive: false,
 
@@ -274,9 +281,9 @@ export default {
   components: {},
 
    created() {
-    
+    this.initial_value();
     this.planDetails =  db
-      .collection("plan_details")
+       .collection("plan_details").where('Id','>=',2)
       .get()
       .then((querySnapshot) => {
         this.ivrPlanArray = [];
@@ -286,7 +293,7 @@ export default {
             console.log(doc.id, " => ", doc.data());
             let plan = doc.data();
             this.plan = plan;
-            console.log(plan.Name);
+            console.log('plan here'+plan.IsRecommanded);
           
             if (plan.IsIvr == true) {
               this.ivrobject = Object.assign({}, this.ivrobject, {
@@ -295,6 +302,7 @@ export default {
                 Validity: plan.Validity,
                 Discount: plan.Discount,
                 PlanId: plan.Id,
+                bestPlanIvr:plan.IsRecommanded,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
               });
               this.ivrPlanArray.push(this.ivrobject);
@@ -306,8 +314,10 @@ export default {
                 Validity: plan.Validity,
                 Discount: plan.Discount,
                 PlanId: plan.Id,
+                bestPlanNonIvr: plan.IsRecommanded,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
               });
+            
               this.nonIvrPlanArray.push(this.nonivrobject);
              
             }
@@ -354,6 +364,22 @@ export default {
       }
     });
     },
+       initial_value() {
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      //  this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
+
+      // local storage isIV get data here
+      // if false then noIVR
+      this.checkIvrStatus = localStorageUserObj.IsIvr;
+          
+          this.nonIVRPlanradio = localStorage.getItem("nonIVRPlanradio");
+          this.IVRPlanradio = localStorage.getItem("IVRPlanradio");
+        // this.checkIvrStatus = false;
+        this.checkIvrStatus = localStorageUserObj.IsIvr;
+              this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
+          this.directActive = localStorageUserObj.IsIvr == true ? false : true;
+          this.IvrPlan = localStorageUserObj.IsIvr == false ? 2 : 1;
+       },
     isIvr(i) {
       this.SelectPlan = i;
       console.log(i);

@@ -33,19 +33,24 @@
                                         </v-col>
                                     </v-row>
                                     <v-row class="mt-0" align="center" justify="center">
-                                        <v-col cols="12" sm="8">
+                                        <v-col cols="12" sm="10">
                                             <h2 class="comment_heading ml-5">
                                                 Configure {{ pageTitle }}.
                                             </h2>
                                         </v-col>
-                                        <v-col cols="10" sm="4" class="d-flex">
-
-                                            <v-btn @click="disableKey()" class="ma-2" color="primary" dark>
+                                        <v-col cols="10" sm="2" >
+<v-switch @click="disableEnable()"
+      v-model="enableDisable"
+      :label="` `"
+    ></v-switch>
+    <span v-if="enableDisable==true" class="center" >Enabled</span>
+    <span v-else>Disabled</span>
+                                            <!-- <v-btn @click="disableKey()" class="ma-2" color="primary" dark>
                                                 Disable
                                             </v-btn>
                                             <v-btn @click="enableKey()" class="ma-2" color="success" dark>
                                                 Enable
-                                            </v-btn>
+                                            </v-btn> -->
 
                                         </v-col>
                                     </v-row>
@@ -83,26 +88,34 @@
 
                                                             <v-col cols="12" class="ml-2">
                                                                 <v-row>
-                                                                    <v-col cols="6">
+                                                                    <v-col cols="8">
                                                                         <h2 class="name_heading mt-4 mr-7">
-                                                                            Department Title *
+                                                                            <div v-if="isEditTitle==false ">
+
+                                                                                <span v-if="departmentTitle">{{departmentTitle}}</span><span v-else>Department Title *</span>
+                                                                            </div><div v-if="isEditTitle==true">    <v-text-field
+      label="Department Title" class="pt-0 mt-0"
+     :value="departmentTitle"
+      single-line
+      full-width
+      hide-details
+    ></v-text-field>
+</div>
                                                                         </h2>
-                                                                        <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                                                            Sales Enquiry
-                                                                        </h2>
+                                                                        
                                                                     </v-col>
-                                                                    <v-col cols="6" align="end">
+                                                                    <v-col cols="4" align="end">
                                                                         <!-- <router-link :to="{ name: 'CallRouting' }"> -->
                                                                         <span>
                                                                             <v-icon class="mt-6 mb-5 mr-7"
-                                                                                color="#EE1C25" @click="callRouting()">
+                                                                                color="#EE1C25" @click="toggleEditTitle">
                                                                                 mdi-pencil</v-icon>
                                                                         </span>
                                                                         <!-- </router-link> -->
                                                                     </v-col>
                                                                 </v-row>
                                                                 <v-divider></v-divider>
-                                                                <v-row>
+                                                                   <v-row>
                                                                     <v-col cols="6">
                                                                         <h2 class="name_heading mt-4 mr-7">
                                                                             Select Agents
@@ -162,7 +175,7 @@
                                                                         <span>
                                                                             <v-icon class="mt-6 mb-5 mr-7"
                                                                                 color="#EE1C25"
-                                                                                @click="MissedCallRouting()">
+                                                                                @click="missedcallRouting()">
                                                                                 mdi-arrow-right</v-icon>
                                                                         </span>
                                                                         <!-- </router-link> -->
@@ -242,6 +255,7 @@
 
 <script>
 import { db } from "@/main.js";
+import axios from "axios";
 // import firebase from "firebase";
 export default {
     components: {},
@@ -257,10 +271,9 @@ export default {
                 : localStorageUserObj.OwnerAccountId;
         this.bussinessNumber = this.$route.query.bn;
         this.key = this.$route.query.key;
+        this.uid= localStorageUserObj.uid;
         if (this.key == 'intro') {
-
             this.pageTitle = 'Introduction and Departments Audio';
-
         } else if (this.key == 'nokeypress') {
             this.pageTitle = 'No Keypress Audio';
 
@@ -299,7 +312,7 @@ export default {
                 },
             };
             console.log(options);
-            this.$axios(options)
+            axios(options)
                 .then((response) => {
                     console.log(response.data);
                     // this.newPopupAudioName = '';
@@ -316,7 +329,7 @@ export default {
                     console.error(error);
                 });
         });
-        this.getAllUserGreetingMessages(); //get all user audios
+        // this.getAllUserGreetingMessages(); //get all user audios
         db.collection("uservirtualNumber")
             .where("Uid", "==", this.ownerUid)
             .where("VirtualNumber", "==", parseInt(this.bussinessNumber))
@@ -325,6 +338,8 @@ export default {
                 if (!snapshot.empty) {
                     snapshot.docs.forEach((element) => {
                         console.log("element.data()", element.data());
+                        this.departmentTitle = element.data().Ivr[this.key.toString()].Source,
+                        this.enableDisable = element.data().Ivr[this.key.toString()].IsActive,
                         this.radioGroup = element.data().WelcomeMessage;
                     });
                 } else {
@@ -333,14 +348,21 @@ export default {
             });
     },
     data: () => ({
+        key:"",
+        departmentTitle:"",
         dialog: false,
         dialog2: false,
         isActive: true,
         pageTitle: '',
         e2: 1,
+        uid:"",
         repeatCallerSettings: false,
         curr: 1,
         lastStep: 4,
+        enableDisable:false,
+        dptTitle:false,
+        dptHead:true,
+        isEditTitle:false,
         steps: [
             { name: "Manage User", rules: [(v) => !!v || "Required."], valid: true },
             {
@@ -401,6 +423,46 @@ export default {
         },
     },
     methods: {
+        toggleEditTitle(){
+               this.isEditTitle = !this.isEditTitle;
+
+        },
+        disableEnable(){
+        //   console.log("enableDisable",this.enableDisable)
+              const details = {
+						url: this.$cloudfareApi + '/callDistribution/ivr/status',
+						method: 'POST',
+            headers:{"token":localStorage.getItem("token")},
+					data: {
+                    owner_uid: this.ownerUid,
+                    updated_by: this.uid,
+                    virtual_number: this.bussinessNumber,
+                    AccountId: this.AccountId,
+                    IsIvr: this.enableDisable,
+                    key:this.key
+                },
+					}      
+					axios(details)
+						.then((response) => {
+                            console.log(response)
+                     this.$root.vtoast.show({message: 'updated successfully', color: 'green', timer: 2000});
+						})
+						.catch((error) => {
+							console.error(error);
+						})
+        },
+    //       callRouting() {
+    //   // const getNumber =  Object.keys(this.$route.query)[0]
+    //   this.$router.push("/CallPreference?bn=" + this.bussinessNumber);
+    // },
+
+    // IVRandcallRouting() {
+    //   this.$router.push("/IVRandCallRouting?bn=" + this.bussinessNumber);
+    // },
+    // MissedCallRouting() {
+    //   // const getNumber =  Object.keys(this.$route.query)[0]
+    //   this.$router.push("/MissedCallDistribution?bn=" + this.bussinessNumber);
+    // },
         triggerUnselectAudio(greetingAudioAccountId) {
             console.log("triggerUnselectAudio", greetingAudioAccountId);
             this.dialog = true;
@@ -423,7 +485,7 @@ export default {
                 },
             };
             console.log(options);
-            this.$axios(options)
+            axios(options)
                 .then((response) => {
                     console.log(response.data);
                     // this.newPopupAudioName = '';
@@ -496,8 +558,12 @@ export default {
             this.curr = 5;
         },
 
-
-
+        callRouting(){
+         this.$router.push("/IvrCallPreference?key=" + this.key + "&bn=" + this.bussinessNumber);
+        },
+         missedcallRouting(){
+         this.$router.push("/IvrMissedCallDistribution?key=" + this.key + "&bn=" + this.bussinessNumber);
+        },
         threeDotAction(m, greetingsId) {
             console.log("m.actionSlug", m.actionSlug);
             console.log("greetingsId", greetingsId);

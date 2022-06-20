@@ -277,6 +277,13 @@ const routes = [{
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
 
+    {
+        path: '/IvrCallPreference',
+        name: 'IvrCallPreference',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/CallPreferenceivr.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
 
 
 
@@ -316,7 +323,13 @@ const routes = [{
             import ( /* webpackChunkName: "missed_call" */ '../views/MissedCallDistribution.vue'),
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
-
+    {
+        path: '/IvrMissedCallDistribution',
+        name: 'IvrMissedCallDistribution',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/MissedCallDistributionIvr.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
     // SelectSpecificAgent
     {
         path: '/SelectSpecificAgent',

@@ -129,30 +129,30 @@
                             </v-row>
                             <v-divider></v-divider>
                             
-                            <v-row>
-                              <v-col cols="6">
-                                <h2 class="name_heading mt-4 mr-7">
-                                  Set Working Hours and Offline Audio
-                                </h2>
-                                <h2 class="comment_heading mt-1 mb-5 mr-7">
-                                  Set a duration for which this number will be
-                                  active.
-                                </h2>
-                              </v-col>
-                              <v-col cols="6" align="end">
+                              <!-- <v-row>
+                                <v-col cols="6">
+                                  <h2 class="name_heading mt-4 mr-7">
+                                    Set Working Hours and Offline Audio
+                                  </h2>
+                                  <h2 class="comment_heading mt-1 mb-5 mr-7">
+                                    Set a duration for which this number will be
+                                    active.
+                                  </h2>
+                                </v-col>
+                                <v-col cols="6" align="end">
 
-                                <router-link :to="{ name: 'WorkingHours', query: { bn: this.bussinessNumber } }">
-                                  <span
-                                    ><v-icon
-                                      class="mt-6 mb-5 mr-7"
-                                      color="#EE1C25"
-                                      >mdi-arrow-right</v-icon
-                                    >
-                                  </span>
-                                </router-link>
-                              </v-col>
-                            </v-row>
-                            <v-divider></v-divider>
+                                  <router-link :to="{ name: 'WorkingHours', query: { bn: this.bussinessNumber } }">
+                                    <span
+                                      ><v-icon
+                                        class="mt-6 mb-5 mr-7"
+                                        color="#EE1C25"
+                                        >mdi-arrow-right</v-icon
+                                      >
+                                    </span>
+                                  </router-link>
+                                </v-col>
+                              </v-row>
+                              <v-divider></v-divider> -->
                             <v-row>
                               <v-col cols="6">
                                 <h2
