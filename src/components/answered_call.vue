@@ -273,12 +273,11 @@
                   </v-row>
 
                   <div>
-                      <v-progress-linear  v-if=" realdata.length == 0 && this.searchTerm.length==0"
-                            color="#ee1c25 "
-                            indeterminate
-                            rounded
-                            height="6"
-                          ></v-progress-linear>
+                         <div v-if="realdata.length!=0">
+
+                    <v-progress-linear v-if="realdata.length == 0 && this.searchTerm.length == 0" color="#ee1c25 "
+                      indeterminate rounded height="6"></v-progress-linear>
+</div><div v-else>No calls found</div>
                     
                             
                           <div v-if="this.searchTerm.length != 0 && totalItems==0" align="center" class="center">No Calls to show!</div>

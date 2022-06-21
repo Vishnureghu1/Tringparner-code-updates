@@ -27,13 +27,13 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        <!-- IvrPlan: {{ IvrPlan }}<br>
+                        IvrPlan: {{ IvrPlan }}<br>
                         checkIvrStatus: {{ checkIvrStatus }}
                         <br>
                         upgrade: {{ upgrade }}
                         <br>
                         IvrPlan: {{ IvrPlan }}
-                        <br> -->
+                        <br>
                         <div class="center align-center" align="center" v-if="checkIvrStatus == false">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
@@ -785,13 +785,6 @@ export default {
     getBill(status, planid) {
       console.log(status, planid);
       const token = localStorage.getItem("token");
-
-      let plan =
-        this.twelvemonths == false && this.sixmonths == false
-          ? 1
-          : this.twelvemonths == true && this.sixmonths == false
-          ? 3
-          : 2;
       // this.PlanId = (radio == "inital")?this.PlanId:planid;
       this.PlanId = planid;
       this.sublist = [];
