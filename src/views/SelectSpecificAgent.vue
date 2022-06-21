@@ -10,7 +10,7 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 pl-5">
-                        <v-icon class="mr-2" color="black" @click="goBack()"
+                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber, key)"
                           >mdi-arrow-left</v-icon
                         >
                         Prioritize Configuration
@@ -207,8 +207,9 @@ export default {
     initial_data(){
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.bussinessNumber = this.$route.query.bn;
+    this.key = this.$route.query.key;
     console.log(this.bussinessNumber);
-        this.setBreadcrumbs(this.bussinessNumber);
+        this.setBreadcrumbs(this.bussinessNumber, this.key);
     // this.setBreadcrumbs(this.bussinessNumber);
     const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
@@ -251,8 +252,9 @@ export default {
       const item = this.items.find((item) => item.id == itemID);
       item.list = list;
     },
-    goBack() {
-      this.$router.push("/CallFlowSettings");
+    goBack(bussinessNumber, key) {
+      let newQuery = {bn: bussinessNumber, key: key};
+      this.$router.push({ path: '/IvrCallPreference', query: { ...newQuery } });
     },
     CallFlowSettings() {
       this.$router.push("/CallFlowSettings");
@@ -272,36 +274,42 @@ export default {
         this.curr = n + 2;
       }
     },
-     setBreadcrumbs(bussinessNumber) {
+     setBreadcrumbs(bussinessNumber, key) {
       this.items = [
         {
-          text: "Business Numbers",
-          disabled: false,
-          to: { name: "BusinessNumber" },
-          href: `BusinessNumber?bn=`,
-          route: { name: 'BusinessNumber', query: { }  }
+            text: "Business Numbers",
+            disabled: false,
+            to: { name: "BusinessNumber" },
+            href: `BusinessNumber?bn=`,
+            route: { name: "BusinessNumber", query: {} },
         },
         {
-          text: "Call Flow Settings",
-          disabled: false,
-          to: { name: "CallFlowSettings", query: { ...{bn: 1111111}} },
-          href: `CallFlowSettings?bn=`,
-          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+            text: "Call and IVR Configuration",
+            disabled: false,
+            to: { name: "CallandIVRConfig", query: { ...{ bn: 1111111 } } },
+            href: `CallandIVRConfig?bn=`,
+            route: { name: "CallandIVRConfig", query: { bn: [bussinessNumber] } },
         },
         {
-          text: "Missed Call Distribution",
-          disabled: false,
-          to: { name: "MissedCallDistribution" },
-          href: `MissedCallDistribution?bn=`,
-          route: { name: 'MissedCallDistribution', query: { bn: [bussinessNumber]}  }
+            text: "IVR and Call Routing",
+            disabled: false,
+            to: { name: "IVRandCallRouting", query: { ...{ bn: 1111111 } } },
+            href: `IVRandCallRouting?bn=`,
+            route: {
+                name: "IVRandCallRouting",
+                query: { bn: [bussinessNumber] },
+            },
         },
          {
-          text: "Specific Agents",
-          disabled: true,
-          to: { name: "MissedCallDistribution" },
-          href: `MissedCallDistribution?bn=`,
-          route: { name: 'MissedCallDistribution', query: { bn: [bussinessNumber]}  }
+          text: "Missed Call Distribution",
+          disabled: false,
+          route: { name: 'MissedCallDistribution', query: { bn: [bussinessNumber], key: [key]}  }
         },
+        {
+          text: " Prioritize Configuration",
+          disabled: true,
+          route: { name: 'IvrCallPreference', query: { bn: [bussinessNumber], key: [key]}  }
+        }
       ]
     },
     done() {

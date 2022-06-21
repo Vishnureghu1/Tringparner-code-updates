@@ -15,11 +15,26 @@
                         >
                         Prioritize Configuration
                       </h2>
-                      <v-breadcrumbs class="breadcrumbs" :items="items">
-                        <template class="breadcrumbs" v-slot:divider>
-                          <v-icon>mdi-chevron-right</v-icon>
+                      <!-- BREADCRUMBS SECTION -->
+                      <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
+
+                        <template v-slot:item="{ item }">
+                          <router-link style="text-decoration: none;" v-if="!item.disabled" :to="item.route">
+                            <v-breadcrumbs-item :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          </router-link>
+
+                          <!-- <router-link style="text-decoration: none;" v-if="item.disabled" :to="item.route"> -->
+                            <v-breadcrumbs-item v-if="item.disabled" :disabled="item.disabled">
+                              {{ item.text }}
+                            </v-breadcrumbs-item>
+                          <!-- </router-link> -->
+
                         </template>
+
                       </v-breadcrumbs>
+                      <!-- BREADCRUMBS SECTION -->
                     </v-col>
                   </v-row>
                   <div class="comment_heading mt-6 ml-5">
@@ -181,13 +196,60 @@ this.priorityList();
     },
   },
   methods: {
+    setBreadcrumbs(bussinessNumber, key) {
+      this.items = [
+        {
+            text: "Business Numbers",
+            disabled: false,
+            to: { name: "BusinessNumber" },
+            href: `BusinessNumber?bn=`,
+            route: { name: "BusinessNumber", query: {} },
+        },
+        {
+            text: "Call and IVR Configuration",
+            disabled: false,
+            to: { name: "CallandIVRConfig", query: { ...{ bn: 1111111 } } },
+            href: `CallandIVRConfig?bn=`,
+            route: { name: "CallandIVRConfig", query: { bn: [bussinessNumber] } },
+        },
+        {
+            text: "IVR and Call Routing",
+            disabled: false,
+            to: { name: "IVRandCallRouting", query: { ...{ bn: 1111111 } } },
+            href: `IVRandCallRouting?bn=`,
+            route: {
+                name: "IVRandCallRouting",
+                query: { bn: [bussinessNumber] },
+            },
+        },
+        {
+            text: `Keypress ${key}`,
+            disabled: false,
+            to: { name: "GreetingMessage" },
+            href: `GreetingMessage`,
+            route: { name: "keyPressDepartment", query: { bn: [bussinessNumber], key: [key] } },
+        },
+         {
+          text: "Call Preference",
+          disabled: false,
+          route: { name: 'IvrCallPreference', query: { bn: [bussinessNumber], key: [key]}  }
+        },
+        {
+          text: " Prioritize Configuration",
+          disabled: true,
+          route: { name: 'IvrCallPreference', query: { bn: [bussinessNumber], key: [key]}  }
+        }
+      ]
+    },
     priorityList(){
    
            let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
      this.owneruid = owneruid;
     this.uid = localStorageUserObj.uid;
+    this.bussinessNumber = this.$route.query.bn;
      this.key = this.$route.query.key;
+     this.setBreadcrumbs(this.bussinessNumber, this.key);
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
     db.collection("uservirtualNumber").where("Uid","==",owneruid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
     //   console.log(snap.docs[0].data().VirtualNumber)
@@ -253,9 +315,9 @@ this.priorityList();
       const item = this.items.find((item) => item.id == itemID);
       item.list = list;
     },
-    goBack() {
-      const getNumber =  Object.keys(this.$route.query)[0]
-      this.$router.push("/CallFlowSettings?"+getNumber);
+    goBack(bussinessNumber, key) {
+      let newQuery = {bn: bussinessNumber, key: key};
+      this.$router.push({ path: '/keyPressDepartment', query: { ...newQuery } });
     },
     CallFlowSettings() {
       const getNumber =  Object.keys(this.$route.query)[0]

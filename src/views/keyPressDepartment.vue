@@ -286,7 +286,7 @@ export default {
 
         }
 
-        this.setBreadcrumbs(this.bussinessNumber);
+        this.setBreadcrumbs(this.bussinessNumber, this.key);
         this.$on("greeting_message_changed", function (id) {
             console.log(
                 `Event from parent component emitted ${this.bussinessNumber}`,
@@ -529,7 +529,7 @@ export default {
                 });
             // RESET AUDIO
         },
-        setBreadcrumbs(bussinessNumber) {
+        setBreadcrumbs(bussinessNumber, key) {
             this.items = [
                 {
                     text: "Business Numbers",
@@ -560,7 +560,7 @@ export default {
                     disabled: true,
                     to: { name: "GreetingMessage" },
                     href: `GreetingMessage`,
-                    route: { name: "GreetingMessage", query: { bn: [bussinessNumber] } },
+                    route: { name: "GreetingMessage", query: { bn: [bussinessNumber], key: [key] } },
                 },
             ];
         },
