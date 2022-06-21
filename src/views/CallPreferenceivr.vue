@@ -9,7 +9,7 @@
                 <div class="ml-8">
                   <v-row>
                     <v-col cols="12" sm="10">
-                     <h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack(bussinessNumber)">mdi-arrow-left</v-icon>  Call Preference  - {{bussinessNumber}}</h2>               
+                     <h2 class="page_title mt-6 ml-5"> <v-icon  class="mr-2" color="black" @click="goBack(bussinessNumber, key)">mdi-arrow-left</v-icon>  Call Preference  - {{bussinessNumber}}</h2>               
                       <!-- BREADCRUMBS SECTION -->
                       <v-breadcrumbs divider=">" class="breadcrumbs" :items="items">
 
@@ -475,7 +475,7 @@ export default {
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.bussinessNumber = this.$route.query.bn;
     this.key = this.$route.query.key;
-    this.setBreadcrumbs(this.bussinessNumber);
+    this.setBreadcrumbs(this.bussinessNumber, this.key);
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
 		// console.log("vetri",owneruid)
       this.owneruid = owneruid;
@@ -696,21 +696,38 @@ export default {
 							console.error(error);
 						})
     },
-    setBreadcrumbs(bussinessNumber) {
+    setBreadcrumbs(bussinessNumber, key) {
       this.items = [
         {
-          text: "Business Numbers",
-          disabled: false,
-          to: { name: "BusinessNumber" },
-          href: `BusinessNumber?bn=`,
-          route: { name: 'BusinessNumber', query: { }  }
+            text: "Business Numbers",
+            disabled: false,
+            to: { name: "BusinessNumber" },
+            href: `BusinessNumber?bn=`,
+            route: { name: "BusinessNumber", query: {} },
         },
         {
-          text: "Call Flow Settings",
-          disabled: false,
-          to: { name: "CallFlowSettings", query: { ...{bn: bussinessNumber}} },
-          href: `CallFlowSettings?bn=`,
-          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+            text: "Call and IVR Configuration",
+            disabled: false,
+            to: { name: "CallandIVRConfig", query: { ...{ bn: 1111111 } } },
+            href: `CallandIVRConfig?bn=`,
+            route: { name: "CallandIVRConfig", query: { bn: [bussinessNumber] } },
+        },
+        {
+            text: "IVR and Call Routing",
+            disabled: false,
+            to: { name: "IVRandCallRouting", query: { ...{ bn: 1111111 } } },
+            href: `IVRandCallRouting?bn=`,
+            route: {
+                name: "IVRandCallRouting",
+                query: { bn: [bussinessNumber] },
+            },
+        },
+        {
+            text: `Keypress ${key}`,
+            disabled: false,
+            to: { name: "GreetingMessage" },
+            href: `GreetingMessage`,
+            route: { name: "keyPressDepartment", query: { bn: [bussinessNumber], key: [key] } },
         },
          {
           text: "Call Preference",
@@ -721,11 +738,11 @@ export default {
         },
       ]
     },
-    goBack(bussinessNumber) {
+    goBack(bussinessNumber, key) {
       // this.$router.push("/CallFlowSettings?bn=" + bussinessNumber);
       // alert(bussinessNumber);
-      let newQuery = {bn: bussinessNumber};
-      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+      let newQuery = {bn: bussinessNumber, key: key};
+      this.$router.push({ path: '/keyPressDepartment', query: { ...newQuery } });
     },
      PrioritizeConfiguration() {
         // const getNumber =  Object.keys(this.$route.query)[0]

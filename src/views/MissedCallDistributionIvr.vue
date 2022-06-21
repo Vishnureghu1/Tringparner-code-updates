@@ -10,7 +10,7 @@
                   <v-row>
                     <v-col cols="12" sm="10">
                       <h2 class="page_title mt-6 ml-5">
-                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber)"
+                        <v-icon class="mr-2" color="black" @click="goBack(bussinessNumber, key)"
                           >mdi-arrow-left</v-icon
                         >
                        Missed Call Distribution
@@ -233,7 +233,7 @@ export default {
     this.uid = localStorageUserObj.uid;
      this.key = this.$route.query.key;
     this.bussinessNumber = this.$route.query.bn;    
-    this.setBreadcrumbs(this.bussinessNumber);
+    this.setBreadcrumbs(this.bussinessNumber, this.key);
 
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
        db.collection("uservirtualNumber").where("Uid","==",localStorageUserObj.uid).where("VirtualNumber","==",parseInt(this.$route.query.bn)).get().then(async(snap) =>{
@@ -316,36 +316,52 @@ export default {
 							console.error(error);
 						})
     },
-    setBreadcrumbs(bussinessNumber) {
+    setBreadcrumbs(bussinessNumber, key) {
       this.items = [
         {
-          text: "More",
-          disabled: false,
-          route: { name: 'BusinessNumber', query: { }  }
+            text: "Business Numbers",
+            disabled: false,
+            to: { name: "BusinessNumber" },
+            href: `BusinessNumber?bn=`,
+            route: { name: "BusinessNumber", query: {} },
         },
         {
-          text: "Business Numbers",
-          disabled: false,
-          route: { name: 'BusinessNumber', query: { }  }
+            text: "Call and IVR Configuration",
+            disabled: false,
+            to: { name: "CallandIVRConfig", query: { ...{ bn: 1111111 } } },
+            href: `CallandIVRConfig?bn=`,
+            route: { name: "CallandIVRConfig", query: { bn: [bussinessNumber] } },
         },
         {
-          text: "Call Flow Settings",
-          disabled: false,
-          route: { name: 'CallFlowSettings', query: { bn: [bussinessNumber]}  }
+            text: "IVR and Call Routing",
+            disabled: false,
+            to: { name: "IVRandCallRouting", query: { ...{ bn: 1111111 } } },
+            href: `IVRandCallRouting?bn=`,
+            route: {
+                name: "IVRandCallRouting",
+                query: { bn: [bussinessNumber] },
+            },
+        },
+        {
+            text: `Keypress ${key}`,
+            disabled: false,
+            to: { name: "GreetingMessage" },
+            href: `GreetingMessage`,
+            route: { name: "keyPressDepartment", query: { bn: [bussinessNumber], key: [key] } },
         },
          {
           text: "Missed Call Distribution",
           disabled: true,
-          route: { name: 'MissedCallDistribution', query: { bn: [bussinessNumber]}  }
+          route: { name: 'IvrMissedCallDistribution', query: { bn: [bussinessNumber]}  }
         },
       ]
     },
-    goBack(bussinessNumber) {
-      let newQuery = {bn: bussinessNumber};
-      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+    goBack(bussinessNumber, key) {
+      let newQuery = {bn: bussinessNumber, key: key};
+      this.$router.push({ path: '/keyPressDepartment', query: { ...newQuery } });
     },
     SelectSpecificAgent() {
-      this.$router.push("/SelectSpecificAgent?bn="+parseInt(this.$route.query.bn));
+      this.$router.push("/SelectSpecificAgent?bn="+parseInt(this.$route.query.bn)+"&key=" + parseInt(this.$route.query.key));
     },
     stepComplete(step) {
       return this.curr > step;
