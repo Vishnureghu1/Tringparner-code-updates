@@ -46,7 +46,7 @@
                         <v-row no-gutters>
                           <v-col cols="12">
                             <div class="center align-center" align="center">
-                              <p>Please choose your plan</p>
+                              <!-- <p>Please choose your plan</p> -->
 
                               <v-btn-toggle
                                 rounded
