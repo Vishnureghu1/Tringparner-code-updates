@@ -6,23 +6,12 @@
           <v-row no-gutters>
             <v-col cols="12" align="center">
               <v-overlay :value="overlay">
-                <v-progress-circular
-                  indeterminate
-                  color="red"
-                  size="40"
-                  :width="3"
-                ></v-progress-circular>
+                <v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
               </v-overlay>
 
-              <v-card
-                color="transparent"
-                v-if="changePlanArea == true"
-                outlined
-                class=""
-                max-width="1200"
-              >
+              <v-card color="transparent" v-if="changePlanArea == true" outlined class="" max-width="1200">
                 <h2 class="lato-font f23 mt-16 mb-4">
-                 
+
                   Select your Tring Partner Payments Plan
                 </h2>
                 <h2 class="sub_title mt-2 mb-16">
@@ -32,15 +21,11 @@
                   <v-radio-group mandatory v-model="radio">
                     <v-row>
                       <v-col cols="12" sm="4">
-                        <v-card
-                          class=""
-                          @click="colorChange(radio)"
-                          :style="
-                            radio1
-                              ? 'border: 1px solid #EE1C25;border-radius: 10px;'
-                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                          "
-                        >
+                        <v-card class="" @click="colorChange(radio)" :style="
+                          radio1
+                            ? 'border: 1px solid #EE1C25;border-radius: 10px;'
+                            : 'border: 1px solid #B4B4B4;border-radius: 10px;'
+                        ">
                           <v-radio color="red" value="1" class="ml-4">
                             <span slot="label" class="black--text ml-3">
                               <h2 class="page_title mt-3 ml-2 mb-5">1 month</h2>
@@ -57,15 +42,11 @@
                       </v-col>
 
                       <v-col cols="12" sm="4" class="">
-                        <v-card
-                          class="badge-overlay overflow_data"
-                          @click="colorChange(radio)"
-                          :style="
-                            radio2
-                              ? 'border:1px solid #EE1C25;border-radius: 10px;'
-                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                          "
-                        >
+                        <v-card class="badge-overlay overflow_data" @click="colorChange(radio)" :style="
+                          radio2
+                            ? 'border:1px solid #EE1C25;border-radius: 10px;'
+                            : 'border: 1px solid #B4B4B4;border-radius: 10px;'
+                        ">
                           <span class="top-right badge red">BEST VALUE</span>
                           <v-radio color="red" value="2" class="ml-4">
                             <span slot="label" class="black--text ml-3">
@@ -75,8 +56,7 @@
                               <h2 class="price_title mt-1 ml-2 mb-3">
                                 <sup class="rupees">₹</sup>2700
                                 <strike>
-                                  <sup class="rupees">₹</sup>3000</strike
-                                >
+                                  <sup class="rupees">₹</sup>3000</strike>
                               </h2>
                               <h2 class="sub_title mt-1 ml-2 mb-3">
                                 HalfYearly Small Bussiness(Truly Unlimited)
@@ -87,15 +67,11 @@
                         </v-card>
                       </v-col>
                       <v-col cols="12" sm="4">
-                        <v-card
-                          class=""
-                          @click="colorChange(radio)"
-                          :style="
-                            radio3
-                              ? 'border: 1px solid #EE1C25;border-radius: 10px;'
-                              : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                          "
-                        >
+                        <v-card class="" @click="colorChange(radio)" :style="
+                          radio3
+                            ? 'border: 1px solid #EE1C25;border-radius: 10px;'
+                            : 'border: 1px solid #B4B4B4;border-radius: 10px;'
+                        ">
                           <v-radio color="red" value="3" class="ml-4">
                             <span slot="label" class="black--text ml-3">
                               <h2 class="page_title mt-3 ml-2 mb-5">
@@ -104,8 +80,7 @@
                               <h2 class="price_title mt-1 ml-2 mb-3">
                                 <sup class="rupees">₹</sup>4800
                                 <strike>
-                                  <sup class="rupees">₹</sup>6000</strike
-                                >
+                                  <sup class="rupees">₹</sup>6000</strike>
                               </h2>
                               <h2 class="sub_title mt-1 ml-2 mb-3">
                                 Yearly Small Bussiness(Truly Unlimited)
@@ -118,24 +93,13 @@
                     </v-row>
                   </v-radio-group>
                 </div>
-                <v-btn
-                  class="btn_text mt-15 white--text text-capitalize"
-                  width="12%"
-                  rounded
-                  @click.prevent="updatePlan()"
-                  color="#EE1C25"
-                >
+                <v-btn class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                  @click.prevent="updatePlan()" color="#EE1C25">
                   Update Plan
                 </v-btn>
               </v-card>
 
-              <v-card
-                v-if="changePlanArea == false"
-                color="transparent"
-                outlined
-                class=""
-                max-width="800"
-              >
+              <v-card v-if="changePlanArea == false" color="transparent" outlined class="" max-width="800">
                 <h2 class="page_title lato-font mb-4 mt-10">
                   Review Informations and Pay Now
                 </h2>
@@ -147,14 +111,8 @@
                   <v-col cols="12" sm="6" align="start">
                     <h2 class="name_heading light4 f14">
                       Billing Address
-                      <span
-                      v-on="on"
-                      class="primary--text f14 cursor"
-                      @click="changeAddress()"
-                      small
-                    >
-                      Edit</span
-                    >
+                      <span v-on="on" class="primary--text f14 cursor" @click="changeAddress()" small>
+                        Edit</span>
                     </h2>
                     <h2 class="name_heading light4">Business Name</h2>
                     <h2 class="content_title medium mb-4 f14">{{ name }}</h2>
@@ -170,153 +128,55 @@
                     <h2 class="content_title medium mb-4 f14">{{ email }}</h2>
                   </v-col>
                   <v-col cols="12" sm="6" align="start">
-                    
+
                     <h2 class="name_heading light4">Payment Plan</h2>
                     <v-row class="mb-0">
-                      <v-col cols="12" sm="6">   <h2
-                      v-if="planId == '1'"
-                      class="content_title medium mb-0 f14"
-                    >
-                      1 month - Rs 500
-                    </h2>
-                    <h2
-                      v-else-if="planId == '2'"
-                      class="content_title medium mb-0 f14"
-                    >
-                      6 months - Rs 2700
-                    </h2>
-                    <h2
-                      v-else-if="planId == '3'"
-                      class="content_title medium mb-0 f14"
-                    >
-                      12 months - Rs 4800
-                    </h2></v-col>
-                      <v-col cols="12" sm="6"  align="end"><span
-                      v-on="on"
-                      class="primary--text f14 cursor"
-                      @click="changePlan()"
-                      small
-                    >
-                      Change</span
-                    ></v-col>
+                      <v-col cols="12" sm="6">
+                       
+                        <h2 class="content_title medium mb-0 f14">
+                          {{validity}} months - Rs {{actual_amount}}
+                        </h2>
+                        
+                      </v-col>
+                      <v-col cols="12" sm="6" align="end"><span v-on="on" class="primary--text f14 cursor"
+                          @click="changePlan()" small>
+                          Change</span></v-col>
 
-                    
+
                     </v-row>
-                 
-                  
+
+
                     <v-row class="mt-0 pt-0">
                       <v-col cols="12" sm="6" align="start">
                         <h2 class="name_heading light4 mb-4">Actual Cost</h2>
-                        <h2
-                          v-if="planId != '1'"
-                          class="name_heading light4 mb-4"
-                        >
+                        <h2 v-if="planId != '1'" class="name_heading light4 mb-4">
                           Discount
                         </h2>
                         <h2 class="name_heading light4 mb-4">GST(18%)</h2>
                         <h2 class="content_title mb-4 f14">Charges</h2>
                       </v-col>
                       <v-col cols="12" sm="6" align="end">
-                        <h2
-                          v-if="planId == '1'"
-                          class="content_title medium mb-4 f14"
-                        >
-                          Rs 500.00
+                        <h2  class="content_title medium mb-4 f14">
+                          Rs {{actual_amount}}
                         </h2>
-                        <h2
-                          v-else-if="planId == '2'"
-                          class="content_title medium mb-4 f14"
-                        >
-                          Rs 3000.00
+                        <h2  class="content_title medium mb-4 f14">
+                          Rs {{Discount}}
                         </h2>
-                        <h2
-                          v-else-if="planId == '3'"
-                          class="content_title medium mb-4 f14"
-                        >
-                          Rs 6000.00
+                         <h2  class="content_title medium mb-4 f14">
+                          Rs {{Gst}}
                         </h2>
-                        <h2
-                          v-if="planId == '2'"
-                          class="content_title medium mb-4 f14"
-                        >
-                          Rs 300.00
-                        </h2>
-                        <h2
-                          v-else-if="planId == '3'"
-                          class="content_title medium mb-4 f14"
-                        >
-                          Rs 1200.00
-                        </h2>
-                        <h2
-                          v-if="planId == '1'"
-                          class="content_title medium mb-4 f14"
-                        >
-                          Rs 90.00
-                        </h2>
-                        <h2
-                          v-else-if="planId == '2'"
-                          class="content_title medium mb-4 f14"
-                        >
-                          Rs 486.00
-                        </h2>
-                        <h2
-                          v-else-if="planId == '3'"
-                          class="content_title medium mb-4 f14"
-                        >
-                          Rs 864.00
-                        </h2>
-                        <h2
-                          v-if="planId == '1'"
-                          class="content_title bold mb-4 f14"
-                        >
-                          Rs 590.00
-                        </h2>
-                        <h2
-                          v-else-if="planId == '2'"
-                          class="content_title bold mb-4 f14"
-                        >
-                          Rs 3186.00
-                        </h2>
-                        <h2
-                          v-else-if="planId == '3'"
-                          class="content_title bold mb-4 f14"
-                        >
-                          Rs 5664.00
+                          <h2  class="content_title medium mb-4 f14">
+                          Rs {{CostAfterDiscount}}
                         </h2>
                       </v-col>
                     </v-row>
                   </v-col>
                 </v-row>
-                <v-btn
-                  v-if="planId == '1'"
-                  @click="Paynow()"
-                  class="btn_text mt-15 white--text text-capitalize"
-                  width="20%"
-                  rounded
-                  color="#EE1C25"
-                >
-                  Pay Rs 590
+                <v-btn  @click="Paynow()" class="btn_text mt-15 white--text text-capitalize"
+                  width="20%" rounded color="#EE1C25">
+                  Pay Rs {{CostAfterDiscount}}
                 </v-btn>
-                <v-btn
-                  v-if="planId == '2'"
-                  @click="Paynow()"
-                  class="btn_text mt-15 white--text text-capitalize"
-                  width="20%"
-                  rounded
-                  color="#EE1C25"
-                >
-                  Pay Rs 3186
-                </v-btn>
-                <v-btn
-                  v-if="planId == '3'"
-                  @click="Paynow()"
-                  class="btn_text mt-15 white--text text-capitalize"
-                  width="20%"
-                  rounded
-                  color="#EE1C25"
-                >
-                  Pay Rs 5664
-                </v-btn>
+           
               </v-card>
             </v-col>
           </v-row>
@@ -331,7 +191,7 @@
 import firebase from "firebase";
 import { db } from "@/main.js";
 import PlanSelect from "@/components/select_plan.vue";
-
+import axios from "axios";
 export default {
   data: () => ({
     radio: "",
@@ -349,6 +209,7 @@ export default {
     overlay: false,
     changePlanArea: false,
     rerenderKey: 0,
+    actual_amount:0,
   }),
 
   components: {
@@ -388,19 +249,8 @@ export default {
               // } else if (this.currentPage == "onboarding_dashboard") {
               //   this.$router.push("/Dashboard");
               // }
-            });
-          })
-          .catch((error) => {
-            console.log("Error getting documents: ", error);
-          });
-        db.collection("users")
-          .where("uid", "==", this.uid)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              console.log(doc.id, " => ", doc.data());
-              let user_details = doc.data();
-              this.virtualNumber = user_details.virtualNumber[0];
+
+               this.virtualNumber = user_details.virtualNumber[0];
               this.address = user_details.Address;
               this.city = user_details.City;
               this.state = user_details.State;
@@ -410,15 +260,110 @@ export default {
               this.planId = user_details.PlanId;
               this.orderId = user_details.OrderId;
 
+              this.getBill(this.uid, this.planId);
             });
           })
           .catch((error) => {
             console.log("Error getting documents: ", error);
           });
+        // db.collection("users")
+        //   .where("uid", "==", this.uid)
+        //   .get()
+        //   .then((querySnapshot) => {
+        //     querySnapshot.forEach((doc) => {
+        //       console.log(doc.id, " => ", doc.data());
+        //       let user_details = doc.data();
+        //       console.log(user_details);
+        //       this.virtualNumber = user_details.virtualNumber[0];
+        //       this.address = user_details.Address;
+        //       this.city = user_details.City;
+        //       this.state = user_details.State;
+        //       this.email = user_details.Email;
+        //       this.name = user_details.FirstName;
+        //       this.phno = user_details.PhoneNumber;
+        //       this.planId = user_details.PlanId;
+        //       this.orderId = user_details.OrderId;
+
+        //     });
+        //   })
+        //   .catch((error) => {
+        //     console.log("Error getting documents: ", error);
+        //   });
+        
+        
       }
+          
     });
   },
   methods: {
+        getBill(userid, planid) {
+      // console.log(status, planid);
+      const token = localStorage.getItem("token");
+      // this.PlanId = (radio == "inital")?this.PlanId:planid;
+      this.PlanId = planid;
+      this.sublist = [];
+      const details = {
+        // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
+        url: this.$cloudfareApi + "/bill/",
+        method: "POST",
+        data: {
+          uid: userid,
+          PlanId: planid,
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(details)
+        .then((response) => {
+          console.log( response.data);
+          this.invoice_amount = response.data.invoice_amount;
+          this.actual_amount = response.data.actual_amount;
+          this.total_amount = response.data.total_amount;
+          this.validity = response.data.validity;
+          const permonthdivison = this.PlanId == 1 ? 1 : this.PlanId == 5 ? 6 : 12;
+          this.permonth = parseInt(
+            response.data.invoice_amount / permonthdivison
+          );
+          this.SubTotal =
+            response.data.actual_amount +
+            response.data.actual_vn_amount +
+            response.data.actual_user_amount;
+          this.Discount = this.SubTotal - response.data.total_amount;
+          this.CostAfterDiscount = response.data.total_amount;
+          this.Gst = response.data.invoice_amount - response.data.total_amount;
+          this.sublist.push(
+            { title: "Item", qty: "Quantity", amount: "Price", class: "bold" },
+            {
+              title: response.data.code,
+              qty: 1,
+              amount: response.data.actual_amount,
+              class: "light3",
+            },
+            {
+              title: "Business Numbers",
+              qty: response.data.number,
+              amount: response.data.actual_vn_amount,
+              class: "light3",
+            },
+            {
+              title: "Users",
+              qty: response.data.user,
+              amount: response.data.actual_user_amount,
+              class: "light3",
+            }
+          );
+
+
+          
+          // console.log(response.data.invoice_amount);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     colorChange(i) {
       console.log(i);
       if (i == 1) {
@@ -562,31 +507,38 @@ export default {
   font-weight: 400;
   color: #3b3b3b;
 }
+
 .price_title .rupees {
   font-size: 14px;
 }
+
 .price_title strike {
   color: #b4b4b4;
   font-family: "Nunito", sans-serif;
 }
+
 .price_title {
   font-size: 23px;
   color: #3b3b3b;
 }
+
 .sub_title {
   font-family: "Nunito", sans-serif;
   font-size: 14px;
   color: #3b3b3b;
   font-weight: 400;
 }
+
 .name_heading {
   font-size: 14px;
   color: #3b3b3b;
 }
+
 .number_heading {
   font-size: 24px;
   color: #3b3b3b;
 }
+
 .offer_title {
   font-size: 14px;
   color: #ee1c25;
@@ -595,21 +547,26 @@ export default {
 .number_heading.v-btn--outlined {
   border: thin solid #ee1c25;
 }
+
 .v-btn:before {
   color: #f3f9f3;
 }
+
 .btn_text {
   font-family: "Nunito", sans-serif;
   font-size: 14px;
 }
+
 .v-application .error {
   background-color: #ff5252 !important;
   border-color: #ff5252 !important;
   transform: rotate(45deg);
 }
+
 .overflow_data {
   overflow: hidden;
 }
+
 .badge {
   margin: 0;
   padding: 0;
@@ -643,6 +600,7 @@ export default {
 .badge::after {
   left: 100%;
 }
+
 .top-right {
   position: absolute;
   top: 0;

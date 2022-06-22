@@ -20,7 +20,13 @@
 
                 <v-col cols="12" sm="6" class="py-2">
              
-
+ <!-- IvrPlan: {{ IvrPlan }}<br>
+                        checkIvrStatus: {{ checkIvrStatus }}
+                        <br>
+                        upgrade: {{ upgrade }}
+                        <br>
+                        IvrPlan: {{ IvrPlan }}
+                        <br> -->
                    <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless>
                       <v-btn v-if="checkIvrStatus == true" width="200" @click="isIvr(2)" disabled>
                                   Direct (No IVR)
@@ -40,11 +46,11 @@
                               </v-btn-toggle>
                 </v-col>
                 <h2 class="sub_title mt-2 mb-16"><br /></h2>
-
-                <div v-if="SelectPlan == 1">
+ 
+                <div v-if="SelectPlan == 1 || checkIvrStatus==true">
                   <v-radio-group mandatory v-model="IVRPlanradio">
-                    <v-row>
-                      <v-col
+                    <v-row align="center"> 
+                      <v-col 
                         cols="12"
                         sm="4"
                         v-for="ivrData in ivrPlanArray"
@@ -98,12 +104,11 @@
                   </v-radio-group>
                   <p class="text--red" @click="ivrFeatureBox=true">Plan Details</p>
                 </div>
-                <div v-else-if="SelectPlan == 2">
+                <div v-else-if="SelectPlan == 2 || checkIvrStatus==true">
                   <v-radio-group mandatory v-model="nonIVRPlanradio">
-                    <v-row>
-                      <v-col
-                        cols="12"
-                        sm="4"
+                    <v-row align="center">
+                      <v-col 
+                       
                         v-for="nonivrData in nonIvrPlanArray"
                         :key="nonivrData.Code"
                       >
