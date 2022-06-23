@@ -222,7 +222,7 @@
                                   GST
                                 </div>
                                 <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ amount - amountwithoutgst }}
+                                  ₹ {{ gstAmount }}
                                 </div>
                               </v-row>
                               <v-row no-gutters>
@@ -281,7 +281,7 @@
                                             1
                                           </td>
                                           <td class="ma-0 pa-0 " align="right">
-                                            ₹ {{ defaultafterdiscount }}
+                                            ₹ {{ defaultamount }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
@@ -336,7 +336,7 @@
                                           </td>
 
                                           <td class="ma-0 pa-0" colspan="2" align="right">
-                                            ₹ {{ amount - amountwithoutgst }}
+                                            ₹ {{ gstAmount }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
@@ -756,7 +756,7 @@ export default {
             console.log(response.data);
             var upgradeData = response.data;
             this.amount = upgradeData.amount.toFixed(2);
-            this.amountwithoutdeduction = upgradeData.amountwithoutdeduction;
+            this.amountwithoutdeduction = upgradeData.amountwithoutdeduction.toFixed(2);
             this.amountwithoutgst = upgradeData.amountwithoutgst.toFixed(2);
             this.defaultafterdiscount = upgradeData.defaultafterdiscount;
             this.defaultamount =  upgradeData.defaultamount.toFixed(2);
@@ -767,6 +767,7 @@ export default {
             this.reminingmonths = upgradeData.reminingmonths;
             this.status = upgradeData.status;
             this.useddays = upgradeData.useddays;
+            this.gstAmount =  (upgradeData.amount - upgradeData.amountwithoutgst).toFixed(2);
 
         
           })
@@ -806,7 +807,7 @@ export default {
         .then((response) => {
           console.log( response.data);
           this.invoice_amount = response.data.invoice_amount;
-          const permonthdivison = this.PlanId == 1 ? 1 : this.PlanId == 5 ? 6 : 12;
+          const permonthdivison =  response.data.validity;
           this.permonth = parseInt(
             response.data.invoice_amount / permonthdivison
           );
