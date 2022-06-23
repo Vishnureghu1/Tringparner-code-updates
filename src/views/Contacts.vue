@@ -771,7 +771,6 @@ export default {
     searchForm: false,
     benched: 0,
     hidden: true,
-    hidden: true,
     filtermenu: false,
     sendInviteLoader: false,
     changeEmailPopup: false,
