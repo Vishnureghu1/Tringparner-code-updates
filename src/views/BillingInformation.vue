@@ -405,7 +405,7 @@
                                   Cost After Discount
                                 </div>
                                 <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ invoice_amount }} for {{}} Months
+                                  ₹ {{ invoice_amount }} for {{validity}} Months
                                 </div>
                               </v-row>
                               <v-row no-gutters>
@@ -627,6 +627,7 @@ export default {
     AccountId: "",
     upgradeInfo:false,
     ivrData:"",
+    validity:1,
   }),
   computed: {
     computedPrice() {
@@ -807,6 +808,7 @@ export default {
         .then((response) => {
           console.log( response.data);
           this.invoice_amount = response.data.invoice_amount;
+          this.validity =response.data.validity;
           const permonthdivison =  response.data.validity;
           this.permonth = parseInt(
             response.data.invoice_amount / permonthdivison
