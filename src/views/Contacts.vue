@@ -692,9 +692,9 @@
           <h3 class="center">{{ contact_text }}</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field label="Name" outlined></v-text-field>
+          <v-text-field label="Name" outlined v-model="name"></v-text-field>
 
-          <v-text-field label="Mobile Number*" outlined></v-text-field>
+          <v-text-field label="Mobile Number*" outlined v-model="number"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -711,7 +711,7 @@
             class="text-capitalize ma-3 rounded-pill red_button"
             min-width="140px"
             color="white"
-            outlined
+            outlined  @click="saveNow()"
           >
             Save
           </v-btn>
@@ -756,9 +756,14 @@
 </template>
 
 <script>
+import { db } from "@/main.js";
+import axios from "axios";
 export default {
   components: {},
   data: () => ({
+    number:"",
+    name:"",
+    dialog: false,
     dialog2: false,
     dialogDelete: false,
     showBadge: false,
@@ -779,6 +784,21 @@ export default {
       { title: "Delete Contact", color: "red--text", url: "delete_contact" },
     ],
   }),
+    created() {
+     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    // console.log(owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
+       this.current_number = snap.docs[0].data().PhoneNumber
+
+    
+		}).catch((err)=>{
+			console.log(err.message)
+		})
+  },
   methods: {
     searchAction() {
       this.hidden = !this.hidden;
@@ -822,6 +842,30 @@ export default {
         this.dialog2 = false;
         this.dialogDelete = true;
       }
+    },
+
+          saveNow() {
+      const details = {
+        url: this.$cloudfareApi + "/contact/user",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          Uid: this.owneruid,
+          UpdatedBy: this.owneruid,
+          Name: this.name,
+          Number: this.number,
+          SyncOrganisation: false,
+        },
+      };
+      axios(details).then(async (responsevalue) => {
+        console.log(responsevalue);
+        // if (responsevalue.data.status == true) {
+        
+     
+        // } else {
+        //   console.log("wrong value");
+        // }
+      });
     },
   },
 };

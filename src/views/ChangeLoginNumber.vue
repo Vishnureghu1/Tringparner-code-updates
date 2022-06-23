@@ -160,12 +160,7 @@ export default {
     this.uid = localStorageUserObj.uid;
       db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
        this.current_number = snap.docs[0].data().PhoneNumber
-			// console.log("test.........",snap.docs.data());
-      // this.baseusers = snap.docs[0].data().PlanBaseUsers;
-      // this.totalusers = snap.docs[0].data().PlanNumberOfUsers;
-			// snap.docs.forEach((element)=> {
-			// 	this.users.push({Name:element.data().FirstName,role:element.data().role,PhoneNumber:element.data().PhoneNumber,cron:true,uid:element.data().uid,option:[{title:"Edit Title",type:"Edit",headline:"Edit User",function:"edit_user"}]});
-			// });
+
     
 		}).catch((err)=>{
 			console.log(err.message)
