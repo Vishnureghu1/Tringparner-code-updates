@@ -801,3 +801,11 @@ h4.background span {
 .name-ico {
     background-color: #FFEDEE;
 }
+
+.pl-80 {
+    padding-left: 80px;
+}
+
+.pr-45 {
+    padding-right: 45px;
+}

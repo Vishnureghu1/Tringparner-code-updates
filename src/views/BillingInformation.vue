@@ -92,7 +92,7 @@
                         
                          
                               </div>
-                              <v-row no-gutters>
+                              <v-row no-gutters v-if="Discount>0">
                                 <div class="col-8 membership_heading red--text">
                                   Cost After Discount
                                 </div>
@@ -100,7 +100,7 @@
                                   ₹ {{ invoice_amount }} for {{}} Months
                                 </div>
                               </v-row>
-                              <v-row no-gutters>
+                              <v-row no-gutters v-if="Discount>0">
                                 <div class="col-12  red--text" align="center">
                                   ( Your Total Saving ₹ {{ Discount }})
                                 </div>
@@ -400,7 +400,7 @@
                         
                          
                               </div>
-                              <v-row no-gutters>
+                              <v-row no-gutters v-if="Discount>0">
                                 <div class="col-8 membership_heading red--text">
                                   Cost After Discount
                                 </div>
@@ -408,7 +408,7 @@
                                   ₹ {{ invoice_amount }} for {{validity}} Months
                                 </div>
                               </v-row>
-                              <v-row no-gutters>
+                              <v-row no-gutters v-if="Discount>0">
                                 <div class="col-12  red--text" align="center">
                                   ( Your Total Saving ₹ {{ Discount }})
                                 </div>
