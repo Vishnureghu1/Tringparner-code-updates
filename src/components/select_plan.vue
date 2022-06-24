@@ -9,95 +9,7 @@
                 <v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
               </v-overlay>
 
-              <v-card color="transparent" v-if="changePlanArea == true" outlined class="" max-width="1200">
-                <h2 class="lato-font f23 mt-16 mb-4">
-
-                  Select your Tring Partner Payments Plan
-                </h2>
-                <h2 class="sub_title mt-2 mb-16">
-                  Please select from below plan<br />
-                </h2>
-                <div>
-                  <v-radio-group mandatory v-model="radio">
-                    <v-row>
-                      <v-col cols="12" sm="4">
-                        <v-card class="" @click="colorChange(radio)" :style="
-                          radio1
-                            ? 'border: 1px solid #EE1C25;border-radius: 10px;'
-                            : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                        ">
-                          <v-radio color="red" value="1" class="ml-4">
-                            <span slot="label" class="black--text ml-3">
-                              <h2 class="page_title mt-3 ml-2 mb-5">1 month</h2>
-                              <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>500
-                              </h2>
-                              <h2 class="sub_title mt-1 ml-2">
-                                Monthly Small Bussiness(Truly Unlimited)
-                              </h2>
-                              <br /><br />
-                            </span>
-                          </v-radio>
-                        </v-card>
-                      </v-col>
-
-                      <v-col cols="12" sm="4" class="">
-                        <v-card class="badge-overlay overflow_data" @click="colorChange(radio)" :style="
-                          radio2
-                            ? 'border:1px solid #EE1C25;border-radius: 10px;'
-                            : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                        ">
-                          <span class="top-right badge red">BEST VALUE</span>
-                          <v-radio color="red" value="2" class="ml-4">
-                            <span slot="label" class="black--text ml-3">
-                              <h2 class="page_title mt-3 ml-2 mb-5">
-                                6 months
-                              </h2>
-                              <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>2700
-                                <strike>
-                                  <sup class="rupees">₹</sup>3000</strike>
-                              </h2>
-                              <h2 class="sub_title mt-1 ml-2 mb-3">
-                                HalfYearly Small Bussiness(Truly Unlimited)
-                              </h2>
-                              <h2 class="offer_title ml-2 mb-2">10% off</h2>
-                            </span>
-                          </v-radio>
-                        </v-card>
-                      </v-col>
-                      <v-col cols="12" sm="4">
-                        <v-card class="" @click="colorChange(radio)" :style="
-                          radio3
-                            ? 'border: 1px solid #EE1C25;border-radius: 10px;'
-                            : 'border: 1px solid #B4B4B4;border-radius: 10px;'
-                        ">
-                          <v-radio color="red" value="3" class="ml-4">
-                            <span slot="label" class="black--text ml-3">
-                              <h2 class="page_title mt-3 ml-2 mb-5">
-                                12 months
-                              </h2>
-                              <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>4800
-                                <strike>
-                                  <sup class="rupees">₹</sup>6000</strike>
-                              </h2>
-                              <h2 class="sub_title mt-1 ml-2 mb-3">
-                                Yearly Small Bussiness(Truly Unlimited)
-                              </h2>
-                              <h2 class="offer_title ml-2 mb-2">20% off</h2>
-                            </span>
-                          </v-radio>
-                        </v-card>
-                      </v-col>
-                    </v-row>
-                  </v-radio-group>
-                </div>
-                <v-btn class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                  @click.prevent="updatePlan()" color="#EE1C25">
-                  Update Plan
-                </v-btn>
-              </v-card>
+        
 
               <v-card v-if="changePlanArea == false" color="transparent" outlined class="" max-width="800">
                 <h2 class="page_title lato-font mb-4 mt-10">
@@ -411,10 +323,9 @@ export default {
         });
     },
     changePlan() {
-      this.changePlanArea = true;
-      
-
-       this.$router.push("/SelectPlan");
+      // this.changePlanArea = true;
+    
+        this.$router.push("/SelectPlan?editplan=true");
     },
     changeAddress() {
       this.$router.push("/Billing");

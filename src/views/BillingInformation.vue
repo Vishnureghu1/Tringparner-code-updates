@@ -92,7 +92,7 @@
                         
                          
                               </div>
-                              <v-row no-gutters>
+                              <v-row no-gutters v-if="Discount>0">
                                 <div class="col-8 membership_heading red--text">
                                   Cost After Discount
                                 </div>
@@ -100,7 +100,7 @@
                                   ₹ {{ invoice_amount }} for {{}} Months
                                 </div>
                               </v-row>
-                              <v-row no-gutters>
+                              <v-row no-gutters v-if="Discount>0">
                                 <div class="col-12  red--text" align="center">
                                   ( Your Total Saving ₹ {{ Discount }})
                                 </div>
@@ -222,7 +222,7 @@
                                   GST
                                 </div>
                                 <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ amount - amountwithoutgst }}
+                                  ₹ {{ gstAmount }}
                                 </div>
                               </v-row>
                               <v-row no-gutters>
@@ -281,7 +281,7 @@
                                             1
                                           </td>
                                           <td class="ma-0 pa-0 " align="right">
-                                            ₹ {{ defaultafterdiscount }}
+                                            ₹ {{ defaultamount }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
@@ -336,7 +336,7 @@
                                           </td>
 
                                           <td class="ma-0 pa-0" colspan="2" align="right">
-                                            ₹ {{ amount - amountwithoutgst }}
+                                            ₹ {{ gstAmount }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
@@ -400,15 +400,15 @@
                         
                          
                               </div>
-                              <v-row no-gutters>
+                              <v-row no-gutters v-if="Discount>0">
                                 <div class="col-8 membership_heading red--text">
                                   Cost After Discount
                                 </div>
                                 <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ invoice_amount }} for {{}} Months
+                                  ₹ {{ invoice_amount }} for {{validity}} Months
                                 </div>
                               </v-row>
-                              <v-row no-gutters>
+                              <v-row no-gutters v-if="Discount>0">
                                 <div class="col-12  red--text" align="center">
                                   ( Your Total Saving ₹ {{ Discount }})
                                 </div>
@@ -627,6 +627,7 @@ export default {
     AccountId: "",
     upgradeInfo:false,
     ivrData:"",
+    validity:1,
   }),
   computed: {
     computedPrice() {
@@ -756,7 +757,7 @@ export default {
             console.log(response.data);
             var upgradeData = response.data;
             this.amount = upgradeData.amount.toFixed(2);
-            this.amountwithoutdeduction = upgradeData.amountwithoutdeduction;
+            this.amountwithoutdeduction = upgradeData.amountwithoutdeduction.toFixed(2);
             this.amountwithoutgst = upgradeData.amountwithoutgst.toFixed(2);
             this.defaultafterdiscount = upgradeData.defaultafterdiscount;
             this.defaultamount =  upgradeData.defaultamount.toFixed(2);
@@ -767,6 +768,7 @@ export default {
             this.reminingmonths = upgradeData.reminingmonths;
             this.status = upgradeData.status;
             this.useddays = upgradeData.useddays;
+            this.gstAmount =  (upgradeData.amount - upgradeData.amountwithoutgst).toFixed(2);
 
         
           })
@@ -806,7 +808,8 @@ export default {
         .then((response) => {
           console.log( response.data);
           this.invoice_amount = response.data.invoice_amount;
-          const permonthdivison = this.PlanId == 1 ? 1 : this.PlanId == 5 ? 6 : 12;
+          this.validity =response.data.validity;
+          const permonthdivison =  response.data.validity;
           this.permonth = parseInt(
             response.data.invoice_amount / permonthdivison
           );
