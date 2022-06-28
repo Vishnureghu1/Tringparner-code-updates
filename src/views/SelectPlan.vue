@@ -321,6 +321,7 @@ editplan:'false',
       this.SelectPlan = 2;
       this.IVRPlanradio = parseInt(localStorage.getItem("IVRPlanradio"));
       this.nonIVRPlanradio = parseInt(localStorage.getItem("nonIVRPlanradio"));
+      this.planId = parseInt(localStorage.getItem("planId"));
  
   },
   methods: {
@@ -342,9 +343,11 @@ editplan:'false',
       this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
       this.directActive = localStorageUserObj.IsIvr == true ? false : true;
       this.IvrPlan = localStorageUserObj.IsIvr == false ? 2 : 1;
- 
+     
       if(!this.checkIvrStatus){
         this.colorChange(2);
+      }else{
+        this.colorChange(1);
       }
    
     },
@@ -356,6 +359,7 @@ editplan:'false',
       this.radio = i;
     },
     nextPage(review) {
+     
       this.overlay = true;
       const user_stage = {
         url: this.$cloudfareApi + "/user/stage",
@@ -375,11 +379,18 @@ editplan:'false',
       this.$axios(user_stage)
         .then((response) => {
           if(this.SelectPlan==1){
-
+ this.colorChange(this.IVRPlanradio);
             localStorage.setItem("IVRPlanradio", this.IVRPlanradio );
+            localStorage.setItem("planId", this.IVRPlanradio );
             
           }else{
+ this.colorChange(this.nonIVRPlanradio);
+
+
             localStorage.setItem("nonIVRPlanradio", this.nonIVRPlanradio );
+            localStorage.setItem("planId", this.nonIVRPlanradio );
+
+            
           }
           console.log(response);
           if(review){

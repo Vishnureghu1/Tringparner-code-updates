@@ -849,8 +849,9 @@ export default {
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
-          Uid: this.owneruid,
-          UpdatedBy: this.owneruid,
+          OwnerUid:this.owneruid,
+          Uid: this.uid,
+          UpdatedBy: this.uid,
           Name: this.name,
           Number: this.number,
           SyncOrganisation: false,

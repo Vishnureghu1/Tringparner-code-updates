@@ -61,7 +61,7 @@
                     <v-row class="mt-0 pt-0">
                       <v-col cols="12" sm="6" align="start">
                         <h2 class="name_heading light4 mb-4">Actual Cost</h2>
-                        <h2 v-if="planId != '1'" class="name_heading light4 mb-4">
+                        <h2  class="name_heading light4 mb-4">
                           Discount
                         </h2>
                         <h2 class="name_heading light4 mb-4">GST(18%)</h2>
@@ -129,6 +129,10 @@ export default {
   },
 
   created() {
+   this.planIdSelected = parseInt(localStorage.getItem("planId"));
+
+   
+     
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("logged user details", user);
@@ -147,22 +151,8 @@ export default {
               // planId
 
               console.log(this.currentPage);
-              // if (this.currentPage == "onboarding_listing") {
-              //   this.$router.push("/ChooseNumbers");
-              // } else if (this.currentPage == "onboarding_plan_details") {
-              //   this.$router.push("/SelectPlan"); remove this
-              // } else if (
-              //   this.currentPage == "onboarding_billing" ||
-              //   this.currentPage == "onboarding_revisiting"
-              // ) {
-              //   this.$router.push("/Billing");
-              // } else if (this.currentPage == "onboarding_review") {
-              //   this.$router.push("/Review")
-              // } else if (this.currentPage == "onboarding_dashboard") {
-              //   this.$router.push("/Dashboard");
-              // }
 
-               this.virtualNumber = user_details.virtualNumber[0];
+              this.virtualNumber = user_details.virtualNumber[0];
               this.address = user_details.Address;
               this.city = user_details.City;
               this.state = user_details.State;
@@ -172,36 +162,19 @@ export default {
               this.planId = user_details.PlanId;
               this.orderId = user_details.OrderId;
 
-              this.getBill(this.uid, this.planId);
+    if(this.planIdSelected){
+        
+         this.getBill(this.uid, this.planIdSelected); // a plan selected
+      }else{
+         this.getBill(this.uid, this.planId);
+      }
+             
             });
           })
           .catch((error) => {
             console.log("Error getting documents: ", error);
           });
-        // db.collection("users")
-        //   .where("uid", "==", this.uid)
-        //   .get()
-        //   .then((querySnapshot) => {
-        //     querySnapshot.forEach((doc) => {
-        //       console.log(doc.id, " => ", doc.data());
-        //       let user_details = doc.data();
-        //       console.log(user_details);
-        //       this.virtualNumber = user_details.virtualNumber[0];
-        //       this.address = user_details.Address;
-        //       this.city = user_details.City;
-        //       this.state = user_details.State;
-        //       this.email = user_details.Email;
-        //       this.name = user_details.FirstName;
-        //       this.phno = user_details.PhoneNumber;
-        //       this.planId = user_details.PlanId;
-        //       this.orderId = user_details.OrderId;
-
-        //     });
-        //   })
-        //   .catch((error) => {
-        //     console.log("Error getting documents: ", error);
-        //   });
-        
+  
         
       }
           
