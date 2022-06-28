@@ -78,7 +78,7 @@
                           Rs {{Gst}}
                         </h2>
                           <h2  class="content_title medium mb-4 f14">
-                          Rs {{CostAfterDiscount}}
+                          Rs {{Charges}}
                         </h2>
                       </v-col>
                     </v-row>
@@ -86,7 +86,7 @@
                 </v-row>
                 <v-btn  @click="Paynow()" class="btn_text mt-15 white--text text-capitalize"
                   width="20%" rounded color="#EE1C25">
-                  Pay Rs {{CostAfterDiscount}}
+                  Pay Rs {{Charges}}
                 </v-btn>
            
               </v-card>
@@ -219,6 +219,7 @@ export default {
           this.Discount = this.SubTotal - response.data.total_amount;
           this.CostAfterDiscount = response.data.total_amount;
           this.Gst = response.data.invoice_amount - response.data.total_amount;
+          this.Charges = (this.actual_amount -  this.Discount ) + this.Gst;
           this.sublist.push(
             { title: "Item", qty: "Quantity", amount: "Price", class: "bold" },
             {

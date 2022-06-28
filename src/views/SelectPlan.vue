@@ -264,7 +264,14 @@ editplan:'false',
 
   created() {
           this.editplan = this.$route.query.editplan;
-    this.initial_value();
+          let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      this.planIdSelected = parseInt(localStorageUserObj.PlanId);
+// alert(this.planIdSelected)
+             if(this.planIdSelected){
+    this.colorChange(this.planIdSelected);
+             }else{
+              this.initial_value();
+             }
     this.planDetails = db
       .collection("plan_details")
       // where('Id', '>=', 2)
