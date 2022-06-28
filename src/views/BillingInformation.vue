@@ -27,13 +27,13 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        IvrPlan: {{ IvrPlan }}<br>
+                        <!-- IvrPlan: {{ IvrPlan }}<br>
                         checkIvrStatus: {{ checkIvrStatus }}
                         <br>
                         upgrade: {{ upgrade }}
                         <br>
                         IvrPlan: {{ IvrPlan }}
-                        <br>
+                        <br> -->
                         <div class="center align-center" align="center" v-if="checkIvrStatus == false || checkIvrStatus == undefined">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
@@ -43,7 +43,7 @@
                             </v-btn>
 
                             <v-btn width="200" @click="isIvr(1)" :class="{ active: upgrade == 1 || IvrPlan == 1 }">
-                              Upgrade s
+                              Upgrade 
                             </v-btn>
                           </v-btn-toggle>
                         </div>
