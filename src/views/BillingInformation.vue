@@ -34,16 +34,16 @@
                         <br>
                         IvrPlan: {{ IvrPlan }}
                         <br> -->
-                        <div class="center align-center" align="center" v-if="checkIvrStatus == false">
+                        <div class="center align-center" align="center" v-if="checkIvrStatus == false || checkIvrStatus == undefined">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
-                            <v-btn v-if="checkIvrStatus == false" width="200" @click="isIvr(2)"
+                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="isIvr(2)"
                               :class="{ active: IvrPlan == 2 }">
                               Current Plan
                             </v-btn>
 
                             <v-btn width="200" @click="isIvr(1)" :class="{ active: upgrade == 1 || IvrPlan == 1 }">
-                              Upgrade
+                              Upgrade 
                             </v-btn>
                           </v-btn-toggle>
                         </div>
@@ -357,7 +357,7 @@
                           </v-card>
                         </div>
 
-                        <div v-else-if="checkIvrStatus == false || IvrPlan==2" class="row">
+                        <div v-else-if="checkIvrStatus == false ||checkIvrStatus == undefined || IvrPlan==2" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
                               <p class="redtext bold">
@@ -380,7 +380,7 @@
                               <div class="membership_details">
                                 <!-- {{PlanId}} -->
 
-                                 <v-radio-group mandatory  v-if="checkIvrStatus==false">
+                                 <v-radio-group mandatory  v-if="checkIvrStatus==false ||checkIvrStatus==undefined" >
                                  
                                   <v-radio color="red darken-3" hide-details v-for="nonivrData in nonIvrPlanArray"
                                     :key="nonivrData.PlanId" :value="nonivrData.PlanId" @click="
@@ -628,6 +628,8 @@ export default {
     upgradeInfo:false,
     ivrData:"",
     validity:1,
+    nonIvrPlanArray:"",
+    IvrPlanArray:"",
   }),
   computed: {
     computedPrice() {
@@ -722,9 +724,13 @@ export default {
           this.IVRPlanradio = localStorage.getItem("IVRPlanradio");
           // this.checkIvrStatus = false;
           
+          
           this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
           this.directActive = localStorageUserObj.IsIvr == true ? false : true;
-          this.IvrPlan = localStorageUserObj.IsIvr == false ? 2 : 1;
+          this.checkCondition = localStorageUserObj.IsIvr == undefined ? false : this.checkCondition;
+          this.IvrPlan = this.checkCondition == false ? 2 : this.checkCondition; // edited by navas on 28 june 2022
+          //  this.IvrPlan = this.checkCondition == false ? 2:1
+          // alert(this.checkCondition);
           if(this.IvrPlan==1){
             this.checkIvrStatus = true;
           }else{
@@ -807,6 +813,7 @@ export default {
       axios(details)
         .then((response) => {
           console.log( response.data);
+          this.invoice_amount = response.data.invoice_amount;
           this.invoice_amount = response.data.invoice_amount;
           this.validity =response.data.validity;
           const permonthdivison =  response.data.validity;
