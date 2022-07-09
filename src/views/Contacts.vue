@@ -90,8 +90,71 @@
             </v-col>
           </v-row>
           <div id="layoutCallLog">
-            <v-expansion-panels accordion flat>
-              <v-alert dense outlined type="error">
+            <v-expansion-panels accordion flat v-if="userContacts && userContacts.length>0">
+          
+              
+              <v-expansion-panel v-for="userContact in userContacts" :key="userContact.Name">
+                <v-expansion-panel-header expand-icon="">
+                  <v-row
+                    class="d-flex align-center justify-center"
+                    align-content="center"
+                    justify="center"
+                  >
+                    <v-col cols="12" sm="10">
+                      <h3 class="f16 nunito-font regular">
+                        <div
+                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
+                        >
+                          {{userContact.ContactName.charAt(0)}}
+                        </div>
+                        {{userContact.ContactName}}
+                      </h3>
+                    </v-col>
+                    <v-col cols="12" sm="2" align="right">
+                      <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-bind="attrs" v-on="on" color="black"
+                            >mdi-dots-vertical
+                          </v-icon>
+                        </template>
+
+                        <v-list>
+                          <v-list-item
+                            v-for="(item, index) in items"
+                            :key="index"
+                            active-class="pink--text"
+                          >
+                            <v-list-item-title
+                              :class="item.color"
+                              @click="threeDotAction(item.url, '')"
+                            >
+                              {{ item.title }}
+                            </v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <div class="row">
+                    <div class="col-12 pl-15">
+                      <h6 class="font-weight-thin">Caller Number</h6>
+
+                      <h5 class="font-weight-light">+91  {{userContact.ContactNumber}}</h5>
+                    </div>
+                  </div>
+                </v-expansion-panel-content>
+                <div class="row">
+                  <div class="col-12 pl-80 pr-45">
+                    <v-divider></v-divider>
+                  </div>
+                </div>
+              </v-expansion-panel>
+                           
+            </v-expansion-panels>
+            <v-expansion-panels v-else>
+         <v-alert dense outlined type="error" >
                 <h4 class="f16">No contacts found!</h4>
                 <p class="mb-0 pb-0 black--text" color="black">
                   There are no saved contacts. Please
@@ -99,587 +162,6 @@
                   <a href="#"> add a new contact.</a>
                 </p>
               </v-alert>
-              <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          A
-                        </div>
-                        Alpha
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          S
-                        </div>
-                        Stone
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          P
-                        </div>
-                       Priya
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          N
-                        </div>
-                        Nguta
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          S
-                        </div>
-                        Simoes
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                         V
-                        </div>
-                        Virtue
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          M
-                        </div>
-                        Mia 
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          T
-                        </div>
-                        Trevor Virtue
-
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          R
-                        </div>
-                        Ruveni 
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
-                            <v-expansion-panel>
-                <v-expansion-panel-header expand-icon="">
-                  <v-row
-                    class="d-flex align-center justify-center"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col cols="12" sm="10">
-                      <h3 class="f16 nunito-font regular">
-                        <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
-                        >
-                          E
-                        </div>
-                        Ellawala
-                      </h3>
-                    </v-col>
-                    <v-col cols="12" sm="2" align="right">
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-bind="attrs" v-on="on" color="black"
-                            >mdi-dots-vertical
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                            v-for="(item, index) in items"
-                            :key="index"
-                            active-class="pink--text"
-                          >
-                            <v-list-item-title
-                              :class="item.color"
-                              @click="threeDotAction(item.url, '')"
-                            >
-                              {{ item.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </v-col>
-                  </v-row>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="row">
-                    <div class="col-12 pl-15">
-                      <h6 class="font-weight-thin">Caller Number</h6>
-
-                      <h5 class="font-weight-light">+91 80000 00 089</h5>
-                    </div>
-                  </div>
-                </v-expansion-panel-content>
-                <div class="row">
-                  <div class="col-12 pl-80 pr-45">
-                    <v-divider></v-divider>
-                  </div>
-                </div>
-              </v-expansion-panel>
             </v-expansion-panels>
           </div>
         </v-flex>
@@ -778,6 +260,7 @@ export default {
     loadingMore: false,
     searchTerm: "",
     contact_text: "",
+    userContacts:[],
     items: [
       { title: "Edit Contact", color: "black--text", url: "edit_contact" },
       { title: "Delete Contact", color: "red--text", url: "delete_contact" },
@@ -790,10 +273,22 @@ export default {
     // console.log(owneruid)
     this.owneruid = owneruid;
     this.uid = localStorageUserObj.uid;
-      db.collection("users").where("uid","==",owneruid).get().then(async(snap) =>{
-       this.current_number = snap.docs[0].data().PhoneNumber
+      db.collection("UserContacts").where("Uid","==",owneruid).get().then(async(querySnapshot) =>{
+      console.log(querySnapshot);
+       this.userContacts = [];
+        if (!querySnapshot.empty) {
+          
+querySnapshot.forEach(async (doc) => {
+  let contact = doc.data();
+  this.contact = contact;
+  // console.log(contact)
+ this.userContactsObject = Object.assign({}, this.userContactsObject, {
+   ContactName: contact.Name,
+   ContactNumber: contact.Number,
 
-    
+ })
+     this.userContacts.push(this.userContactsObject);
+})}
 		}).catch((err)=>{
 			console.log(err.message)
 		})

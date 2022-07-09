@@ -15,14 +15,17 @@
 
                 <v-col cols="12" sm="6" class="py-2">
 
-                  <!-- IvrPlan: {{ IvrPlan }}<br>
+           IvrPlan: {{ IvrPlan }}<br>
                   checkIvrStatus: {{ checkIvrStatus }}
                
-                  IvrPlan: {{ IvrPlan }}<br>
+                  CurrentPlan: {{ CurrentPlan }}<br>
+                  Stage: {{ Stage }}<br>
+                  planIdSelected: {{ planId }}<br>
                   selected plan {{ SelectPlan }}<br>
                   nonIVRPlanradio {{nonIVRPlanradio}}<br>
                   IVRPlanradio {{IVRPlanradio}}<br>
-                  <br> -->
+                  
+                  <br>
 
                   <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless v-if="!checkIvrStatus">
 
@@ -65,6 +68,7 @@
 
                         <v-card class="badge-overlay overflow_data" @click="colorChange(ivrData.PlanId)">
                           <span class="top-right badge red" v-if="ivrData.bestPlanIvr == true">BEST VALUE IVR</span>
+                          <span class="top-right badge red" v-if="ivrData.IsTrail == true">TRIAL PLAN</span>
                           <v-radio color="red" :value="ivrData.PlanId" class="pl-4 radio_classs"
                             active-class="planActive">
                             <span slot="label" class="black--text ml-3">
@@ -102,9 +106,13 @@
                 
                   <v-radio-group mandatory v-model="nonIVRPlanradio">
                     <v-row align="center">
+                      <div v-if="planId!='' && planId==3">Trial Plan will update here - still in progress</div>
                       <v-col v-for="nonivrData in nonIvrPlanArray" :key="nonivrData.Code">
+
                         <v-card class="badge-overlay overflow_data" @click="colorChange(nonivrData.PlanId)">
                           <span class="top-right badge red" v-if="nonivrData.bestPlanNonIvr == true">BEST VALUE IVR</span>
+                          <span class="top-right badge red" v-if="nonivrData.IsTrail == true">TRIAL PLAN</span>
+                          
                           <v-radio color="red" :value="nonivrData.PlanId" class="pl-4 radio_classs"
                             active-class="planActive">
                             <span slot="label" class="black--text ml-3">
@@ -139,6 +147,7 @@
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
+               
                 <div v-if="editplan=='true'">
                 <v-btn v-if="SelectPlan != 0" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
                   @click.prevent="nextPage('review')" color="#EE1C25">
@@ -146,11 +155,21 @@
                 </v-btn>
                 </div>
                 <div v-else>
-
-                  <v-btn v-if="SelectPlan != 0" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                  @click.prevent="nextPage()" color="#EE1C25">
+       
+                  <v-btn v-if="SelectPlan != 0 && nonIVRPlanradio ==1" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                  @click.prevent="nextPage('trial')" color="#EE1C25">
                   Next
                 </v-btn>
+                  <v-btn v-else-if="SelectPlan != 0 && IVRPlanradio >3" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                  @click.prevent="nextPage('address')" color="#EE1C25">
+                  Next 
+                </v-btn>
+               
+                  <v-btn v-else class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                  @click.prevent="nextPage('address')" color="#EE1C25">
+                  Next 
+                </v-btn>
+               
                 </div>
               </v-card>
             </v-col>
@@ -259,6 +278,7 @@ IVRPlanradio:0,
 nonIVRPlanradio:0,
 radio:0,
 editplan:'false',
+Stage:'',
   }),
   components: {},
 
@@ -266,6 +286,7 @@ editplan:'false',
           this.editplan = this.$route.query.editplan;
           let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
       this.planIdSelected = parseInt(localStorageUserObj.PlanId);
+      this.Stage =localStorageUserObj.Stage;
 // alert(this.planIdSelected)
              if(this.planIdSelected){
     this.colorChange(this.planIdSelected);
@@ -275,6 +296,8 @@ editplan:'false',
     this.planDetails = db
       .collection("plan_details")
       // where('Id', '>=', 2)
+      // .collection
+      .orderBy("Id", "asc")
       .get()
       .then((querySnapshot) => {
         this.ivrPlanArray = [];
@@ -282,6 +305,7 @@ editplan:'false',
         if (!querySnapshot.empty) {
           querySnapshot.forEach(async (doc) => {
             console.log(doc.id, " => ", doc.data());
+            console.log('Plan Data');
             let plan = doc.data();
             this.plan = plan;
             console.log('plan here' + plan.IsRecommanded);
@@ -295,6 +319,7 @@ editplan:'false',
                 PlanId: plan.Id,
                 bestPlanIvr: plan.IsRecommanded,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+                IsTrail: plan.IsTrail,
               });
               this.ivrPlanArray.push(this.ivrobject);
             } else {
@@ -306,6 +331,8 @@ editplan:'false',
                 PlanId: plan.Id,
                 bestPlanNonIvr: plan.IsRecommanded,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+                IsTrail: plan.IsTrail,
+
               });
 
               this.nonIvrPlanArray.push(this.nonivrobject);
@@ -350,6 +377,8 @@ editplan:'false',
       this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
       this.directActive = localStorageUserObj.IsIvr == true ? false : true;
       this.IvrPlan = localStorageUserObj.IsIvr == false ? 2 : 1;
+      this.Stage = localStorageUserObj.Stage;
+      this.CurrentPlan =localStorageUserObj.PlanId;
      
       if(!this.checkIvrStatus){
         this.colorChange(2);
@@ -366,9 +395,49 @@ editplan:'false',
       this.radio = i;
     },
     nextPage(review) {
-     
       this.overlay = true;
-      const user_stage = {
+     if(review=='trial'){
+    const user_trial = {
+        url: this.$cloudfareApi + "/user/trial",
+        method: "POST",
+        headers: {
+          token: localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+        data: {
+          uid: this.uid,
+        },
+      };
+      this.$axios(user_trial)
+        .then((response) => {
+          if(this.SelectPlan==1){
+ this.colorChange(this.IVRPlanradio);
+            localStorage.setItem("IVRPlanradio", this.IVRPlanradio );
+            localStorage.setItem("planId", this.IVRPlanradio );
+            
+          }else{
+ this.colorChange(this.nonIVRPlanradio);
+
+
+            localStorage.setItem("nonIVRPlanradio", this.nonIVRPlanradio );
+            localStorage.setItem("planId", this.nonIVRPlanradio );
+
+            
+          }
+          console.log(response);
+          if(review){
+            this.$router.push("/Review");
+
+          }else{
+
+            this.$router.push("/Billing");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+     }else{
+          const user_stage = {
         url: this.$cloudfareApi + "/user/stage",
         method: "POST",
         headers: {
@@ -382,7 +451,6 @@ editplan:'false',
           plan_id: this.radio,
         },
       };
-      console.log(user_stage);
       this.$axios(user_stage)
         .then((response) => {
           if(this.SelectPlan==1){
@@ -411,6 +479,8 @@ editplan:'false',
         .catch((error) => {
           console.error(error);
         });
+     }
+  
     },
   },
 };
