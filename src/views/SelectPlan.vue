@@ -15,7 +15,7 @@
 
                 <v-col cols="12" sm="6" class="py-2">
 
-           IvrPlan: {{ IvrPlan }}<br>
+           <!-- IvrPlan: {{ IvrPlan }}<br>
                   checkIvrStatus: {{ checkIvrStatus }}
                
                   CurrentPlan: {{ CurrentPlan }}<br>
@@ -23,9 +23,9 @@
                   planIdSelected: {{ planIdSelected }}<br>
                   selected plan {{ SelectPlan }}<br>
                   nonIVRPlanradio {{nonIVRPlanradio}}<br>
-                  IVRPlanradio {{IVRPlanradio}}<br>
+                  IVRPlanradio {{IVRPlanradio}}<br> -->
                   
-                  <br>
+                  <!-- <br> -->
 
                   <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless v-if="!checkIvrStatus">
 
@@ -62,8 +62,8 @@
                 <h2 class="sub_title mt-2 mb-16"><br /></h2>
 
                 <div v-if="SelectPlan == 1 || checkIvrStatus == true">
-                  <v-radio-group mandatory v-model="IVRPlanradio">
-                    <v-row align="center">
+                  <v-radio-group mandatory v-model="IVRPlanradio" align="center" justify="center" class="justify-center">
+                    <v-row align="center" justify="center" class="justify-center">
                       <v-col class="col-4" v-for="ivrData in ivrPlanArray" :key="ivrData.Code">
 
                         <v-card class="badge-overlay overflow_data" @click="colorChange(ivrData.PlanId)">
@@ -156,7 +156,7 @@
                 </div>
                 <div v-else>
        
-                  <v-btn v-if="SelectPlan != 0 && nonIVRPlanradio ==1" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                  <v-btn v-if="(SelectPlan != 0 && nonIVRPlanradio ==1 ) || (SelectPlan != 0 && IVRPlanradio==4)" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
                   @click.prevent="nextPage('trial')" color="#EE1C25">
                   Next
                 </v-btn>
@@ -311,6 +311,10 @@ Stage:'',
             console.log('plan here' + plan.Id);
 
             if (plan.IsIvr == true) {
+              // alert(this.planIdSelected)
+              if((this.planIdSelected==1 || this.planIdSelected==4) && this.Stage=='PAID'){
+
+  if(plan.Id!=4){
               this.ivrobject = Object.assign({}, this.ivrobject, {
                 planName: plan.Name,
                 price: plan.Price,
@@ -322,6 +326,22 @@ Stage:'',
                 IsTrail: plan.IsTrail,
               });
               this.ivrPlanArray.push(this.ivrobject);
+  }
+  }else{
+     this.ivrobject = Object.assign({}, this.ivrobject, {
+                planName: plan.Name,
+                price: plan.Price,
+                Validity: plan.Validity,
+                Discount: plan.Discount,
+                PlanId: plan.Id,
+                bestPlanIvr: plan.IsRecommanded,
+                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+                IsTrail: plan.IsTrail,
+              });
+              this.ivrPlanArray.push(this.ivrobject);
+
+  }
+            
             } else {
               // alert (this.planIdSelected)
 if(this.planIdSelected==1 && this.Stage=='PAID'){
