@@ -41,12 +41,16 @@
                   </v-col>
                   <v-col cols="12" sm="6" align="start">
 
-                    <h2 class="name_heading light4">Payment Plan</h2>
+                    <h2 class="name_heading light4" v-if="actual_amount!=0">Payment Plan</h2>
+                    <h2 class="name_heading light4" v-else>Selected Plan</h2>
                     <v-row class="mb-0">
                       <v-col cols="12" sm="6">
                        
-                        <h2 class="content_title medium mb-0 f14">
+                        <h2 class="content_title medium mb-0 f14" v-if="actual_amount!=0">
                           {{validity}} months - Rs {{actual_amount}}
+                        </h2>
+                        <h2 class="content_title medium mb-0 f14"  v-else>
+                          {{validity}} month trial plan
                         </h2>
                         
                       </v-col>
@@ -58,7 +62,7 @@
                     </v-row>
 
 
-          <v-row class="mt-0 pt-0">
+          <v-row class="mt-0 pt-0" v-if="actual_amount!=0">
                       <v-col cols="12" sm="6" align="start">
                         <h2 class="name_heading light4 mb-4">Actual Cost</h2>
                         <h2  class="name_heading light4 mb-4" v-if="Discount!=0">
@@ -84,9 +88,13 @@
                     </v-row>
                   </v-col>
                 </v-row>
-                <v-btn  @click="Paynow()" class="btn_text mt-15 white--text text-capitalize"
+                <v-btn  @click="Paynow()" class="btn_text mt-15 white--text text-capitalize" v-if="actual_amount!=0"
                   width="20%" rounded color="#EE1C25">
                   Pay Rs {{Charges}}
+                </v-btn>
+                 <v-btn  @click="Dashbord()" class="btn_text mt-15 white--text text-capitalize" v-else
+                  width="30%" rounded color="#EE1C25">
+                 Proceed to Dashboard
                 </v-btn>
            
               </v-card>
@@ -122,6 +130,7 @@ export default {
     changePlanArea: false,
     rerenderKey: 0,
     actual_amount:0,
+    planIdChoosen:0,
   }),
 
   components: {
@@ -130,7 +139,9 @@ export default {
 
   created() {
    this.planIdSelected = parseInt(localStorage.getItem("planId"));
-
+          let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      this.planIdChoosen = parseInt(localStorageUserObj.PlanId);
+      this.Stage =localStorageUserObj.Stage;
    
      
     firebase.auth().onAuthStateChanged((user) => {
@@ -150,7 +161,7 @@ export default {
               this.currentPage = this.Udata.currentPage;
               // planId
 
-              console.log(this.currentPage);
+              console.log('planIdSelected:'+this.planIdSelected);
 
               this.virtualNumber = user_details.virtualNumber[0];
               this.address = user_details.Address;
@@ -305,6 +316,9 @@ export default {
     changeAddress() {
       this.$router.push("/Billing");
     },
+       dashboard() {
+      this.$router.push("/dashboard").catch(() => {});
+    },
     Paynow() {
       const details = {
         url: this.$cloudfareApi+"/addon/payment",
@@ -323,10 +337,10 @@ export default {
           Gstin: this.gst,
           CompanyName: this.businessName,
           Pincode: this.pincode,
-          PlanId: this.planId,
+          PlanId: this.planIdSelected,
           payment_mode: "WEB",
           type: "BASIC",
-          amount: this.Charges,
+          // amount: this.Charges,
         },
       };
       this.$axios(details).then(async (responsevalue) => {
