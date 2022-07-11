@@ -316,7 +316,7 @@ export default {
     changeAddress() {
       this.$router.push("/Billing");
     },
-       dashboard() {
+       Dashbord() {
       this.$router.push("/dashboard").catch(() => {});
     },
     Paynow() {
