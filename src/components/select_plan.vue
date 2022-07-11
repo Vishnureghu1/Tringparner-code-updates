@@ -58,10 +58,10 @@
                     </v-row>
 
 
-                    <v-row class="mt-0 pt-0">
+          <v-row class="mt-0 pt-0">
                       <v-col cols="12" sm="6" align="start">
                         <h2 class="name_heading light4 mb-4">Actual Cost</h2>
-                        <h2  class="name_heading light4 mb-4">
+                        <h2  class="name_heading light4 mb-4" v-if="Discount!=0">
                           Discount
                         </h2>
                         <h2 class="name_heading light4 mb-4">GST(18%)</h2>
@@ -71,7 +71,7 @@
                         <h2  class="content_title medium mb-4 f14">
                           Rs {{actual_amount}}
                         </h2>
-                        <h2  class="content_title medium mb-4 f14">
+                        <h2  class="content_title medium mb-4 f14" v-if="Discount!=0">
                           Rs {{Discount}}
                         </h2>
                          <h2  class="content_title medium mb-4 f14">
@@ -218,8 +218,9 @@ export default {
             response.data.actual_user_amount;
           this.Discount = this.SubTotal - response.data.total_amount;
           this.CostAfterDiscount = response.data.total_amount;
-          this.Gst = response.data.invoice_amount - response.data.total_amount;
-          this.Charges = (this.actual_amount -  this.Discount ) + this.Gst;
+          this.Gst = (response.data.invoice_amount - response.data.total_amount).toFixed(2);
+          this.GstNoRound = (response.data.invoice_amount - response.data.total_amount);
+          this.Charges = (this.actual_amount -  this.Discount ) + this.GstNoRound;
           this.sublist.push(
             { title: "Item", qty: "Quantity", amount: "Price", class: "bold" },
             {
@@ -325,6 +326,7 @@ export default {
           PlanId: this.planId,
           payment_mode: "WEB",
           type: "BASIC",
+          amount: this.Charges,
         },
       };
       this.$axios(details).then(async (responsevalue) => {

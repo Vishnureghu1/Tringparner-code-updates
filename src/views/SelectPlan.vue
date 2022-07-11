@@ -20,7 +20,7 @@
                
                   CurrentPlan: {{ CurrentPlan }}<br>
                   Stage: {{ Stage }}<br>
-                  planIdSelected: {{ planId }}<br>
+                  planIdSelected: {{ planIdSelected }}<br>
                   selected plan {{ SelectPlan }}<br>
                   nonIVRPlanradio {{nonIVRPlanradio}}<br>
                   IVRPlanradio {{IVRPlanradio}}<br>
@@ -64,7 +64,7 @@
                 <div v-if="SelectPlan == 1 || checkIvrStatus == true">
                   <v-radio-group mandatory v-model="IVRPlanradio">
                     <v-row align="center">
-                      <v-col cols="12" sm="4" v-for="ivrData in ivrPlanArray" :key="ivrData.Code">
+                      <v-col class="col-4" v-for="ivrData in ivrPlanArray" :key="ivrData.Code">
 
                         <v-card class="badge-overlay overflow_data" @click="colorChange(ivrData.PlanId)">
                           <span class="top-right badge red" v-if="ivrData.bestPlanIvr == true">BEST VALUE IVR</span>
@@ -102,14 +102,14 @@
                   <p class="text--red" @click="ivrFeatureBox = true">Plan Details</p>
                 </div>
                 
-                <div v-else-if="SelectPlan == 2 || checkIvrStatus == true">
+                <div v-else-if="SelectPlan == 2 || checkIvrStatus == true" >
                 
-                  <v-radio-group mandatory v-model="nonIVRPlanradio">
-                    <v-row align="center">
-                      <div v-if="planId!='' && planId==3">Trial Plan will update here - still in progress</div>
-                      <v-col v-for="nonivrData in nonIvrPlanArray" :key="nonivrData.Code">
+                  <v-radio-group mandatory v-model="nonIVRPlanradio" align="center" justify="center" class="justify-center">
+                    <v-row align="center" justify="center" class="justify-center">
+                    
+                      <v-col class="col-4" v-for="nonivrData in nonIvrPlanArray" :key="nonivrData.Code"  justify="center">
 
-                        <v-card class="badge-overlay overflow_data" @click="colorChange(nonivrData.PlanId)">
+                        <v-card class="badge-overlay overflow_data" @click="colorChange(nonivrData.PlanId)"  >
                           <span class="top-right badge red" v-if="nonivrData.bestPlanNonIvr == true">BEST VALUE IVR</span>
                           <span class="top-right badge red" v-if="nonivrData.IsTrail == true">TRIAL PLAN</span>
                           
@@ -308,7 +308,7 @@ Stage:'',
             console.log('Plan Data');
             let plan = doc.data();
             this.plan = plan;
-            console.log('plan here' + plan.IsRecommanded);
+            console.log('plan here' + plan.Id);
 
             if (plan.IsIvr == true) {
               this.ivrobject = Object.assign({}, this.ivrobject, {
@@ -323,6 +323,11 @@ Stage:'',
               });
               this.ivrPlanArray.push(this.ivrobject);
             } else {
+              // alert (this.planIdSelected)
+if(this.planIdSelected==1 && this.Stage=='PAID'){
+
+  if(plan.Id!=1){
+    
               this.nonivrobject = Object.assign({}, this.nonivrobject, {
                 planName: plan.Name,
                 price: plan.Price,
@@ -336,9 +341,26 @@ Stage:'',
               });
 
               this.nonIvrPlanArray.push(this.nonivrobject);
+ }
 
+            }else{
 
+                  
+              this.nonivrobject = Object.assign({}, this.nonivrobject, {
+                planName: plan.Name,
+                price: plan.Price,
+                Validity: plan.Validity,
+                Discount: plan.Discount,
+                PlanId: plan.Id,
+                bestPlanNonIvr: plan.IsRecommanded,
+                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+                IsTrail: plan.IsTrail,
+
+              });
+
+              this.nonIvrPlanArray.push(this.nonivrobject);
             }
+    }
           
           });
           this.checkData();
