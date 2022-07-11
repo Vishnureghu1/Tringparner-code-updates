@@ -76,6 +76,13 @@ const routes = [{
         meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
     },
     {
+        path: '/NoAddons',
+        name: 'NoAddons',
+        component: () =>
+            import ( /* webpackChunkName: "missed_call" */ '../views/NoAddons.vue'),
+        meta: { requiresAuth: true, role: 'OWNER', allowedRoles: ["OWNER", "ADMIN"] }
+    },
+    {
         path: '/manageAddonNumbers',
         name: 'manageAddonNumbers',
         component: () =>

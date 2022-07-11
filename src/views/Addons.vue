@@ -31,9 +31,26 @@
                     max-width="1069"
                   >
                     <v-layout>
-                      <v-flex xs12 sm12 md12>
+                                        <v-flex xs12 sm12 md12 v-if="CurrentPlan==1 || CurrentPlan==4">
+                        <v-row no-gutters>
+                          <v-col cols="12" >
+                            <!-- {{CurrentPlan}} -->
+                               <v-alert dense outlined  type="error">
+                <h4 class="f16">You are not allowed!</h4>
+                <p class="mb-0 pb-0 black--text" color="black">
+                  You are not allowed to add Add-Ons
+                </p>
+              </v-alert>
+                            </v-col>
+
+                            
+                        </v-row>
+                      </v-flex>
+                      <v-flex xs12 sm12 md12 v-else> 
                         <v-row no-gutters>
                           <v-col cols="12">
+
+             
                             <v-row class="center" justify="center" align="center">
                               <v-col cols="6">
                                 <h2 class="name_heading mr-7 regular">
@@ -153,10 +170,12 @@ export default {
   components: {},
   created() {
      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      this.CurrentPlan =localStorageUserObj.PlanId;
        this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
     window.scrollTo(0, 0); //scroll to top
   },
   data: () => ({
+    CurrentPlan:0,
     isHide:false,
     uid:"",
     owneruid:"",
