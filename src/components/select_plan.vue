@@ -50,7 +50,7 @@
                           {{validity}} months - Rs {{actual_amount}}
                         </h2>
                         <h2 class="content_title medium mb-0 f14"  v-else>
-                          {{validity}} month trial plan
+                          Trial plan
                         </h2>
                         
                       </v-col>

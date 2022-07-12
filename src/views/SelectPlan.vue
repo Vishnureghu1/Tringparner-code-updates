@@ -15,7 +15,7 @@
 
                 <v-col cols="12" sm="6" class="py-2">
 
-           <!-- IvrPlan: {{ IvrPlan }}<br>
+           IvrPlan: {{ IvrPlan }}<br>
                   checkIvrStatus: {{ checkIvrStatus }}
                
                   CurrentPlan: {{ CurrentPlan }}<br>
@@ -23,7 +23,7 @@
                   planIdSelected: {{ planIdSelected }}<br>
                   selected plan {{ SelectPlan }}<br>
                   nonIVRPlanradio {{nonIVRPlanradio}}<br>
-                  IVRPlanradio {{IVRPlanradio}}<br> -->
+                  IVRPlanradio {{IVRPlanradio}}<br>
                   
                   <!-- <br> -->
 
@@ -68,7 +68,7 @@
 
                         <v-card class="badge-overlay overflow_data" @click="colorChange(ivrData.PlanId)">
                           <span class="top-right badge red" v-if="ivrData.bestPlanIvr == true">BEST VALUE IVR</span>
-                          <span class="top-right badge red" v-if="ivrData.IsTrail == true">TRIAL PLAN</span>
+                          <span class="top-right badge red" v-if="ivrData.IsTrial == true">Trial PLAN</span>
                           <v-radio color="red" :value="ivrData.PlanId" class="pl-4 radio_classs"
                             active-class="planActive">
                             <span slot="label" class="black--text ml-3">
@@ -111,7 +111,7 @@
 
                         <v-card class="badge-overlay overflow_data" @click="colorChange(nonivrData.PlanId)"  >
                           <span class="top-right badge red" v-if="nonivrData.bestPlanNonIvr == true">BEST VALUE IVR</span>
-                          <span class="top-right badge red" v-if="nonivrData.IsTrail == true">TRIAL PLAN</span>
+                          <span class="top-right badge red" v-if="nonivrData.IsTrial == true">Trial PLAN</span>
                           
                           <v-radio color="red" :value="nonivrData.PlanId" class="pl-4 radio_classs"
                             active-class="planActive">
@@ -144,10 +144,11 @@
                     </v-row>
                   </v-radio-group>
                 </div>
+                
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
-               
+                   {{Stage}}
                 <div v-if="editplan=='true'">
                 <v-btn v-if="SelectPlan != 0" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
                   @click.prevent="nextPage('review')" color="#EE1C25">
@@ -155,14 +156,10 @@
                 </v-btn>
                 </div>
                 <div v-else>
-       
-                  <v-btn v-if="(SelectPlan != 0 && nonIVRPlanradio ==1 ) || (SelectPlan != 0 && IVRPlanradio==4)" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+   
+                  <v-btn v-if="Stage =='TRIAL'" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
                   @click.prevent="nextPage('trial')" color="#EE1C25">
                   Next
-                </v-btn>
-                  <v-btn v-else-if="SelectPlan != 0 && IVRPlanradio >3" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                  @click.prevent="nextPage('address')" color="#EE1C25">
-                  Next 
                 </v-btn>
                
                   <v-btn v-else class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
@@ -285,6 +282,8 @@ Stage:'',
   created() {
           this.editplan = this.$route.query.editplan;
           let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+          this.planId = parseInt(localStorage.getItem("PlanId"));
+          // alert(localStorageUserObj.PlanId);
       this.planIdSelected = parseInt(localStorageUserObj.PlanId);
       this.Stage =localStorageUserObj.Stage;
 // alert(this.planIdSelected)
@@ -323,7 +322,7 @@ Stage:'',
                 PlanId: plan.Id,
                 bestPlanIvr: plan.IsRecommanded,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
-                IsTrail: plan.IsTrail,
+                IsTrial: plan.IsTrial,
               });
               this.ivrPlanArray.push(this.ivrobject);
   }
@@ -336,7 +335,7 @@ Stage:'',
                 PlanId: plan.Id,
                 bestPlanIvr: plan.IsRecommanded,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
-                IsTrail: plan.IsTrail,
+                IsTrial: plan.IsTrial,
               });
               this.ivrPlanArray.push(this.ivrobject);
 
@@ -356,7 +355,7 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
                 PlanId: plan.Id,
                 bestPlanNonIvr: plan.IsRecommanded,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
-                IsTrail: plan.IsTrail,
+                IsTrial: plan.IsTrial,
 
               });
 
@@ -374,7 +373,7 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
                 PlanId: plan.Id,
                 bestPlanNonIvr: plan.IsRecommanded,
                 ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
-                IsTrail: plan.IsTrail,
+                IsTrial: plan.IsTrial,
 
               });
 
