@@ -15,7 +15,7 @@
 
                 <v-col cols="12" sm="6" class="py-2">
 
-           IvrPlan: {{ IvrPlan }}<br>
+           <!-- IvrPlan: {{ IvrPlan }}<br>
                   checkIvrStatus: {{ checkIvrStatus }}
                
                   CurrentPlan: {{ CurrentPlan }}<br>
@@ -23,7 +23,7 @@
                   planIdSelected: {{ planIdSelected }}<br>
                   selected plan {{ SelectPlan }}<br>
                   nonIVRPlanradio {{nonIVRPlanradio}}<br>
-                  IVRPlanradio {{IVRPlanradio}}<br>
+                  IVRPlanradio {{IVRPlanradio}}<br> -->
                   
                   <!-- <br> -->
 
@@ -148,7 +148,10 @@
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
+                   <!-- {{planIdSelected}}
                    {{Stage}}
+                {{nonIVRPlanradio }}
+                {{IVRPlanradio }} -->
                 <div v-if="editplan=='true'">
                 <v-btn v-if="SelectPlan != 0" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
                   @click.prevent="nextPage('review')" color="#EE1C25">
@@ -157,14 +160,13 @@
                 </div>
                 <div v-else>
    
-                  <v-btn v-if="Stage =='TRIAL'" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                  @click.prevent="nextPage('trial')" color="#EE1C25">
-                  Next
-                </v-btn>
-               
-                  <v-btn v-else class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                  @click.prevent="nextPage('address')" color="#EE1C25">
+                  <v-btn v-if="(planIdSelected ==0 && Stage=='INPROGRESS') &&  (nonIVRPlanradio!=1  || IVRPlanradio!=4)" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                  color="#EE1C25" @click.prevent="nextPage('address')" >
                   Next 
+                </v-btn>               
+                  <v-btn v-else class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                   @click.prevent="nextPage('trial')" color="#EE1C25">
+                  Next Trial
                 </v-btn>
                
                 </div>
@@ -280,19 +282,18 @@ Stage:'',
   components: {},
 
   created() {
-          this.editplan = this.$route.query.editplan;
-          let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-          this.planId = parseInt(localStorage.getItem("PlanId"));
-          // alert(localStorageUserObj.PlanId);
-      this.planIdSelected = parseInt(localStorageUserObj.PlanId);
-      this.Stage =localStorageUserObj.Stage;
-// alert(this.planIdSelected)
+      this.editplan = this.$route.query.editplan;
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorage.getItem("PlanId"));
+      this.planIdSelected = localStorageUserObj.PlanId==''? 0 : parseInt(localStorageUserObj.PlanId);
+      this.Stage = localStorageUserObj.Stage;
+
              if(this.planIdSelected){
-    this.colorChange(this.planIdSelected);
+      this.colorChange(this.planIdSelected);
              }else{
               this.initial_value();
              }
-    this.planDetails = db
+      this.planDetails = db
       .collection("plan_details")
       // where('Id', '>=', 2)
       // .collection
@@ -396,7 +397,7 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
       this.SelectPlan = 2;
       this.IVRPlanradio = parseInt(localStorage.getItem("IVRPlanradio"));
       this.nonIVRPlanradio = parseInt(localStorage.getItem("nonIVRPlanradio"));
-      this.planId = parseInt(localStorage.getItem("planId"));
+      this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorage.getItem("PlanId"));
  
   },
   methods: {
@@ -437,6 +438,7 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
     },
     nextPage(review) {
       this.overlay = true;
+      alert(review);
      if(review=='trial'){
     const user_trial = {
         url: this.$cloudfareApi + "/user/trial",

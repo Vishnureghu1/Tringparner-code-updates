@@ -103,7 +103,9 @@
                     <v-col cols="12" sm="10">
                       <h3 class="f16 nunito-font regular">
                         <div
-                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5"
+                          class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5 text-uppercase" style="
+    width: 30px;
+    text-align: center;"
                         >
                           {{userContact.ContactName.charAt(0)}}
                         </div>
