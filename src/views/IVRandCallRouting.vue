@@ -47,7 +47,8 @@
                           <v-col cols="12">
                             <div class="center align-center" align="center">
                               <!-- <p>Please choose your plan</p> -->
-
+<!-- {{IvrPlan}}
+{{checkIvrStatus}} -->
                               <v-btn-toggle
                                 rounded
                                 elivation="05"
@@ -530,7 +531,7 @@ export default {
     ivrActive: false,
     directActive: false,
     toggle_exclusive: undefined,
-
+    checkIvrStatus:false,
     source1: "",
     source2: "",
     source3: "",
@@ -642,7 +643,7 @@ export default {
 
       // local storage isIV get data here
       // if false then noIVR
-      this.checkIvrStatus = localStorageUserObj.IsIvr;
+      this.checkIvrStatus = localStorageUserObj.PlanId?true:false
       // this.checkIvrStatus = false;
 
       const owneruid =

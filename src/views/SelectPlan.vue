@@ -15,17 +15,7 @@
 
                 <v-col cols="12" sm="6" class="py-2">
 
-           <!-- IvrPlan: {{ IvrPlan }}<br>
-                  checkIvrStatus: {{ checkIvrStatus }}
-               
-                  CurrentPlan: {{ CurrentPlan }}<br>
-                  Stage: {{ Stage }}<br>
-                  planIdSelected: {{ planIdSelected }}<br>
-                  selected plan {{ SelectPlan }}<br>
-                  nonIVRPlanradio {{nonIVRPlanradio}}<br>
-                  IVRPlanradio {{IVRPlanradio}}<br> -->
-                  
-                  <!-- <br> -->
+     
 
                   <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless v-if="!checkIvrStatus">
 
@@ -148,10 +138,17 @@
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
-                   <!-- {{planIdSelected}}
-                   {{Stage}}
-                {{nonIVRPlanradio }}
-                {{IVRPlanradio }} -->
+                   <!-- IvrPlan: {{ IvrPlan }}<br>
+                  checkIvrStatus: {{ checkIvrStatus }}<br>
+               
+                  CurrentPlan: {{ CurrentPlan }}<br>
+                  Stage: {{ Stage }}<br>
+                  planIdSelected: {{ planIdSelected }}<br>
+                  selected plan {{ SelectPlan }}<br>
+                  nonIVRPlanradio {{nonIVRPlanradio}}<br>
+                  IVRPlanradio {{IVRPlanradio}}<br> -->
+                  
+                  <!-- <br> -->
                 <div v-if="editplan=='true'">
                 <v-btn v-if="SelectPlan != 0" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
                   @click.prevent="nextPage('review')" color="#EE1C25">
@@ -438,7 +435,7 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
     },
     nextPage(review) {
       this.overlay = true;
-      alert(review);
+      // alert(review);
      if(review=='trial'){
     const user_trial = {
         url: this.$cloudfareApi + "/user/trial",
