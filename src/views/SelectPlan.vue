@@ -138,7 +138,7 @@
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
-                   <!-- IvrPlan: {{ IvrPlan }}<br>
+                   IvrPlan: {{ IvrPlan }}<br>
                   checkIvrStatus: {{ checkIvrStatus }}<br>
                
                   CurrentPlan: {{ CurrentPlan }}<br>
@@ -146,7 +146,7 @@
                   planIdSelected: {{ planIdSelected }}<br>
                   selected plan {{ SelectPlan }}<br>
                   nonIVRPlanradio {{nonIVRPlanradio}}<br>
-                  IVRPlanradio {{IVRPlanradio}}<br> -->
+                  IVRPlanradio {{IVRPlanradio}}<br>
                   
                   <!-- <br> -->
                 <div v-if="editplan=='true'">
@@ -157,13 +157,13 @@
                 </div>
                 <div v-else>
    
-                  <v-btn v-if="(planIdSelected ==0 && Stage=='INPROGRESS') &&  (nonIVRPlanradio!=1  || IVRPlanradio!=4)" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                  color="#EE1C25" @click.prevent="nextPage('address')" >
+                  <v-btn v-if="nonIVRPlanradio==1  || IVRPlanradio==4" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                  color="#EE1C25" @click.prevent="nextPage('trial')" >
                   Next 
                 </v-btn>               
                   <v-btn v-else class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                   @click.prevent="nextPage('trial')" color="#EE1C25">
-                  Next Trial
+                   @click.prevent="nextPage('address')" color="#EE1C25">
+                  Next
                 </v-btn>
                
                 </div>
@@ -465,13 +465,9 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
             
           }
           console.log(response);
-          if(review){
-            this.$router.push("/Review");
-
-          }else{
-
-            this.$router.push("/Billing");
-          }
+       
+            this.$router.push("/Billing?plan=trial");
+          
         })
         .catch((error) => {
           console.error(error);
@@ -508,13 +504,13 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
             
           }
           console.log(response);
-          if(review){
-            this.$router.push("/Review");
+          // if(review){
+          this.$router.push("/Review");
 
-          }else{
+          // }else{
 
-            this.$router.push("/Billing");
-          }
+          //   this.$router.push("/Billing");
+          // }
         })
         .catch((error) => {
           console.error(error);

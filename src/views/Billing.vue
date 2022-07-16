@@ -90,10 +90,14 @@
                     <p class="left">+91{{ userPhoneNumber }}</p>
                   </v-col> -->
                 </v-row>
-                <v-btn
+                <v-btn v-if="plan=='trial'" class="btn_text mt-15 white--text text-capitalize"  width="25%" rounded
+                  @click.prevent="nextPage('dashboard')" color="#EE1C25">
+                  Next
+                </v-btn>
+                <v-btn v-else
                   class="btn_text mt-8 white--text text-capitalize"
                   width="25%"
-                  @click.prevent="nextPage()"
+                  @click.prevent="nextPage('noplan')"
                   rounded
                   color="#EE1C25"
                 >
@@ -141,6 +145,7 @@ export default {
     pincodeDb: pincodeDB,
     pincodeInvalid: true,
     dialog: false,
+    plan:'',
     emailRules: [
       (v) => !!v || "E-mail is required",
       (v) =>
@@ -181,6 +186,7 @@ export default {
   components: {},
 
   created() {
+    this.plan = this.$route.query.plan;
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("logged user details", user);
@@ -237,7 +243,8 @@ export default {
         // console.log('after',this.pincodeInvalid)
       });
     },
-    nextPage() {
+    nextPage(plan) {
+    // alert(plan)
      var dd =  this.$refs.form.validate();
 
       if(dd==true){
@@ -288,7 +295,13 @@ export default {
           this.$axios(user_stage)
             .then((response) => {
               console.log(response);
-              this.$router.push("/Review");
+              if(plan=='trial'){
+
+                this.$router.push("/Dashboard");
+              }else{
+                this.$router.push("/Review");
+
+              }
             })
             .catch((error) => {
               console.error(error);
