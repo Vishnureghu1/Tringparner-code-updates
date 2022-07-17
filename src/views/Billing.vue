@@ -186,6 +186,8 @@ export default {
   components: {},
 
   created() {
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorageUserObj.getItem("PlanId"));
     this.plan = this.$route.query.plan;
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -200,7 +202,7 @@ export default {
               let user_details = doc.data();
               console.log(user_details);
               this.virtualnumber = user_details.virtualNumber[0];
-              this.planId = user_details.PlanId;
+              this.planId = user_details.PlanId?user_details.PlanId:this.planId;
               this.userPhoneNumber = user_details.PhoneNumber;
               this.virtualNumber = user_details.virtualNumber[0];
               this.address = user_details.Address;

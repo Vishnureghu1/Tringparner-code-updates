@@ -138,7 +138,7 @@
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
-                   IvrPlan: {{ IvrPlan }}<br>
+                   <!-- IvrPlan: {{ IvrPlan }}<br>
                   checkIvrStatus: {{ checkIvrStatus }}<br>
                
                   CurrentPlan: {{ CurrentPlan }}<br>
@@ -146,7 +146,7 @@
                   planIdSelected: {{ planIdSelected }}<br>
                   selected plan {{ SelectPlan }}<br>
                   nonIVRPlanradio {{nonIVRPlanradio}}<br>
-                  IVRPlanradio {{IVRPlanradio}}<br>
+                  IVRPlanradio {{IVRPlanradio}}<br> -->
                   
                   <!-- <br> -->
                 <div v-if="editplan=='true'">
