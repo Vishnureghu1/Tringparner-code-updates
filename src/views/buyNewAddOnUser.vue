@@ -22,6 +22,23 @@
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
+                    <v-flex xs12 sm12 md12 v-if="CurrentPlan==1 || CurrentPlan==4">
+                        <v-row no-gutters>
+                          <v-col cols="9" class="mt-6 pl-5">
+                               <v-alert dense outlined  type="error">
+                <h4 class="f16">You are not allowed!</h4>
+                <p class="mb-0 pb-0 black--text" color="black">
+                  You are not allowed to add Add-Ons
+                </p>
+              </v-alert>
+                            </v-col>
+
+                            
+                        </v-row>
+                      </v-flex>
+                      <div class="" v-else>
+
+                    
                   <v-row align="center" justify="center">
                     <v-col cols="12" sm="12">
                       <h2 class="comment_heading ml-5 text-left">
@@ -289,6 +306,7 @@
                     </v-layout>
                     <!-- STEPPER2 -->
                   </v-card>
+                  </div>
                 </div>
               </v-col>
             </v-row>
@@ -305,6 +323,9 @@ import axios from "axios";
 export default {
   components: {},
   created() {
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.CurrentPlan =localStorageUserObj.PlanId;
+
      db.collection("Addons").where("Id","==",1).get().then(async(snap) =>{
 			console.log("test.........",snap.docs[0].data());
       this.Amount = snap.docs[0].data().Amount;

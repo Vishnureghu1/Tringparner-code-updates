@@ -22,9 +22,22 @@
                       </v-breadcrumbs>
                     </v-col>
                   </v-row>
-                
+                    <v-flex xs12 sm12 md12 v-if="CurrentPlan==1 || CurrentPlan==4">
+                        <v-row no-gutters>
+                          <v-col cols="9" class="mt-6 pl-5">
+                               <v-alert dense outlined  type="error">
+                <h4 class="f16">You are not allowed!</h4>
+                <p class="mb-0 pb-0 black--text" color="black">
+                  You are not allowed to add Add-Ons
+                </p>
+              </v-alert>
+                            </v-col>
 
-                  <v-card
+                            
+                        </v-row>
+                      </v-flex>
+
+                  <v-card v-else
                     color="transparent"
                     outlined
                     class="mt-5"
@@ -203,6 +216,7 @@ export default {
   components: {},
    created() {
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      this.CurrentPlan =localStorageUserObj.PlanId;
         //  this.bussinessNumber = this.$route.query.bn;
     // this.setBreadcrumbs(this.bussinessNumber);
 		const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;

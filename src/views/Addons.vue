@@ -34,7 +34,6 @@
                                         <v-flex xs12 sm12 md12 v-if="CurrentPlan==1 || CurrentPlan==4">
                         <v-row no-gutters>
                           <v-col cols="12" >
-                            <!-- {{CurrentPlan}} -->
                                <v-alert dense outlined  type="error">
                 <h4 class="f16">You are not allowed!</h4>
                 <p class="mb-0 pb-0 black--text" color="black">
