@@ -75,10 +75,10 @@
       >
         <v-card flat elevation="0">
                    <div id="layoutCallLog">
-            <v-expansion-panels accordion flat v-if="userContacts && userContacts.length > 0">
+            <v-expansion-panels accordion flat v-if="organisationContacts && organisationContacts.length > 0">
 
 
-              <v-expansion-panel v-for="userContact in userContacts" :key="userContact.Name">
+              <v-expansion-panel v-for="organisationContact in organisationContacts" :key="organisationContact.Name">
                 <v-expansion-panel-header expand-icon="">
                   <v-row class="d-flex align-center justify-center" align-content="center" justify="center">
                     <v-col cols="12" sm="10">
@@ -86,9 +86,9 @@
                         <div class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5 text-uppercase" style="
     width: 30px;
     text-align: center;">
-                          {{ userContact.ContactName.charAt(0) }}
+                          {{ organisationContact.ContactName.charAt(0) }}
                         </div>
-                        {{ userContact.ContactName }}
+                        {{ organisationContact.ContactName }}
                       </h3>
                     </v-col>
                     <v-col cols="12" sm="2" align="right">
@@ -101,7 +101,7 @@
                         <v-list>
                           <v-list-item v-for="(item, index) in items" :key="index" active-class="pink--text">
                             <v-list-item-title :class="item.color"
-                              @click="threeDotAction(item.url, userContact.ContactName, userContact.ContactNumber)">
+                              @click="threeDotAction(item.url, organisationContact.ContactName, organisationContact.ContactNumber)">
                               {{ item.title }}
                             </v-list-item-title>
                           </v-list-item>
@@ -115,7 +115,7 @@
                     <div class="col-12 pl-15">
                       <h6 class="font-weight-thin">Caller Number</h6>
 
-                      <h5 class="font-weight-light">+91 {{ userContact.ContactNumber }}</h5>
+                      <h5 class="font-weight-light">+91 {{ organisationContact.ContactNumber }}</h5>
                     </div>
                   </div>
                 </v-expansion-panel-content>
@@ -127,7 +127,7 @@
               </v-expansion-panel>
 
             </v-expansion-panels>
-            <v-expansion-panels v-else>
+            <v-expansion-panels v-else class="mt-5">
               <v-alert dense outlined type="error">
                 <h4 class="f16">No contacts found!</h4>
                 <p class="mb-0 pb-0 black--text" color="black">
@@ -198,7 +198,7 @@
               </v-expansion-panel>
 
             </v-expansion-panels>
-            <v-expansion-panels v-else>
+            <v-expansion-panels v-else class="mt-5">
               <v-alert dense outlined type="error">
                 <h4 class="f16">No contacts found!</h4>
                 <p class="mb-0 pb-0 black--text" color="black">
@@ -226,10 +226,12 @@
         <v-card-title class="d-flex justify-center">
           <h3 class="center">{{ contact_text }}</h3>
         </v-card-title>
-        <v-card-text class="pt-0">
+        <v-card-text class="pt-0 pb-0 mb-0">
           <v-text-field label="Name" outlined v-model="name"></v-text-field>
 
           <v-text-field label="Mobile Number*" outlined v-model="number"></v-text-field>
+          <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox>
+
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
@@ -294,6 +296,7 @@ export default {
     contact_text: "",
     userContacts: [],
     tab:null,
+    syncOrganisation:false,
     // contactName:"",
     // contactNumber:"",
     items: [
@@ -328,8 +331,34 @@ export default {
     }).catch((err) => {
       console.log(err.message)
     })
+
+
+        db.collection("OrganisationContacts").where("OrganisationUid", "==", owneruid).get().then(async (querySnapshot) => {
+      console.log(querySnapshot);
+      this.organisationContacts = [];
+      if (!querySnapshot.empty) {
+
+        querySnapshot.forEach(async (doc) => {
+          let contact = doc.data();
+          this.contact = contact;
+          // console.log(contact)
+          this.organisationContactsObject = Object.assign({}, this.organisationContactsObject, {
+            ContactName: contact.Name,
+            ContactNumber: contact.Number,
+
+          })
+          this.organisationContacts.push(this.organisationContactsObject);
+        })
+      }
+    }).catch((err) => {
+      console.log(err.message)
+    })
   },
   methods: {
+    checkboxUpdated(newValue){
+  console.log(newValue)
+  this.syncOrganisation = newValue==null?false:true;
+},
     searchAction() {
       this.hidden = !this.hidden;
     },
@@ -406,8 +435,11 @@ export default {
     },
 
     saveNow() {
-      const details = {
-        url: this.$cloudfareApi + "/contact/user",
+
+      if(this.syncOrganisation==false){
+
+        const details = {
+          url: this.$cloudfareApi + "/contact/user",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -416,7 +448,7 @@ export default {
           UpdatedBy: this.uid,
           Name: this.name,
           Number: this.number,
-          SyncOrganisation: false,
+          SyncOrganisation: this.syncOrganisation,
         },
       };
       axios(details).then(async (responsevalue) => {
@@ -432,6 +464,36 @@ export default {
 
 
       });
+          }else{
+
+                 const details = {
+          url: this.$cloudfareApi + "/contact/organisation",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          OrganisationUid: this.owneruid,
+          OwnerUid: this.owneruid,
+          Uid: this.uid,
+          UpdatedBy: this.uid,
+          Name: this.name,
+          Number: this.number,
+          SyncOrganisation: this.syncOrganisation,
+        },
+      };
+      axios(details).then(async (responsevalue) => {
+        console.log(responsevalue);
+
+        if (responsevalue.data.status == true) {
+          this.contacts_added = true;
+          this.dialog2 = false;
+          this.created();
+
+
+        }
+
+
+      }); 
+          }
     },
   },
 };
