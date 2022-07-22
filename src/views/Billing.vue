@@ -186,6 +186,7 @@ export default {
   components: {},
 
   created() {
+ 
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
       this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorageUserObj.getItem("PlanId"));
     this.plan = this.$route.query.plan;
@@ -245,6 +246,7 @@ export default {
         // console.log('after',this.pincodeInvalid)
       });
     },
+    
     nextPage(plan) {
     // alert(plan)
      var dd =  this.$refs.form.validate();
@@ -289,7 +291,8 @@ export default {
             data: {
               uid: this.uid,
               phoneNumber: this.phno,
-              currentPage: "onboarding_review",
+              // currentPage: "onboarding_review",
+              currentPage: "onboarding_billing",
               plan_id: this.planId,
             },
           };
@@ -297,7 +300,8 @@ export default {
           this.$axios(user_stage)
             .then((response) => {
               console.log(response);
-              if(plan=='trial'){
+
+              if(plan=='dashboard'){
 
                 this.$router.push("/Dashboard");
               }else{

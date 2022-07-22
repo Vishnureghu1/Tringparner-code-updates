@@ -27,14 +27,32 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        <!-- IvrPlan: {{ IvrPlan }}<br>
+                     <!-- IvrPlan: {{ IvrPlan }}<br>
                         checkIvrStatus: {{ checkIvrStatus }}
                         <br>
                         upgrade: {{ upgrade }}
                         <br>
                         IvrPlan: {{ IvrPlan }}
-                        <br> -->
-                        <div class="center align-center" align="center" v-if="checkIvrStatus == false || checkIvrStatus == undefined">
+                        <br> 
+                        PlanId: {{PlanId}}
+                        <br>
+                        NoOfTrail: {{NoOfTrail}} -->
+
+
+                         <div class="center align-center" align="center" v-if="PlanId == 1|| PlanId == 4">
+
+                          <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
+                            <v-btn v-if="PlanId == 1" width="200" @click="isIvr(2)"
+                              :class="{ active: IvrPlan == 2 }">
+                             Basic
+                            </v-btn>
+
+                            <v-btn width="200" @click="isIvr(1)" :class="{ active: upgrade == 1 || IvrPlan == 1 }">
+                              IVR 
+                            </v-btn>
+                          </v-btn-toggle>
+                        </div>
+                        <div v-else class="center align-center" align="center">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
                             <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="isIvr(2)"
@@ -585,7 +603,7 @@ export default {
     sixmonths: false,
     twelvemonths: false,
     invoice_amount: "",
-    checkIvrStatus:"",
+    checkIvrStatus:false,
     amount: "",
     plans: false,
     sublist: [],
@@ -630,6 +648,7 @@ export default {
     validity:1,
     nonIvrPlanArray:"",
     IvrPlanArray:"",
+    NoOfTrail:0,
   }),
   computed: {
     computedPrice() {
@@ -651,7 +670,9 @@ export default {
     this.Rechargeday = localStorageUserObj.LastDay;
     this.Name = localStorageUserObj.FirstName;
     this.owneruid = owneruid;
-    this.PlanId = localStorageUserObj.PlanId;
+    // this.PlanId = localStorageUserObj.PlanId;
+    this.NoOfTrail = localStorageUserObj.NoOfTrail == ""? 0: parseInt(localStorageUserObj.NoOfTrail);
+    this.PlanId = localStorageUserObj.PlanId == ""? 0: parseInt(localStorageUserObj.PlanId);
 
     this.planDetails = db
       .collection("plan_details")
@@ -729,6 +750,7 @@ export default {
           this.directActive = localStorageUserObj.IsIvr == true ? false : true;
           this.checkCondition = localStorageUserObj.IsIvr == undefined ? false : this.checkCondition;
           this.IvrPlan = this.checkCondition == false ? 2 : this.checkCondition; // edited by navas on 28 june 2022
+          this.IvrPlan = this.PlanId==1 ? 2:1;
           //  this.IvrPlan = this.checkCondition == false ? 2:1
           // alert(this.checkCondition);
           if(this.IvrPlan==1){

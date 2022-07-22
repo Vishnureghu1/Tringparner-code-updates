@@ -160,50 +160,8 @@ import pincodeDB from "./pincodes.json"
 import { db } from '@/main.js';
   export default {
 			created() {
-				firebase.auth().onAuthStateChanged(user => {
-					if (user) {
-						console.log("logged user details",user)
-						this.uid = user.uid
-						this.phno = user.phoneNumber.slice(3)
-						console.log("billing il user id", this.uid)
-						console.log("billing il user number", this.phno)
-
-					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
-						querySnapshot.forEach((doc) => {
-							console.log(doc.id, " => ", doc.data());
-							let user_details = doc.data()
-							this.Udata = user_details
-							this.currentPage = this.Udata.currentPage
-							this.virtualnumber = this.Udata.virtualNumber[0]
-							console.log(this.virtualnumber)
-							if (this.currentPage == "onboarding_listing") {
-								this.$router.push("/choose_no")
-							}
-							else if (this.currentPage == "onboarding_test_completed") {
-								this.$router.push("/test_number")
-							}
-							else if (this.currentPage == "onboarding_plan_details") {
-								this.$router.push("/pricing")
-							}
-							else if (this.currentPage == "onboarding_billing") {
-								this.radio = localStorage.getItem('planId')
-								this.$router.push("/billing")
-							}
-							else if (this.currentPage == "onboarding_success") {
-								this.$router.push("/emailVerification")
-							}
-							else if (this.currentPage == "onboarding_dashboard") {
-								this.$router.push("/downloadApp")
-							}
-
-
-						})
-					}).catch((error) => {
-						console.log("Error getting documents: ", error);
-					})
-
-				}
-			})
+			window.localStorage.removeItem('tpu');  
+			this.checkData();
     },
     data () {
       return {
@@ -262,6 +220,53 @@ import { db } from '@/main.js';
         }
       },
     methods :{
+
+		syncData(){
+	firebase.auth().onAuthStateChanged(user => {
+					if (user) {
+						console.log("logged user details",user)
+						this.uid = user.uid
+						this.phno = user.phoneNumber.slice(3)
+						console.log("billing il user id", this.uid)
+						console.log("billing il user number", this.phno)
+
+					db.collection('users').where("uid" , "==" , this.uid).get().then((querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							console.log(doc.id, " => ", doc.data());
+							let user_details = doc.data()
+							this.Udata = user_details
+							this.currentPage = this.Udata.currentPage
+							this.virtualnumber = this.Udata.virtualNumber[0]
+							console.log(this.virtualnumber)
+							if (this.currentPage == "onboarding_listing") {
+								this.$router.push("/choose_no")
+							}
+							else if (this.currentPage == "onboarding_test_completed") {
+								this.$router.push("/test_number")
+							}
+							else if (this.currentPage == "onboarding_plan_details") {
+								this.$router.push("/pricing")
+							}
+							else if (this.currentPage == "onboarding_billing") {
+								this.radio = localStorage.getItem('planId')
+								this.$router.push("/billing")
+							}
+							else if (this.currentPage == "onboarding_success") {
+								this.$router.push("/emailVerification")
+							}
+							else if (this.currentPage == "onboarding_dashboard") {
+								this.$router.push("/downloadApp")
+							}
+
+
+						})
+					}).catch((error) => {
+						console.log("Error getting documents: ", error);
+					})
+
+				}
+			})
+		},
 			searchPincode(){
 				console.log(this.pincodeDb)
 				console.log(this.pincode)
@@ -327,6 +332,8 @@ import { db } from '@/main.js';
 						console.log(details)
             this.$axios(details)
 							.then((response) => {
+								window.localStorage.removeItem('tpu');  
+			this.checkData();
 								console.log('order_id',response)
 								console.log(response.data.OrderId)
 								this.order_id = response.data.OrderId

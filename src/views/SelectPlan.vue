@@ -6,7 +6,12 @@
           <v-row no-gutters>
             <v-col cols="12" align="center">
               <v-overlay :value="overlay">
-                <v-progress-circular indeterminate color="red" size="40" :width="3"></v-progress-circular>
+                <v-progress-circular
+                  indeterminate
+                  color="red"
+                  size="40"
+                  :width="3"
+                ></v-progress-circular>
               </v-overlay>
               <v-card color="transparent" outlined class="" max-width="1200">
                 <h2 class="lato-font f23 mt-16 mb-4">
@@ -14,55 +19,113 @@
                 </h2>
 
                 <v-col cols="12" sm="6" class="py-2">
-
-     
-
-                  <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless v-if="!checkIvrStatus">
-
-
-
-                    <v-btn width="200" @click="isIvr(2)" :class="{ active: SelectPlan == 2 }">
+                  <v-btn-toggle
+                    rounded
+                    elivation="05"
+                    class="toggle_IVR"
+                    borderless
+                    v-if="!checkIvrStatus"
+                  >
+                    <v-btn
+                      width="200"
+                      @click="isIvr(2)"
+                      :class="{ active: SelectPlan == 2 }"
+                    >
                       Direct (No IVR)
                     </v-btn>
-                    <v-btn width="200" @click="isIvr(1)" :class="{ active: SelectPlan == 1 }">
+                    <v-btn
+                      width="200"
+                      @click="isIvr(1)"
+                      :class="{ active: SelectPlan == 1 }"
+                    >
                       IVR
                     </v-btn>
-
-
-
                   </v-btn-toggle>
-                  <v-btn-toggle rounded elivation="05" class="toggle_IVR" borderless v-else>
-
-                    <v-btn v-if="checkIvrStatus == true" width="200" @click="isIvr(2)" disabled>
+                  <v-btn-toggle
+                    rounded
+                    elivation="05"
+                    class="toggle_IVR"
+                    borderless
+                    v-else
+                  >
+                    <v-btn
+                      v-if="checkIvrStatus == true"
+                      width="200"
+                      @click="isIvr(2)"
+                      disabled
+                    >
                       Direct (No IVR)
                     </v-btn>
-                    <v-btn v-else width="200" @click="isIvr(2)" :class="{ active: checkIvrStatus == false }">
+                    <v-btn
+                      v-else
+                      width="200"
+                      @click="isIvr(2)"
+                      :class="{ active: checkIvrStatus == false }"
+                    >
                       Direct (No IVR)
                     </v-btn>
-                    <v-btn v-if="checkIvrStatus == false" width="200" @click="isIvr(1)">
+                    <v-btn
+                      v-if="checkIvrStatus == false"
+                      width="200"
+                      @click="isIvr(1)"
+                    >
                       IVR
                     </v-btn>
-                    <v-btn v-else width="200" @click="isIvr(1)" :class="{ active: checkIvrStatus == true }">
+                    <v-btn
+                      v-else
+                      width="200"
+                      @click="isIvr(1)"
+                      :class="{ active: checkIvrStatus == true }"
+                    >
                       IVR
                     </v-btn>
-
-
                   </v-btn-toggle>
                 </v-col>
                 <h2 class="sub_title mt-2 mb-16"><br /></h2>
 
                 <div v-if="SelectPlan == 1 || checkIvrStatus == true">
-                  <v-radio-group mandatory v-model="IVRPlanradio" align="center" justify="center" class="justify-center">
-                    <v-row align="center" justify="center" class="justify-center">
-                      <v-col class="col-4" v-for="ivrData in ivrPlanArray" :key="ivrData.Code">
-
-                        <v-card class="badge-overlay overflow_data" @click="colorChange(ivrData.PlanId)">
-                          <span class="top-right badge red" v-if="ivrData.bestPlanIvr == true">BEST VALUE IVR</span>
-                          <span class="top-right badge red" v-if="ivrData.IsTrial == true">Trial PLAN</span>
-                          <v-radio color="red" :value="ivrData.PlanId" class="pl-4 radio_classs"
-                            active-class="planActive">
+                  <v-radio-group
+                    mandatory
+                    v-model="IVRPlanradio"
+                    align="center"
+                    justify="center"
+                    class="justify-center"
+                  >
+                    <v-row
+                      align="center"
+                      justify="center"
+                      class="justify-center"
+                    >
+                      <v-col
+                        class="col-4"
+                        v-for="ivrData in ivrPlanArray"
+                        :key="ivrData.Code"
+                      >
+                        <v-card
+                          class="badge-overlay overflow_data"
+                          @click="colorChange(ivrData.PlanId)"
+                        >
+                          <span
+                            class="top-right badge red"
+                            v-if="ivrData.bestPlanIvr == true"
+                            >BEST VALUE IVR</span
+                          >
+                          <span
+                            class="top-right badge red"
+                            v-if="ivrData.IsTrial == true"
+                            >Trial PLAN</span
+                          >
+                          <v-radio
+                            color="red"
+                            :value="ivrData.PlanId"
+                            class="pl-4 radio_classs"
+                            active-class="planActive"
+                          >
                             <span slot="label" class="black--text ml-3">
-                              <h2 class="page_title mt-3 ml-2 mb-5" v-if="ivrData.Validity > 1">
+                              <h2
+                                class="page_title mt-3 ml-2 mb-5"
+                                v-if="ivrData.Validity > 1"
+                              >
                                 {{ ivrData.Validity }} months
                               </h2>
                               <h2 class="page_title mt-3 ml-2 mb-5" v-else>
@@ -72,12 +135,17 @@
                               <h2 class="price_title mt-1 ml-2 mb-3">
                                 <sup class="rupees">₹</sup>{{ ivrData.price }}
                                 <strike v-if="ivrData.Discount != 0">
-                                  <sup class="rupees">₹</sup>{{ ivrData.ActualPrice }}</strike>
+                                  <sup class="rupees">₹</sup
+                                  >{{ ivrData.ActualPrice }}</strike
+                                >
                               </h2>
                               <h2 class="sub_title mt-1 ml-2 mb-3">
                                 {{ ivrData.planName }}
                               </h2>
-                              <h2 class="offer_title ml-2 mb-2" v-if="ivrData.Discount > 0">
+                              <h2
+                                class="offer_title ml-2 mb-2"
+                                v-if="ivrData.Discount > 0"
+                              >
                                 {{ ivrData.Discount }}% off
                               </h2>
                               <h2 class="offer_title ml-2 mb-2" v-else>
@@ -89,24 +157,56 @@
                       </v-col>
                     </v-row>
                   </v-radio-group>
-                  <p class="text--red" @click="ivrFeatureBox = true">Plan Details</p>
+                  <p class="text--red" @click="ivrFeatureBox = true">
+                    Plan Details
+                  </p>
                 </div>
-                
-                <div v-else-if="SelectPlan == 2 || checkIvrStatus == true" >
-                
-                  <v-radio-group mandatory v-model="nonIVRPlanradio" align="center" justify="center" class="justify-center">
-                    <v-row align="center" justify="center" class="justify-center">
-                    
-                      <v-col class="col-4" v-for="nonivrData in nonIvrPlanArray" :key="nonivrData.Code"  justify="center">
 
-                        <v-card class="badge-overlay overflow_data" @click="colorChange(nonivrData.PlanId)"  >
-                          <span class="top-right badge red" v-if="nonivrData.bestPlanNonIvr == true">BEST VALUE IVR</span>
-                          <span class="top-right badge red" v-if="nonivrData.IsTrial == true">Trial PLAN</span>
-                          
-                          <v-radio color="red" :value="nonivrData.PlanId" class="pl-4 radio_classs"
-                            active-class="planActive">
+                <div v-else-if="SelectPlan == 2 || checkIvrStatus == true">
+                  <v-radio-group
+                    mandatory
+                    v-model="nonIVRPlanradio"
+                    align="center"
+                    justify="center"
+                    class="justify-center"
+                  >
+                    <v-row
+                      align="center"
+                      justify="center"
+                      class="justify-center"
+                    >
+                      <v-col
+                        class="col-4"
+                        v-for="nonivrData in nonIvrPlanArray"
+                        :key="nonivrData.Code"
+                        justify="center"
+                      >
+                        <v-card
+                          class="badge-overlay overflow_data"
+                          @click="colorChange(nonivrData.PlanId)"
+                        >
+                          <span
+                            class="top-right badge red"
+                            v-if="nonivrData.bestPlanNonIvr == true"
+                            >BEST VALUE IVR</span
+                          >
+                          <span
+                            class="top-right badge red"
+                            v-if="nonivrData.IsTrial == true"
+                            >Trial PLAN</span
+                          >
+
+                          <v-radio
+                            color="red"
+                            :value="nonivrData.PlanId"
+                            class="pl-4 radio_classs"
+                            active-class="planActive"
+                          >
                             <span slot="label" class="black--text ml-3">
-                              <h2 class="page_title mt-3 ml-2 mb-5" v-if="nonivrData.Validity > 1">
+                              <h2
+                                class="page_title mt-3 ml-2 mb-5"
+                                v-if="nonivrData.Validity > 1"
+                              >
                                 {{ nonivrData.Validity }} months
                               </h2>
                               <h2 class="page_title mt-3 ml-2 mb-5" v-else>
@@ -114,14 +214,20 @@
                               </h2>
 
                               <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>{{ nonivrData.price }}
+                                <sup class="rupees">₹</sup
+                                >{{ nonivrData.price }}
                                 <strike v-if="nonivrData.Discount != 0">
-                                  <sup class="rupees">₹</sup>{{ nonivrData.ActualPrice }}</strike>
+                                  <sup class="rupees">₹</sup
+                                  >{{ nonivrData.ActualPrice }}</strike
+                                >
                               </h2>
                               <h2 class="sub_title mt-1 ml-2 mb-3">
                                 {{ nonivrData.planName }}
                               </h2>
-                              <h2 class="offer_title ml-2 mb-2" v-if="nonivrData.Discount > 0">
+                              <h2
+                                class="offer_title ml-2 mb-2"
+                                v-if="nonivrData.Discount > 0"
+                              >
                                 {{ nonivrData.Discount }}% off
                               </h2>
                               <h2 class="offer_title ml-2 mb-2" v-else>
@@ -134,38 +240,62 @@
                     </v-row>
                   </v-radio-group>
                 </div>
-                
+
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
-                   <!-- IvrPlan: {{ IvrPlan }}<br>
-                  checkIvrStatus: {{ checkIvrStatus }}<br>
-               
-                  CurrentPlan: {{ CurrentPlan }}<br>
-                  Stage: {{ Stage }}<br>
-                  planIdSelected: {{ planIdSelected }}<br>
-                  selected plan {{ SelectPlan }}<br>
-                  nonIVRPlanradio {{nonIVRPlanradio}}<br>
-                  IVRPlanradio {{IVRPlanradio}}<br> -->
-                  
-                  <!-- <br> -->
-                <div v-if="editplan=='true'">
-                <v-btn v-if="SelectPlan != 0" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                  @click.prevent="nextPage('review')" color="#EE1C25">
-                  Next
-                </v-btn>
+
+                <div v-if="editplan == 'true'">
+                  <v-btn
+                    v-if="
+                      Stage == 'TRIAL' ||
+                      IVRPlanradio == 4 ||
+                      nonIVRPlanradio == 1
+                    "
+                    class="btn_text mt-15 white--text text-capitalize"
+                    width="12%"
+                    rounded
+                    @click.prevent="nextPage('trial')"
+                    color="#EE1C25"
+                  >
+                    Next
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    class="btn_text mt-15 white--text text-capitalize"
+                    width="12%"
+                    rounded
+                    @click.prevent="nextPage('review')"
+                    color="#EE1C25"
+                  >
+                    Next
+                  </v-btn>
                 </div>
                 <div v-else>
-   
-                  <v-btn v-if="nonIVRPlanradio==1  || IVRPlanradio==4" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                  color="#EE1C25" @click.prevent="nextPage('trial')" >
-                  Next 
-                </v-btn>               
-                  <v-btn v-else class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
-                   @click.prevent="nextPage('address')" color="#EE1C25">
-                  Next
-                </v-btn>
-               
+                  <v-btn
+                    v-if="
+                      Stage == 'TRIAL' ||
+                      nonIVRPlanradio == 1 ||
+                      IVRPlanradio == 4
+                    "
+                    class="btn_text mt-15 white--text text-capitalize"
+                    width="12%"
+                    rounded
+                    color="#EE1C25"
+                    @click.prevent="nextPage('trial')"
+                  >
+                    Next Trial
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    class="btn_text mt-15 white--text text-capitalize"
+                    width="12%"
+                    rounded
+                    @click.prevent="nextPage('review')"
+                    color="#EE1C25"
+                  >
+                    Next Bill
+                  </v-btn>
                 </div>
               </v-card>
             </v-col>
@@ -182,7 +312,10 @@
         <v-list>
           <v-list-item class="pt-0 mb-0 pb-0 mt-0">
             <v-list-item-content>
-              <v-list-item-title class="gray--text bulletpoints" color="primary">
+              <v-list-item-title
+                class="gray--text bulletpoints"
+                color="primary"
+              >
                 <v-icon color="red"> mdi-check-circle </v-icon>
                 <strong>1 </strong>Cloud Business Number
               </v-list-item-title>
@@ -241,18 +374,22 @@
         </v-list-item>
 
         <v-card-actions class="center justify-center">
-          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="150px" color="white" outlined
-            @click="ivrFeatureBox = false">
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="150px"
+            color="white"
+            outlined
+            @click="ivrFeatureBox = false"
+          >
             Close
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
     <!-- RENAME MEDIA SECTION -->
-
   </v-app>
 </template>
-
 
 <script>
 import firebase from "firebase";
@@ -268,29 +405,43 @@ export default {
     bestPlanIvr: false,
     bestPlanNonIvr: false,
     isActive: false,
-ivrPlanArray:[],
-nonIvrPlanArray:[],
-IVRPlanradio:0,
-nonIVRPlanradio:0,
-radio:0,
-editplan:'false',
-Stage:'',
+    ivrPlanArray: [],
+    nonIvrPlanArray: [],
+    IVRPlanradio: 0,
+    nonIVRPlanradio: 0,
+    radio: 0,
+    editplan: "false",
+    Stage: "",
+    checkIvrStatus: false,
+    IvrPlan: false,
+    NoOfTrial: 0,
+    NoOfTrail: 0,
   }),
   components: {},
 
   created() {
-      this.editplan = this.$route.query.editplan;
-      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-      this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorage.getItem("PlanId"));
-      this.planIdSelected = localStorageUserObj.PlanId==''? 0 : parseInt(localStorageUserObj.PlanId);
-      this.Stage = localStorageUserObj.Stage;
+    this.editplan = this.$route.query.editplan;
+    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    this.planId =
+      localStorage.getItem("PlanId") == null
+        ? 0
+        : parseInt(localStorage.getItem("PlanId"));
+    this.planIdSelected =
+      localStorageUserObj.PlanId == ""
+        ? 0
+        : parseInt(localStorageUserObj.PlanId);
+    this.NoOfTrail =
+      localStorageUserObj.NoOfTrail == ""
+        ? 0
+        : parseInt(localStorageUserObj.NoOfTrail);
+    this.Stage = localStorageUserObj.Stage;
 
-             if(this.planIdSelected){
+    if (this.planIdSelected) {
       this.colorChange(this.planIdSelected);
-             }else{
-              this.initial_value();
-             }
-      this.planDetails = db
+    } else {
+      this.initial_value();
+    }
+    this.planDetails = db
       .collection("plan_details")
       // where('Id', '>=', 2)
       // .collection
@@ -302,85 +453,85 @@ Stage:'',
         if (!querySnapshot.empty) {
           querySnapshot.forEach(async (doc) => {
             console.log(doc.id, " => ", doc.data());
-            console.log('Plan Data');
+            console.log("Plan Data");
             let plan = doc.data();
             this.plan = plan;
-            console.log('plan here' + plan.Id);
+            console.log("plan here" + plan.Id);
 
+            // alert(this.NoOfTrail);
             if (plan.IsIvr == true) {
               // alert(this.planIdSelected)
-              if((this.planIdSelected==1 || this.planIdSelected==4) && this.Stage=='PAID'){
-
-  if(plan.Id!=4){
-              this.ivrobject = Object.assign({}, this.ivrobject, {
-                planName: plan.Name,
-                price: plan.Price,
-                Validity: plan.Validity,
-                Discount: plan.Discount,
-                PlanId: plan.Id,
-                bestPlanIvr: plan.IsRecommanded,
-                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
-                IsTrial: plan.IsTrial,
-              });
-              this.ivrPlanArray.push(this.ivrobject);
-  }
-  }else{
-     this.ivrobject = Object.assign({}, this.ivrobject, {
-                planName: plan.Name,
-                price: plan.Price,
-                Validity: plan.Validity,
-                Discount: plan.Discount,
-                PlanId: plan.Id,
-                bestPlanIvr: plan.IsRecommanded,
-                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
-                IsTrial: plan.IsTrial,
-              });
-              this.ivrPlanArray.push(this.ivrobject);
-
-  }
-            
+              if (
+                (this.nonIVRPlanradio == 1 || this.IVRPlanradio == 4) &&
+                this.NoOfTrail == 1
+              ) {
+                if (plan.Id != 4) {
+                  this.ivrobject = Object.assign({}, this.ivrobject, {
+                    planName: plan.Name,
+                    price: plan.Price,
+                    Validity: plan.Validity,
+                    Discount: plan.Discount,
+                    PlanId: plan.Id,
+                    bestPlanIvr: plan.IsRecommanded,
+                    ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+                    IsTrial: plan.IsTrial,
+                  });
+                  this.ivrPlanArray.push(this.ivrobject);
+                }
+              } else {
+                this.ivrobject = Object.assign({}, this.ivrobject, {
+                  planName: plan.Name,
+                  price: plan.Price,
+                  Validity: plan.Validity,
+                  Discount: plan.Discount,
+                  PlanId: plan.Id,
+                  bestPlanIvr: plan.IsRecommanded,
+                  ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+                  IsTrial: plan.IsTrial,
+                });
+                this.ivrPlanArray.push(this.ivrobject);
+              }
             } else {
               // alert (this.planIdSelected)
-if(this.planIdSelected==1 && this.Stage=='PAID'){
+              //  if(this.nonIVRPlanradio ==1 || this.IVRPlanradio ==4){
+              if (
+                (this.nonIVRPlanradio == 1 || this.IVRPlanradio == 4) &&
+                this.NoOfTrail == 1
+              ) {
+                if (plan.Id != 1) {
+                  this.nonivrobject = Object.assign({}, this.nonivrobject, {
+                    planName: plan.Name,
+                    price: plan.Price,
+                    Validity: plan.Validity,
+                    Discount: plan.Discount,
+                    PlanId: plan.Id,
+                    bestPlanNonIvr: plan.IsRecommanded,
+                    ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+                    IsTrial: plan.IsTrial,
+                  });
 
-  if(plan.Id!=1){
-    
-              this.nonivrobject = Object.assign({}, this.nonivrobject, {
-                planName: plan.Name,
-                price: plan.Price,
-                Validity: plan.Validity,
-                Discount: plan.Discount,
-                PlanId: plan.Id,
-                bestPlanNonIvr: plan.IsRecommanded,
-                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
-                IsTrial: plan.IsTrial,
+                  this.nonIvrPlanArray.push(this.nonivrobject);
+                }
+              } else {
+                this.nonivrobject = Object.assign({}, this.nonivrobject, {
+                  planName: plan.Name,
+                  price: plan.Price,
+                  Validity: plan.Validity,
+                  Discount: plan.Discount,
+                  PlanId: plan.Id,
+                  bestPlanNonIvr: plan.IsRecommanded,
+                  ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
+                  IsTrial: plan.IsTrial,
+                });
 
-              });
-
-              this.nonIvrPlanArray.push(this.nonivrobject);
- }
-
-            }else{
-
-                  
-              this.nonivrobject = Object.assign({}, this.nonivrobject, {
-                planName: plan.Name,
-                price: plan.Price,
-                Validity: plan.Validity,
-                Discount: plan.Discount,
-                PlanId: plan.Id,
-                bestPlanNonIvr: plan.IsRecommanded,
-                ActualPrice: (plan.Price * 100) / (100 - plan.Discount),
-                IsTrial: plan.IsTrial,
-
-              });
-
-              this.nonIvrPlanArray.push(this.nonivrobject);
+                this.nonIvrPlanArray.push(this.nonivrobject);
+              }
             }
-    }
-          
           });
+
+          window.localStorage.removeItem("tpu");
           this.checkData();
+          // this.checkData();
         }
       });
     // planDetails.docs.forEach((element) => {
@@ -388,43 +539,81 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
     // });
 
     window.scrollTo(0, 0); //scroll to top
-
   },
   mounted() {
-      this.SelectPlan = 2;
-      this.IVRPlanradio = parseInt(localStorage.getItem("IVRPlanradio"));
-      this.nonIVRPlanradio = parseInt(localStorage.getItem("nonIVRPlanradio"));
-      this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorage.getItem("PlanId"));
- 
+    this.SelectPlan = 2;
+    this.IVRPlanradio = parseInt(localStorage.getItem("IVRPlanradio"));
+    this.nonIVRPlanradio = parseInt(localStorage.getItem("nonIVRPlanradio"));
+    this.planId =
+      localStorage.getItem("PlanId") == null
+        ? 0
+        : parseInt(localStorage.getItem("PlanId"));
   },
   methods: {
     async checkData() {
-
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          console.log("logged user details", user);
           this.uid = user.uid;
           this.phno = user.phoneNumber.slice(3);
-          
-        
+          db.collection("users")
+            .where("uid", "==", this.uid)
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                console.log(
+                  "<-------------------LOGGING USER DETAILS----------------------->"
+                );
+                localStorage.setItem("tpu", JSON.stringify(doc.data()));
+                let user_details = doc.data();
+                this.Udata = user_details;
+                this.currentPage = this.Udata.currentPage;
+                this.role = this.Udata.role;
+                this.firstName = this.Udata.FirstName;
+                this.Email = this.Udata.Email;
+                this.PhoneNumber = this.Udata.PhoneNumber;
+                this.$emit("userFirstNameEmitted", this.Udata.FirstName);
+
+                this.onSignIn();
+                if (this.role == "ADMIN" || this.role == "AGENT") {
+                  this.$router.push("/all_calls");
+                } else {
+                  if (this.currentPage == "onboarding_listing") {
+                    this.$router.push("/ChooseNumbers");
+                  } else if (this.currentPage == "onboarding_plan_details") {
+                    this.$router.push("/SelectPlan");
+                  } else if (this.currentPage == "onboarding_billing") {
+                    this.$router.push("/Billing");
+                  } else if (this.currentPage == "onboarding_review") {
+                    this.$router.push("/Review");
+                  } else if (
+                    this.currentPage == "onboarding_dashboard" ||
+                    this.currentPage == "onboarding_success"
+                  ) {
+                    this.$router.push("/all_calls");
+                  }
+                }
+              });
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+            });
         }
       });
     },
     initial_value() {
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-      this.checkIvrStatus = localStorageUserObj.IsIvr;
+      this.checkIvrStatus = localStorageUserObj.IsIvr ? true : false;
       this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
       this.directActive = localStorageUserObj.IsIvr == true ? false : true;
       this.IvrPlan = localStorageUserObj.IsIvr == false ? 2 : 1;
       this.Stage = localStorageUserObj.Stage;
-      this.CurrentPlan =localStorageUserObj.PlanId;
-     
-      if(!this.checkIvrStatus){
+
+      if (this.checkIvrStatus == true) {
         this.colorChange(2);
-      }else{
+      } else {
         this.colorChange(1);
       }
-   
     },
     isIvr(i) {
       this.SelectPlan = i;
@@ -436,87 +625,83 @@ if(this.planIdSelected==1 && this.Stage=='PAID'){
     nextPage(review) {
       this.overlay = true;
       // alert(review);
-     if(review=='trial'){
-    const user_trial = {
-        url: this.$cloudfareApi + "/user/trial",
-        method: "POST",
-        headers: {
-          token: localStorage.getItem("token"),
-          "Content-Type": "application/json",
-        },
-        data: {
-          uid: this.uid,
-        },
-      };
-      this.$axios(user_trial)
-        .then((response) => {
-          if(this.SelectPlan==1){
- this.colorChange(this.IVRPlanradio);
-            localStorage.setItem("IVRPlanradio", this.IVRPlanradio );
-            localStorage.setItem("planId", this.IVRPlanradio );
-            
-          }else{
- this.colorChange(this.nonIVRPlanradio);
+      if (review == "trial") {
+        const user_trial = {
+          url: this.$cloudfareApi + "/user/trial",
+          method: "POST",
+          headers: {
+            token: localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+          data: {
+            uid: this.uid,
+          },
+        };
+        this.$axios(user_trial)
+          .then((response) => {
+            if (this.SelectPlan == 1) {
+              this.colorChange(this.IVRPlanradio);
+              localStorage.setItem("IVRPlanradio", parseInt(this.IVRPlanradio));
+              localStorage.setItem("planId", parseInt(this.IVRPlanradio));
+            } else {
+              this.colorChange(this.nonIVRPlanradio);
 
+              localStorage.setItem(
+                "nonIVRPlanradio",
+                parseInt(this.nonIVRPlanradio)
+              );
+              localStorage.setItem("planId", parseInt(this.nonIVRPlanradio));
+            }
+            console.log(response);
 
-            localStorage.setItem("nonIVRPlanradio", this.nonIVRPlanradio );
-            localStorage.setItem("planId", this.nonIVRPlanradio );
-
-            
-          }
-          console.log(response);
-       
             this.$router.push("/Billing?plan=trial");
-          
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-     }else{
-          const user_stage = {
-        url: this.$cloudfareApi + "/user/stage",
-        method: "POST",
-        headers: {
-          token: localStorage.getItem("token"),
-          "Content-Type": "application/json",
-        },
-        data: {
-          uid: this.uid,
-          phoneNumber: this.phno,
-          currentPage: "onboarding_billing",
-          plan_id: this.radio,
-        },
-      };
-      this.$axios(user_stage)
-        .then((response) => {
-          if(this.SelectPlan==1){
- this.colorChange(this.IVRPlanradio);
-            localStorage.setItem("IVRPlanradio", this.IVRPlanradio );
-            localStorage.setItem("planId", this.IVRPlanradio );
-            
-          }else{
- this.colorChange(this.nonIVRPlanradio);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        const user_stage = {
+          url: this.$cloudfareApi + "/user/stage",
+          method: "POST",
+          headers: {
+            token: localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+          data: {
+            uid: this.uid,
+            phoneNumber: this.phno,
+            currentPage: "onboarding_billing",
+            plan_id: this.radio,
+          },
+        };
+        this.$axios(user_stage)
+          .then((response) => {
+            if (this.SelectPlan == 1) {
+              this.colorChange(this.IVRPlanradio);
+              localStorage.setItem("IVRPlanradio", parseInt(this.IVRPlanradio));
+              localStorage.setItem("planId", parseInt(this.IVRPlanradio));
+            } else {
+              this.colorChange(this.nonIVRPlanradio);
 
+              localStorage.setItem(
+                "nonIVRPlanradio",
+                parseInt(this.nonIVRPlanradio)
+              );
+              localStorage.setItem("planId", parseInt(this.nonIVRPlanradio));
+            }
+            console.log(response);
+            // if(review){
+            this.$router.push("/Review");
 
-            localStorage.setItem("nonIVRPlanradio", this.nonIVRPlanradio );
-            localStorage.setItem("planId", this.nonIVRPlanradio );
+            // }else{
 
-            
-          }
-          console.log(response);
-          // if(review){
-          this.$router.push("/Review");
-
-          // }else{
-
-          //   this.$router.push("/Billing");
-          // }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-     }
-  
+            //   this.$router.push("/Billing");
+            // }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     },
   },
 };

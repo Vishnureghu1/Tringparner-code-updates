@@ -157,6 +157,7 @@ export default {
               this.PhoneNumber = this.Udata.PhoneNumber;
 
               this.$emit("userFirstNameEmitted", this.Udata.FirstName);
+          
               this.onSignIn();
               if (this.role == "ADMIN" || this.role == "AGENT") {
                 this.$router.push("/all_calls");
@@ -301,6 +302,7 @@ export default {
                         this.$router.push("/all_calls").catch(() => {});
                       } else {
                         if (this.currentPage == "onboarding_listing") {
+                          
                           this.overlay = false;
                           this.$router.push("/ChooseNumbers").catch((err) => {
                             console.log(err);
