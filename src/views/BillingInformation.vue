@@ -27,24 +27,19 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                     <!-- IvrPlan: {{ IvrPlan }}<br>
+                        <!-- IvrPlan: {{ IvrPlan }}<br>
                         checkIvrStatus: {{ checkIvrStatus }}
                         <br>
                         upgrade: {{ upgrade }}
                         <br>
-                        IvrPlan: {{ IvrPlan }}
-                        <br> 
-                        PlanId: {{PlanId}}
-                        <br>
-                        NoOfTrail: {{NoOfTrail}} -->
-
-
-                         <div class="center align-center" align="center" v-if="PlanId == 1|| PlanId == 4">
+                        PlanId: {{ PlanId }}
+                        <br> -->
+                        <div class="center align-center" align="center" v-if="checkIvrStatus == false || checkIvrStatus == undefined">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
-                            <v-btn v-if="PlanId == 1" width="200" @click="isIvr(2)"
+                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="isIvr(2)"
                               :class="{ active: IvrPlan == 2 }">
-                             Basic
+                             BASE PLAN
                             </v-btn>
 
                             <v-btn width="200" @click="isIvr(1)" :class="{ active: upgrade == 1 || IvrPlan == 1 }">
@@ -52,7 +47,7 @@
                             </v-btn>
                           </v-btn-toggle>
                         </div>
-                        <div v-else class="center align-center" align="center">
+ <div class="center align-center" align="center" v-else>
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
                             <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="isIvr(2)"
@@ -66,11 +61,10 @@
                           </v-btn-toggle>
                         </div>
 
-
      <div v-if="checkIvrStatus == true" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
-                              <p class="redtext bold">
+                              <p class="redtext bold" v-if="PlanId!=4">
                                 Next Recharge Due on {{ Rechargeday }}
                               </p>
                               <v-row no-gutters>
@@ -378,7 +372,7 @@
                         <div v-else-if="checkIvrStatus == false ||checkIvrStatus == undefined || IvrPlan==2" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
-                              <p class="redtext bold">
+                              <p class="redtext bold" v-if="PlanId!=4">
                                 Next Recharge Due on {{ Rechargeday }}
                               </p>
                               <v-row no-gutters>
@@ -603,7 +597,7 @@ export default {
     sixmonths: false,
     twelvemonths: false,
     invoice_amount: "",
-    checkIvrStatus:false,
+    checkIvrStatus:"",
     amount: "",
     plans: false,
     sublist: [],
@@ -648,7 +642,6 @@ export default {
     validity:1,
     nonIvrPlanArray:"",
     IvrPlanArray:"",
-    NoOfTrail:0,
   }),
   computed: {
     computedPrice() {
@@ -660,6 +653,7 @@ export default {
     this.upgrade = this.$route.query.upgrade;
 
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+  
     //  this.bussinessNumber = this.$route.query.bn;
     // this.setBreadcrumbs(this.bussinessNumber);
     const owneruid =
@@ -670,13 +664,22 @@ export default {
     this.Rechargeday = localStorageUserObj.LastDay;
     this.Name = localStorageUserObj.FirstName;
     this.owneruid = owneruid;
-    // this.PlanId = localStorageUserObj.PlanId;
-    this.NoOfTrail = localStorageUserObj.NoOfTrail == ""? 0: parseInt(localStorageUserObj.NoOfTrail);
-    this.PlanId = localStorageUserObj.PlanId == ""? 0: parseInt(localStorageUserObj.PlanId);
+    this.PlanId = localStorageUserObj.PlanId;
+    if(this.PlanId==1){
+
+      this.getBill("inital", 2);
+    } else if(this.PlanId==4){
+
+      this.getBill("inital", 4);
+    }else{
+      this.getBill("inital", this.PlanId);
+
+    }
 
     this.planDetails = db
       .collection("plan_details")
-      .where("Id", ">=", 2)
+      .where("Id", ">=",2)
+     
       .get()
       .then((querySnapshot) => {
         this.ivrPlanArray = [];
@@ -724,7 +727,8 @@ export default {
     // });
 
     window.scrollTo(0, 0); //scroll to top
-    this.getBill("inital", this.PlanId);
+
+
     
 
     //  this.getOrderIdforPayment()
@@ -750,7 +754,6 @@ export default {
           this.directActive = localStorageUserObj.IsIvr == true ? false : true;
           this.checkCondition = localStorageUserObj.IsIvr == undefined ? false : this.checkCondition;
           this.IvrPlan = this.checkCondition == false ? 2 : this.checkCondition; // edited by navas on 28 june 2022
-          this.IvrPlan = this.PlanId==1 ? 2:1;
           //  this.IvrPlan = this.checkCondition == false ? 2:1
           // alert(this.checkCondition);
           if(this.IvrPlan==1){
