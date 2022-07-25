@@ -27,7 +27,7 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        <!-- IvrPlan: {{ IvrPlan }}<br>
+                        <!-- SwitcherID: {{ SwitcherID }}<br>
                         checkIvrStatus: {{ checkIvrStatus }}
                         <br>
                         upgrade: {{ upgrade }}
@@ -37,12 +37,12 @@
                         <div class="center align-center" align="center" v-if="checkIvrStatus == false || checkIvrStatus == undefined">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
-                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="isIvr(2)"
-                              :class="{ active: IvrPlan == 2 }">
+                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="planTypeSwitcher(4)"
+                              :class="{ active: SwitcherID == 4 }">
                              BASE PLAN
                             </v-btn>
-
-                            <v-btn width="200" @click="isIvr(1)" :class="{ active: upgrade == 1 || IvrPlan == 1 }">
+<!-- Ivr plan trial -->
+                            <v-btn width="200" @click="planTypeSwitcher(3)" :class="{ active: SwitcherID == 3 }">
                               IVR 
                             </v-btn>
                           </v-btn-toggle>
@@ -50,18 +50,18 @@
  <div class="center align-center" align="center" v-else>
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
-                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="isIvr(2)"
-                              :class="{ active: IvrPlan == 2 }">
+                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="planTypeSwitcher(2)"
+                              :class="{ active: SwitcherID == 2 }">
                               Current Plan
                             </v-btn>
-
-                            <v-btn width="200" @click="isIvr(1)" :class="{ active: upgrade == 1 || IvrPlan == 1 }">
+<!-- actual ivr plan  -->
+                            <v-btn width="200" @click="planTypeSwitcher(1)" :class="{ active: upgrade == 1 || SwitcherID == 1 }">
                               Upgrade 
                             </v-btn>
                           </v-btn-toggle>
                         </div>
 
-     <div v-if="checkIvrStatus == true" class="row">
+     <div v-if="SwitcherID == 3|| SwitcherID ==1" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
                               <p class="redtext bold" v-if="PlanId!=4">
@@ -84,7 +84,7 @@
                               <div class="membership_details">
                                 <!-- {{PlanId}} -->
 
-                                 <v-radio-group mandatory  v-if="checkIvrStatus==true">
+                                 <v-radio-group mandatory  >
                                  
                                   <v-radio color="red darken-3" hide-details v-for="ivrData in ivrPlanArray"
                                     :key="ivrData.PlanId" :value="ivrData.PlanId" @click="
@@ -211,7 +211,7 @@
                             </v-expand-transition>
                           </v-card>
                         </div>
-                        <div  class="row" v-else-if=" IvrPlan==1">
+                        <div  class="row" v-else-if="SwitcherID == 3|| SwitcherID ==1">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
                          
@@ -369,7 +369,7 @@
                           </v-card>
                         </div>
 
-                        <div v-else-if="checkIvrStatus == false ||checkIvrStatus == undefined || IvrPlan==2" class="row">
+                        <div v-else-if="checkIvrStatus == false ||checkIvrStatus == undefined || SwitcherID==2" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
                               <p class="redtext bold" v-if="PlanId!=4">
@@ -633,7 +633,7 @@ export default {
     overlay: false,
     Rechargeday: "",
     nonIVRPlanradio: 1,
-    IvrPlan: "",
+    SwitcherID: "",
     bussinessNumber: "",
     upgrade: "",
     AccountId: "",
@@ -665,21 +665,43 @@ export default {
     this.Name = localStorageUserObj.FirstName;
     this.owneruid = owneruid;
     this.PlanId = localStorageUserObj.PlanId;
-    if(this.PlanId==1){
+    // if(this.PlanId==1){
 
-      this.getBill("inital", 2);
-    } else if(this.PlanId==4){
+    //   this.getBill("inital", 2);
+    // } else if(this.PlanId==4){
 
-      this.getBill("inital", 4);
-    }else{
-      this.getBill("inital", this.PlanId);
+    //   this.getBill("inital", 4);
+    // }else{
+    //   this.getBill("inital", this.PlanId);
 
-    }
+    // }
+
+
+  this.checkCondition = parseInt(localStorageUserObj.PlanId); 
+  //  alert(this.checkCondition);
+          if(this.checkCondition<=3){
+         
+
+            this.getBill("inital", 2);
+            
+               
+          }
+           else if(this.checkCondition>=4){
+             
+  
+this.getBill("inital", 4);
+             
+           
+          }
+          else{
+             this.getBill("inital", this.PlanId);
+          }
+
 
     this.planDetails = db
       .collection("plan_details")
-      .where("Id", ">=",2)
-     
+      // .where("Id", ">=",2)
+     .where("IsTrial","==",false)
       .get()
       .then((querySnapshot) => {
         this.ivrPlanArray = [];
@@ -737,7 +759,7 @@ export default {
   methods: {
     async checkData() {
       if(this.upgrade==1){
- this.isIvr(1);
+ this.planTypeSwitcher(1);
 }
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
@@ -752,23 +774,40 @@ export default {
           
           this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
           this.directActive = localStorageUserObj.IsIvr == true ? false : true;
-          this.checkCondition = localStorageUserObj.IsIvr == undefined ? false : this.checkCondition;
-          this.IvrPlan = this.checkCondition == false ? 2 : this.checkCondition; // edited by navas on 28 june 2022
-          //  this.IvrPlan = this.checkCondition == false ? 2:1
-          // alert(this.checkCondition);
-          if(this.IvrPlan==1){
-            this.checkIvrStatus = true;
-          }else{
+          this.checkCondition = parseInt(localStorageUserObj.PlanId); 
+   
+          if(this.checkCondition<=3){
+            if(this.checkCondition==1){
+
+              this.SwitcherID=4; //trial active
+            }else{
+
+              this.SwitcherID=2; // non ivr
+            }
+               
+          }
+           else if(this.checkCondition>=4){
+             
+              if(this.checkCondition==3){
+
+             this.SwitcherID=2; // ivr
+            }else{
+             this.SwitcherID=3; //trial active
+            }
+          }
+          else{
             this.checkIvrStatus = localStorageUserObj.IsIvr;
           }
         }
       });
     },
 
-    isIvr(i) {
+    planTypeSwitcher(i) {
       this.basicplan_info=false;
       this.upgradeInfo=false;
-      if (i == 1) {
+      if (i == 3) 
+      { this.SwitcherID=i;
+      }else if (i == 1) {
         const options = {
           url: this.$cloudfareApi + "/bill/upgrade",
           method: "POST",
@@ -784,7 +823,7 @@ export default {
         axios(options)
           .then((response) => {
             this.dialog = false;
-            this.IvrPlan=1;
+          
             console.log(response.data);
             var upgradeData = response.data;
             this.amount = upgradeData.amount.toFixed(2);
@@ -807,7 +846,7 @@ export default {
             console.error(error);
           });
       } else{
-         this.IvrPlan=2;
+          this.SwitcherID=i;
       }
     },
 

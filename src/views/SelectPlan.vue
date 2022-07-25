@@ -188,7 +188,7 @@
                           <span
                             class="top-right badge red"
                             v-if="nonivrData.bestPlanNonIvr == true"
-                            >BEST VALUE IVR</span
+                            >BEST VALUE NON IVR</span
                           >
                           <span
                             class="top-right badge red"
@@ -284,7 +284,7 @@
                     color="#EE1C25"
                     @click.prevent="nextPage('trial')"
                   >
-                    Next Trial
+                    Next 
                   </v-btn>
                   <v-btn
                     v-else
