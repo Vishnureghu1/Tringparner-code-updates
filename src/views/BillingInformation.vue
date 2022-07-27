@@ -28,16 +28,16 @@
                     <v-row no-gutters>
                       <div class="col-12">
                         <!-- SwitcherID: {{ SwitcherID }}<br>
-                        checkIvrStatus: {{ checkIvrStatus }}
+                        ivrActive: {{ ivrActive }}
                         <br>
-                        upgrade: {{ upgrade }}
+                        Stage: {{ Stage }}
                         <br>
                         PlanId: {{ PlanId }}
                         <br> -->
-                        <div class="center align-center" align="center" v-if="checkIvrStatus == false || checkIvrStatus == undefined">
+                        <div class="center align-center" align="center" v-if="ivrActive == false || ivrActive == undefined">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
-                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="planTypeSwitcher(4)"
+                            <v-btn v-if="ivrActive == false || ivrActive == undefined" width="200" @click="planTypeSwitcher(4)"
                               :class="{ active: SwitcherID == 4 }">
                              BASE PLAN
                             </v-btn>
@@ -642,6 +642,7 @@ export default {
     validity:1,
     nonIvrPlanArray:"",
     IvrPlanArray:"",
+    Stage:"",
   }),
   computed: {
     computedPrice() {
@@ -664,39 +665,12 @@ export default {
     this.Rechargeday = localStorageUserObj.LastDay;
     this.Name = localStorageUserObj.FirstName;
     this.owneruid = owneruid;
-    this.PlanId = localStorageUserObj.PlanId;
-    // if(this.PlanId==1){
-
-    //   this.getBill("inital", 2);
-    // } else if(this.PlanId==4){
-
-    //   this.getBill("inital", 4);
-    // }else{
-    //   this.getBill("inital", this.PlanId);
-
-    // }
+ 
 
 
-  this.checkCondition = parseInt(localStorageUserObj.PlanId); 
-  //  alert(this.checkCondition);
-          if(this.checkCondition<=3){
-         
 
-            this.getBill("inital", 2);
-            
-               
-          }
-           else if(this.checkCondition>=4){
-             
-  
-this.getBill("inital", 4);
-             
-           
-          }
-          else{
-             this.getBill("inital", this.PlanId);
-          }
-
+  this.PlanId = parseInt(localStorageUserObj.PlanId); 
+this.getBill("inital", this.PlanId);
 
     this.planDetails = db
       .collection("plan_details")
@@ -773,24 +747,25 @@ this.getBill("inital", 4);
           
           
           this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
+          this.Stage = localStorageUserObj.Stage;
           this.directActive = localStorageUserObj.IsIvr == true ? false : true;
-          this.checkCondition = parseInt(localStorageUserObj.PlanId); 
-   
-          if(this.checkCondition<=3){
-            if(this.checkCondition==1){
+          this.PlanId = parseInt(localStorageUserObj.PlanId); 
+        
+          if(this.PlanId<=3){
+            if(this.PlanId==1){
 
-              this.SwitcherID=4; //trial active
+              this.SwitcherID=1; //trial active
             }else{
 
-              this.SwitcherID=2; // non ivr
+              this.SwitcherID=4; // non ivr
             }
                
           }
-           else if(this.checkCondition>=4){
+           else if(this.PlanId>=4){
              
-              if(this.checkCondition==3){
+              if(this.PlanId==3){
 
-             this.SwitcherID=2; // ivr
+             this.SwitcherID=4; // ivr
             }else{
              this.SwitcherID=3; //trial active
             }
@@ -805,9 +780,19 @@ this.getBill("inital", 4);
     planTypeSwitcher(i) {
       this.basicplan_info=false;
       this.upgradeInfo=false;
+      this.SwitcherID=i;
+      console.log(i);
+        this.getBill(this.uid, i);
       if (i == 3) 
-      { this.SwitcherID=i;
-      }else if (i == 1) {
+      { 
+      this.getBill(this.uid, 5);
+      }
+       else if(i == 4) 
+      { 
+      this.getBill(this.uid, 3);
+      }
+      
+      else if (i == 1) {
         const options = {
           url: this.$cloudfareApi + "/bill/upgrade",
           method: "POST",

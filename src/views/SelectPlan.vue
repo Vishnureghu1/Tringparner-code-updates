@@ -129,11 +129,12 @@
                                 {{ ivrData.Validity }} months
                               </h2>
                               <h2 class="page_title mt-3 ml-2 mb-5" v-else>
-                                {{ ivrData.Validity }} month
+                                <!-- {{ ivrData.Validity }} month -->
+                                 Trial Plan
                               </h2>
 
                               <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup>{{ ivrData.price }}
+                                <sup class="rupees" v-if="ivrData.price>0">₹</sup>{{ ivrData.price }}
                                 <strike v-if="ivrData.Discount != 0">
                                   <sup class="rupees">₹</sup
                                   >{{ ivrData.ActualPrice }}</strike
@@ -210,11 +211,12 @@
                                 {{ nonivrData.Validity }} months
                               </h2>
                               <h2 class="page_title mt-3 ml-2 mb-5" v-else>
-                                {{ nonivrData.Validity }} month
+                                <!-- {{ nonivrData.Validity }} month -->
+                                Trial Plan
                               </h2>
 
                               <h2 class="price_title mt-1 ml-2 mb-3">
-                                <sup class="rupees">₹</sup
+                                <sup class="rupees" v-if="nonivrData.price>0">₹</sup
                                 >{{ nonivrData.price }}
                                 <strike v-if="nonivrData.Discount != 0">
                                   <sup class="rupees">₹</sup
@@ -468,7 +470,7 @@ export default {
                 if (plan.Id != 4) {
                   this.ivrobject = Object.assign({}, this.ivrobject, {
                     planName: plan.Name,
-                    price: plan.Price,
+                    price: plan.Price==0?plan.Description:plan.Price,
                     Validity: plan.Validity,
                     Discount: plan.Discount,
                     PlanId: plan.Id,
@@ -481,7 +483,7 @@ export default {
               } else {
                 this.ivrobject = Object.assign({}, this.ivrobject, {
                   planName: plan.Name,
-                  price: plan.Price,
+                  price: plan.Price==0?plan.Description:plan.Price,
                   Validity: plan.Validity,
                   Discount: plan.Discount,
                   PlanId: plan.Id,
@@ -501,7 +503,7 @@ export default {
                 if (plan.Id != 1) {
                   this.nonivrobject = Object.assign({}, this.nonivrobject, {
                     planName: plan.Name,
-                    price: plan.Price,
+                    price: plan.Price==0?plan.Description:plan.Price,
                     Validity: plan.Validity,
                     Discount: plan.Discount,
                     PlanId: plan.Id,
@@ -515,7 +517,7 @@ export default {
               } else {
                 this.nonivrobject = Object.assign({}, this.nonivrobject, {
                   planName: plan.Name,
-                  price: plan.Price,
+                  price: plan.Price==0?plan.Description:plan.Price,
                   Validity: plan.Validity,
                   Discount: plan.Discount,
                   PlanId: plan.Id,
@@ -626,39 +628,8 @@ export default {
       this.overlay = true;
       // alert(review);
       if (review == "trial") {
-        const user_trial = {
-          url: this.$cloudfareApi + "/user/trial",
-          method: "POST",
-          headers: {
-            token: localStorage.getItem("token"),
-            "Content-Type": "application/json",
-          },
-          data: {
-            uid: this.uid,
-          },
-        };
-        this.$axios(user_trial)
-          .then((response) => {
-            if (this.SelectPlan == 1) {
-              this.colorChange(this.IVRPlanradio);
-              localStorage.setItem("IVRPlanradio", parseInt(this.IVRPlanradio));
-              localStorage.setItem("planId", parseInt(this.IVRPlanradio));
-            } else {
-              this.colorChange(this.nonIVRPlanradio);
-
-              localStorage.setItem(
-                "nonIVRPlanradio",
-                parseInt(this.nonIVRPlanradio)
-              );
-              localStorage.setItem("planId", parseInt(this.nonIVRPlanradio));
-            }
-            console.log(response);
-
+      
             this.$router.push("/Billing?plan=trial");
-          })
-          .catch((error) => {
-            console.error(error);
-          });
       } else {
         const user_stage = {
           url: this.$cloudfareApi + "/user/stage",
