@@ -35,7 +35,7 @@
                         PlanId: {{ PlanId }}
                         <br> -->
                         <div class="center align-center" align="center"
-                          v-if="PlanId <= 3 && Stage=='TRIAL'">
+                          v-if="Stage=='TRIAL' ">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
                             <v-btn :class="{ active: SwitcherID == 1 }" width="200"
@@ -43,7 +43,7 @@
                               BASE PLAN
                             </v-btn>
                             <!-- Ivr plan trial -->
-                            <v-btn width="200" @click="planTypeSwitcher(2)" :class="{ active: SwitcherID == 2 }">
+                            <v-btn width="200" @click="planTypeSwitcher(2)"  :class="{ active: SwitcherID == 2 }">
                               IVR
                             </v-btn>
                           </v-btn-toggle>
