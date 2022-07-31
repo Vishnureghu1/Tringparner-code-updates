@@ -27,15 +27,15 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        SwitcherID: {{ SwitcherID }}<br>
+                        <!-- SwitcherID: {{ SwitcherID }}<br>
                         ivrActive: {{ ivrActive }}
                         <br>
                         Stage: {{ Stage }}
                         <br>
                         PlanId: {{ PlanId }}
-                        <br>
+                        <br> -->
                         <div class="center align-center" align="center"
-                          v-if="PlanId <= 3 || Stage=='TRIAL'">
+                          v-if="PlanId <= 3 && Stage=='TRIAL'">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
                             <v-btn :class="{ active: SwitcherID == 1 }" width="200"
@@ -50,14 +50,14 @@
                         </div>
                         <div v-else class="center align-center" align="center">
 
-                          <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
-                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200"
+                          <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless v-if="ivrActive==false">
+                            <v-btn width="200" 
                               @click="planTypeSwitcher(3)" :class="{ active: SwitcherID == 3 }">
                               Current Plan
                             </v-btn>
                             <!-- actual ivr plan  -->
                             <v-btn width="200" @click="planTypeSwitcher(4)"
-                              :class="{ active: upgrade == 1 || SwitcherID == 4 }">
+                              :class="{ active: upgrade == 1 || SwitcherID == 4 ||ivrActive==true }">
                               Upgrade
                             </v-btn>
                           </v-btn-toggle>
@@ -73,7 +73,7 @@
                                 <div class="col-8 membership_heading">
                                   Total Cost (Inclusive of GST)
                                 </div>
-                                <div class="col-4 membership_heading">
+                                <div class="col-4 membership_heading" align="right" >
                                   ₹ {{ permonth }}/Month
                                 </div>
                               </v-row>
@@ -84,9 +84,7 @@
                               </div>
 
                               <div class="membership_details">
-
-
-                                <v-radio-group mandatory v-if="checkIvrStatus == false || checkIvrStatus == undefined"
+                                <v-radio-group mandatory 
                                   v-model="nonivrRadioGroup">
 
                                   <v-radio color="red darken-3" hide-details v-for="nonivrData in nonIvrPlanArray"
@@ -125,9 +123,15 @@
                             </v-card-text>
                             <v-card-actions align="center" class="center">
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
-                                color="white" outlined @click="paynow()">
+                                color="white" outlined @click="recharge()" v-if="Stage != 'TRIAL'">
                                 Pay Now
                               </v-btn>
+                              <!-- If trial inside non IVR-->
+                              <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
+                                color="white" outlined @click="paynow()" v-else>
+                                Pay Now
+                              </v-btn>
+                              
                               <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
                                 min-width="140px" @click="basicplan_info = true">
                                 View Detail
@@ -226,16 +230,16 @@
                                 <div class="col-8 membership_heading">
                                   Total Cost (Inclusive of GST)
                                 </div>
-                                <div class="col-4 membership_heading">
+                                <div class="col-4 membership_heading" align="right" >
                                   ₹ {{ permonth }}/Month
                                 </div>
                               </v-row>
-                              <v-row no-gutters  v-if="Stage != 'TRIAL'">
+                              <v-row no-gutters  v-if="Stage == 'PAID' ">
                                 
                                 <div class="col-8 membership_heading" >
                                   Cost for Upgradation
                                 </div>
-                                <div class="col-4 membership_heading" align="right">
+                                <div class="col-4 membership_heading" align="right" >
                                   ₹ {{ amountwithoutgst }}
                                 </div>
                               </v-row>
@@ -247,10 +251,10 @@
 
                               <div class="membership_details">
 
-                                <v-radio-group mandatory>
+                                <v-radio-group mandatory  v-model="ivrRadioGroup">
 
-                                  <v-radio color="red darken-3" hide-details v-for="ivrData in ivrPlanArray"
-                                    v-model="ivrRadioGroup" :key="ivrData.PlanId" :value="ivrData.PlanId" @click="
+                                  <v-radio color="red darken-3"  v-for="ivrData in ivrPlanArray"
+                                    :key="ivrData.PlanId" :value="ivrData.PlanId" @click="
                                       getBill(ivrData.price, ivrData.PlanId)
                                     ">
                                     <template v-slot:label>
@@ -285,7 +289,12 @@
                             </v-card-text>
                             <v-card-actions align="center" class="center">
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
-                                color="white" outlined @click="paynow()">
+                                color="white" outlined @click="paynowUpgrade()" v-if="Stage == 'PAID'">
+                                Pay Now
+                              </v-btn>
+                              <!-- If trial inside IVR-->
+                              <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
+                                color="white" outlined @click="paynow()" v-else>
                                 Pay Now
                               </v-btn>
                               <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
@@ -505,9 +514,9 @@ export default {
   async created() {
     this.bussinessNumber = this.$route.query.bn;
     this.upgrade = this.$route.query.upgrade;
-
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-  
+this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
+ 
     //  this.bussinessNumber = this.$route.query.bn;
     // this.setBreadcrumbs(this.bussinessNumber);
     const owneruid =
@@ -529,8 +538,14 @@ if(this.Stage=="TRIAL"){
 this.ivrRadioGroup=parseInt(this.PlanId) +  3;
 this.getBill("inital", parseInt(this.PlanId));
 
+}else if(this.Stage=="PAID"){
+  this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+  this.SwitcherID=3;
+  this.nonivrRadioGroup=parseInt(this.PlanId);
+this.ivrRadioGroup=parseInt(this.PlanId) +  3;
+this.getBill("inital", parseInt(this.PlanId));
 }else{
-  // .
+
 }
 
 
@@ -599,86 +614,144 @@ this.getBill("inital", parseInt(this.PlanId));
 
   methods: {
 
-
-    planTypeSwitcher(i) {
+planTypeSwitcher(i) {
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+       if(this.ivrActive==true){
+    planTypeSwitcher(4);
+  }
       this.SwitcherID=i;
 console.log('Plan ID '+i)
-
 // SwitcherID ==1 Base plan (If Trial)
 // SwitcherID ==2 Ivr plan 
-
-
 // SwitcherID ==3 plan 2 or 3 IVR (if Trial)
 // SwitcherID ==4 plan 5 or 6 IVR
-
-
   if(i==1){
-    this.PlanId=2; //Trial 
-    this.nonivrRadioGroup=this.PlanId;
-    this.ivrRadioGroup =this.PlanId;
-// this.getBill("inital", parseInt(this.PlanId));
+  this.PlanId=2; //Trial 
+  this.nonivrRadioGroup=this.PlanId;
   this.getBill(this.uid, parseInt(this.PlanId));
-
   }else if(i==2){ //Trial
-  
+  // this.planUpgradeData();
     this.PlanId= 5; //Trial
-    // this.nonivrRadioGroup=2;
-    this.ivrRadioGroup =this.PlanId;
-    
-  this.getBill(this.uid, parseInt(this.PlanId));
-    
+    this.ivrRadioGroup =this.PlanId; 
+    this.getBill(this.uid, parseInt(this.PlanId));
+  }else if(i==3){ 
+    var v = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
 
-// this.getBill("inital", parseInt(this.nonivrRadioGroup));
+  if(v<=3 && v!=0){
+    this.PlanId = v; 
+  }else{
+    this.PlanId = 2; 
 
   }
-    else if(i==3){ 
-       
-  this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
-  this.Stage = localStorageUserObj.Stage?localStorageUserObj.Stage:'notFound';
-  // this.getBill("inital", parseInt(this.PlanId));
+  this.nonivrRadioGroup=this.PlanId;
   this.getBill(this.uid, parseInt(this.PlanId));
-  this.nonivrRadioGroup =this.PlanId;
-
-
     }else if(i==4){
-           
-      this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
-  this.Stage = localStorageUserObj.Stage?localStorageUserObj.Stage:'notFound';
-// this.getBill("inital", parseInt(this.PlanId));
-  this.getBill(this.uid, parseInt(this.PlanId));
-  this.ivrRadioGroup =this.PlanId;
 
-
-
+this.planUpgradeData();
+    var v = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+  if(v>=4 && v!=0){
+    
+    this.PlanId = v; 
   }else{
- this.SwitcherID=i;
+    this.PlanId = 5; 
+  }
+    // this.PlanId = 5;     
+    // this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+    this.ivrRadioGroup =this.PlanId; 
+    this.getBill(this.uid, parseInt(this.PlanId));
+  }else{
+//  this.SwitcherID=i;
   }
     },
+    syncStatus(){
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.uid = user.uid;
+        this.phno = user.phoneNumber.slice(3);
+        db.collection("users")
+          .where("uid", "==", this.uid)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              console.log(doc.id, " => ", doc.data());
+              console.log(
+                "<-------------------LOGGING USER DETAILS----------------------->"
+              );
+              localStorage.setItem("tpu", JSON.stringify(doc.data()));
+  
+          
+            });
+          })
+          .catch((error) => {
+            console.log("Error getting documents: ", error);
+          });
+      }
+    });
 
+    },
 
     async checkData() {
-      if(this.upgrade==1){
- this.planTypeSwitcher(1);
-}
+//       if(this.upgrade==1){
+//  this.planTypeSwitcher(1);
+// }
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           console.log("logged user details", user);
           this.uid = user.uid;
           this.phno = user.phoneNumber.slice(3);
           let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-          this.nonIVRPlanradio = localStorage.getItem("nonIVRPlanradio");
-          this.IVRPlanradio = localStorage.getItem("IVRPlanradio");
+          this.nonIVRPlanradio = localStorageUserObj.getItem("nonIVRPlanradio");
+          this.IVRPlanradio = localStorageUserObj.getItem("IVRPlanradio");
           // this.checkIvrStatus = false;
           
           
           this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
           this.Stage = localStorageUserObj.Stage;
-          this.directActive = localStorageUserObj.IsIvr == true ? false : true;
+
        
         }
       });
     },
+planUpgradeData(){ //fetch upgrade plan data
+  
+      const options = {
+          url: this.$cloudfareApi + "/bill/upgrade",
+          method: "POST",
+          headers: {
+            token: localStorage.getItem("token"),
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+          data: {
+            owner_uid: this.owneruid
+          },
+        };
 
+        axios(options)
+          .then((response) => {
+            this.dialog = false;
+          
+            console.log(response.data);
+            var upgradeData = response.data;
+            this.amount = upgradeData.amount.toFixed(2);
+            this.amountwithoutdeduction = upgradeData.amountwithoutdeduction.toFixed(2);
+            this.amountwithoutgst = upgradeData.amountwithoutgst.toFixed(2);
+            this.defaultafterdiscount = upgradeData.defaultafterdiscount;
+            this.defaultamount =  upgradeData.defaultamount.toFixed(2);
+            this.defaultdiscount = upgradeData.defaultdiscount;
+            this.planname = upgradeData.planname;
+            this.reminingamt = upgradeData.reminingamt.toFixed(2);
+            this.reminingdays = upgradeData.reminingdays;
+            this.reminingmonths = upgradeData.reminingmonths;
+            this.status = upgradeData.status;
+            this.useddays = upgradeData.useddays;
+            this.gstAmount =  (upgradeData.amount - upgradeData.amountwithoutgst).toFixed(2);
+
+        
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+},
     // planTypeSwitcher(i) {
     //   this.basicplan_info=false;
     //   this.upgradeInfo=false;
@@ -746,8 +819,8 @@ console.log('Plan ID '+i)
     getBill(status, planid) {
       console.log(status, planid);
       const token = localStorage.getItem("token");
-      // this.PlanId = (radio == "inital")?this.PlanId:planid;
       this.PlanId = planid;
+    
       this.sublist = [];
       const details = {
         // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
@@ -820,15 +893,15 @@ console.log('Plan ID '+i)
           owner_uid: this.owneruid,
           PlanId: parseInt(this.PlanId),
           payment_mode: "WEB",
-          type: "RECHARGE",
+          type: "BASIC",
         },
       };
       axios(details).then(async (responsevalue) => {
-        console.log(responsevalue);
+        console.log(responsevalue.data);
         if (responsevalue.data.status == true) {
           var options = {
             key: this.$razorpaykey,
-            order_id: responsevalue.data.order_id,
+            order_id: responsevalue.data.OrderId,
             name: this.Name,
             currency: "INR", // Optional. Same as the Order currency
             description: "Purchase Description",
@@ -838,7 +911,7 @@ console.log('Plan ID '+i)
               var initial = true;
               if (initial) {
                 db.collection("paymentTransaction")
-                  .where("OrderId", "==", responsevalue.data.order_id)
+                  .where("OrderId", "==", responsevalue.data.OrderId)
                   .onSnapshot((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                       console.log(doc.id, " => ", doc.data());
@@ -855,7 +928,10 @@ console.log('Plan ID '+i)
                           .catch((err) => console.log(err));
                         initial = false;
                         this.overlay = false;
-                        // this.$router.push("/Dashboard")
+                          window.localStorage.removeItem('tpu');  
+this.syncStatus();
+this.Stage='PAID';
+this.SwitcherID=3;
                       }
                     });
                   });
@@ -888,11 +964,9 @@ console.log('Plan ID '+i)
       });
     },
 
-
-
-      paynowUpgrade() {
+recharge() {
       const details = {
-        url: this.$cloudfareApi + "/addon/upgrade",
+        url: this.$cloudfareApi + "/addon/payment",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -935,7 +1009,8 @@ console.log('Plan ID '+i)
                           .catch((err) => console.log(err));
                         initial = false;
                         this.overlay = false;
-                        // this.$router.push("/Dashboard")
+                                                 window.localStorage.removeItem('tpu');  
+this.syncStatus();
                       }
                     });
                   });
@@ -967,6 +1042,96 @@ console.log('Plan ID '+i)
         }
       });
     },
+
+      paynowUpgrade() {
+        // alert(this.PlanId);
+      const details = {
+        url: this.$cloudfareApi + "/addon/upgrade",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          uid: this.owneruid,
+          owner_uid: this.owneruid,
+          PlanId: parseInt(this.PlanId),
+          payment_mode: "WEB",
+          type: "RECHARGE",
+        },
+      };
+      axios(details).then(async (responsevalue) => {
+        console.log(responsevalue);
+        if (responsevalue.data.status == true) {
+          var options = {
+            key: this.$razorpaykey,
+            order_id: responsevalue.data.order_id,
+            name: this.Name,
+            currency: "INR", // Optional. Same as the Order currency
+            description: "Purchase Description",
+            handler: (response) => {
+              console.log(response);
+              this.overlay = true;
+              var initial = true;
+              var upgradeData = response.data;
+              // console.log(upgradeData);
+            
+              
+              if (initial) {
+                db.collection("paymentTransaction")
+                  .where("OrderId", "==", responsevalue.data.order_id)
+                  .onSnapshot((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      console.log(doc.id, " => ", doc.data());
+                      let testing_status = doc.data();
+                      if (testing_status.Status == true && initial) {
+                        initial = false;
+                        this.overlay = false;
+                        db.collection("users")
+                          .where("uid", "==", this.owneruid)
+                          .get()
+                          .then((snap) => {
+                            this.Rechargeday = snap.docs[0].data().LastDay;
+                          })
+                          .catch((err) => console.log(err));
+                        initial = false;
+                        this.overlay = false;
+                                                  window.localStorage.removeItem('tpu');  
+this.syncStatus();
+                      }
+                    });
+                  });
+              }
+            },
+            prefill: {
+              name: this.Name,
+              email: this.email,
+              contact: this.phno,
+            },
+            notes: {
+              address: this.address,
+            },
+            theme: {
+              color: "#D32F2F",
+            },
+            modal: {
+              ondismiss: () => {
+                this.dialog2 = true;
+              },
+            },
+          };
+          // console.log(options)
+          const rzp1 = new Razorpay(options);
+          this.overlay = false;
+          rzp1.open();
+        } else {
+          console.log("wrong value");
+        }
+      });
+    },
+
+
+
+
+
+    
   },
 };
 </script>
