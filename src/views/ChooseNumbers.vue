@@ -262,6 +262,41 @@ export default {
     });
   },
   methods: {
+    syncStatus(){
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.uid = user.uid;
+        this.phno = user.phoneNumber.slice(3);
+        db.collection("users")
+          .where("uid", "==", this.uid)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              console.log(doc.id, " => ", doc.data());
+              console.log(
+                "<-------------------LOGGING USER DETAILS----------------------->"
+              );
+              localStorage.setItem("tpu", JSON.stringify(doc.data()));
+              let user_details = doc.data();
+              this.Udata = user_details;
+              this.currentPage = this.Udata.currentPage;
+              this.role = this.Udata.role;
+              this.firstName = this.Udata.FirstName;
+              this.Email = this.Udata.Email;
+              this.PhoneNumber = this.Udata.PhoneNumber;
+
+              this.$emit("userFirstNameEmitted", this.Udata.FirstName);
+             
+          
+            });
+          })
+          .catch((error) => {
+            console.log("Error getting documents: ", error);
+          });
+      }
+    });
+
+    },
     colorChange(i) {
       if (i == 1) {
         this.radio1 = true;
@@ -399,6 +434,10 @@ export default {
       this.$axios(reserve)
         .then((response) => {
           console.log(response);
+
+      window.localStorage.removeItem('tpu');  
+this.syncStatus();
+
         })
         .catch((error) => {
           console.error(error);

@@ -27,39 +27,53 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        <!-- IvrPlan: {{ IvrPlan }}<br>
-                        checkIvrStatus: {{ checkIvrStatus }}
+                        <!-- SwitcherID: {{ SwitcherID }}<br>
+                        ivrActive: {{ ivrActive }}
                         <br>
-                        upgrade: {{ upgrade }}
+                        Stage: {{ Stage }}
                         <br>
-                        IvrPlan: {{ IvrPlan }}
+                        PlanId: {{ PlanId }}
                         <br> -->
-                        <div class="center align-center" align="center" v-if="checkIvrStatus == false || checkIvrStatus == undefined">
+                        <div class="center align-center" align="center"
+                          v-if="Stage=='TRIAL' ">
 
                           <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless>
-                            <v-btn v-if="checkIvrStatus == false || checkIvrStatus == undefined" width="200" @click="isIvr(2)"
-                              :class="{ active: IvrPlan == 2 }">
+                            <v-btn :class="{ active: SwitcherID == 1 }" width="200"
+                              @click="planTypeSwitcher(1)">
+                              BASE PLAN
+                            </v-btn>
+                            <!-- Ivr plan trial -->
+                            <v-btn width="200" @click="planTypeSwitcher(2)"  :class="{ active: SwitcherID == 2 }">
+                              IVR
+                            </v-btn>
+                          </v-btn-toggle>
+                        </div>
+                        <div v-else class="center align-center" align="center">
+
+                          <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless v-if="ivrActive==false">
+                            <v-btn width="200" 
+                              @click="planTypeSwitcher(3)" :class="{ active: SwitcherID == 3 }">
                               Current Plan
                             </v-btn>
-
-                            <v-btn width="200" @click="isIvr(1)" :class="{ active: upgrade == 1 || IvrPlan == 1 }">
-                              Upgrade 
+                            <!-- actual ivr plan  -->
+                            <v-btn width="200" @click="planTypeSwitcher(4)"
+                              :class="{ active: upgrade == 1 || SwitcherID == 4 ||ivrActive==true }">
+                              Upgrade
                             </v-btn>
                           </v-btn-toggle>
                         </div>
 
-
-     <div v-if="checkIvrStatus == true" class="row">
+                        <div v-if="SwitcherID == 1 || SwitcherID == 3" class="row">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
-                              <p class="redtext bold">
+                              <p class="redtext bold" v-if="Stage != 'TRIAL'">
                                 Next Recharge Due on {{ Rechargeday }}
                               </p>
                               <v-row no-gutters>
                                 <div class="col-8 membership_heading">
                                   Total Cost (Inclusive of GST)
                                 </div>
-                                <div class="col-4 membership_heading">
+                                <div class="col-4 membership_heading" align="right" >
                                   ₹ {{ permonth }}/Month
                                 </div>
                               </v-row>
@@ -70,325 +84,17 @@
                               </div>
 
                               <div class="membership_details">
-                                <!-- {{PlanId}} -->
+                                <v-radio-group mandatory 
+                                  v-model="nonivrRadioGroup">
 
-                                 <v-radio-group mandatory  v-if="checkIvrStatus==true">
-                                 
-                                  <v-radio color="red darken-3" hide-details v-for="ivrData in ivrPlanArray"
-                                    :key="ivrData.PlanId" :value="ivrData.PlanId" @click="
-                                      getBill(ivrData.price, ivrData.PlanId)
-                                    " >
-                                    <template v-slot:label>
-                                      <div class="black--text">
-                                        Pay for
-                                        <strong class="black--text darken-4">
-                                          {{ ivrData.Validity }} months
-                                          <span v-if="ivrData.Discount > 0">and save
-                                            {{ ivrData.Discount }}%</span></strong>
-                                      </div>
-                                    </template>
-                                  </v-radio>
-                                </v-radio-group>
-                        
-                         
-                              </div>
-                              <v-row no-gutters v-if="Discount>0">
-                                <div class="col-8 membership_heading red--text">
-                                  Cost After Discount
-                                </div>
-                                <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ invoice_amount }} for {{}} Months
-                                </div>
-                              </v-row>
-                              <v-row no-gutters v-if="Discount>0">
-                                <div class="col-12  red--text" align="center">
-                                  ( Your Total Saving ₹ {{ Discount }})
-                                </div>
-
-                              </v-row>
-                            </v-card-text>
-                            <v-card-actions align="center" class="center">
-                              <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
-                                color="white" outlined @click="paynow()">
-                                Pay Now
-                              </v-btn>
-                              <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-                                min-width="140px" @click="basicplan_info = true">
-                                View Detail
-                              </v-btn>
-                            </v-card-actions>
-
-                            <v-expand-transition>
-                              <v-card v-if="basicplan_info" class="transition-fast-in-fast-out v-card--reveal"
-                                style="height: 100%">
-                                <v-row>
-                                  <v-col cols="12" sm="10">
-                                    <h6 class="f16 mt-6 ml-5">
-                                      <v-icon class="mr-2" color="black" @click="basicplan_info = false">mdi-arrow-left
-                                      </v-icon>
-                                      Details
-                                    </h6>
-                                  </v-col>
-                                </v-row>
-                                <v-card-text class="pb-0">
-                                  <v-simple-table dense>
-                                    <template v-slot:default>
-                                      <tbody class="ma-0 pa-0" border="0">
-                                        <tr v-for="d in sublist" :key="d.name">
-                                          <td class="ma-0 pa-0 pr-0 mr-0" :class="d.class">
-                                            {{ d.title }}
-                                          </td>
-                                          <td :class="d.class" align="center">
-                                            {{ d.qty }}
-                                          </td>
-                                          <td :class="d.class" align="right" class="ma-0 pa-0">
-                                            ₹ {{ d.amount }}
-                                          </td>
-                                        </tr>
-
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            Sub Total
-                                          </td>
-
-                                          <td class="ma-0 pa-0" colspan="2" align="right">
-                                            ₹ {{ SubTotal }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            Discount
-                                          </td>
-
-                                          <td class="ma-0 pa-0" colspan="2" align="right">
-                                            {{ Discount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
-                                            Cost after Discount
-                                          </td>
-
-                                          <td class="ma-0 pa-0 bold primary--text" colspan="2" align="right">
-                                            {{ CostAfterDiscount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            GST
-                                          </td>
-
-                                          <td class="ma-0 pa-0" colspan="2" align="right">
-                                            {{ Gst.toFixed(2) }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0 bold" colspan="1">
-                                            Total
-                                          </td>
-
-                                          <td class="ma-0 pa-0 bold" colspan="2" align="right">
-                                            ₹ {{ invoice_amount }}
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </template>
-                                  </v-simple-table>
-                                </v-card-text>
-                              </v-card>
-                            </v-expand-transition>
-                          </v-card>
-                        </div>
-                        <div  class="row" v-else-if=" IvrPlan==1">
-                          <v-card class="ml-8" min-width="700" min-height="400">
-                            <v-card-text class="pb-0">
-                         
-                              <p class="redtext bold" v-if="reminingdays > 0">
-                                Billable duration {{ reminingmonths }}
-                              </p>
-                              <p class="redtext bold" v-else>
-                                Next Recharge Due on {{ Rechargeday }}
-                              </p>
-                              <v-row no-gutters>
-                                <div class="col-8 membership_heading">
-                                  Cost for Upgradation
-                                </div>
-                                <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ amountwithoutgst }}
-                                </div>
-                              </v-row>
-                              <v-row no-gutters>
-                                <div class="col-8 membership_heading">
-                                  GST
-                                </div>
-                                <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ gstAmount }}
-                                </div>
-                              </v-row>
-                              <v-row no-gutters>
-                                <div class="col-8 membership_heading">
-                                  Grand Total
-                                </div>
-                                <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ amount }}
-                                </div>
-                              </v-row>
-
-
-
-                            </v-card-text>
-                            <v-card-actions align="center" class="center">
-                              <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
-                                color="white" outlined @click="paynowUpgrade()">
-                                Pay Now
-                              </v-btn>
-                              <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-                                min-width="140px" @click="upgradeInfo = true">
-                                View Detail
-                              </v-btn>
-                            </v-card-actions>
-
-                            <v-expand-transition>
-                              <v-card v-if="upgradeInfo" class="transition-fast-in-fast-out v-card--reveal"
-                                style="height: 100%">
-                                <v-row>
-                                  <v-col cols="12" sm="10">
-                                    <h6 class="f16 mt-6 ml-5">
-                                      <v-icon class="mr-2" color="black" @click="upgradeInfo = false">mdi-arrow-left
-                                      </v-icon>
-                                      Details
-                                    </h6>
-                                  </v-col>
-                                </v-row>
-                                <v-card-text class="pb-0">
-                                  <v-simple-table dense class="mytable">
-                                    <template v-slot:default>
-                                      <tbody class="ma-0 pa-0" border="0">
-                                        <tr>
-
-
-                                          <td class="ma-0 pa-0 bold">Item</td>
-                                          <td class="ma-0 pa-0 bold">Qty</td>
-                                          <td class="ma-0 pa-0 bold" colspan="2" align="right">Price</td>
-
-                                        </tr>
-
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0 ">
-                                            {{ planname }}
-                                          </td>
-                                          <td class="ma-0 pa-0 ">
-                                            1
-                                          </td>
-                                          <td class="ma-0 pa-0 " align="right">
-                                            ₹ {{ defaultamount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0 " colspan="1">
-                                            Discount for Half Yearly Plan
-                                          </td>
-
-                                          <td class="ma-0 pa-0 " colspan="2" align="right">
-                                            ₹ {{ defaultdiscount }}
-                                          </td>
-                                        </tr>
-
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0 " colspan="1">
-                                            Cost IVR After Discount
-                                          </td>
-
-                                          <td class="ma-0 pa-0 " colspan="2" align="right">
-                                            ₹ {{ defaultafterdiscount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            IVR Cost for {{ planname }}
-                                          </td>
-
-                                          <td class="ma-0 pa-0" colspan="2" align="right">
-                                            ₹ {{ amountwithoutdeduction }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            Remining Amount Paid for Basic
-                                          </td>
-
-                                          <td class="ma-0 pa-0" colspan="2" align="right">
-                                            ₹ {{ reminingamt }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
-                                            Cost for Upgrade After Discount
-                                          </td>
-
-                                          <td class="ma-0 pa-0 bold primary--text" colspan="2" align="right">
-                                            ₹ {{ amountwithoutgst }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0" colspan="1">
-                                            GST
-                                          </td>
-
-                                          <td class="ma-0 pa-0" colspan="2" align="right">
-                                            ₹ {{ gstAmount }}
-                                          </td>
-                                        </tr>
-                                        <tr colspan="3">
-                                          <td class="ma-0 pa-0 bold" colspan="1">
-                                            Grand Total
-                                          </td>
-
-                                          <td class="ma-0 pa-0 bold" colspan="2" align="right">
-                                            ₹ {{ amount }}
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </template>
-                                  </v-simple-table>
-                                </v-card-text>
-                              </v-card>
-                            </v-expand-transition>
-                          </v-card>
-                        </div>
-
-                        <div v-else-if="checkIvrStatus == false ||checkIvrStatus == undefined || IvrPlan==2" class="row">
-                          <v-card class="ml-8" min-width="700" min-height="400">
-                            <v-card-text class="pb-0">
-                              <p class="redtext bold">
-                                Next Recharge Due on {{ Rechargeday }}
-                              </p>
-                              <v-row no-gutters>
-                                <div class="col-8 membership_heading">
-                                  Total Cost (Inclusive of GST)
-                                </div>
-                                <div class="col-4 membership_heading">
-                                  ₹ {{ permonth }}/Month
-                                </div>
-                              </v-row>
-
-                              <div class="membership_price">
-                                {{ invoice_amount
-                                }}<span class="currency_symbol">INR</span>
-                              </div>
-
-                              <div class="membership_details">
-                                <!-- {{PlanId}} -->
-
-                                 <v-radio-group mandatory  v-if="checkIvrStatus==false ||checkIvrStatus==undefined" >
-                                 
                                   <v-radio color="red darken-3" hide-details v-for="nonivrData in nonIvrPlanArray"
                                     :key="nonivrData.PlanId" :value="nonivrData.PlanId" @click="
                                       getBill(nonivrData.price, nonivrData.PlanId)
-                                    " >
+                                    ">
                                     <template v-slot:label>
                                       <div class="black--text">
                                         Pay for
+
                                         <strong class="black--text darken-4">
                                           {{ nonivrData.Validity }} months
                                           <span v-if="nonivrData.Discount > 0">and save
@@ -397,18 +103,18 @@
                                     </template>
                                   </v-radio>
                                 </v-radio-group>
-                        
-                         
+
+
                               </div>
-                              <v-row no-gutters v-if="Discount>0">
+                              <v-row no-gutters v-if="Discount > 0">
                                 <div class="col-8 membership_heading red--text">
                                   Cost After Discount
                                 </div>
                                 <div class="col-4 membership_heading" align="right">
-                                  ₹ {{ invoice_amount }} for {{validity}} Months
+                                  ₹ {{ invoice_amount }} for {{ validity }} Months
                                 </div>
                               </v-row>
-                              <v-row no-gutters v-if="Discount>0">
+                              <v-row no-gutters v-if="Discount > 0">
                                 <div class="col-12  red--text" align="center">
                                   ( Your Total Saving ₹ {{ Discount }})
                                 </div>
@@ -417,7 +123,178 @@
                             </v-card-text>
                             <v-card-actions align="center" class="center">
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
-                                color="white" outlined @click="paynow()">
+                                color="white" outlined @click="recharge()" v-if="Stage != 'TRIAL'">
+                                Pay Now
+                              </v-btn>
+                              <!-- If trial inside non IVR-->
+                              <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
+                                color="white" outlined @click="paynow()" v-else>
+                                Pay Now
+                              </v-btn>
+                              
+                              <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+                                min-width="140px" @click="basicplan_info = true">
+                                View Detail
+                              </v-btn>
+                            </v-card-actions>
+
+                            <v-expand-transition>
+                              <v-card v-if="basicplan_info" class="transition-fast-in-fast-out v-card--reveal"
+                                style="height: 100%">
+                                <v-row>
+                                  <v-col cols="12" sm="10">
+                                    <h6 class="f16 mt-6 ml-5">
+                                      <v-icon class="mr-2" color="black" @click="basicplan_info = false">mdi-arrow-left
+                                      </v-icon>
+                                      Details
+                                    </h6>
+                                  </v-col>
+                                </v-row>
+                                <v-card-text class="pb-0">
+                                  <v-simple-table dense>
+                                    <template v-slot:default>
+                                      <tbody class="ma-0 pa-0" border="0">
+                                        <tr v-for="d in sublist" :key="d.name">
+                                          <td class="ma-0 pa-0 pr-0 mr-0" :class="d.class">
+                                            {{ d.title }}
+                                          </td>
+                                          <td :class="d.class" align="center">
+                                            {{ d.qty }}
+                                          </td>
+                                          <td :class="d.class" align="right" class="ma-0 pa-0">
+                                            ₹ {{ d.amount }}
+                                          </td>
+                                        </tr>
+
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Sub Total
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            ₹ {{ SubTotal }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Discount
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            {{ Discount }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
+                                            Cost after Discount
+                                          </td>
+
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="2" align="right">
+                                            {{ CostAfterDiscount }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            GST
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            {{ Gst.toFixed(2) }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0 bold" colspan="1">
+                                            Total
+                                          </td>
+
+                                          <td class="ma-0 pa-0 bold" colspan="2" align="right">
+                                            ₹ {{ invoice_amount }}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </template>
+                                  </v-simple-table>
+                                </v-card-text>
+                              </v-card>
+                            </v-expand-transition>
+                          </v-card>
+
+                        </div>
+                        <div class="row" v-else-if="SwitcherID == 2 || SwitcherID == 4">
+                          <v-card class="ml-8" min-width="700" min-height="400">
+                            <v-card-text class="pb-0">
+                              <p class="redtext bold"  v-if="Stage != 'TRIAL'">
+                                Next Recharge Due on {{ Rechargeday }}
+                              </p>
+                              <v-row no-gutters>
+                                <div class="col-8 membership_heading">
+                                  Total Cost (Inclusive of GST)
+                                </div>
+                                <div class="col-4 membership_heading" align="right" >
+                                  ₹ {{ permonth }}/Month
+                                </div>
+                              </v-row>
+                              <v-row no-gutters  v-if="Stage == 'PAID' ">
+                                
+                                <div class="col-8 membership_heading" >
+                                  Cost for Upgradation
+                                </div>
+                                <div class="col-4 membership_heading" align="right" >
+                                  ₹ {{ amountwithoutgst }}
+                                </div>
+                              </v-row>
+
+                              <div class="membership_price">
+                                {{ invoice_amount
+                                }}<span class="currency_symbol">INR</span>
+                              </div>
+
+                              <div class="membership_details">
+
+                                <v-radio-group mandatory  v-model="ivrRadioGroup">
+
+                                  <v-radio color="red darken-3"  v-for="ivrData in ivrPlanArray"
+                                    :key="ivrData.PlanId" :value="ivrData.PlanId" @click="
+                                      getBill(ivrData.price, ivrData.PlanId)
+                                    ">
+                                    <template v-slot:label>
+                                      <div class="black--text">
+                                        Pay for
+
+                                        <strong class="black--text darken-4">
+                                          {{ ivrData.Validity }} months
+                                          <span v-if="ivrData.Discount > 0">and save
+                                            {{ ivrData.Discount }}%</span></strong>
+                                      </div>
+                                    </template>
+                                  </v-radio>
+                                </v-radio-group>
+
+
+                              </div>
+                              <v-row no-gutters v-if="Discount > 0">
+                                <div class="col-8 membership_heading red--text">
+                                  Cost After Discount
+                                </div>
+                                <div class="col-4 membership_heading" align="right">
+                                  ₹ {{ invoice_amount }} for {{}} Months
+                                </div>
+                              </v-row>
+                              <v-row no-gutters v-if="Discount > 0">
+                                <div class="col-12  red--text" align="center">
+                                  ( Your Total Saving ₹ {{ Discount }})
+                                </div>
+
+                              </v-row>
+                            </v-card-text>
+                            <v-card-actions align="center" class="center">
+                              <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
+                                color="white" outlined @click="paynowUpgrade()" v-if="Stage == 'PAID'">
+                                Pay Now
+                              </v-btn>
+                              <!-- If trial inside IVR-->
+                              <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
+                                color="white" outlined @click="paynow()" v-else>
                                 Pay Now
                               </v-btn>
                               <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
@@ -506,9 +383,6 @@
                               </v-card>
                             </v-expand-transition>
                           </v-card>
-                        </div>
-                        <div v-else class="row">
-                          No Plan found!
                         </div>
                       </div>
                     </v-row>
@@ -621,15 +495,16 @@ export default {
     overlay: false,
     Rechargeday: "",
     nonIVRPlanradio: 1,
-    IvrPlan: "",
+    SwitcherID: 1,
     bussinessNumber: "",
     upgrade: "",
     AccountId: "",
     upgradeInfo:false,
     ivrData:"",
     validity:1,
-    nonIvrPlanArray:"",
-    IvrPlanArray:"",
+    Stage:"",
+    nonIvrPlanArray:[],
+    ivrPlanArray:[],
   }),
   computed: {
     computedPrice() {
@@ -639,8 +514,9 @@ export default {
   async created() {
     this.bussinessNumber = this.$route.query.bn;
     this.upgrade = this.$route.query.upgrade;
-
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
+ 
     //  this.bussinessNumber = this.$route.query.bn;
     // this.setBreadcrumbs(this.bussinessNumber);
     const owneruid =
@@ -651,11 +527,36 @@ export default {
     this.Rechargeday = localStorageUserObj.LastDay;
     this.Name = localStorageUserObj.FirstName;
     this.owneruid = owneruid;
-    this.PlanId = localStorageUserObj.PlanId;
+ 
+// only for recharge and upgrade
+  this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+  this.Stage = localStorageUserObj.Stage?localStorageUserObj.Stage:'notFound';
+if(this.Stage=="TRIAL"){
+  this.PlanId=2;
+  this.SwitcherID=1;
+  this.nonivrRadioGroup=parseInt(this.PlanId);
+this.ivrRadioGroup=parseInt(this.PlanId) +  3;
+this.getBill("inital", parseInt(this.PlanId));
+
+}else if(this.Stage=="PAID"){
+  this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+  this.SwitcherID=3;
+  this.nonivrRadioGroup=parseInt(this.PlanId);
+this.ivrRadioGroup=parseInt(this.PlanId) +  3;
+this.getBill("inital", parseInt(this.PlanId));
+}else{
+
+}
+
+
+// alert(this.PlanId);
+// alert(this.Stage);
+// if(this.planI==)
 
     this.planDetails = db
       .collection("plan_details")
-      .where("Id", ">=", 2)
+      // .where("Id", ">=",2)
+     .where("IsTrial","==",false)
       .get()
       .then((querySnapshot) => {
         this.ivrPlanArray = [];
@@ -665,7 +566,7 @@ export default {
             console.log(doc.id, " => ", doc.data());
             let plan = doc.data();
             this.plan = plan;
-            console.log(plan.Name);
+           
 
             if (plan.IsIvr == true) {
               this.ivrobject = Object.assign({}, this.ivrobject, {
@@ -680,6 +581,7 @@ export default {
               this.ivrPlanArray.push(this.ivrobject);
               
             } else {
+               console.log(plan.Name+'========='+plan.IsIvr);
               this.nonivrobject = Object.assign({}, this.nonivrobject, {
                 planName: plan.Name,
                 price: plan.Price,
@@ -703,48 +605,116 @@ export default {
     // });
 
     window.scrollTo(0, 0); //scroll to top
-    this.getBill("inital", this.PlanId);
+
+
     
 
     //  this.getOrderIdforPayment()
   },
 
   methods: {
+
+planTypeSwitcher(i) {
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+       if(this.ivrActive==true){
+    planTypeSwitcher(4);
+  }
+      this.SwitcherID=i;
+console.log('Plan ID '+i)
+// SwitcherID ==1 Base plan (If Trial)
+// SwitcherID ==2 Ivr plan 
+// SwitcherID ==3 plan 2 or 3 IVR (if Trial)
+// SwitcherID ==4 plan 5 or 6 IVR
+  if(i==1){
+  this.PlanId=2; //Trial 
+  this.nonivrRadioGroup=this.PlanId;
+  this.getBill(this.uid, parseInt(this.PlanId));
+  }else if(i==2){ //Trial
+  // this.planUpgradeData();
+    this.PlanId= 5; //Trial
+    this.ivrRadioGroup =this.PlanId; 
+    this.getBill(this.uid, parseInt(this.PlanId));
+  }else if(i==3){ 
+    var v = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+
+  if(v<=3 && v!=0){
+    this.PlanId = v; 
+  }else{
+    this.PlanId = 2; 
+
+  }
+  this.nonivrRadioGroup=this.PlanId;
+  this.getBill(this.uid, parseInt(this.PlanId));
+    }else if(i==4){
+
+this.planUpgradeData();
+    var v = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+  if(v>=4 && v!=0){
+    
+    this.PlanId = v; 
+  }else{
+    this.PlanId = 5; 
+  }
+    // this.PlanId = 5;     
+    // this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+    this.ivrRadioGroup =this.PlanId; 
+    this.getBill(this.uid, parseInt(this.PlanId));
+  }else{
+//  this.SwitcherID=i;
+  }
+    },
+    syncStatus(){
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.uid = user.uid;
+        this.phno = user.phoneNumber.slice(3);
+        db.collection("users")
+          .where("uid", "==", this.uid)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              console.log(doc.id, " => ", doc.data());
+              console.log(
+                "<-------------------LOGGING USER DETAILS----------------------->"
+              );
+              localStorage.setItem("tpu", JSON.stringify(doc.data()));
+  
+          
+            });
+          })
+          .catch((error) => {
+            console.log("Error getting documents: ", error);
+          });
+      }
+    });
+
+    },
+
     async checkData() {
-      if(this.upgrade==1){
- this.isIvr(1);
-}
+//       if(this.upgrade==1){
+//  this.planTypeSwitcher(1);
+// }
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           console.log("logged user details", user);
           this.uid = user.uid;
           this.phno = user.phoneNumber.slice(3);
           let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-          this.nonIVRPlanradio = localStorage.getItem("nonIVRPlanradio");
-          this.IVRPlanradio = localStorage.getItem("IVRPlanradio");
+          this.nonIVRPlanradio = localStorageUserObj.getItem("nonIVRPlanradio");
+          this.IVRPlanradio = localStorageUserObj.getItem("IVRPlanradio");
           // this.checkIvrStatus = false;
           
           
           this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
-          this.directActive = localStorageUserObj.IsIvr == true ? false : true;
-          this.checkCondition = localStorageUserObj.IsIvr == undefined ? false : this.checkCondition;
-          this.IvrPlan = this.checkCondition == false ? 2 : this.checkCondition; // edited by navas on 28 june 2022
-          //  this.IvrPlan = this.checkCondition == false ? 2:1
-          // alert(this.checkCondition);
-          if(this.IvrPlan==1){
-            this.checkIvrStatus = true;
-          }else{
-            this.checkIvrStatus = localStorageUserObj.IsIvr;
-          }
+          this.Stage = localStorageUserObj.Stage;
+
+       
         }
       });
     },
-
-    isIvr(i) {
-      this.basicplan_info=false;
-      this.upgradeInfo=false;
-      if (i == 1) {
-        const options = {
+planUpgradeData(){ //fetch upgrade plan data
+  
+      const options = {
           url: this.$cloudfareApi + "/bill/upgrade",
           method: "POST",
           headers: {
@@ -759,7 +729,7 @@ export default {
         axios(options)
           .then((response) => {
             this.dialog = false;
-            this.IvrPlan=1;
+          
             console.log(response.data);
             var upgradeData = response.data;
             this.amount = upgradeData.amount.toFixed(2);
@@ -781,10 +751,66 @@ export default {
           .catch((error) => {
             console.error(error);
           });
-      } else{
-         this.IvrPlan=2;
-      }
-    },
+},
+    // planTypeSwitcher(i) {
+    //   this.basicplan_info=false;
+    //   this.upgradeInfo=false;
+    //   this.SwitcherID=i;
+    //   console.log(i);
+
+    //   alert(i)
+        // this.getBill(this.uid, i);
+      // if (i == 3) 
+      // { 
+      // this.getBill(this.uid, 5);
+      // }
+      //  else if(i == 4) 
+      // { 
+      // this.getBill(this.uid, 3);
+      // }
+      
+      // else if (i == 1) {
+      //   const options = {
+      //     url: this.$cloudfareApi + "/bill/upgrade",
+      //     method: "POST",
+      //     headers: {
+      //       token: localStorage.getItem("token"),
+      //       "Content-Type": "application/json;charset=UTF-8",
+      //     },
+      //     data: {
+      //       owner_uid: this.owneruid
+      //     },
+      //   };
+
+      //   axios(options)
+      //     .then((response) => {
+      //       this.dialog = false;
+          
+      //       console.log(response.data);
+      //       var upgradeData = response.data;
+      //       this.amount = upgradeData.amount.toFixed(2);
+      //       this.amountwithoutdeduction = upgradeData.amountwithoutdeduction.toFixed(2);
+      //       this.amountwithoutgst = upgradeData.amountwithoutgst.toFixed(2);
+      //       this.defaultafterdiscount = upgradeData.defaultafterdiscount;
+      //       this.defaultamount =  upgradeData.defaultamount.toFixed(2);
+      //       this.defaultdiscount = upgradeData.defaultdiscount;
+      //       this.planname = upgradeData.planname;
+      //       this.reminingamt = upgradeData.reminingamt.toFixed(2);
+      //       this.reminingdays = upgradeData.reminingdays;
+      //       this.reminingmonths = upgradeData.reminingmonths;
+      //       this.status = upgradeData.status;
+      //       this.useddays = upgradeData.useddays;
+      //       this.gstAmount =  (upgradeData.amount - upgradeData.amountwithoutgst).toFixed(2);
+
+        
+      //     })
+      //     .catch((error) => {
+      //       console.error(error);
+      //     });
+      // } else{
+          // this.SwitcherID=i;
+      // }
+    // },
 
     goBack() {
       this.$router.push("/dashboard");
@@ -793,8 +819,8 @@ export default {
     getBill(status, planid) {
       console.log(status, planid);
       const token = localStorage.getItem("token");
-      // this.PlanId = (radio == "inital")?this.PlanId:planid;
       this.PlanId = planid;
+    
       this.sublist = [];
       const details = {
         // https://asia-south1-test-tpv2.cloudfunctions.net/tpv2
@@ -867,15 +893,15 @@ export default {
           owner_uid: this.owneruid,
           PlanId: parseInt(this.PlanId),
           payment_mode: "WEB",
-          type: "RECHARGE",
+          type: "BASIC",
         },
       };
       axios(details).then(async (responsevalue) => {
-        console.log(responsevalue);
+        console.log(responsevalue.data);
         if (responsevalue.data.status == true) {
           var options = {
             key: this.$razorpaykey,
-            order_id: responsevalue.data.order_id,
+            order_id: responsevalue.data.OrderId,
             name: this.Name,
             currency: "INR", // Optional. Same as the Order currency
             description: "Purchase Description",
@@ -885,7 +911,7 @@ export default {
               var initial = true;
               if (initial) {
                 db.collection("paymentTransaction")
-                  .where("OrderId", "==", responsevalue.data.order_id)
+                  .where("OrderId", "==", responsevalue.data.OrderId)
                   .onSnapshot((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                       console.log(doc.id, " => ", doc.data());
@@ -902,7 +928,10 @@ export default {
                           .catch((err) => console.log(err));
                         initial = false;
                         this.overlay = false;
-                        // this.$router.push("/Dashboard")
+                          window.localStorage.removeItem('tpu');  
+this.syncStatus();
+this.Stage='PAID';
+this.SwitcherID=3;
                       }
                     });
                   });
@@ -935,11 +964,9 @@ export default {
       });
     },
 
-
-
-      paynowUpgrade() {
+recharge() {
       const details = {
-        url: this.$cloudfareApi + "/addon/upgrade",
+        url: this.$cloudfareApi + "/addon/payment",
         method: "POST",
         headers: { token: localStorage.getItem("token") },
         data: {
@@ -982,7 +1009,8 @@ export default {
                           .catch((err) => console.log(err));
                         initial = false;
                         this.overlay = false;
-                        // this.$router.push("/Dashboard")
+                                                 window.localStorage.removeItem('tpu');  
+this.syncStatus();
                       }
                     });
                   });
@@ -1014,6 +1042,96 @@ export default {
         }
       });
     },
+
+      paynowUpgrade() {
+        // alert(this.PlanId);
+      const details = {
+        url: this.$cloudfareApi + "/addon/upgrade",
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        data: {
+          uid: this.owneruid,
+          owner_uid: this.owneruid,
+          PlanId: parseInt(this.PlanId),
+          payment_mode: "WEB",
+          type: "RECHARGE",
+        },
+      };
+      axios(details).then(async (responsevalue) => {
+        console.log(responsevalue);
+        if (responsevalue.data.status == true) {
+          var options = {
+            key: this.$razorpaykey,
+            order_id: responsevalue.data.order_id,
+            name: this.Name,
+            currency: "INR", // Optional. Same as the Order currency
+            description: "Purchase Description",
+            handler: (response) => {
+              console.log(response);
+              this.overlay = true;
+              var initial = true;
+              var upgradeData = response.data;
+              // console.log(upgradeData);
+            
+              
+              if (initial) {
+                db.collection("paymentTransaction")
+                  .where("OrderId", "==", responsevalue.data.order_id)
+                  .onSnapshot((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      console.log(doc.id, " => ", doc.data());
+                      let testing_status = doc.data();
+                      if (testing_status.Status == true && initial) {
+                        initial = false;
+                        this.overlay = false;
+                        db.collection("users")
+                          .where("uid", "==", this.owneruid)
+                          .get()
+                          .then((snap) => {
+                            this.Rechargeday = snap.docs[0].data().LastDay;
+                          })
+                          .catch((err) => console.log(err));
+                        initial = false;
+                        this.overlay = false;
+                                                  window.localStorage.removeItem('tpu');  
+this.syncStatus();
+                      }
+                    });
+                  });
+              }
+            },
+            prefill: {
+              name: this.Name,
+              email: this.email,
+              contact: this.phno,
+            },
+            notes: {
+              address: this.address,
+            },
+            theme: {
+              color: "#D32F2F",
+            },
+            modal: {
+              ondismiss: () => {
+                this.dialog2 = true;
+              },
+            },
+          };
+          // console.log(options)
+          const rzp1 = new Razorpay(options);
+          this.overlay = false;
+          rzp1.open();
+        } else {
+          console.log("wrong value");
+        }
+      });
+    },
+
+
+
+
+
+    
   },
 };
 </script>

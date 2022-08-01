@@ -192,6 +192,21 @@ export default {
     });
   },
   methods: {
+
+          // if (this.SelectPlan == 1) {
+            //   this.colorChange(this.IVRPlanradio);
+            //   localStorage.setItem("IVRPlanradio", parseInt(this.IVRPlanradio));
+            //   localStorage.setItem("planId", parseInt(this.IVRPlanradio));
+            // } else {
+            //   this.colorChange(this.nonIVRPlanradio);
+
+            //   localStorage.setItem(
+            //     "nonIVRPlanradio",
+            //     parseInt(this.nonIVRPlanradio)
+            //   );
+            //   localStorage.setItem("planId", parseInt(this.nonIVRPlanradio));
+            // }
+            
         getBill(userid, planid) {
       // console.log(status, planid);
       const token = localStorage.getItem("token");

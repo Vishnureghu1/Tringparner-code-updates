@@ -306,6 +306,7 @@ export default {
     this.GetMissedCall();
     this.GetSkippedCall();
     this.GetRemiders();
+    this.updateTPU();
   },
     destroyed(){
     window.removeEventListener("scroll", this.handleScroll, false);
@@ -339,6 +340,33 @@ export default {
   },
 
   methods: {
+
+    updateTPU(){
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.uid = user.uid;
+        this.phno = user.phoneNumber.slice(3);
+        db.collection("users")
+          .where("uid", "==", this.uid)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              console.log(doc.id, " => ", doc.data());
+              console.log(
+                "<-------------------LOGGING USER DETAILS----------------------->"
+              );
+              localStorage.setItem("tpu", JSON.stringify(doc.data()));
+    
+
+          
+                   });
+          })
+          .catch((error) => {
+            console.log("Error getting documents: ", error);
+          });
+      }
+    });
+    },
         handleScroll () {
       window.onscroll = () => {
         let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight

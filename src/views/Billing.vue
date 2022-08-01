@@ -20,7 +20,6 @@
                       Enter your billing details
                     </h2>
                     <v-form
-                     
                       class="mt-3 ml-5 mr-4"
                       ref="form"
                       method="post"
@@ -90,11 +89,18 @@
                     <p class="left">+91{{ userPhoneNumber }}</p>
                   </v-col> -->
                 </v-row>
-                <v-btn v-if="plan=='trial'" class="btn_text mt-15 white--text text-capitalize"  width="25%" rounded
-                  @click.prevent="nextPage('dashboard')" color="#EE1C25">
+                <v-btn
+                  v-if="plan == 'trial'"
+                  class="btn_text mt-15 white--text text-capitalize"
+                  width="25%"
+                  rounded
+                  @click.prevent="nextPage('dashboard')"
+                  color="#EE1C25"
+                >
                   Next
                 </v-btn>
-                <v-btn v-else
+                <v-btn
+                  v-else
                   class="btn_text mt-8 white--text text-capitalize"
                   width="25%"
                   @click.prevent="nextPage('noplan')"
@@ -111,7 +117,6 @@
     </v-container>
   </v-app>
 </template>
-
 
 <script>
 import firebase from "firebase";
@@ -214,7 +219,7 @@ export default {
               this.name = user_details.FirstName;
               this.phno = user_details.PhoneNumber;
               this.gst = user_details.Gstin;
-             
+
               this.orderId = user_details.OrderId;
             });
           });
@@ -245,17 +250,82 @@ export default {
         // console.log('after',this.pincodeInvalid)
       });
     },
+    //  var dd =  this.$refs.form.validate();
     nextPage(plan) {
-    // alert(plan)
-     var dd =  this.$refs.form.validate();
+    // alert(plan) // if trial move to dashboard
+if(plan=="dashboard"){
+    const user_trial = {
+          url: this.$cloudfareApi + "/user/trial",
+          method: "POST",
+          headers: {
+            token: localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+          data: {
+            uid: this.uid,
+          },
+        };
+        this.$axios(user_trial)
+          .then((response) => {
+            // if (this.SelectPlan == 1) {
+            //   this.colorChange(this.IVRPlanradio);
+            //   localStorage.setItem("IVRPlanradio", parseInt(this.IVRPlanradio));
+            //   localStorage.setItem("planId", parseInt(this.IVRPlanradio));
+            // } else {
+            //   this.colorChange(this.nonIVRPlanradio);
 
-      if(dd==true){
+            //   localStorage.setItem(
+            //     "nonIVRPlanradio",
+            //     parseInt(this.nonIVRPlanradio)
+            //   );
+            //   localStorage.setItem("planId", parseInt(this.nonIVRPlanradio));
+            // }
+            console.log(response);
+console.log(response);
+                this.$router.push("/Dashboard");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+}else{
+          this.overlay = true;
 
-        this.overlay = true;
-      const details = {
+          // console.log("order_id", response);
+          const user_stage = {
+            url: this.$cloudfareApi+"/user/stage",
+            method: "POST",
+            headers: {
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
+            data: {
+              uid: this.uid,
+              phoneNumber: this.phno,
+              // currentPage: "onboarding_review",
+              currentPage: "onboarding_billing",
+              plan_id: this.planId,
+            },
+          };
+          console.log(user_stage);
+          this.$axios(user_stage)
+            .then((response) => {
+              console.log(response);
+
+
+
+
+                this.$router.push("/Review");
+
+ })
+          .catch((error) => {
+            console.error(error);
+          });
+        }
+
+        const details = {
         url: this.$cloudfareApi+"/user/owner",
         method: "POST",
-        headers: { 
+        headers: {
 						'token': localStorage.getItem("token"),
 						'Content-Type': 'application/json'
 					},
@@ -278,44 +348,16 @@ export default {
       console.log(details);
       this.$axios(details)
         .then((response) => {
-          console.log("order_id", response);
-          const user_stage = {
-            url: this.$cloudfareApi+"/user/stage",
-            method: "POST",
-            headers: { 
-						'token': localStorage.getItem("token"),
-						'Content-Type': 'application/json'
-					},
-            data: {
-              uid: this.uid,
-              phoneNumber: this.phno,
-              currentPage: "onboarding_review",
-              plan_id: this.planId,
-            },
-          };
-          console.log(user_stage);
-          this.$axios(user_stage)
-            .then((response) => {
-              console.log(response);
-              if(plan=='trial'){
+          console.log(response)
 
-                this.$router.push("/Dashboard");
-              }else{
-                this.$router.push("/Review");
+ })
+          .catch((error) => {
+            console.error(error);
+          });
 
-              }
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  },
-  }
-};
+}
+}
+}
 </script>
 
 <style scoped>

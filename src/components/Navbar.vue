@@ -78,16 +78,16 @@
           height="35"
         />
         <v-spacer></v-spacer>
-
+<!-- {{userRole}} -->
         <div v-if="isLoggedIn">
-          <v-btn v-on="on" icon v-if="Stage=='INPROGRESS' || userRole =='' ">
+          <v-btn v-on="on" icon v-if=" userRole =='' ">
                 
                   <v-icon color="black"  @click="logout">mdi-logout</v-icon>
                
                 
               </v-btn>
           <!-- NOTIFICATION MENU -->
-          <v-menu bottom width="378px" height="504px" rounded offset-y v-if="Stage!='INPROGRESS'">
+          <v-menu bottom width="378px" height="504px" rounded offset-y v-if=" userRole !=''">
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" icon>
                 <v-badge color="red" content="0" overlap  v-if="notificationunread.length==0">
@@ -164,7 +164,7 @@
           </v-menu>
           <!-- NOTIFICATION MENU -->
           <!-- DROP DOWM MENU FROM AVATAR   -->
-          <v-menu bottom max-width="247px" min-height="218px" rounded offset-y  v-if="Stage!='INPROGRESS'">
+          <v-menu bottom max-width="247px" min-height="218px" rounded offset-y  v-if=" userRole !=''">
             <template v-slot:activator="{ on }">
               <v-avatar v-on="on" class="ml-5" size="40">
                 <v-img src="/img1.png"></v-img>
@@ -287,11 +287,11 @@ export default {
             },
           ],
         },
-        {
-          to: "/contacts",
-          icon: "mdi-account-box-outline",
-          text: "Contacts",
-        },
+        // {
+        //   to: "/contacts",
+        //   icon: "mdi-account-box-outline",
+        //   text: "Contacts",
+        // },
           {
           to: "/report",
           icon: "mdi-chart-bar",
