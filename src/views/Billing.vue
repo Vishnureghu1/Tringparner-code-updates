@@ -283,7 +283,7 @@ if(plan=="dashboard"){
             // }
             console.log(response);
 console.log(response);
-                this.$router.push("/Dashboard");
+                this.$router.push("/all_calls");
           })
           .catch((error) => {
             console.error(error);

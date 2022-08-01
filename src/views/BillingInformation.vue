@@ -746,7 +746,7 @@ planUpgradeData(){ //fetch upgrade plan data
             this.useddays = upgradeData.useddays;
             this.gstAmount =  (upgradeData.amount - upgradeData.amountwithoutgst).toFixed(2);
 
-        
+           
           })
           .catch((error) => {
             console.error(error);
@@ -1095,6 +1095,7 @@ this.syncStatus();
                         this.overlay = false;
                                                   window.localStorage.removeItem('tpu');  
 this.syncStatus();
+ this.ivrActive=true;
                       }
                     });
                   });

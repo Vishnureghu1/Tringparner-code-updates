@@ -31,13 +31,13 @@
                     max-width="1069"
                   >
                     <v-layout>
-                      <v-flex xs12 sm12 md12>
+                                <v-flex xs12 sm12 md12 v-if="Stage=='TRIAL'">
                         <v-row no-gutters>
-                          <v-col cols="12">
-                               <v-alert dense outlined type="error" >
-                <h4 class="f16">You are not allowed!</h4>
+                          <v-col cols="12" >
+                               <v-alert dense outlined  type="error">
+                <h4 class="f16">Sorry!</h4>
                 <p class="mb-0 pb-0 black--text" color="black">
-                  You are not allowed to add Add-Ons
+                 Addons not available for Trial Plans
                 </p>
               </v-alert>
                             </v-col>
