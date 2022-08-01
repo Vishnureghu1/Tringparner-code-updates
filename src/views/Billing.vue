@@ -191,7 +191,6 @@ export default {
   components: {},
 
   created() {
-
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
       this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorageUserObj.getItem("PlanId"));
     this.plan = this.$route.query.plan;

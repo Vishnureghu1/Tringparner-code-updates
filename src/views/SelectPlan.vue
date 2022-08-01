@@ -246,6 +246,24 @@
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
+<<<<<<< HEAD
+                   <!-- IvrPlan: {{ IvrPlan }}<br>
+                  checkIvrStatus: {{ checkIvrStatus }}<br>
+               
+                  CurrentPlan: {{ CurrentPlan }}<br>
+                  Stage: {{ Stage }}<br>
+                  planIdSelected: {{ planIdSelected }}<br>
+                  selected plan {{ SelectPlan }}<br>
+                  nonIVRPlanradio {{nonIVRPlanradio}}<br>
+                  IVRPlanradio {{IVRPlanradio}}<br> -->
+                  
+                  <!-- <br> -->
+                <div v-if="editplan=='true'">
+                <v-btn v-if="SelectPlan != 0" class="btn_text mt-15 white--text text-capitalize" width="12%" rounded
+                  @click.prevent="nextPage('review')" color="#EE1C25">
+                  Next
+                </v-btn>
+=======
 
                 <div v-if="editplan == 'true'">
                   <v-btn
@@ -272,6 +290,7 @@
                   >
                     Next
                   </v-btn>
+>>>>>>> 498726b314f82e40dc62835ff4b8aa8433a0b384
                 </div>
                 <div v-else>
                   <v-btn
