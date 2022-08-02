@@ -27,13 +27,13 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        SwitcherID: {{ SwitcherID }}<br>
+                        <!-- SwitcherID: {{ SwitcherID }}<br>
                         ivrActive: {{ ivrActive }}
                         <br>
                         Stage: {{ Stage }}
                         <br>
                         PlanId: {{ PlanId }}
-                        <br>
+                        <br> -->
                         <div class="center align-center" align="center"
                           v-if="Stage=='TRIAL' ">
 

@@ -736,6 +736,8 @@ export default {
             this.uid = user.uid;
             this.emailStatus();
             this.blockedStatus(this.ownerUid);
+
+             
             // console.log("User Id : " + this.uid);
             // this.sendMessage(this.uid);
             db.collection("users")
@@ -1952,6 +1954,31 @@ export default {
     },
   },
   created() {
+
+  firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.uid = user.uid;
+        this.phno = user.phoneNumber.slice(3);
+        db.collection("users")
+          .where("uid", "==", this.uid)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              console.log(doc.id, " => ", doc.data());
+              console.log(
+                "<-------------------LOGGING USER DETAILS----------------------->"
+              );
+              localStorage.setItem("tpu", JSON.stringify(doc.data()));
+  
+          
+            });
+          })
+          .catch((error) => {
+            console.log("Error getting documents: ", error);
+          });
+      }
+    });
+
     this.getInitialCalls();
     window.addEventListener("scroll", this.handleScroll, false);
 

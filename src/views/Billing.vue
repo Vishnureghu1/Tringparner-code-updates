@@ -250,12 +250,16 @@ export default {
         // console.log('after',this.pincodeInvalid)
       });
     },
-    //  var dd =  this.$refs.form.validate();
+
     nextPage(plan) {
     // alert(plan) // if trial move to dashboard
 if(plan=="dashboard"){
-    const user_trial = {
-          url: this.$cloudfareApi + "/user/trial",
+
+       var dd =  this.$refs.form.validate();
+   if(dd==true){
+
+     const user_trial = {
+       url: this.$cloudfareApi + "/user/trial",
           method: "POST",
           headers: {
             token: localStorage.getItem("token"),
@@ -267,19 +271,7 @@ if(plan=="dashboard"){
         };
         this.$axios(user_trial)
           .then((response) => {
-            // if (this.SelectPlan == 1) {
-            //   this.colorChange(this.IVRPlanradio);
-            //   localStorage.setItem("IVRPlanradio", parseInt(this.IVRPlanradio));
-            //   localStorage.setItem("planId", parseInt(this.IVRPlanradio));
-            // } else {
-            //   this.colorChange(this.nonIVRPlanradio);
-
-            //   localStorage.setItem(
-            //     "nonIVRPlanradio",
-            //     parseInt(this.nonIVRPlanradio)
-            //   );
-            //   localStorage.setItem("planId", parseInt(this.nonIVRPlanradio));
-            // }
+            
             console.log(response);
 console.log(response);
                 this.$router.push("/all_calls");
@@ -287,6 +279,7 @@ console.log(response);
           .catch((error) => {
             console.error(error);
           });
+            }
 }else{
           this.overlay = true;
 
