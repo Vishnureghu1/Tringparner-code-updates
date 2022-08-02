@@ -50,7 +50,7 @@
                         </div>
                         <div v-else class="center align-center" align="center">
 
-                          <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless v-if="ivrActive==false">
+                          <v-btn-toggle rounded elivation="05" class="toggle_IVR mb-10" borderless v-if="ivrActive==false ">
                             <v-btn width="200" 
                               @click="planTypeSwitcher(3)" :class="{ active: SwitcherID == 3 }">
                               Current Plan
@@ -930,8 +930,7 @@ planUpgradeData(){ //fetch upgrade plan data
                             this.Rechargeday = snap.docs[0].data().LastDay;
                           })
                           .catch((err) => console.log(err));
-                        initial = false;
-                        this.overlay = false;
+                 
                           window.localStorage.removeItem('tpu');  
 this.syncStatus();
 this.Stage='PAID';

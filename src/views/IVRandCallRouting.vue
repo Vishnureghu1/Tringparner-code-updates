@@ -46,9 +46,12 @@
                         <v-row no-gutters>
                           <v-col cols="12">
                             <div class="center align-center" align="center">
-                              <!-- <p>Please choose your plan</p> -->
-<!-- {{IvrPlan}}
-{{checkIvrStatus}} -->
+                              <p>
+
+                                <!-- IvrPlan: {{IvrPlan}} <br>
+checkIvrStatus: {{checkIvrStatus}}<br>
+Stage: {{Stage}} -->
+                              </p>
                               <v-btn-toggle
                                 rounded
                                 elivation="05"
@@ -56,8 +59,16 @@
                                 borderless
                                 v-model="toggle_exclusive"
                               >
+                              <v-btn
+                                  v-if="Stage == 'TRIAL' && checkIvrStatus==false"
+                                  width="200"
+                                  @click="isIvr(1)"
+                                  :class="{ active: checkIvrStatus == true }"
+                                >
+                                  IVR
+                                </v-btn>
                                 <v-btn
-                                  v-if="checkIvrStatus == false"
+                                  v-else-if="checkIvrStatus == false"
                                   width="200"
                                   @click="MovetoBilling(1)"
                                   :class="{ active: checkIvrStatus == true }"
@@ -92,7 +103,7 @@
                               </v-btn-toggle>
                             </div>
                            
-                            <div v-if="IvrPlan == 1 && checkIvrStatus==true">
+                            <div v-if="IvrPlan==1">
                               <h2 class="name_heading mt-0 mr-0 mb-0">
                                 Basic IVR Audio Settings
                               </h2>
@@ -532,6 +543,7 @@ export default {
     directActive: false,
     toggle_exclusive: undefined,
     checkIvrStatus:false,
+    Stage:"",
     source1: "",
     source2: "",
     source3: "",
@@ -644,6 +656,8 @@ export default {
       // local storage isIV get data here
       // if false then noIVR
       this.checkIvrStatus = localStorageUserObj.PlanId?true:false
+
+      this.Stage = localStorageUserObj.Stage;
       // this.checkIvrStatus = false;
 
       const owneruid =
@@ -688,6 +702,7 @@ export default {
           this.ivrActive = data.IsIvr == true ? true : false;
           this.directActive = data.IsIvr == true ? false : true;
           this.IvrPlan = data.IsIvr == false ? 2 : 1;
+           this.Stage = localStorageUserObj.Stage;
           // this.IvrPlan = 2;
           // snap.docs.forEach((element)=> {
           //   // this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]
