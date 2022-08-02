@@ -27,13 +27,13 @@
                   <v-flex xs12 sm12 md12>
                     <v-row no-gutters>
                       <div class="col-12">
-                        <!-- SwitcherID: {{ SwitcherID }}<br>
+                        SwitcherID: {{ SwitcherID }}<br>
                         ivrActive: {{ ivrActive }}
                         <br>
                         Stage: {{ Stage }}
                         <br>
                         PlanId: {{ PlanId }}
-                        <br> -->
+                        <br>
                         <div class="center align-center" align="center"
                           v-if="Stage=='TRIAL' ">
 
@@ -545,6 +545,10 @@ this.getBill("inital", parseInt(this.PlanId));
 this.ivrRadioGroup=parseInt(this.PlanId) +  3;
 this.getBill("inital", parseInt(this.PlanId));
 }else{
+    this.SwitcherID=3;
+  this.nonivrRadioGroup=2;
+this.ivrRadioGroup=parseInt(this.PlanId) +  3;
+this.getBill("inital", parseInt(this.PlanId));
 
 }
 
@@ -700,8 +704,8 @@ this.planUpgradeData();
           this.uid = user.uid;
           this.phno = user.phoneNumber.slice(3);
           let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-          this.nonIVRPlanradio = localStorageUserObj.getItem("nonIVRPlanradio");
-          this.IVRPlanradio = localStorageUserObj.getItem("IVRPlanradio");
+          // this.nonIVRPlanradio = localStorageUserObj.getItem("nonIVRPlanradio");
+          // this.IVRPlanradio = localStorageUserObj.getItem("IVRPlanradio");
           // this.checkIvrStatus = false;
           
           
