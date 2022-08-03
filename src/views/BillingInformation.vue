@@ -695,9 +695,9 @@ this.planUpgradeData();
     },
 
     async checkData() {
-//       if(this.upgrade==1){
-//  this.planTypeSwitcher(1);
-// }
+      if(this.upgrade==1){
+ this.planTypeSwitcher(4);
+}
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           console.log("logged user details", user);

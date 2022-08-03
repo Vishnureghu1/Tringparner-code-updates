@@ -46,12 +46,19 @@
                         <v-row no-gutters>
                           <v-col cols="12">
                             <div class="center align-center" align="center">
-                              <p>
+                              <!-- <p>
 
-                                <!-- IvrPlan: {{IvrPlan}} <br>
-checkIvrStatus: {{checkIvrStatus}}<br>
-Stage: {{Stage}} -->
-                              </p>
+        SwitcherID: {{ SwitcherID }}<br>
+                        ivrActive: {{ ivrActive }}
+                        <br>
+                        Stage: {{ Stage }}
+                        <br>
+                        PlanId: {{ PlanId }}
+                        <br> 
+                        SwitcherID: {{SwitcherID}}<br>
+                        Upgrade: {{Upgrade}}<br>
+                        ActiveTab: {{ActiveTab}}
+                              </p> -->
                               <v-btn-toggle
                                 rounded
                                 elivation="05"
@@ -60,50 +67,50 @@ Stage: {{Stage}} -->
                                 v-model="toggle_exclusive"
                               >
                               <v-btn
-                                  v-if="Stage == 'TRIAL' && checkIvrStatus==false"
+                                  v-if="Stage == 'TRIAL' || ivrActive==true || ActiveTab==1"
                                   width="200"
-                                  @click="isIvr(1)"
-                                  :class="{ active: checkIvrStatus == true }"
+                                  @click="planTypeSwitcher(1)"
+                                  :class="{ active: SwitcherID == 1 }"
                                 >
                                   IVR
                                 </v-btn>
                                 <v-btn
-                                  v-else-if="checkIvrStatus == false"
+                                  v-else-if="Upgrade == true"
                                   width="200"
                                   @click="MovetoBilling(1)"
-                                  :class="{ active: checkIvrStatus == true }"
-                                >
+                                  :class="{ active: SwitcherID == 1 }"
+                                > 
                                   IVR
                                 </v-btn>
                                 <v-btn
                                   v-else
                                   width="200"
-                                  @click="isIvr(1)"
-                                  :class="{ active: IvrPlan == 1 }"
+                                  @click="planTypeSwitcher(1)"
+                                  :class="{ active: SwitcherID == 1 }"
                                 >
                                   IVR
                                 </v-btn>
 
                                 <v-btn
-                                  v-if="checkIvrStatus == true"
+                                  v-if="ivrActive == true"
                                   width="200"
-                                  @click="isIvr(2)"
-                                  :class="{ active: IvrPlan == 2 }"
+                                  @click="planTypeSwitcher(2)"
+                                  :class="{ active: SwitcherID == 2 }"
                                 >
                                   Direct (No IVR)
                                 </v-btn>
                                 <v-btn
                                   v-else
                                   width="200"
-                                  @click="isIvr(2)"
-                                  :class="{ active: checkIvrStatus == false }"
+                                  @click="planTypeSwitcher(2)"
+                                  :class="{ active: SwitcherID == 2 }"
                                 >
                                   Direct (No IVR)
                                 </v-btn>
                               </v-btn-toggle>
                             </div>
                            
-                            <div v-if="IvrPlan==1">
+                            <div v-if="SwitcherID==1 ">
                               <h2 class="name_heading mt-0 mr-0 mb-0">
                                 Basic IVR Audio Settings
                               </h2>
@@ -399,7 +406,7 @@ Stage: {{Stage}} -->
                               </v-row>
                               <v-divider></v-divider>
                             </div>
-                            <div v-else-if="IvrPlan == 2">
+                            <div v-else-if="SwitcherID == 2">
                               <v-row>
                                 <v-col cols="6">
                                   <h2 class="name_heading mt-4 mr-7">
@@ -537,6 +544,13 @@ export default {
     this.bussinessNumber = this.$route.query.bn;
     this.setBreadcrumbs(this.bussinessNumber);
     this.initial_value();
+          this.ActiveTab = parseInt(localStorage.getItem("ActiveTab"));
+  
+      if(this.ActiveTab==1){
+        this.planTypeSwitcher(1) 
+      }else{
+         this.planTypeSwitcher(2) 
+      }
   },
   data: () => ({
     ivrActive: false,
@@ -555,7 +569,8 @@ export default {
     source9: "",
     owneruid: "",
     uid: "",
-    IvrPlan: "",
+    SwitcherID: "",
+    ActiveTab:0,
     dialog: false,
     items: [
       
@@ -630,8 +645,7 @@ export default {
           });
       } else {
         this.dialog = false;
-        this.IvrPlan = i;
-        this.ivrActive = false;
+        this.SwitcherID = i;
         this.directActive = true;
       }
     },
@@ -640,24 +654,32 @@ export default {
         this.dialog = true;
       }
     },
-    isIvr(i) {
-      this.IvrPlan = i; // 1 for ivr plan
-      this.ivrActive = i == 1 ? true : false;
+    planTypeSwitcher(i) {
+      this.SwitcherID = i; // 1 for ivr plan
       this.directActive = i == 1 ? false : true;
-
+      localStorage.setItem("ActiveTab", parseInt(i));
       // console.log(options);
 
       //  console.log("jgrj",i);
     },
     initial_value() {
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+
       //  this.isHide = (localStorageUserObj.role == "OWNER")?true:false;
 
       // local storage isIV get data here
       // if false then noIVR
-      this.checkIvrStatus = localStorageUserObj.PlanId?true:false
-
-      this.Stage = localStorageUserObj.Stage;
+      // this.checkIvrStatus = localStorageUserObj.PlanId?true:false;
+             this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+          if(this.PlanId<=3){
+            this.SwitcherID =2;
+            this.Upgrade =true;
+          }else{
+            this.SwitcherID =1;
+            this.Upgrade =false;
+          }
+          this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
+          this.Stage = localStorageUserObj.Stage;
       // this.checkIvrStatus = false;
 
       const owneruid =
@@ -698,12 +720,12 @@ export default {
             data.Ivr["8"].IsActive == true ? data.Ivr["8"].Source : "Not Used";
           this.source9 =
             data.Ivr["9"].IsActive == true ? data.Ivr["9"].Source : "Not Used";
-          // this.isIvr(data.IsIvr==false?2:1)
-          this.ivrActive = data.IsIvr == true ? true : false;
-          this.directActive = data.IsIvr == true ? false : true;
-          this.IvrPlan = data.IsIvr == false ? 2 : 1;
-           this.Stage = localStorageUserObj.Stage;
-          // this.IvrPlan = 2;
+          // this.planTypeSwitcher(data.IsIvr==false?2:1)
+          // this.ivrActive = data.IsIvr == true ? true : false;
+          // this.directActive = data.IsIvr == true ? false : true;
+          // this.SwitcherID = data.IsIvr == false ? 2 : 1;
+          //  this.Stage = localStorageUserObj.Stage;
+          // this.SwitcherID = 2;
           // snap.docs.forEach((element)=> {
           //   // this.addonNumbers.push({VirtualNumber:element.data().VirtualNumber,Source:element.data().Source,cron:element.data().IsPrimary,Options:(element.data().IsPrimary == true)?[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"}]:[{ title:"Change Title", type:"Edit", headline:"Edit User", color: "black--text",function:"edit_source"},{ title:"Delete", type:"Edit", headline:"Delete Number", color: "black--text",function:"delete_number"}]
           //   // })
