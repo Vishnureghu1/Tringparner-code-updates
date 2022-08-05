@@ -374,7 +374,16 @@ export default {
       console.log("clicked logout");
       // firebase.auth()
       firebase.auth().signOut();
+   
       localStorage.removeItem("tpu");
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("token");
+      localStorage.removeItem("planId");
+      localStorage.removeItem("PlanId");
+      localStorage.removeItem("ActiveTab");
+      localStorage.removeItem("IVRPlanradio");
+      localStorage.removeItem("nonIVRPlanradio");
+
       this.rerenderKey += 1;
       this.$router.push("login").catch(() => {});
     },

@@ -246,21 +246,33 @@
                 <div v-else>
                   <v-alert type="warning"> No Plan selected </v-alert>
                 </div>
-
+<!-- {{planId}}
+{{Stage}} -->
                 <div v-if="editplan == 'true'">
                   <v-btn
                     v-if="
-                      Stage == 'TRIAL' ||
-                      IVRPlanradio == 4 ||
-                      nonIVRPlanradio == 1
+                      Stage == 'TRIAL' 
                     "
                     class="btn_text mt-15 white--text text-capitalize"
                     width="12%"
                     rounded
-                    @click.prevent="nextPage('trial')"
+                    @click.prevent="nextPage('review')"
                     color="#EE1C25"
                   >
-                    Next
+                    Next  1
+                  </v-btn>
+                    <v-btn
+                    v-else-if="
+                       planId == 1 ||
+                      planId == 4
+                    "
+                    class="btn_text mt-15 white--text text-capitalize"
+                    width="12%"
+                    rounded
+                    @click.prevent="nextPage('review')"
+                    color="#EE1C25"
+                  >
+                    Next 2
                   </v-btn>
                   <v-btn
                     v-else
@@ -270,23 +282,34 @@
                     @click.prevent="nextPage('review')"
                     color="#EE1C25"
                   >
-                    Next
+                    Next 3
                   </v-btn>
                 </div>
                 <div v-else>
                   <v-btn
                     v-if="
-                      Stage == 'TRIAL' ||
-                      nonIVRPlanradio == 1 ||
-                      IVRPlanradio == 4
+                      Stage == 'TRIAL' 
                     "
                     class="btn_text mt-15 white--text text-capitalize"
                     width="12%"
                     rounded
+                    @click.prevent="nextPage('dashboard')"
                     color="#EE1C25"
-                    @click.prevent="nextPage('trial')"
                   >
-                    Next 
+                    Next  1
+                  </v-btn>
+                    <v-btn
+                    v-else-if="
+                       planId == 1 ||
+                      planId == 4
+                    "
+                    class="btn_text mt-15 white--text text-capitalize"
+                    width="12%"
+                    rounded
+                    @click.prevent="nextPage('dashboard')"
+                    color="#EE1C25"
+                  >
+                    Next 2
                   </v-btn>
                   <v-btn
                     v-else
@@ -296,8 +319,9 @@
                     @click.prevent="nextPage('review')"
                     color="#EE1C25"
                   >
-                    Next Bill
+                    Next 3
                   </v-btn>
+                  
                 </div>
               </v-card>
             </v-col>
@@ -425,9 +449,9 @@ export default {
     this.editplan = this.$route.query.editplan;
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     this.planId =
-      localStorage.getItem("PlanId") == null
+      localStorage.getItem("planId") == null
         ? 0
-        : parseInt(localStorage.getItem("PlanId"));
+        : parseInt(localStorage.getItem("planId"));
     this.planIdSelected =
       localStorageUserObj.PlanId == ""
         ? 0
@@ -436,10 +460,11 @@ export default {
       localStorageUserObj.NoOfTrail == ""
         ? 0
         : parseInt(localStorageUserObj.NoOfTrail);
-    this.Stage = localStorageUserObj.Stage;
+    // this.Stage = localStorageUserObj.Stage;
 
     if (this.planIdSelected) {
       this.colorChange(this.planIdSelected);
+      
     } else {
       this.initial_value();
     }
@@ -547,9 +572,9 @@ export default {
     this.IVRPlanradio = parseInt(localStorage.getItem("IVRPlanradio"));
     this.nonIVRPlanradio = parseInt(localStorage.getItem("nonIVRPlanradio"));
     this.planId =
-      localStorage.getItem("PlanId") == null
+      localStorage.getItem("planId") == null
         ? 0
-        : parseInt(localStorage.getItem("PlanId"));
+        : parseInt(localStorage.getItem("planId"));
   },
   methods: {
     async checkData() {
@@ -610,7 +635,6 @@ export default {
       this.directActive = localStorageUserObj.IsIvr == true ? false : true;
       this.IvrPlan = localStorageUserObj.IsIvr == false ? 2 : 1;
       this.Stage = localStorageUserObj.Stage;
-
       if (this.checkIvrStatus == true) {
         this.colorChange(2);
       } else {
@@ -623,6 +647,9 @@ export default {
     },
     colorChange(i) {
       this.radio = i;
+      localStorage.setItem("planId", i);
+      this.planId = i;
+      
     },
     nextPage(review) {
       this.overlay = true;
@@ -631,6 +658,7 @@ export default {
       
             this.$router.push("/Billing?plan=trial");
       } else {
+        
         const user_stage = {
           url: this.$cloudfareApi + "/user/stage",
           method: "POST",
@@ -661,13 +689,17 @@ export default {
               localStorage.setItem("planId", parseInt(this.nonIVRPlanradio));
             }
             console.log(response);
-            // if(review){
-            this.$router.push("/Review");
 
-            // }else{
+if(review == "review"){
+  // this.$router.push("/Review");
+  this.$router.push("/Billing?plan=review");
 
-            //   this.$router.push("/Billing");
-            // }
+}else if(review == "dashboard"){
+  this.$router.push("/Billing?plan=dashboard");
+}else{
+  this.$router.push("/all_calls");
+
+}
           })
           .catch((error) => {
             console.error(error);

@@ -194,6 +194,7 @@ export default {
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
       this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorageUserObj.getItem("PlanId"));
     this.plan = this.$route.query.plan;
+   
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("logged user details", user);
@@ -252,11 +253,13 @@ export default {
     },
 
     nextPage(plan) {
+
+      var dd =  this.$refs.form.validate();
+       if(dd==true){
     // alert(plan) // if trial move to dashboard
 if(plan=="dashboard"){
 
-       var dd =  this.$refs.form.validate();
-   if(dd==true){
+ 
 
      const user_trial = {
        url: this.$cloudfareApi + "/user/trial",
@@ -279,7 +282,7 @@ console.log(response);
           .catch((error) => {
             console.error(error);
           });
-            }
+           
 }else{
           this.overlay = true;
 
@@ -305,9 +308,14 @@ console.log(response);
               console.log(response);
 
 
+if(this.plan=='dashboard'){
+  this.$router.push("/all_calls");
 
+}else{
 
-                this.$router.push("/Review");
+  this.$router.push("/Review");
+}
+
 
  })
           .catch((error) => {
@@ -350,6 +358,7 @@ console.log(response);
 
 }
 }
+  }
 }
 </script>
 

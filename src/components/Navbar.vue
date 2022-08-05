@@ -497,6 +497,16 @@ export default {
       // firebase.auth()
       firebase.auth().signOut();
       localStorage.removeItem("tpu");
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("token");
+      localStorage.removeItem("planId");
+      localStorage.removeItem("PlanId");
+      localStorage.removeItem("ActiveTab");
+      localStorage.removeItem("nonIVRPlanradio");
+      localStorage.removeItem("IVRPlanradio");
+      
+
+
       this.rerenderKey += 1;
       this.$router.push("login").catch(() => {});
     },
@@ -600,6 +610,8 @@ export default {
                 }
               })
         }).catch(err =>(console.log(err)));
+        }else{
+          this.$router.push("login").catch(() => {});
         }
        })
     }

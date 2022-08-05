@@ -1936,7 +1936,7 @@ export default {
               : "";
           this.hidealert =
             snap.docs[0].data().role == "OWNER" &&
-              snap.docs[0].data().IsEmailVerified == false
+             (snap.docs[0].data().IsEmailVerified == false || snap.docs[0].data()?.IsEmailVerified == undefined)
               ? true
               : false;
           // this.hidealert =

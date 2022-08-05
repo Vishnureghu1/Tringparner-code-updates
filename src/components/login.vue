@@ -107,6 +107,7 @@
 <script>
 import firebase from "firebase";
 import { db } from "@/main.js";
+import axios from "axios";
 import EventBus from "../event-bus";
 
 export default {
@@ -138,6 +139,26 @@ export default {
       if (user) {
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
+        this.uid = user.uid;
+        this.phno = user.phoneNumber.slice(3);
+        const options = {
+              url: this.$cloudfareApi + "/login",
+              method: "POST",
+              data: {
+                uid: this.uid,
+                phoneNumber: this.phNo,
+                webtoken: localStorage.getItem('webtoken')
+              },
+            };
+            console.log(options);
+            axios(options)
+              .then((response) => {
+                localStorage.setItem("token",response.data.token);
+             
+
+
+
+
         db.collection("users")
           .where("uid", "==", this.uid)
           .get()
@@ -182,7 +203,11 @@ export default {
           .catch((error) => {
             console.log("Error getting documents: ", error);
           });
+
+           });
       }
+      
+      
     });
   },
   methods: {
@@ -249,118 +274,119 @@ export default {
         alert("Invalid OTP Format !");
       } else {
         // this.overlay = true
-        let userid = "";
+        // let userid = "";
         let code = this.otp;
         window.confirmationResult
           .confirm(code)
           .then(function (result) {
-            userid = result.user.uid;
+            console.log(result);
+            // userid = result.user.uid;
           })
           .then(() => {
-            this.uid = userid;
-            this.overlay = true;
-            console.log("ID", this.uid);
-            console.log("phno", this.phNo);
-            const options = {
-              url: this.$cloudfareApi + "/login",
-              method: "POST",
-              data: {
-                uid: this.uid,
-                phoneNumber: this.phNo,
-                webtoken: localStorage.getItem('webtoken')
-              },
-            };
-            console.log(options);
-            this.$axios(options)
-              .then((response) => {
-                console.log(response.data);
-                console.log(this.uid);
-                localStorage.setItem("token", response.data.token);
-                db.collection("users")
-                  .where("uid", "==", this.uid)
-                  .get()
-                  .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                      console.log(doc.id, " => ", doc.data());
-                      console.log(
-                        "<-------------------VERIFY OTP LOGGING USER DETAILS----------------------->"
-                      );
-                      localStorage.setItem("tpu", JSON.stringify(doc.data()));
-                      let user_details = doc.data();
-                      this.Udata = user_details;
-                      this.currentPage = this.Udata.currentPage;
-                      this.role = this.Udata.role;
-                      this.firstName = this.Udata.FirstName;
-                      this.Email = this.Udata.Email;
-                      this.PhoneNumber = this.Udata.PhoneNumber;
-                      this.$emit("userFirstNameEmitted", this.Udata.FirstName);
-                      console.log(this.currentPage);
-                      console.log(this.role);
-                      this.onSignIn();
-                      if (this.role == "ADMIN" || this.role == "AGENT") {
-                        this.overlay = false;
-                        this.$router.push("/all_calls").catch(() => {});
-                      } else {
-                        if (this.currentPage == "onboarding_listing") {
+            // this.uid = userid;
+            // this.overlay = true;
+            // console.log("ID", this.uid);
+            // console.log("phno", this.phNo);
+            // const options = {
+            //   url: this.$cloudfareApi + "/login",
+            //   method: "POST",
+            //   data: {
+            //     uid: this.uid,
+            //     phoneNumber: this.phNo,
+            //     webtoken: localStorage.getItem('webtoken')
+            //   },
+            // };
+          //   console.log(options);
+          //   this.$axios(options)
+          //     .then((response) => {
+          //       console.log(response.data);
+          //       console.log(this.uid);
+          //       localStorage.setItem("token", response.data.token);
+          //       db.collection("users")
+          //         .where("uid", "==", this.uid)
+          //         .get()
+          //         .then((querySnapshot) => {
+          //           querySnapshot.forEach((doc) => {
+          //             console.log(doc.id, " => ", doc.data());
+          //             console.log(
+          //               "<-------------------VERIFY OTP LOGGING USER DETAILS----------------------->"
+          //             );
+          //             localStorage.setItem("tpu", JSON.stringify(doc.data()));
+          //             let user_details = doc.data();
+          //             this.Udata = user_details;
+          //             this.currentPage = this.Udata.currentPage;
+          //             this.role = this.Udata.role;
+          //             this.firstName = this.Udata.FirstName;
+          //             this.Email = this.Udata.Email;
+          //             this.PhoneNumber = this.Udata.PhoneNumber;
+          //             this.$emit("userFirstNameEmitted", this.Udata.FirstName);
+          //             console.log(this.currentPage);
+          //             console.log(this.role);
+          //             this.onSignIn();
+          //             if (this.role == "ADMIN" || this.role == "AGENT") {
+          //               this.overlay = false;
+          //               this.$router.push("/all_calls").catch(() => {});
+          //             } else {
+          //               if (this.currentPage == "onboarding_listing") {
                           
-                          this.overlay = false;
-                          this.$router.push("/ChooseNumbers").catch((err) => {
-                            console.log(err);
-                          });
-                        } else if (
-                          this.currentPage == "onboarding_plan_details"
-                        ) {
-                          this.overlay = false;
-                          this.$router.push("/SelectPlan").catch(() => {});
-                        } else if (this.currentPage == "onboarding_billing") {
-                          this.overlay = false;
-                          this.$router.push("/Billing").catch(() => {});
-                        } else if (this.currentPage == "onboarding_review") {
-                          this.overlay = false;
-                          this.$router.push("/Review").catch(() => {});
-                        } else if (
-                          this.currentPage == "onboarding_dashboard" ||
-                          this.currentPage == "onboarding_success"
-                        ) {
-                          this.overlay = false;
-                          this.$router.push("/all_calls").catch(() => {});
-                        } else {
-                          const user_stage = {
-                            url: this.$cloudfareApi + "/user/stage",
-                            method: "POST",
-                            headers: { 
-					'token': localStorage.getItem("token"),
-						'Content-Type': 'application/json'
-					},
-                            data: {
-                              uid: this.uid,
-                              phoneNumber: this.phno,
-                              currentPage: "onboarding_listing",
-                            },
-                          };
-                          console.log(user_stage);
-                          this.$axios(user_stage)
-                            .then((response) => {
-                              console.log(response);
-                              this.overlay = false;
-                              this.$router
-                                .push("/ChooseNumbers")
-                                .catch(() => {});
-                            })
-                            .catch((error) => {
-                              console.error(error);
-                            });
-                        }
-                      }
-                    });
-                  })
-                  .catch((error) => {
-                    console.log("Error getting documents: ", error);
-                  });
-              })
-              .catch((error) => {
-                console.error(error);
-              });
+          //                 this.overlay = false;
+          //                 this.$router.push("/ChooseNumbers").catch((err) => {
+          //                   console.log(err);
+          //                 });
+          //               } else if (
+          //                 this.currentPage == "onboarding_plan_details"
+          //               ) {
+          //                 this.overlay = false;
+          //                 this.$router.push("/SelectPlan").catch(() => {});
+          //               } else if (this.currentPage == "onboarding_billing") {
+          //                 this.overlay = false;
+          //                 this.$router.push("/Billing").catch(() => {});
+          //               } else if (this.currentPage == "onboarding_review") {
+          //                 this.overlay = false;
+          //                 this.$router.push("/Review").catch(() => {});
+          //               } else if (
+          //                 this.currentPage == "onboarding_dashboard" ||
+          //                 this.currentPage == "onboarding_success"
+          //               ) {
+          //                 this.overlay = false;
+          //                 this.$router.push("/all_calls").catch(() => {});
+          //               } else {
+          //                 const user_stage = {
+          //                   url: this.$cloudfareApi + "/user/stage",
+          //                   method: "POST",
+          //                   headers: { 
+					// 'token': localStorage.getItem("token"),
+					// 	'Content-Type': 'application/json'
+					// },
+          //                   data: {
+          //                     uid: this.uid,
+          //                     phoneNumber: this.phno,
+          //                     currentPage: "onboarding_listing",
+          //                   },
+          //                 };
+          //                 console.log(user_stage);
+          //                 this.$axios(user_stage)
+          //                   .then((response) => {
+          //                     console.log(response);
+          //                     this.overlay = false;
+          //                     this.$router
+          //                       .push("/ChooseNumbers")
+          //                       .catch(() => {});
+          //                   })
+          //                   .catch((error) => {
+          //                     console.error(error);
+          //                   });
+          //               }
+          //             }
+          //           });
+          //         })
+          //         .catch((error) => {
+          //           console.log("Error getting documents: ", error);
+          //         });
+          //     })
+          //     .catch((error) => {
+          //       console.error(error);
+          //     });
           })
           .catch((error) => {
             console.log("error details", error);
