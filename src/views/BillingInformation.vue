@@ -33,7 +33,7 @@
                         Stage: {{ Stage }}
                         <br>
                         PlanId: {{ PlanId }}
-                        <br> -->
+                        <br>  -->
                         <div class="center align-center" align="center"
                           v-if="Stage=='TRIAL' ">
 
@@ -243,13 +243,13 @@
                                   ₹ {{ amountwithoutgst }}
                                 </div>
                               </v-row>
-
+      
                               <div class="membership_price">
-                                {{ invoice_amount
+                                {{ amount
                                 }}<span class="currency_symbol">INR</span>
                               </div>
 
-                              <div class="membership_details">
+                              <div class="membership_details" v-if="ivrActive==true">
 
                                 <v-radio-group mandatory  v-model="ivrRadioGroup">
 
@@ -298,28 +298,42 @@
                                 Pay Now
                               </v-btn>
                               <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-                                min-width="140px" @click="basicplan_info = true">
+                                min-width="140px" @click="ivrplan_info = true">
                                 View Detail
                               </v-btn>
                             </v-card-actions>
 
                             <v-expand-transition>
-                              <v-card v-if="basicplan_info" class="transition-fast-in-fast-out v-card--reveal"
+                              <v-card v-if="ivrplan_info" class="transition-fast-in-fast-out v-card--reveal"
                                 style="height: 100%">
                                 <v-row>
                                   <v-col cols="12" sm="10">
                                     <h6 class="f16 mt-6 ml-5">
-                                      <v-icon class="mr-2" color="black" @click="basicplan_info = false">mdi-arrow-left
+                                      <v-icon class="mr-2" color="black" @click="ivrplan_info = false">mdi-arrow-left
                                       </v-icon>
                                       Details
                                     </h6>
                                   </v-col>
                                 </v-row>
+    <!-- {{amount}}<br>
+           {{amountwithoutdeduction}}<br>
+           {{amountwithoutgst}}<br>
+           {{defaultafterdiscount}}<br>
+           {{defaultamount}}<br>
+           {{defaultdiscount}}<br>
+           {{planname}}<br>
+           {{reminingamt}}<br>
+           {{reminingdays}}<br>
+           {{reminingmonths}}<br>
+           {{status}}<br>
+           {{useddays}}<br>
+           {{gstAmount}}<br> -->
+           
                                 <v-card-text class="pb-0">
                                   <v-simple-table dense>
                                     <template v-slot:default>
                                       <tbody class="ma-0 pa-0" border="0">
-                                        <tr v-for="d in sublist" :key="d.name">
+                                        <!-- <tr v-for="d in sublist" :key="d.name">
                                           <td class="ma-0 pa-0 pr-0 mr-0" :class="d.class">
                                             {{ d.title }}
                                           </td>
@@ -329,6 +343,16 @@
                                           <td :class="d.class" align="right" class="ma-0 pa-0">
                                             ₹ {{ d.amount }}
                                           </td>
+                                        </tr> -->
+                                        <tr>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 bold">Item</td>
+                                          <td class="bold" align="center">Quantity</td>
+                                          <td class="ma-0 pa-0 bold" align="right">Price</td>
+                                          </tr>
+                                          <tr>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 ">{{planname}}</td>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 " align="center">1</td>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 " align="right">₹ {{amountwithoutdeduction}}</td>
                                         </tr>
 
                                         <tr colspan="3">
@@ -482,6 +506,7 @@ export default {
       },
     ],
     basicplan_info: false,
+    ivrplan_info: false,
     instagram_info: false,
     paymentOptions: true,
     paymentOptionsInsta: false,
@@ -666,7 +691,7 @@ this.planUpgradeData();
     // this.PlanId = 5;     
     // this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
     this.ivrRadioGroup =this.PlanId; 
-    this.getBill(this.uid, parseInt(this.PlanId));
+    // this.getBill(this.uid, parseInt(this.PlanId));
   }else{
 //  this.SwitcherID=i;
   }
@@ -1138,11 +1163,6 @@ this.syncStatus();
         }
       });
     },
-
-
-
-
-
     
   },
 };
