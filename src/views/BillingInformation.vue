@@ -935,6 +935,9 @@ planUpgradeData(){ //fetch upgrade plan data
 this.syncStatus();
 this.Stage='PAID';
 this.SwitcherID=3;
+if(this.PlanId>=4){
+  this.ivrActive=true;
+}
                       }
                     });
                   });
@@ -1099,6 +1102,7 @@ this.syncStatus();
                                                   window.localStorage.removeItem('tpu');  
 this.syncStatus();
  this.ivrActive=true;
+ 
                       }
                     });
                   });
