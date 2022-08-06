@@ -93,7 +93,7 @@ import { db } from '@/main.js';
 								this.currentPage = this.Udata.currentPage
 								console.log(this.currentPage)
 								if (this.currentPage == "onboarding_listing") {
-									this.$router.push("/choose_no")
+									// this.$router.push("/choose_no")
 								}
 								else if (this.currentPage == "onboarding_plan_details") {
 									this.$router.push("/pricing")

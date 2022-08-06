@@ -329,7 +329,7 @@ export default {
         this.$router.push("/SelectPlan?editplan=true");
     },
     changeAddress() {
-      this.$router.push("/Billing");
+      this.$router.push("/Billing?plan=review");
     },
        Dashbord() {
       this.$router.push("/dashboard").catch(() => {});

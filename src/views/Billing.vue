@@ -90,7 +90,7 @@
                   </v-col> -->
                 </v-row>
                 <v-btn
-                  v-if="plan == 'trial'"
+                  v-if="plan == 'review'"
                   class="btn_text mt-15 white--text text-capitalize"
                   width="25%"
                   rounded
@@ -192,9 +192,9 @@ export default {
 
   created() {
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-      this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorageUserObj.getItem("PlanId"));
+    this.planId = localStorage.getItem("PlanId")==null?0:parseInt(localStorageUserObj.getItem("PlanId"));
     this.plan = this.$route.query.plan;
-   
+   console.log("vetritesting",this.plan)
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("logged user details", user);
@@ -252,78 +252,8 @@ export default {
       });
     },
 
-    nextPage(plan) {
-
-      var dd =  this.$refs.form.validate();
-       if(dd==true){
-    // alert(plan) // if trial move to dashboard
-if(plan=="dashboard"){
-
- 
-
-     const user_trial = {
-       url: this.$cloudfareApi + "/user/trial",
-          method: "POST",
-          headers: {
-            token: localStorage.getItem("token"),
-            "Content-Type": "application/json",
-          },
-          data: {
-            uid: this.uid,
-          },
-        };
-        this.$axios(user_trial)
-          .then((response) => {
-            
-            console.log(response);
-console.log(response);
-                this.$router.push("/all_calls");
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-           
-}else{
-          this.overlay = true;
-
-          // console.log("order_id", response);
-          const user_stage = {
-            url: this.$cloudfareApi+"/user/stage",
-            method: "POST",
-            headers: {
-						'token': localStorage.getItem("token"),
-						'Content-Type': 'application/json'
-					},
-            data: {
-              uid: this.uid,
-              phoneNumber: this.phno,
-              // currentPage: "onboarding_review",
-              currentPage: "onboarding_billing",
-              plan_id: this.planId,
-            },
-          };
-          console.log(user_stage);
-          this.$axios(user_stage)
-            .then((response) => {
-              console.log(response);
-
-
-if(this.plan=='dashboard'){
-  this.$router.push("/all_calls");
-
-}else{
-
-  this.$router.push("/Review");
-}
-
-
- })
-          .catch((error) => {
-            console.error(error);
-          });
-        }
-
-        const details = {
+    userUpdate(){
+       const details = {
         url: this.$cloudfareApi+"/user/owner",
         method: "POST",
         headers: {
@@ -346,15 +276,80 @@ if(this.plan=='dashboard'){
           payment_mode: "WEB",
         },
       };
-      console.log(details);
       this.$axios(details)
         .then((response) => {
-          console.log(response)
+         console.log(response)
+         })
+          .catch((error) => {
+            console.error(error);
+          });
+    },
+
+
+    nextPage(plan) {
+     console.log("vetri again",plan)
+      var dd =  this.$refs.form.validate();
+       if(dd==true){
+    // alert(plan) // if trial move to dashboard
+if(plan=="noplan"){
+    this.userUpdate();
+     const user_trial = {
+       url: this.$cloudfareApi + "/user/trial",
+          method: "POST",
+          headers: {
+            token: localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+          data: {
+            uid: this.uid,
+          },
+        };
+        this.$axios(user_trial)
+          .then((response) => {        
+                 console.log(response)    
+                this.$router.push("/all_calls");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+           
+}else{
+          this.overlay = true;
+          this.userUpdate();
+          const user_stage = {
+            url: this.$cloudfareApi+"/user/stage",
+            method: "POST",
+            headers: {
+						'token': localStorage.getItem("token"),
+						'Content-Type': 'application/json'
+					},
+            data: {
+              uid: this.uid,
+              phoneNumber: this.phno,
+              currentPage: "onboarding_billing",
+              plan_id: this.planId,
+            },
+          };
+          console.log(user_stage);
+          this.$axios(user_stage)
+            .then((response) => {
+              console.log(response);
+
+
+// if(this.plan=='dashboard'){
+//   this.$router.push("/all_calls");
+
+// }else{
+
+  this.$router.push("/Review");
+// }
+
 
  })
           .catch((error) => {
             console.error(error);
           });
+        }
 
 }
 }

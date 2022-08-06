@@ -66,16 +66,16 @@ export default {
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
 
-        db.collection("users")
-          .where("uid", "==", this.uid)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              console.log(doc.id, " => ", doc.data());
-              let user_details = doc.data();
-              this.Udata = user_details;
-              this.currentPage = this.Udata.currentPage;
-              console.log(this.currentPage);
+       // db.collection("users")
+        //  .where("uid", "==", this.uid)
+        //  .get()
+         // .then((querySnapshot) => {
+           // querySnapshot.forEach((doc) => {
+          //    console.log(doc.id, " => ", doc.data());
+            //  let user_details = doc.data();
+            /// this.Udata = user_details;
+              // this.currentPage = this.Udata.currentPage;
+              // console.log(this.currentPage);
               // if (this.currentPage == "onboarding_listing") {
               //   this.$router.push("/ChooseNumbers");
               // } else if (this.currentPage == "onboarding_plan_details") {
@@ -90,11 +90,11 @@ export default {
               // } else if (this.currentPage == "onboarding_dashboard") {
               //   this.$router.push("/Dashboard");
               // }
-            });
-          })
-          .catch((error) => {
-            console.log("Error getting documents: ", error);
-          });
+            //});
+          //})
+          //.catch((error) => {
+            //console.log("Error getting documents: ", error);
+          //});
         db.collection("users")
           .where("uid", "==", this.uid)
           .get()
@@ -178,7 +178,7 @@ this.forceRerenderKey();
       //  this.$router.push("/SelectPlan");
     },
     changeAddress() {
-      this.$router.push("/Billing");
+      this.$router.push("/Billing?plan=review");
     },
     Paynow() {
       const details = {
