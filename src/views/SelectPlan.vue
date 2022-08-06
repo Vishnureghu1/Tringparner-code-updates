@@ -259,7 +259,7 @@
                     @click.prevent="nextPage('review')"
                     color="#EE1C25"
                   >
-                    Next  1
+                    Next
                   </v-btn>
                     <v-btn
                     v-else-if="
@@ -269,10 +269,10 @@
                     class="btn_text mt-15 white--text text-capitalize"
                     width="12%"
                     rounded
-                    @click.prevent="nextPage('review')"
+                    @click.prevent="nextPage('dashboard')"
                     color="#EE1C25"
                   >
-                    Next 2
+                    Next
                   </v-btn>
                   <v-btn
                     v-else
@@ -282,7 +282,7 @@
                     @click.prevent="nextPage('review')"
                     color="#EE1C25"
                   >
-                    Next 3
+                    Next
                   </v-btn>
                 </div>
                 <div v-else>
@@ -296,7 +296,7 @@
                     @click.prevent="nextPage('dashboard')"
                     color="#EE1C25"
                   >
-                    Next  1
+                    Next
                   </v-btn>
                     <v-btn
                     v-else-if="
@@ -309,7 +309,7 @@
                     @click.prevent="nextPage('dashboard')"
                     color="#EE1C25"
                   >
-                    Next 2
+                    Next
                   </v-btn>
                   <v-btn
                     v-else
@@ -319,7 +319,7 @@
                     @click.prevent="nextPage('review')"
                     color="#EE1C25"
                   >
-                    Next 3
+                    Next
                   </v-btn>
                   
                 </div>

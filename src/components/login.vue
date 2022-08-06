@@ -135,6 +135,14 @@ export default {
 
   created() {
     this.initReCaptcha();
+    localStorage.removeItem("tpu");
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("token");
+      localStorage.removeItem("planId");
+      localStorage.removeItem("PlanId");
+      localStorage.removeItem("ActiveTab");
+      localStorage.removeItem("IVRPlanradio");
+      localStorage.removeItem("nonIVRPlanradio");
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.uid = user.uid;
