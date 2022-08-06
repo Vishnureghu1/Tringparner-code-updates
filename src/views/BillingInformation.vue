@@ -515,7 +515,10 @@ export default {
     this.bussinessNumber = this.$route.query.bn;
     this.upgrade = this.$route.query.upgrade;
     let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
+    if(localStorageUserObj.Stage == "INPROGRESS"){
+       this.$router.push("login").catch(() => {});
+    }
+    this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
  
     //  this.bussinessNumber = this.$route.query.bn;
     // this.setBreadcrumbs(this.bussinessNumber);
@@ -532,6 +535,7 @@ this.ivrActive = localStorageUserObj.IsIvr == true ? true : false;
   this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
   this.Stage = localStorageUserObj.Stage?localStorageUserObj.Stage:'notFound';
 if(this.Stage=="TRIAL"){
+  console.log("vetri test")
   this.PlanId=2;
   this.SwitcherID=1;
   this.nonivrRadioGroup=parseInt(this.PlanId);

@@ -736,7 +736,18 @@ export default {
             this.uid = user.uid;
             this.emailStatus();
             this.blockedStatus(this.ownerUid);
-
+             if(parsedUser?.Stage == "INPROGRESS"){
+                db.collection("users")
+                .where("uid", "==", this.uid).get().then((snap)=>{
+                if(snap.docs[0].data().Stage == "INPROGRESS"){
+                  this.$router.push("login").catch(() => {});
+                }else{
+                  snap.forEach((doc) => {
+              localStorage.setItem("tpu", JSON.stringify(doc.data()));
+                  })
+                }
+              })
+             }
              
             // console.log("User Id : " + this.uid);
             // this.sendMessage(this.uid);
