@@ -145,9 +145,9 @@ export default {
       localStorage.removeItem("nonIVRPlanradio");
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        this.overlay = true;
         this.uid = user.uid;
-        this.phno = user.phoneNumber.slice(3);
-        this.uid = user.uid;
+        this.phNo = user.phoneNumber.slice(3);
         this.phno = user.phoneNumber.slice(3);
         const options = {
               url: this.$cloudfareApi + "/login",
@@ -162,11 +162,6 @@ export default {
             axios(options)
               .then((response) => {
                 localStorage.setItem("token",response.data.token);
-             
-
-
-
-
         db.collection("users")
           .where("uid", "==", this.uid)
           .get()
