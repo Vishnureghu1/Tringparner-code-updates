@@ -57,7 +57,7 @@
                             </v-btn>
                             <!-- actual ivr plan  -->
                             <v-btn width="200" @click="planTypeSwitcher(4)"
-                              :class="{ active: upgrade == 1 || SwitcherID == 4 ||ivrActive==true }">
+                              :class="{ active:  SwitcherID == 4 ||ivrActive==true }">
                               Upgrade
                             </v-btn>
                           </v-btn-toggle>
