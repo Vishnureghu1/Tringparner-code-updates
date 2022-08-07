@@ -149,8 +149,19 @@ export default {
         console.log("logged user details", user);
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
-    
-        db.collection("users")
+      
+        this.getUserData();
+        if(this.email==undefined){
+          this.getUserData();
+        }
+      }
+          
+    });
+  },
+  methods: {
+
+getUserData(){
+          db.collection("users")
           .where("uid", "==", this.uid)
           .get()
           .then((querySnapshot) => {
@@ -185,14 +196,7 @@ export default {
           .catch((error) => {
             console.log("Error getting documents: ", error);
           });
-  
-        
-      }
-          
-    });
-  },
-  methods: {
-
+},
           // if (this.SelectPlan == 1) {
             //   this.colorChange(this.IVRPlanradio);
             //   localStorage.setItem("IVRPlanradio", parseInt(this.IVRPlanradio));
