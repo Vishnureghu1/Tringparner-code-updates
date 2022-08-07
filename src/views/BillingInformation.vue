@@ -121,7 +121,20 @@
 
                               </v-row>
                             </v-card-text>
-                            <v-card-actions align="center" class="center">
+
+                            <!-- Last day: {{FormatedLastDay}}<br>
+                            today {{new Date().getTime()}} <br>
+                             10 days before: {{renewlDate}} -->
+                             <!-- if() -->
+
+                          <v-card-actions align="center" class="center" v-if="renewlDate > new Date().getTime()">
+                          
+                              <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+                                min-width="140px" @click="basicplan_info = true">
+                                View Detail
+                              </v-btn>
+                            </v-card-actions>
+                            <v-card-actions align="center" class="center" v-else>
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
                                 color="white" outlined @click="recharge()" v-if="Stage != 'TRIAL'">
                                 Pay Now
@@ -315,20 +328,20 @@
                                     </h6>
                                   </v-col>
                                 </v-row>
-    <!-- {{amount}}<br>
-           {{amountwithoutdeduction}}<br>
-           {{amountwithoutgst}}<br>
-           {{defaultafterdiscount}}<br>
-           {{defaultamount}}<br>
-           {{defaultdiscount}}<br>
-           {{planname}}<br>
-           {{reminingamt}}<br>
-           {{reminingdays}}<br>
-           {{reminingmonths}}<br>
-           {{status}}<br>
-           {{useddays}}<br>
-           {{gstAmount}}<br> -->
-           
+    <!-- amount: {{amount}} /
+        amountwithoutdeduction:   {{amountwithoutdeduction}} /
+         amountwithoutgst : {{amountwithoutgst}} /
+         defaultafterdiscount : {{defaultafterdiscount}} /
+         defaultamount : {{defaultamount}} /
+         defaultdiscount : {{defaultdiscount}}<br>
+         planname  :{{planname}}/
+         reminingamt:  {{reminingamt}}/
+         reminingdays:  {{reminingdays}}/
+          reminingmonths :{{reminingmonths}}/
+        status  :{{status}}/
+           useddays: {{useddays}}/
+         gstAmount : {{gstAmount}}<br> -->
+          
                                 <v-card-text class="pb-0">
                                   <v-simple-table dense>
                                     <template v-slot:default>
@@ -354,32 +367,50 @@
                                           <td class="ma-0 pa-0 pr-0 mr-0 " align="center">1</td>
                                           <td class="ma-0 pa-0 pr-0 mr-0 " align="right">₹ {{amountwithoutdeduction}}</td>
                                         </tr>
-
-                                        <tr colspan="3">
+                                        <tr colspan="3" v-if="defaultdiscount">
                                           <td class="ma-0 pa-0" colspan="1">
-                                            Sub Total
+                                            Discount for Yearly Plan
                                           </td>
 
                                           <td class="ma-0 pa-0" colspan="2" align="right">
-                                            ₹ {{ SubTotal }}
+                                            ₹ {{ defaultdiscount }}
                                           </td>
                                         </tr>
+
+                                       
+
+
                                         <tr colspan="3">
                                           <td class="ma-0 pa-0" colspan="1">
-                                            Discount
+                                            Cost for {{reminingmonths}}
                                           </td>
 
                                           <td class="ma-0 pa-0" colspan="2" align="right">
-                                            {{ Discount }}
+                                            ₹ {{ defaultamount  }}
                                           </td>
                                         </tr>
+
+
+
+
+
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Remaining Amount Paid for Basic
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            ₹ {{ reminingamt }}
+                                          </td>
+                                        </tr>
+                                    
                                         <tr colspan="3">
                                           <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
-                                            Cost after Discount
+                                            Cost for Upgrade After Discount
                                           </td>
 
                                           <td class="ma-0 pa-0 bold primary--text" colspan="2" align="right">
-                                            {{ CostAfterDiscount }}
+                                            {{ amountwithoutgst  }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
@@ -388,7 +419,7 @@
                                           </td>
 
                                           <td class="ma-0 pa-0" colspan="2" align="right">
-                                            {{ Gst.toFixed(2) }}
+                                            {{ gstAmount }}
                                           </td>
                                         </tr>
                                         <tr colspan="3">
@@ -397,7 +428,7 @@
                                           </td>
 
                                           <td class="ma-0 pa-0 bold" colspan="2" align="right">
-                                            ₹ {{ invoice_amount }}
+                                            ₹ {{ amount  }}
                                           </td>
                                         </tr>
                                       </tbody>
@@ -530,6 +561,7 @@ export default {
     Stage:"",
     nonIvrPlanArray:[],
     ivrPlanArray:[],
+    renewlDate:"",
   }),
   computed: {
     computedPrice() {
@@ -555,6 +587,11 @@ export default {
     this.Rechargeday = localStorageUserObj.LastDay;
     this.Name = localStorageUserObj.FirstName;
     this.owneruid = owneruid;
+    this.FormatedLastDay=localStorageUserObj.FormatedLastDay;
+
+    var dt = new Date(this.FormatedLastDay);
+ this.renewlDate = dt.setDate(dt.getDate() - 10);
+// console.log(renewlDate,new Date(renewlDate));
  
 // only for recharge and upgrade
   this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
