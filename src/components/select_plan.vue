@@ -151,7 +151,7 @@ export default {
         this.phno = user.phoneNumber.slice(3);
       
         this.getUserData();
-        if(this.email==undefined){
+        if(!this.email){
           this.getUserData();
         }
       }
