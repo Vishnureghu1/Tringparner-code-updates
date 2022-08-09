@@ -151,9 +151,9 @@ export default {
         this.phno = user.phoneNumber.slice(3);
       
         this.getUserData();
-        if(!this.email){
-          this.getUserData();
-        }
+         const temp = JSON.parse(localStorage.getItem("temp"));
+           console.log("vetri back", temp.Email)
+        
       }
           
     });
@@ -183,6 +183,14 @@ getUserData(){
               this.phno = user_details.PhoneNumber;
               this.planId = user_details.PlanId;
               this.orderId = user_details.OrderId;
+              if(!this.email || this.email==undefined){
+           const temp = JSON.parse(localStorage.getItem("temp"));
+            this.address = temp.Address;
+              this.city = temp.City;
+              this.state = temp.State;
+              this.email = temp.Email;
+              this.name = temp.FirstName;
+        }
 
     if(this.planIdSelected){
         
