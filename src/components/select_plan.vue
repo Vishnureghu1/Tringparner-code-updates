@@ -149,10 +149,13 @@ export default {
         console.log("logged user details", user);
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
-this.getUserData();
-setTimeout(function () {this.getUserData(); } , 2000)
 
-   
+      
+        this.getUserData();
+         const temp = JSON.parse(localStorage.getItem("temp"));
+           console.log("vetri back", temp.Email);
+        
+
       }
           
     });
@@ -182,8 +185,14 @@ getUserData(){
               this.phno = user_details.PhoneNumber;
               this.planId = user_details.PlanId;
               this.orderId = user_details.OrderId;
-     if(!this.email){
-          console.log('test'+this.email);
+
+              if(!this.email || this.email==undefined){
+           const temp = JSON.parse(localStorage.getItem("temp"));
+            this.address = temp.Address;
+              this.city = temp.City;
+              this.state = temp.State;
+              this.email = temp.Email;
+              this.name = temp.FirstName;
 
           this.getUserData();
         }

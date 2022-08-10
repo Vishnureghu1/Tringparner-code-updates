@@ -253,6 +253,20 @@ export default {
     },
 
     userUpdate(){
+       var temp = {
+          uid: this.uid,
+          phoneNumber: this.phno,
+          virtual_number: this.virtualnumber,
+          FirstName: this.businessName,
+          Email: this.email,
+          Address: this.address,
+          City: this.city,
+          State: this.state,
+          CompanyName: this.businessName,
+          Pincode: this.pincode,
+          PlanId: this.planId,
+        };
+      localStorage.setItem("temp", JSON.stringify(temp));
        const details = {
         url: this.$cloudfareApi+"/user/owner",
         method: "POST",
