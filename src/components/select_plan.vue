@@ -149,11 +149,10 @@ export default {
         console.log("logged user details", user);
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
-      
-        this.getUserData();
-        if(!this.email){
-          this.getUserData();
-        }
+this.getUserData();
+setTimeout(function () {this.getUserData(); } , 2000)
+
+   
       }
           
     });
@@ -183,7 +182,11 @@ getUserData(){
               this.phno = user_details.PhoneNumber;
               this.planId = user_details.PlanId;
               this.orderId = user_details.OrderId;
+     if(!this.email){
+          console.log('test'+this.email);
 
+          this.getUserData();
+        }
     if(this.planIdSelected){
         
          this.getBill(this.uid, this.planIdSelected); // a plan selected

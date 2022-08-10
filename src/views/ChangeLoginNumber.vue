@@ -42,7 +42,7 @@
                                 <p>+91 {{current_number}}</p>
                                 <v-checkbox
                                   v-model="ex4"
-                                  label="I agree that I will not be able to access Tring Partner from my current login number after changing it."
+                                  label="I agree that I will not be able to access TringPartner from my current login number after changing it."
                                   color="red"
                                   value="agreeNumebrChange"
                                   change-number

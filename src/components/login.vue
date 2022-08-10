@@ -14,13 +14,13 @@
                 ></v-progress-circular>
               </v-overlay>
               <v-card color="transparent" outlined class="" max-width="280">
-                <h2 class="page_title mt-16 mb-13">Welcome to Tring Partner</h2>
+                <h2 class="page_title mt-16 mb-13">Welcome to TringPartner</h2>
                 <h2 class="sub_title mt-8 mb-13">
-                  Use your mobile number to get started with Tring Partner
+                  Use your mobile number to get started with TringPartner
                 </h2>
                 <div>
                   <div class="mt-1 ml-2" v-if="getNumber">
-                    <h4 class="name_heading mt-4 ml-2" align="start">
+                    <h4 class="name_heading mt-4 ml-2" align="center">
                       Login or Sign Up
                     </h4>
                     <v-form @submit.prevent="submit">
@@ -60,7 +60,7 @@
                     </v-form>
                   </div>
                   <div class="mt-1 ml-2" v-if="getOtp">
-                    <h4 class="name_heading mt-4" align="start">Enter OTP</h4>
+                    <h4 class="name_heading mt-4" align="center">Enter OTP</h4>
                     <v-otp-input length="6" v-model="otp"></v-otp-input>
                     <div class="mt-4">
                       <span class=" gray--text"  v-if="countDown>0"
@@ -250,6 +250,11 @@ export default {
           .catch((error) => {
             this.errorMessage = error.message;
             console.log(this.errorMessage);
+              this.$root.vtoast.show({
+          message: this.errorMessage,
+          color: "red",
+          timer: 5000,
+        });
           });
         this.$root.vtoast.show({
           message: "otp send successfully",

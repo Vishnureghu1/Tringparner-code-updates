@@ -15,7 +15,7 @@
               </v-overlay>
               <v-card color="transparent" outlined class="" max-width="1200">
                 <h2 class="lato-font f23 mt-16 mb-4">
-                  Select your Tring Partner Subscription Plan
+                  Select your TringPartner Subscription Plan
                 </h2>
 
                 <v-col cols="12" sm="6" class="py-2">
