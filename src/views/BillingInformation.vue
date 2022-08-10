@@ -343,7 +343,101 @@
            useddays: {{useddays}}/
          gstAmount : {{gstAmount}}<br> -->
           
-                                   <v-card-text class="pb-0">
+                                <v-card-text class="pb-0" v-if="Stage=='PAID'">
+                                  <v-simple-table dense>
+                                    <template v-slot:default>
+                                      <tbody class="ma-0 pa-0" border="0">
+                                        <!-- <tr v-for="d in sublist" :key="d.name">
+                                          <td class="ma-0 pa-0 pr-0 mr-0" :class="d.class">
+                                            {{ d.title }}
+                                          </td>
+                                          <td :class="d.class" align="center">
+                                            {{ d.qty }}
+                                          </td>
+                                          <td :class="d.class" align="right" class="ma-0 pa-0">
+                                            ₹ {{ d.amount }}
+                                          </td>
+                                        </tr> -->
+                                        <tr>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 bold">Item</td>
+                                          <td class="bold" align="center">Quantity</td>
+                                          <td class="ma-0 pa-0 bold" align="right">Price</td>
+                                          </tr>
+                                          <tr>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 ">{{planname}}</td>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 " align="center">1</td>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 " align="right">₹ {{amountwithoutdeduction}}</td>
+                                        </tr>
+                                        <tr colspan="3" v-if="defaultdiscount">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Discount for Yearly Plan
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            ₹ {{ defaultdiscount }}
+                                          </td>
+                                        </tr>
+
+                                       {{invoice_amount}}
+
+
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Cost for {{reminingmonths}}
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            ₹ {{ defaultamount  }}
+                                          </td>
+                                        </tr>
+
+
+
+
+
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Remaining Amount Paid for Basic
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            ₹ {{ reminingamt }}
+                                          </td>
+                                        </tr>
+                                    
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
+                                            Cost for Upgrade After Discount
+                                          </td>
+
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="2" align="right">
+                                            {{ amountwithoutgst  }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            GST
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            {{ gstAmount }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0 bold" colspan="1">
+                                            Total
+                                          </td>
+
+                                          <td class="ma-0 pa-0 bold" colspan="2" align="right">
+                                            ₹ {{ amount  }}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </template>
+                                  </v-simple-table>
+                                </v-card-text>
+
+                                    <v-card-text class="pb-0" v-else>
                                   <v-simple-table dense>
                                     <template v-slot:default>
                                       <tbody class="ma-0 pa-0" border="0">
