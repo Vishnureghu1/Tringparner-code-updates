@@ -691,7 +691,7 @@ planTypeSwitcher(i) {
     planTypeSwitcher(4);
   }
       this.SwitcherID=i;
-console.log('Plan ID '+i)
+ console.log('Plan ID '+i)
 // SwitcherID ==1 Base plan (If Trial)
 // SwitcherID ==2 Ivr plan 
 // SwitcherID ==3 plan 2 or 3 IVR (if Trial)
