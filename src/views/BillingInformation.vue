@@ -34,6 +34,8 @@
                         <br>
                         PlanId: {{ PlanId }}
                         <br>  -->
+
+                       
                         <div class="center align-center" align="center"
                           v-if="Stage=='TRIAL' ">
 
@@ -64,7 +66,10 @@
                         </div>
 
                         <div v-if="SwitcherID == 1 || SwitcherID == 3" class="row">
+
                           <v-card class="ml-8" min-width="700" min-height="400">
+
+                            
                             <v-card-text class="pb-0">
                               <p class="redtext bold" v-if="Stage != 'TRIAL'">
                                 Next Recharge Due on {{ Rechargeday }}
@@ -122,10 +127,8 @@
                               </v-row>
                             </v-card-text>
 
-                            <!-- Last day: {{FormatedLastDay}}<br>
-                            today {{new Date().getTime()}} <br>
-                             10 days before: {{renewlDate}} -->
-                             <!-- if() -->
+                           
+                          
 
                           <v-card-actions align="center" class="center" v-if="renewlDate > new Date().getTime()">
                           
@@ -239,6 +242,7 @@
                               <p class="redtext bold"  v-if="Stage != 'TRIAL'">
                                 Next Recharge Due on {{ Rechargeday }}
                               </p>
+                              
                               <v-row no-gutters>
                                 <div class="col-8 membership_heading">
                                   Total Cost (Inclusive of GST)
@@ -247,7 +251,7 @@
                                   ₹ {{ permonth }}/Month
                                 </div>
                               </v-row>
-                              <v-row no-gutters  v-if="Stage == 'PAID' ">
+                              <v-row no-gutters  v-if="Stage == 'PAID' && ivrActive==false ">
                                 
                                 <div class="col-8 membership_heading" >
                                   Cost for Upgradation
@@ -301,7 +305,8 @@
 
                               </v-row>
                             </v-card-text>
-                            <v-card-actions align="center" class="center">
+                            <v-card-actions align="center" class="center" >
+                              <div v-if="renewlDate > new Date().getTime()">
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
                                 color="white" outlined @click="paynowUpgrade()" v-if="Stage == 'PAID'">
                                 Pay Now
@@ -311,6 +316,7 @@
                                 color="white" outlined @click="paynow()" v-else>
                                 Pay Now
                               </v-btn>
+                              </div>
                               <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
                                 min-width="140px" @click="ivrplan_info = true">
                                 View Detail
@@ -344,10 +350,10 @@
          gstAmount : {{gstAmount}}<br> -->
           
                                 <v-card-text class="pb-0" v-if="Stage=='PAID'">
-                                  <v-simple-table dense>
+                                 <v-simple-table dense v-if="Stage=='PAID' && ivrActive==true">
                                     <template v-slot:default>
                                       <tbody class="ma-0 pa-0" border="0">
-                                        <!-- <tr v-for="d in sublist" :key="d.name">
+                                        <tr v-for="d in sublist" :key="d.name">
                                           <td class="ma-0 pa-0 pr-0 mr-0" :class="d.class">
                                             {{ d.title }}
                                           </td>
@@ -357,7 +363,60 @@
                                           <td :class="d.class" align="right" class="ma-0 pa-0">
                                             ₹ {{ d.amount }}
                                           </td>
-                                        </tr> -->
+                                        </tr>
+
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Sub Total
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            ₹ {{ SubTotal }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            Discount
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            {{ Discount }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
+                                            Cost after Discount
+                                          </td>
+
+                                          <td class="ma-0 pa-0 bold primary--text" colspan="2" align="right">
+                                            {{ CostAfterDiscount }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0" colspan="1">
+                                            GST
+                                          </td>
+
+                                          <td class="ma-0 pa-0" colspan="2" align="right">
+                                            {{ Gst.toFixed(2) }}
+                                          </td>
+                                        </tr>
+                                        <tr colspan="3">
+                                          <td class="ma-0 pa-0 bold" colspan="1">
+                                            Total
+                                          </td>
+
+                                          <td class="ma-0 pa-0 bold" colspan="2" align="right">
+                                            ₹ {{ invoice_amount }}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </template>
+                                  </v-simple-table>
+                                  <v-simple-table dense v-if="ivrActive==false">
+                                    <template v-slot:default>
+                                      <tbody class="ma-0 pa-0" border="0">
+                                   
                                         <tr>
                                           <td class="ma-0 pa-0 pr-0 mr-0 bold">Item</td>
                                           <td class="bold" align="center">Quantity</td>
@@ -671,13 +730,20 @@ if(this.Stage=="TRIAL"){
 this.ivrRadioGroup=parseInt(this.PlanId) +  3;
 this.getBill("inital", parseInt(this.PlanId));
 
-}else if(this.Stage=="PAID"){
+}else if(this.Stage=="PAID" && this.ivrActive==false){
   this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
   this.SwitcherID=3;
   this.nonivrRadioGroup=parseInt(this.PlanId);
 this.ivrRadioGroup=parseInt(this.PlanId) +  3;
 this.getBill("inital", parseInt(this.PlanId));
-}else{
+}
+else if(this.Stage=="PAID" && this.ivrActive==true){
+this.PlanId = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+this.SwitcherID=4;
+this.ivrRadioGroup=parseInt(this.PlanId);
+this.getBill("inital", parseInt(this.PlanId));
+}
+else{
     this.SwitcherID=3;
   this.nonivrRadioGroup=2;
 this.ivrRadioGroup=parseInt(this.PlanId) +  3;
