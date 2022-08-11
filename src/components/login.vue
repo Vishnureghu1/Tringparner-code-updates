@@ -82,7 +82,7 @@
                       </a>
                     </div>
                     <v-btn
-                      class="btn_text mt-15 white--text text-capitalize" 
+                      class="btn_text mt-5 white--text text-capitalize" 
                       width="70%"
                       rounded
                       @click.prevent="verifyOtp()"
