@@ -6,7 +6,7 @@
           class="mt-2 hidden-md-and-up"
           @click.stop="drawer = !drawer"
         ></v-app-bar-nav-icon>
-        <v-toolbar-title class="mt-3 ml-2">TringPartner</v-toolbar-title>
+        <v-toolbar-title class="mt-3 ml-2">Tringpartner</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon>
           <v-icon class="mt-3">mdi-chat-outline</v-icon>

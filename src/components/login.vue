@@ -14,13 +14,13 @@
                 ></v-progress-circular>
               </v-overlay>
               <v-card color="transparent" outlined class="" max-width="280">
-                <h2 class="page_title mt-16 mb-13">Welcome to TringPartner</h2>
-                <h2 class="sub_title mt-8 mb-13">
-                  Use your mobile number to get started with TringPartner
+                <h2 class="page_title mt-16 pt-15 mb-3">Welcome to Tringpartner</h2>
+                <h2 class="sub_title mt-4 mb-0">
+                  Use your mobile number to get started with Tringpartner
                 </h2>
                 <div>
-                  <div class="mt-1 ml-2" v-if="getNumber">
-                    <h4 class="name_heading mt-4 ml-2" align="center">
+                  <div class="mt-1 " v-if="getNumber">
+                    <h4 class="name_heading mt-4 " align="center">
                       Login or Sign Up
                     </h4>
                     <v-form @submit.prevent="submit">
@@ -38,7 +38,7 @@
                       ></v-text-field>
                     
                       <v-btn
-                        class="btn_text mt-15 white--text text-capitalize" v-if="phoneNumberValid==false" disabled
+                        class="btn_text mt-0 white--text text-capitalize" v-if="phoneNumberValid==false" disabled
                         width="70%"
                         rounded
                         @click.prevent="sendOtp()"
@@ -48,7 +48,7 @@
                         Next
                       </v-btn>
                       <v-btn
-                        class="btn_text mt-15 white--text text-capitalize" v-if="phoneNumberValid==true" 
+                        class="btn_text mt-0 white--text text-capitalize" v-if="phoneNumberValid==true" 
                         width="70%"
                         rounded
                         @click.prevent="sendOtp()"

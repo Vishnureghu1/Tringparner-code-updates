@@ -15,7 +15,7 @@
 									<div class="ml-4 mr-4 mt-4 pt-4">
 										
 										<v-card-text>
-											<h3 class="font-weight-regular mt-2 mb-2 text-center"> TringPartner Number(s)</h3>
+											<h3 class="font-weight-regular mt-2 mb-2 text-center"> Tringpartner Number(s)</h3>
 											<div v-for="(details) in virtual_number_list" :key="details.text">
 												<h4 class="font-weight-bold mb-3 text-center"> {{ details }} </h4>
 											</div>
