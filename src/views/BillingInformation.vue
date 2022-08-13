@@ -130,7 +130,7 @@
                            
                           
 
-                          <v-card-actions align="center" class="center" v-if="renewlDate > new Date().getTime()">
+                          <v-card-actions align="center" class="center" v-if="  new Date().getTime() < renewlDate">
                           
                               <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
                                 min-width="140px" @click="basicplan_info = true">
@@ -258,6 +258,7 @@
                                 </div>
                                 <div class="col-4 membership_heading" align="right" >
                                   ₹ {{ amountwithoutgst }}
+                                  
                                 </div>
                               </v-row>
       
@@ -306,7 +307,8 @@
                               </v-row>
                             </v-card-text>
                             <v-card-actions align="center" class="center" >
-                              <div v-if="renewlDate > new Date().getTime()">
+                             
+                              <div v-if="new Date().getTime() > renewlDate ">
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
                                 color="white" outlined @click="paynowUpgrade()" v-if="Stage == 'PAID'">
                                 Pay Now
@@ -316,6 +318,14 @@
                                 color="white" outlined @click="paynow()" v-else>
                                 Pay Now
                               </v-btn>
+                              </div>
+                                 <div v-else>
+                                  <!-- {{Stage}} -->
+                              <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
+                                color="white" outlined @click="paynowUpgrade()" v-if="ivrActive != true">
+                                Pay Now
+                              </v-btn>
+                        
                               </div>
                               <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
                                 min-width="140px" @click="ivrplan_info = true">
@@ -425,7 +435,7 @@
                                           <tr>
                                           <td class="ma-0 pa-0 pr-0 mr-0 ">{{planname}}</td>
                                           <td class="ma-0 pa-0 pr-0 mr-0 " align="center">1</td>
-                                          <td class="ma-0 pa-0 pr-0 mr-0 " align="right">₹ {{amountwithoutdeduction}}</td>
+                                          <td class="ma-0 pa-0 pr-0 mr-0 " align="right">₹ {{defaultamount }}</td>
                                         </tr>
                                         <tr colspan="3" v-if="defaultdiscount">
                                           <td class="ma-0 pa-0" colspan="1">
@@ -437,7 +447,7 @@
                                           </td>
                                         </tr>
 
-                                       {{invoice_amount}}
+                                       <!-- {{invoice_amount}} -->
 
 
                                         <tr colspan="3">
@@ -446,7 +456,7 @@
                                           </td>
 
                                           <td class="ma-0 pa-0" colspan="2" align="right">
-                                            ₹ {{ defaultamount  }}
+                                            ₹ {{ amountwithoutdeduction  }}
                                           </td>
                                         </tr>
 
@@ -823,7 +833,7 @@ planTypeSwitcher(i) {
     planTypeSwitcher(4);
   }
       this.SwitcherID=i;
- console.log('Plan ID '+i)
+ console.log('tab ID '+i)
 // SwitcherID ==1 Base plan (If Trial)
 // SwitcherID ==2 Ivr plan 
 // SwitcherID ==3 plan 2 or 3 IVR (if Trial)
@@ -832,6 +842,8 @@ planTypeSwitcher(i) {
   this.PlanId=2; //Trial 
   this.nonivrRadioGroup=this.PlanId;
   this.getBill(this.uid, parseInt(this.PlanId));
+
+  
   }else if(i==2){ //Trial
   // this.planUpgradeData();
     this.PlanId= 5; //Trial
@@ -842,6 +854,7 @@ planTypeSwitcher(i) {
 
   if(v<=3 && v!=0){
     this.PlanId = v; 
+    
   }else{
     this.PlanId = 2; 
 
@@ -851,10 +864,19 @@ planTypeSwitcher(i) {
     }else if(i==4){
 
 this.planUpgradeData();
-    var v = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+// if(this.PlanId){
+//   v=this.PlanId
+//     this.getBill(this.uid, v+3);
+
+// }else{
+
+  var v = localStorageUserObj.PlanId?parseInt(localStorageUserObj.PlanId):0;
+    this.getBill(this.uid, v+3);
+// }
   if(v>=4 && v!=0){
     
     this.PlanId = v; 
+    
   }else{
     this.PlanId = 5; 
   }
