@@ -261,13 +261,21 @@
                                   
                                 </div>
                               </v-row>
-      
-                              <div class="membership_price">
+
+                             <div class="membership_price"   v-if="Stage=='TRIAL' ">
                                 {{ invoice_amount
 }}<span class="currency_symbol">INR</span>
                               </div>
+                                   <div class="membership_price"   v-else-if="Stage=='PAID' && ivrActive==false">
+                                {{ amount
+}}<span class="currency_symbol">INR</span>
+</div>
+                                 <div class="membership_price"   v-else>
+                                {{ invoice_amount
+}}<span class="currency_symbol">INR</span>
+</div>
 
-                             
+                        
                               <div class="membership_details" v-if="ivrActive==true || Stage == 'TRIAL'">
 
                                 <v-radio-group mandatory  v-model="ivrRadioGroup">
