@@ -111,6 +111,7 @@
 
 
                               </div>
+                             
                               <v-row no-gutters v-if="Discount > 0">
                                 <div class="col-8 membership_heading red--text">
                                   Cost After Discount
@@ -126,7 +127,15 @@
 
                               </v-row>
                             </v-card-text>
+<v-row no-gutters >
+                                <div class="col-12  black--text" align="center">
+                                    <strong class="black--text darken-3">
 
+                                      Basic Plan Charge ₹{{ SubTotal }}
+                                    </strong>
+                                </div>
+
+                              </v-row>
                            
                           
 
@@ -191,7 +200,7 @@
                                             ₹ {{ SubTotal }}
                                           </td>
                                         </tr>
-                                        <tr colspan="3">
+                                        <tr colspan="3"  v-if="Discount > 0">
                                           <td class="ma-0 pa-0" colspan="1">
                                             Discount
                                           </td>
@@ -200,7 +209,7 @@
                                             {{ Discount }}
                                           </td>
                                         </tr>
-                                        <tr colspan="3">
+                                        <tr colspan="3"  v-if="Discount > 0">
                                           <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
                                             Cost after Discount
                                           </td>
@@ -314,6 +323,15 @@
 
                               </v-row>
                             </v-card-text>
+                            <v-row no-gutters >
+                                <div class="col-12  black--text" align="center">
+                                    <strong class="black--text darken-3">
+
+                                      IVR Plan Charge ₹{{ SubTotal }}
+                                    </strong>
+                                </div>
+
+                              </v-row>
                             <v-card-actions align="center" class="center" >
                              
                               <div v-if="new Date().getTime() > renewlDate ">
@@ -392,7 +410,7 @@
                                             ₹ {{ SubTotal }}
                                           </td>
                                         </tr>
-                                        <tr colspan="3">
+                                        <tr colspan="3"  v-if="Discount > 0">
                                           <td class="ma-0 pa-0" colspan="1">
                                             Discount
                                           </td>
@@ -401,7 +419,7 @@
                                             {{ Discount }}
                                           </td>
                                         </tr>
-                                        <tr colspan="3">
+                                        <tr colspan="3"  v-if="Discount > 0">
                                           <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
                                             Cost after Discount
                                           </td>
@@ -482,7 +500,7 @@
                                           </td>
                                         </tr>
                                     
-                                        <tr colspan="3">
+                                        <tr colspan="3"  v-if="Discount > 0">
                                           <td class="ma-0 pa-0 bold primary--text" colspan="1" color="red">
                                             Cost for Upgrade After Discount
                                           </td>
