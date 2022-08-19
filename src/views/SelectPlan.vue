@@ -343,7 +343,7 @@
                 color="primary"
               >
                 <v-icon color="red"> mdi-check-circle </v-icon>
-                <strong>1 </strong>Cloud Business Number
+                <strong>IVR Call</strong> Distribution
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -351,7 +351,7 @@
             <v-list-item-content>
               <v-list-item-title class="gray--text bulletpoints">
                 <v-icon color="red"> mdi-check-circle </v-icon>
-                <strong>3</strong> Users
+                <strong>IVR</strong> Departments
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -359,7 +359,7 @@
             <v-list-item-content>
               <v-list-item-title class="gray--text bulletpoints">
                 <v-icon color="red"> mdi-check-circle </v-icon>
-                <strong>Advanced</strong> Call Distribution
+                <strong>Visual IVR </strong> Designer App
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -367,37 +367,12 @@
             <v-list-item-content>
               <v-list-item-title class="gray--text bulletpoints">
                 <v-icon color="red"> mdi-check-circle </v-icon>
-                <strong>Missed Call</strong> Management
+                <strong>IVR Drop Call</strong> Management
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item class="pt-0 mb-0 pb-0 mt-0">
-            <v-list-item-content>
-              <v-list-item-title class="gray--text bulletpoints">
-                <v-icon color="red"> mdi-check-circle </v-icon>
-                <strong>Admin</strong> App
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-item class="pt-0 mb-0 pb-0 mt-0">
-            <v-list-item-content>
-              <v-list-item-title class="gray--text bulletpoints">
-                <v-icon color="red"> mdi-check-circle </v-icon>
-                <strong>Agent</strong> App
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
         </v-list>
-        <v-list-item class="pt-0 mb-0 pb-0 mt-0">
-          <v-list-item-content>
-            <v-list-item-title class="gray--text bulletpoints">
-              <v-icon color="red"> mdi-check-circle </v-icon>
-              <strong>Productivity</strong> Dashboard
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
 
         <v-card-actions class="center justify-center">
           <v-btn
