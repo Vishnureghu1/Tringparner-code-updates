@@ -196,10 +196,11 @@
 
                                     <v-list>
                                       <div v-for="getNotes in details.Note" :key="getNotes.text"></div>
+                                      
                                       <v-list-item v-for="(item, index) in items" :key="index"
                                         active-class="pink--text">
                                         <div v-for="getNotes in details.Note" :key="getNotes.text">
-                                          <v-list-item-title :class="item.color" @click="
+                                          <v-list-item-title   :class="item.color" @click="
                                             threeDotAction(
                                               item.url,
                                               details.virtualnumber,
@@ -209,13 +210,25 @@
                                               '10'
                                             )
                                           ">
+                                    
+                                           
                                             <span v-if="
                                               getNotes.Note != '' &&
                                               item.url == 'add_note'
                                             ">Edit Note</span>
-                                            <span v-else>{{ item.title }}</span>
+                                           
+
+                                            
+                                            <span v-else-if="
+                                              getNotes.Note != '' &&
+                                              item.url == 'delete_note'
+                                            ">Delete Note</span>
+                                             <span v-else>{{ item.title }}</span>
+                                            
                                           </v-list-item-title>
+                                          
                                         </div>
+                                        
                                       </v-list-item>
                                     </v-list>
                                   </v-menu>
@@ -291,7 +304,7 @@
                                       <span class="mdi mdi-note grey--text">
                                       </span>
                                       <span v-html="callNote(getNotes.Note)" />
-                                      <span class="mdi mdi-pencil grey--text" @click="
+                                      <v-icon small class="mdi mdi-pencil grey--text p-2" @click="
                                         threeDotAction(
                                           'add_note',
                                           'virtualNumber',
@@ -299,7 +312,17 @@
                                           getNotes.Note
                                         )
                                       ">
-                                      </span>
+                                      </v-icon>
+
+                                        <v-icon small class="mdi mdi-trash-can primary--text" @click="
+                                        threeDotAction(
+                                          'delete_note',
+                                          'virtualNumber',
+                                          details.uniqueid,
+                                          getNotes.Note
+                                        )
+                                      ">
+                                      </v-icon>
                                     </span>
                                   </div>
 
@@ -548,6 +571,30 @@
     </v-dialog>
     <!-- RENAME addNotesDialog SECTION -->
 
+
+    <!-- RENAME DeleteNote SECTION -->
+    <v-dialog v-model="deleteNoteDialog" max-width="332px">
+      <v-card v-model="deleteNoteDialog" class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Are you sure?</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+         <p class="pb-0 mb-0" align="center">Are you sure want to delete this note?</p>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
+            @click="deleteNoteDialog = false">
+            No
+          </v-btn>
+          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
+            @click="deleteNote(uniqueId, notes_data)">
+            Yes
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- RENAME DeleteNote SECTION -->
     <v-dialog v-model="sendInviteLoader" hide-overlay persistent width="300">
       <v-card color="red" dark>
         <v-card-text>
@@ -598,9 +645,10 @@ export default {
     changeEmailPopup: false,
     enterOtpModel: false,
     loadingMore: false,
-
+deleteNoteDialog:false,
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
+      
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
       {
         title: "Block This Number",
@@ -1000,6 +1048,15 @@ export default {
           this.notes_text = "Edit Notes";
         }
       }
+
+      if (action == "delete_note") {
+        console.log("Delete Note");
+ 
+        this.dialog = false;
+        this.addNotesDialog = false;
+        this.deleteNoteDialog = true;
+
+      }
       if (action == "add_reminder") {
         console.log("Add Reminder");
         console.log(uniqueId);
@@ -1232,6 +1289,43 @@ export default {
           console.log("Error getting documents: ", error);
         });
     },
+
+
+
+
+        deleteNote(unique_id) {
+      var token = localStorage.getItem("token");
+      const user_data = {
+        url: this.$cloudfareApi + "/note/delete",
+        method: "POST",
+        data: {
+          uid: this.uid,
+          updated_by: this.uid,
+          // uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
+          unique_id: unique_id, //call id
+          
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(user_data);
+      axios(user_data)
+        .then((response) => {
+
+          if (response.data.status == true) {
+            this.notes_added = true;
+            this.addNotesDialog = false;
+            this.uniqueId = "";
+            this.getInitialCalls();
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    },
+    
     sendReminder(radio, date, time) {
       // console.log(moment(new Date()).format("YYYY-MM-DD hh:mm"))
       var token = localStorage.getItem("token");
