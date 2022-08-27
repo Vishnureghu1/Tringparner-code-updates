@@ -249,9 +249,10 @@
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
                               <p class="redtext bold"  v-if="Stage != 'TRIAL'">
-                                Next Recharge Due on {{ Rechargeday }}
+                               Billable Duration  {{ reminingmonths }}
+                                
                               </p>
-                              
+                             
                               <v-row no-gutters>
                                 <div class="col-8 membership_heading">
                                   Total Cost (Inclusive of GST)

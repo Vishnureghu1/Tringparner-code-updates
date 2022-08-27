@@ -120,7 +120,24 @@
                                 </router-link>
                               </v-col>
                             </v-row>
+  <v-divider></v-divider>
 
+                            <v-row>
+                              <v-col cols="6">
+                                <h2 class="name_heading mt-4 mr-7" style="color:rgb(238, 28, 37)">Delete My Account</h2>
+                               
+                              </v-col>
+                              <v-col cols="6" align="end">
+                                <span
+                                  ><v-icon
+                                   @click="deleteAccountDialog = true"
+                                    class="mt-6 mb-5 mr-7"
+                                    color="#EE1C25"
+                                    >mdi-arrow-right</v-icon
+                                  >
+                                </span>
+                              </v-col>
+                            </v-row>
                             <v-divider></v-divider>
 
                             <v-row>
@@ -153,11 +170,38 @@
         </v-layout>
       </v-container>
     </div>
+
+
+     <!-- RENAME deleteAccountDialog SECTION -->
+    <v-dialog v-model="deleteAccountDialog" max-width="332px">
+      <v-card v-model="deleteAccountDialog" class="rounded-lg pt-7 pb-7">
+        <v-card-title class="d-flex justify-center">
+          <h3 class="center">Are you sure?</h3>
+        </v-card-title>
+        <v-card-text class="pt-0">
+         <p class="pb-0 mb-0" align="center">Are you sure want to delete your Account? </p>
+         <p class="pb-0 mb-0 " color="primary--text" align="center">Warning! This action can't be undone!</p>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
+            @click="deleteAccountDialog = false">
+            No
+          </v-btn>
+          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
+            @click="deleteAccount()">
+            Yes
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- RENAME deleteAccountDialog SECTION -->
   </v-app>
 </template>
 
 <script>
 import firebase from "firebase";
+import axios from "axios";
 export default {
   components: {},
   created() {
@@ -166,6 +210,7 @@ export default {
     this.isHide = (localStorageUserObj.role == "AGENT")?false:true
   },
   data: () => ({
+    deleteAccountDialog:false,
     isHide:false,
     items: [
       {
@@ -187,6 +232,42 @@ export default {
     },
     callPauseNumber() {
       this.$router.push("/PauseNumber");
+    },
+          deleteAccount() {
+      var token = localStorage.getItem("token");
+      const user_data = {
+        url: this.$cloudfareApi + "/deteleaccount",
+        method: "POST",
+        data: {
+          uid: this.uid,
+        },
+        headers: {
+          token: token,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(user_data);
+      axios(user_data)
+        .then(() => {
+
+          console.log("clicked logout");
+      // firebase.auth()
+      firebase.auth().signOut();
+     localStorage.removeItem("tpu");
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("token");
+      localStorage.removeItem("planId");
+      localStorage.removeItem("PlanId");
+      localStorage.removeItem("ActiveTab");
+      localStorage.removeItem("IVRPlanradio");
+      localStorage.removeItem("nonIVRPlanradio");
+      
+      this.rerenderKey += 1;
+      this.$router.push("login").catch(() => {});
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
     },
     logout: function () {
       console.log("clicked logout");
