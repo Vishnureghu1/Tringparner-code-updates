@@ -166,13 +166,6 @@
                     <div v-if="this.searchTerm.length != 0 && totalItems == 0" align="center" class="center">No Calls to
                       show!</div>
 
-                    <!-- <v-icon
-                                class="mt-0 mb-5 mr-0"
-                                color="blue"
-                                
-                                >mdi-swap-vertical-variant</v-icon
-                              > -->
-                    <!-- IVR icon here -->
                     <v-expansion-panels accordion flat v-if="realdata.length != ''">
                       <v-expansion-panel v-for="details in realdata" :key="details.text">
 
@@ -218,11 +211,7 @@
                                             ">Edit Note</span>
                                            
 
-                                            
-                                            <span v-else-if="
-                                              getNotes.Note != '' &&
-                                              item.url == 'delete_note'
-                                            ">Delete Note</span>
+                                          
                                              <span v-else>{{ item.title }}</span>
                                             
                                           </v-list-item-title>
@@ -314,15 +303,7 @@
                                       ">
                                       </v-icon>
 
-                                        <v-icon small class="mdi mdi-trash-can primary--text" @click="
-                                        threeDotAction(
-                                          'delete_note',
-                                          'virtualNumber',
-                                          details.uniqueid,
-                                          getNotes.Note
-                                        )
-                                      ">
-                                      </v-icon>
+                                  
                                     </span>
                                   </div>
 
@@ -551,19 +532,26 @@
         <v-card-title class="d-flex justify-center">
           <h3 class="center">{{ notes_text }}</h3>
         </v-card-title>
-        <v-card-text class="pt-0">
+    
+        <v-card-text class="pt-0" v-if="uniqueId==this.ownerUid">
           <v-text-field v-model="notes_data" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules"
-            counter maxlength="120" type="text" @click:clear="clearMessage(uniqueId, notes_data)" class="black--text">
+            counter maxlength="120" type="text" @click:clear="clearMessage( uniqueId, notes_data)" class="black--text">
           </v-text-field>
         </v-card-text>
-
+   
+        <v-card-text class="pt-0" v-else>
+          <v-text-field v-model="notes_data"  disabled label="Notes" :rules="rules"
+            type="text" class="black--text">
+          </v-text-field>
+        </v-card-text>
+        
         <v-card-actions>
           <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
             @click="addNotesDialog = false">
             Cancel
           </v-btn>
           <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
-            @click="addNote(uniqueId, notes_data)">
+            @click="addNote(uniqueId, notes_data)" v-if="uniqueId==this.ownerUid">
             Save
           </v-btn>
         </v-card-actions>
@@ -1288,44 +1276,7 @@ deleteNoteDialog:false,
         .catch((error) => {
           console.log("Error getting documents: ", error);
         });
-    },
-
-
-
-
-        deleteNote(unique_id) {
-      var token = localStorage.getItem("token");
-      const user_data = {
-        url: this.$cloudfareApi + "/note/delete",
-        method: "POST",
-        data: {
-          uid: this.uid,
-          updated_by: this.uid,
-          // uid: 'rp7aem0HEVWyYeLZQ4ytSNyjyG02',
-          unique_id: unique_id, //call id
-          
-        },
-        headers: {
-          token: token,
-          "Content-Type": "application/json",
-        },
-      };
-      console.log(user_data);
-      axios(user_data)
-        .then((response) => {
-
-          if (response.data.status == true) {
-            this.notes_added = true;
-            this.addNotesDialog = false;
-            this.uniqueId = "";
-            this.getInitialCalls();
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting documents: ", error);
-        });
-    },
-    
+    }, 
     sendReminder(radio, date, time) {
       // console.log(moment(new Date()).format("YYYY-MM-DD hh:mm"))
       var token = localStorage.getItem("token");
@@ -1412,7 +1363,9 @@ deleteNoteDialog:false,
         });
     },
     clearMessage(unique_id, message) {
-      var token = localStorage.getItem("token");
+if(unique_id==this.ownerUid){
+
+  var token = localStorage.getItem("token");
       message = "";
       const user_data = {
         url: this.$cloudfareApi + "/note",
@@ -1439,6 +1392,9 @@ deleteNoteDialog:false,
         .catch((error) => {
           console.log("Error getting documents: ", error);
         });
+          }else{
+            alert('You are not allowed to clear the message! Only owner can delete it!')
+          }
     },
     getCallsFilterPayload(filterCallsConditions) {
       console.log("this.selectedTimeOfCall", this.selectedTimeOfCall);
