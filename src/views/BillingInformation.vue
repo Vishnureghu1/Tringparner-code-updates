@@ -248,20 +248,16 @@
                         <div class="row" v-else-if="SwitcherID == 2 || SwitcherID == 4">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
-                              <p class="redtext bold"  v-if="Stage != 'TRIAL'">
-                               Billable Duration  {{ reminingmonths }}
+                              <p class="redtext bold"  v-if="Stage != 'TRIAL' && SwitcherID==2">
+                                Next Recharge Due on {{ Rechargeday }}
                                 
                               </p>
-                             
-                              <v-row no-gutters>
-                                <div class="col-8 membership_heading">
-                                  Total Cost (Inclusive of GST)
-                                </div>
-                                <div class="col-4 membership_heading" align="right" >
-                                  ₹ {{ permonth }}/Month
-                                </div>
-                              </v-row>
-                              <v-row no-gutters  v-if="Stage == 'PAID' && ivrActive==false ">
+                               <p class="redtext bold"  v-else>
+                               Billable Duration 
+                                {{reminingmonths}}
+                              </p>
+                              
+                                 <v-row no-gutters  v-if="Stage == 'PAID' && ivrActive==false && SwitcherID==2">
                                 
                                 <div class="col-8 membership_heading" >
                                   Cost for Upgradation
@@ -271,6 +267,34 @@
                                   
                                 </div>
                               </v-row>
+                                <v-row no-gutters  v-else>
+                                
+                                <div class="col-8 membership_heading" >
+                                  Cost for Upgradation
+                                </div>
+                                <div class="col-4 membership_heading" align="right" >
+                                  ₹ {{ amountwithoutgst }}
+                                  
+                                </div>
+                              </v-row>
+                              <v-row no-gutters v-if="SwitcherID==2">
+                                <div class="col-8 membership_heading">
+                                  Total Cost (Inclusive of GST)
+                                </div>
+                                <div class="col-4 membership_heading" align="right" >
+                                  ₹ {{ permonth }}/Month
+                                </div>
+                              </v-row>
+
+                                  <v-row no-gutters v-else>
+                                <div class="col-8 membership_heading">
+                                  GST
+                                </div>
+                                <div class="col-4 membership_heading" align="right" >
+                                  ₹ {{ gstAmount  }}
+                                </div>
+                              </v-row>
+                           
 
                              <div class="membership_price"   v-if="Stage=='TRIAL' ">
                                 {{ invoice_amount
