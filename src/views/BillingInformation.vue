@@ -269,10 +269,10 @@
                               </v-row>
                                 <v-row no-gutters  v-else>
                                 
-                                <div class="col-8 membership_heading" >
+                                <div class="col-8 membership_heading black--text darken-3 f18" >
                                   Cost for Upgradation
                                 </div>
-                                <div class="col-4 membership_heading" align="right" >
+                                <div class="col-4 membership_heading black--text darken-3 f18" align="right" >
                                   ₹ {{ amountwithoutgst }}
                                   
                                 </div>
@@ -287,10 +287,10 @@
                               </v-row>
 
                                   <v-row no-gutters v-else>
-                                <div class="col-8 membership_heading">
+                                <div class="col-8 membership_heading black--text darken-3 f18 pt-2">
                                   GST
                                 </div>
-                                <div class="col-4 membership_heading" align="right" >
+                                <div class="col-4 membership_heading black--text darken-3 f18 pt-2" align="right" >
                                   ₹ {{ gstAmount  }}
                                 </div>
                               </v-row>
@@ -301,8 +301,17 @@
 }}<span class="currency_symbol">INR</span>
                               </div>
                                    <div class="membership_price"   v-else-if="Stage=='PAID' && ivrActive==false">
-                                {{ amount
-}}<span class="currency_symbol">INR</span>
+
+                                      <v-row no-gutters  v-if="SwitcherID==4">
+                                <div class="col-8 membership_heading black--text darken-3 f18 pt-0">
+                                  Grand Total
+                                </div>
+                                <div class="col-4 membership_heading black--text darken-3 f18 pt-0" align="right" >
+                                  ₹ {{ amount  }}
+                                </div>
+                              </v-row>
+                               <span v-else> {{ amount
+}}<span class="currency_symbol">INR</span></span>
 </div>
                                  <div class="membership_price"   v-else>
                                 {{ invoice_amount
@@ -348,7 +357,7 @@
 
                               </v-row>
                             </v-card-text>
-                            <v-row no-gutters >
+                            <v-row no-gutters v-if="SwitcherID==2">
                                 <div class="col-12  black--text" align="center">
                                     <strong class="black--text darken-3">
 
