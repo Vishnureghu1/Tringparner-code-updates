@@ -206,8 +206,22 @@ export default {
   components: {},
   created() {
     window.scrollTo(0, 0); //scroll to top
-    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-    this.isHide = (localStorageUserObj.role == "AGENT")?false:true
+    let llo = JSON.parse(localStorage.getItem("tpu"));
+    this.isHide = (llo.role == "AGENT")?false:true;
+
+    let localStorageUserObj = localStorage.getItem("tpu");
+      if (localStorageUserObj) {
+        let parsedUser = JSON.parse(localStorageUserObj);
+        this.userEmail = parsedUser.Email;
+        this.ownerUid =
+          parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
+        this.userRole = parsedUser.role;
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            this.uid = user.uid;
+          }
+        });
+      }
   },
   data: () => ({
     deleteAccountDialog:false,
@@ -236,10 +250,10 @@ export default {
           deleteAccount() {
       var token = localStorage.getItem("token");
       const user_data = {
-        url: this.$cloudfareApi + "/deteleaccount",
-        method: "POST",
+        url: this.$cloudfareApi + "/user",
+        method: "DELETE",
         data: {
-          uid: this.uid,
+          Uid: this.uid,
         },
         headers: {
           token: token,
@@ -250,7 +264,7 @@ export default {
       axios(user_data)
         .then(() => {
 
-          console.log("clicked logout");
+          console.log("deleted Account");
       // firebase.auth()
       firebase.auth().signOut();
      localStorage.removeItem("tpu");
