@@ -248,7 +248,8 @@
                         <div class="row" v-else-if="SwitcherID == 2 || SwitcherID == 4">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
-                              <p class="redtext bold"  v-if="Stage != 'TRIAL' && SwitcherID==2">
+                              <p class="redtext bold"  v-if="Stage != 'TRIAL' && SwitcherID==4 && ivrActive==true">
+                              <!-- <p class="redtext bold"  v-if="Stage != 'TRIAL' && SwitcherID==2"> -->
                                 Next Recharge Due on {{ Rechargeday }}
                                 
                               </p>
@@ -257,17 +258,7 @@
                                 {{reminingmonths}}
                               </p>
                               
-                                 <v-row no-gutters  v-if="Stage == 'PAID' && ivrActive==false && SwitcherID==2">
-                                
-                                <div class="col-8 membership_heading" >
-                                  Cost for Upgradation
-                                </div>
-                                <div class="col-4 membership_heading" align="right" >
-                                  ₹ {{ amountwithoutgst }}
-                                  
-                                </div>
-                              </v-row>
-                                <v-row no-gutters  v-else>
+                                 <v-row no-gutters  v-if="Stage == 'PAID' && ivrActive==false ">
                                 
                                 <div class="col-8 membership_heading black--text darken-3 f18" >
                                   Cost for Upgradation
@@ -277,7 +268,17 @@
                                   
                                 </div>
                               </v-row>
-                              <v-row no-gutters v-if="SwitcherID==2">
+                                <!-- <v-row no-gutters  v-else>
+                                
+                                <div class="col-8 membership_heading black--text darken-3 f18" >
+                                  Cost for Upgradation
+                                </div>
+                                <div class="col-4 membership_heading black--text darken-3 f18" align="right" >
+                                  ₹ {{ amountwithoutgst }}
+                                  
+                                </div>
+                              </v-row> -->
+                              <v-row no-gutters  v-if="Stage != 'TRIAL' && SwitcherID==2">
                                 <div class="col-8 membership_heading">
                                   Total Cost (Inclusive of GST)
                                 </div>
@@ -286,7 +287,7 @@
                                 </div>
                               </v-row>
 
-                                  <v-row no-gutters v-else>
+                                  <v-row no-gutters  v-if="gstAmount!=null">
                                 <div class="col-8 membership_heading black--text darken-3 f18 pt-2">
                                   GST
                                 </div>
