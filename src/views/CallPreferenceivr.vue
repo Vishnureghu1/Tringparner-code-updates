@@ -668,7 +668,9 @@ export default {
       this.participants.push({AgentUid:agentuid,Name:agentname,Number:parseInt(agentnumber)})
       }
       if($event == null){
-        this.participants.splice(agentIndex,1)
+        // this.participants.splice(agentIndex,1)
+        this.participants = this.participants.filter(ele =>{return ele.AgentUid != agentuid});
+
       }
        const details = {
 						url: this.$cloudfareApi + '/callDistribution/ivr/addparticipant',
