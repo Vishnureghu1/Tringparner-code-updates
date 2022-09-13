@@ -315,9 +315,10 @@ this.priorityList();
       const item = this.items.find((item) => item.id == itemID);
       item.list = list;
     },
-    goBack(bussinessNumber, key) {
-      let newQuery = {bn: bussinessNumber, key: key};
-      this.$router.push({ path: '/keyPressDepartment', query: { ...newQuery } });
+    goBack() {
+       this.$router.push("/keyPressDepartment?bn="+this.bussinessNumber+"&key="+this.key);
+     // let newQuery = {bn: bussinessNumber, key: key};
+      //this.$router.push({ path: '/keyPressDepartment', query: { ...newQuery } });
     },
     CallFlowSettings() {
       const getNumber =  Object.keys(this.$route.query)[0]
