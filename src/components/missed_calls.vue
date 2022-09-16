@@ -438,25 +438,29 @@
                                   </h5>                            
 </div>
                                   </div>
-                                  <div
-                                    v-for="getNotes in details.Note"
-                                    :key="getNotes.text"
-                                  >
-                                    <span v-if="getNotes.Note != ''">
-                                      <span class="mdi mdi-note grey--text">
+                                  <div v-for="getNotes in details.Note" :key="getNotes.text">
+                                    <span v-if="getNotes.Note != '' ">
+                                      <span  class="mdi mdi-note grey--text" >
                                       </span>
-                                      <span v-html="callNote(getNotes.Note)" /> 
-                                      <span
-                                        class="mdi mdi-pencil grey--text"
-                                        @click="
-                                          threeDotAction(
-                                            'add_note',
-                                            'virtualNumber',
-                                            details.uniqueid,
-                                            getNotes.Note
-                                          )
-                                        "
-                                      >
+                                      <span v-html="callNote(getNotes.Note)" />
+                                    
+                                      <span v-if="getNotes.Uid==ownerUid" class="mdi mdi-pencil grey--text" @click="
+                                        threeDotAction(
+                                          'add_note',
+                                          'virtualNumber',
+                                          details.uniqueid,
+                                          getNotes.Note
+                                        )
+                                      ">
+                                      </span>
+                                      <span v-else class="mdi mdi-pencil grey--text" @click="
+                                        threeDotAction(
+                                          'add_note_warning',
+                                          'virtualNumber',
+                                          details.uniqueid,
+                                          getNotes.Note
+                                        )
+                                      ">
                                       </span>
                                     </span>
                                   </div>
@@ -516,11 +520,13 @@
                                         @click="
                                           threeDotAction(
                                             'add_reminder',
-                                            'virtualNumber',
-                                            details.uniqueid,
-                                            '',
-                                            details.reminderPayload.Message,
-                                            details.reminderPayload.Type
+    'virtualNumber',
+    details.uniqueid,
+    'edit_reminder',
+    '',
+    '',
+    details.reminderPayload.Message,
+    details.reminderPayload.Type
                                           )
                                         "
                                       >
@@ -546,6 +552,9 @@
                                               'virtualNumber',
                                               details.uniqueid,
                                               '',
+                                              '',
+                                              '',
+                                              details.reminderPayload.Message,
                                               '10'
                                             )
                                           "
@@ -1095,10 +1104,20 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
       virtualNumber,
       uniqueId,
       notes_text,
+      noteOwnerId,
+      ownerId,
       oldnote,
       oldradio
     ) {
-      if (action == "add_note") {
+
+      console.log('virtualNumber----'+virtualNumber);
+      console.log('uniqueId---------'+uniqueId);
+      console.log('notes_text-------'+notes_text);
+      console.log('noteOwnerId------'+noteOwnerId);
+      console.log('ownerId----------'+ownerId);
+      console.log('oldnote-----------'+oldnote);
+      console.log('oldradio----------'+ oldradio);
+      if (action == "add_note" ) {
         console.log("Add Note");
         this.notes_data = notes_text;
         this.uniqueId = uniqueId;
@@ -1110,6 +1129,13 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
           this.uniqueId = uniqueId;
           this.notes_text = "Edit Notes";
         }
+      }
+      if (action == "add_note_warning" || noteOwnerId!=ownerId) {
+        this.$root.vtoast.show({
+            message: "You cannot edit note created by another user",
+            color: "black",
+            timer: 2000,
+          });
       }
       if (action == "add_reminder") {
         console.log("Add Reminder");

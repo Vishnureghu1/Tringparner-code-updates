@@ -166,6 +166,13 @@
                     <div v-if="this.searchTerm.length != 0 && totalItems == 0" align="center" class="center">No Calls to
                       show!</div>
 
+                    <!-- <v-icon
+                                class="mt-0 mb-5 mr-0"
+                                color="blue"
+                                
+                                >mdi-swap-vertical-variant</v-icon
+                              > -->
+                    <!-- IVR icon here -->
                     <v-expansion-panels accordion flat v-if="realdata.length != ''">
                       <v-expansion-panel v-for="details in realdata" :key="details.text">
 
@@ -189,35 +196,28 @@
 
                                     <v-list>
                                       <div v-for="getNotes in details.Note" :key="getNotes.text"></div>
-                                      
                                       <v-list-item v-for="(item, index) in items" :key="index"
                                         active-class="pink--text">
                                         <div v-for="getNotes in details.Note" :key="getNotes.text">
-                                          <v-list-item-title   :class="item.color" @click="
+                                          <!-- {{getNotes.Uid}} -->
+                                            <v-list-item-title :class="item.color" @click=" 
                                             threeDotAction(
                                               item.url,
                                               details.virtualnumber,
                                               details.uniqueid,
                                               getNotes.Note,
+                                              getNotes.Uid, //5
+                                              ownerUid, //6
                                               '',
                                               '10'
-                                            )
-                                          ">
-                                    
-                                           
-                                            <span v-if="
+                                              )
+                                              "><span v-if="
                                               getNotes.Note != '' &&
                                               item.url == 'add_note'
-                                            ">Edit Note</span>
-                                           
-
-                                          
-                                             <span v-else>{{ item.title }}</span>
-                                            
+                                              ">Edit Note</span>
+                                            <span v-else>{{ item.title }}</span>
                                           </v-list-item-title>
-                                          
                                         </div>
-                                        
                                       </v-list-item>
                                     </v-list>
                                   </v-menu>
@@ -289,11 +289,12 @@
                                   </div>
                                   
                                   <div v-for="getNotes in details.Note" :key="getNotes.text">
-                                    <span v-if="getNotes.Note != ''">
-                                      <span class="mdi mdi-note grey--text">
+                                    <span v-if="getNotes.Note != '' ">
+                                      <span  class="mdi mdi-note grey--text" >
                                       </span>
                                       <span v-html="callNote(getNotes.Note)" />
-                                      <v-icon small class="mdi mdi-pencil grey--text p-2" @click="
+                                    
+                                      <span v-if="getNotes.Uid==ownerUid" class="mdi mdi-pencil grey--text" @click="
                                         threeDotAction(
                                           'add_note',
                                           'virtualNumber',
@@ -301,9 +302,16 @@
                                           getNotes.Note
                                         )
                                       ">
-                                      </v-icon>
-
-                                  
+                                      </span>
+                                      <span v-else class="mdi mdi-pencil grey--text" @click="
+                                        threeDotAction(
+                                          'add_note_warning',
+                                          'virtualNumber',
+                                          details.uniqueid,
+                                          getNotes.Note
+                                        )
+                                      ">
+                                      </span>
                                     </span>
                                   </div>
 
@@ -312,6 +320,7 @@
                                     <div>
                                       <span v-for="getNotes in details.Note" :key="getNotes.text">
                                         <span v-if="getNotes.Note == ''">
+                                          
                                           <v-btn color="red" text class="
                                               ma-2
                                               ml-0
@@ -348,6 +357,8 @@
     'virtualNumber',
     details.uniqueid,
     'edit_reminder',
+    '',
+    '',
     details.reminderPayload.Message,
     details.reminderPayload.Type
   )
@@ -368,6 +379,8 @@
                                               'add_reminder',
                                               'virtualNumber',
                                               details.uniqueid,
+                                              '',
+                                              '',
                                               '',
                                               details.reminderPayload.Message,
                                               '10'
@@ -532,26 +545,19 @@
         <v-card-title class="d-flex justify-center">
           <h3 class="center">{{ notes_text }}</h3>
         </v-card-title>
-    
-        <v-card-text class="pt-0" v-if="uniqueId==this.ownerUid">
+        <v-card-text class="pt-0">
           <v-text-field v-model="notes_data" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules"
-            counter maxlength="120" type="text" @click:clear="clearMessage( uniqueId, notes_data)" class="black--text">
+            counter maxlength="120" type="text" @click:clear="clearMessage(uniqueId, notes_data)" class="black--text">
           </v-text-field>
         </v-card-text>
-   
-        <v-card-text class="pt-0" v-else>
-          <v-text-field v-model="notes_data"  disabled label="Notes" :rules="rules"
-            type="text" class="black--text">
-          </v-text-field>
-        </v-card-text>
-        
+
         <v-card-actions>
           <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
             @click="addNotesDialog = false">
             Cancel
           </v-btn>
           <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
-            @click="addNote(uniqueId, notes_data)" v-if="uniqueId==this.ownerUid">
+            @click="addNote(uniqueId, notes_data)">
             Save
           </v-btn>
         </v-card-actions>
@@ -559,30 +565,6 @@
     </v-dialog>
     <!-- RENAME addNotesDialog SECTION -->
 
-
-    <!-- RENAME DeleteNote SECTION -->
-    <v-dialog v-model="deleteNoteDialog" max-width="332px">
-      <v-card v-model="deleteNoteDialog" class="rounded-lg pt-7 pb-7">
-        <v-card-title class="d-flex justify-center">
-          <h3 class="center">Are you sure?</h3>
-        </v-card-title>
-        <v-card-text class="pt-0">
-         <p class="pb-0 mb-0" align="center">Are you sure want to delete this note?</p>
-        </v-card-text>
-
-        <v-card-actions>
-          <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
-            @click="deleteNoteDialog = false">
-            No
-          </v-btn>
-          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
-            @click="deleteNote(uniqueId, notes_data)">
-            Yes
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!-- RENAME DeleteNote SECTION -->
     <v-dialog v-model="sendInviteLoader" hide-overlay persistent width="300">
       <v-card color="red" dark>
         <v-card-text>
@@ -633,10 +615,9 @@ export default {
     changeEmailPopup: false,
     enterOtpModel: false,
     loadingMore: false,
-deleteNoteDialog:false,
+
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
-      
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
       {
         title: "Block This Number",
@@ -1020,10 +1001,20 @@ deleteNoteDialog:false,
       virtualNumber,
       uniqueId,
       notes_text,
+      noteOwnerId, //5
+      ownerId, //6
       oldnote,
       oldradio
     ) {
-      if (action == "add_note") {
+
+      console.log('virtualNumber----'+virtualNumber);
+      console.log('uniqueId---------'+uniqueId);
+      console.log('notes_text-------'+notes_text);
+      console.log('noteOwnerId------'+noteOwnerId);
+      console.log('ownerId----------'+ownerId);
+      console.log('oldnote-----------'+oldnote);
+      console.log('oldradio----------'+ oldradio);
+      if (action == "add_note" ) {
         console.log("Add Note");
         this.notes_data = notes_text;
         this.uniqueId = uniqueId;
@@ -1036,14 +1027,12 @@ deleteNoteDialog:false,
           this.notes_text = "Edit Notes";
         }
       }
-
-      if (action == "delete_note") {
-        console.log("Delete Note");
- 
-        this.dialog = false;
-        this.addNotesDialog = false;
-        this.deleteNoteDialog = true;
-
+      if (action == "add_note_warning" || noteOwnerId!=ownerId) {
+        this.$root.vtoast.show({
+            message: "You cannot edit note created by another user",
+            color: "black",
+            timer: 2000,
+          });
       }
       if (action == "add_reminder") {
         console.log("Add Reminder");
@@ -1276,7 +1265,7 @@ deleteNoteDialog:false,
         .catch((error) => {
           console.log("Error getting documents: ", error);
         });
-    }, 
+    },
     sendReminder(radio, date, time) {
       // console.log(moment(new Date()).format("YYYY-MM-DD hh:mm"))
       var token = localStorage.getItem("token");
@@ -1363,9 +1352,7 @@ deleteNoteDialog:false,
         });
     },
     clearMessage(unique_id, message) {
-if(unique_id==this.ownerUid){
-
-  var token = localStorage.getItem("token");
+      var token = localStorage.getItem("token");
       message = "";
       const user_data = {
         url: this.$cloudfareApi + "/note",
@@ -1392,9 +1379,6 @@ if(unique_id==this.ownerUid){
         .catch((error) => {
           console.log("Error getting documents: ", error);
         });
-          }else{
-            alert('You are not allowed to clear the message! Only owner can delete it!')
-          }
     },
     getCallsFilterPayload(filterCallsConditions) {
       console.log("this.selectedTimeOfCall", this.selectedTimeOfCall);
