@@ -500,11 +500,11 @@
     <v-dialog v-model="dialog" persistent max-width="400px">
       <v-card>
         <v-card-title class="d-flex justify-center">
-          <h3 class="center">Are you Sure!</h3>
+          <!-- <h3 class="center">Are you Sure!</h3> -->
         </v-card-title>
         <v-card-body>
           <h4 class="mb-3 mt-3 text-center">
-            Do you want to Upgrade the plan?
+            Do you want to proceed with IVR Plan?
           </h4>
         </v-card-body>
         <v-card-actions>

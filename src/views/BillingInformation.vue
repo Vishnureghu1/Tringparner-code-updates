@@ -84,8 +84,8 @@
                               </v-row>
 
                               <div class="membership_price">
-                                {{ invoice_amount
-                                }}<span class="currency_symbol">INR</span>
+                                <!-- {{ invoice_amount
+                                }}<span class="currency_symbol">INR</span> -->
                               </div>
 
                               <div class="membership_details">
@@ -98,12 +98,12 @@
                                     ">
                                     <template v-slot:label>
                                       <div class="black--text">
-                                        Pay for
+                                        
+                                        
 
-                                        <strong class="black--text darken-4">
-                                          {{ nonivrData.Validity }} months
-                                          <span v-if="nonivrData.Discount > 0">and save
-                                            {{ nonivrData.Discount }}%</span></strong>
+                                      
+                                          {{ nonivrData.planName }} 
+                                         
                                       </div>
                                     </template>
                                   </v-radio>
@@ -140,13 +140,19 @@
                           
 
                           <v-card-actions align="center" class="center" v-if="  new Date().getTime() < renewlDate">
-                          
-                              <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+                           <v-layout row>
+          <v-flex justify-center>
+                              <v-btn color="red" text class="ma-5 text-capitalize rounded-pill p-3 red_button_outline"
                                 min-width="140px" @click="basicplan_info = true">
                                 View Detail
                               </v-btn>
+                              </v-flex>
+                              </v-layout>
+
                             </v-card-actions>
                             <v-card-actions align="center" class="center" v-else>
+                              <v-layout row>
+          <v-flex justify-center>
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
                                 color="white" outlined @click="recharge()" v-if="Stage != 'TRIAL'">
                                 Pay Now
@@ -157,10 +163,13 @@
                                 Pay Now
                               </v-btn>
                               
-                              <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+                              <v-btn color="red" text class="ma-5 text-capitalize rounded-pill p-3 red_button_outline"
                                 min-width="140px" @click="basicplan_info = true">
                                 View Detail
                               </v-btn>
+                              </v-flex>
+                              </v-layout>
+
                             </v-card-actions>
 
                             <v-expand-transition>
@@ -298,8 +307,8 @@
                            
 
                              <div class="membership_price"   v-if="Stage=='TRIAL' ">
-                                {{ invoice_amount
-}}<span class="currency_symbol">INR</span>
+                                <!-- {{ invoice_amount
+}}<span class="currency_symbol">INR</span> -->
                               </div>
                                    <div class="membership_price"   v-else-if="Stage=='PAID' && ivrActive==false">
 
@@ -311,15 +320,17 @@
                                   ₹ {{ amount  }}
                                 </div>
                               </v-row>
-                               <span v-else> {{ amount
-}}<span class="currency_symbol">INR</span></span>
+                               <span v-else>
+                                 <!-- {{ amount
+}}<span class="currency_symbol">INR</span> -->
+</span>
 </div>
                                  <div class="membership_price"   v-else>
-                                {{ invoice_amount
-}}<span class="currency_symbol">INR</span>
+                                <!-- {{ invoice_amount
+}}<span class="currency_symbol">INR</span> -->
 </div>
 
-                        
+
                               <div class="membership_details" v-if="ivrActive==true || Stage == 'TRIAL'">
 
                                 <v-radio-group mandatory  v-model="ivrRadioGroup">
@@ -330,12 +341,10 @@
                                     ">
                                     <template v-slot:label>
                                       <div class="black--text">
-                                        Pay for
-
-                                        <strong class="black--text darken-4">
-                                          {{ ivrData.Validity }} months
-                                          <span v-if="ivrData.Discount > 0">and save
-                                            {{ ivrData.Discount }}%</span></strong>
+                                       
+                                        
+                                          {{ ivrData.planName }}
+                                         
                                       </div>
                                     </template>
                                   </v-radio>
@@ -368,7 +377,8 @@
 
                               </v-row>
                             <v-card-actions align="center" class="center" >
-                             
+                              <v-layout row>
+          <v-flex justify-center>
                               <div v-if="new Date().getTime() > renewlDate ">
                               <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px"
                                 color="white" outlined @click="paynowUpgrade()" v-if="Stage == 'PAID'">
@@ -388,10 +398,13 @@
                               </v-btn>
                         
                               </div>
-                              <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+                              <v-btn color="red" text class="ma-5 text-capitalize rounded-pill p-3 red_button_outline"
                                 min-width="140px" @click="ivrplan_info = true">
                                 View Detail
                               </v-btn>
+                              </v-flex>
+                              </v-layout>
+
                             </v-card-actions>
 
                             <v-expand-transition>
@@ -513,7 +526,7 @@
 
                                         <tr colspan="3">
                                           <td class="ma-0 pa-0" colspan="1">
-                                            Cost for {{reminingmonths}}
+                                            IVR Cost for {{reminingmonths}}
                                           </td>
 
                                           <td class="ma-0 pa-0" colspan="2" align="right">
@@ -527,7 +540,7 @@
 
                                         <tr colspan="3">
                                           <td class="ma-0 pa-0" colspan="1">
-                                            Remaining Amount Paid for Basic
+                                            Remaining Amount Paid for Basic Plan
                                           </td>
 
                                           <td class="ma-0 pa-0" colspan="2" align="right">
