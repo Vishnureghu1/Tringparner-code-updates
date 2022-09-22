@@ -1,12 +1,12 @@
 <template>
   <v-app>
     <v-container fluid>
-      <v-snackbar :timeout="timeout" v-model="contacts_added" :bottom="bottom" :right="right" color="green" text>
+      <!-- <v-snackbar :timeout="timeout" v-model="contacts_added" :bottom="bottom" :right="right" color="green" text>
         Contacts
         added successfully!</v-snackbar>
       <v-snackbar :timeout="timeout" v-model="contacts_removed" :bottom="bottom" :right="right" color="red" text>
         Contact
-        removed successfully!</v-snackbar>
+        removed successfully!</v-snackbar> -->
 
       <v-layout>
         <v-flex xs12 sm12 md12>
@@ -230,7 +230,7 @@
           <v-text-field label="Name" outlined v-model="name"></v-text-field>
 
           <v-text-field label="Mobile Number*" outlined v-model="number"></v-text-field>
-          <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox>
+          <!-- <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox> -->
 
         </v-card-text>
         <v-card-actions>
@@ -296,7 +296,7 @@ export default {
     contact_text: "",
     userContacts: [],
     tab:null,
-    syncOrganisation:false,
+    // syncOrganisation:false,
     // contactName:"",
     // contactNumber:"",
     items: [
@@ -348,7 +348,15 @@ export default {
 
           })
           this.organisationContacts.push(this.organisationContactsObject);
+
+          // var docs =  querySnapshot.docs.map(JSON.decode(JSON.encode(doc.data())));
+
+          
         })
+        const LocalContactsOrganizationJson = JSON.stringify(this.organisationContacts);
+        
+        console.log(LocalContactsOrganizationJson);
+        localStorage.setItem("organizationContactLocal", LocalContactsOrganizationJson);
       }
     }).catch((err) => {
       console.log(err.message)
@@ -357,7 +365,7 @@ export default {
   methods: {
     checkboxUpdated(newValue){
   console.log(newValue)
-  this.syncOrganisation = newValue==null?false:true;
+  // this.syncOrganisation = newValue==null?false:true;
 },
     searchAction() {
       this.hidden = !this.hidden;
@@ -400,13 +408,23 @@ export default {
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
-      console.log("this.searchTerm.length", this.searchTerm.length);
-      if (this.searchTerm !== "") {
-        this.searchMongo();
-      } else {
-        console.log("searchTerm is empty");
-        this.realdata = this.backuprealdata;
-      }
+var obj ='';
+  // var searchQuery = this.searchTerm;
+
+  var json = JSON.parse(localStorage.getItem('organizationContactLocal'));
+
+for(obj in json) {
+    console.log(json[obj].name); //compare this with your "searchtext"
+}
+
+
+      // console.log("this.searchTerm.length", this.searchTerm.length);
+      // if (this.searchTerm !== "") {
+      //   this.searchMongo();
+      // } else {
+      //   console.log("searchTerm is empty");
+      //   this.realdata = this.backuprealdata;
+      // }
     },
     threeDotAction(url, contactName, contactNumber) {
       if (url == "edit_contact") {
@@ -436,7 +454,7 @@ export default {
 
     saveNow() {
 
-      if(this.syncOrganisation==false){
+      if(this.syncOrganisation==false){   
 
         const details = {
           url: this.$cloudfareApi + "/contact/user",
