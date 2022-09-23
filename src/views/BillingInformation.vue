@@ -326,8 +326,8 @@
 </span>
 </div>
                                  <div class="membership_price"   v-else>
-                                <!-- {{ invoice_amount
-}}<span class="currency_symbol">INR</span> -->
+                                {{ invoice_amount
+}}<span class="currency_symbol">INR</span>
 </div>
 
 
