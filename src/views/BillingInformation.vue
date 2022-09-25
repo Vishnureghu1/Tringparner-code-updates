@@ -74,7 +74,7 @@
                               <p class="redtext bold" v-if="Stage != 'TRIAL'">
                                 Next Recharge Due on {{ Rechargeday }}
                               </p>
-                              <v-row no-gutters>
+                              <v-row no-gutters  v-if="Stage != 'TRIAL'">
                                 <div class="col-8 membership_heading f16">
                                   Total Cost (Inclusive of GST)
                                 </div>
@@ -268,7 +268,7 @@
                                Billable Duration 
                                 {{reminingmonths}}
                               </p>
-                              <v-row no-gutters>
+                              <v-row no-gutters  v-if="SwitcherID==4 && ivrActive==true">
                                 <div class="col-8 membership_heading f16">
                                   Total Cost (Inclusive of GST)
                                 </div>
