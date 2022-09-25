@@ -257,6 +257,8 @@
                         <div class="row" v-else-if="SwitcherID == 2 || SwitcherID == 4">
                           <v-card class="ml-8" min-width="700" min-height="400">
                             <v-card-text class="pb-0">
+
+
                               <p class="redtext bold"  v-if="Stage != 'TRIAL' && SwitcherID==4 && ivrActive==true">
                               <!-- <p class="redtext bold"  v-if="Stage != 'TRIAL' && SwitcherID==2"> -->
                                 Next Recharge Due on {{ Rechargeday }}
@@ -266,6 +268,17 @@
                                Billable Duration 
                                 {{reminingmonths}}
                               </p>
+                              <v-row no-gutters>
+                                <div class="col-8 membership_heading f16">
+                                  Total Cost (Inclusive of GST)
+                                </div>
+                                <div class="col-4 membership_heading f16" align="right" >
+                                  ₹ {{ invoice_amount }}
+                                </div>
+                              </v-row>
+
+
+                              
                               
                                  <v-row no-gutters  v-if="Stage == 'PAID' && ivrActive==false ">
                                 
@@ -273,7 +286,7 @@
                                   Cost for Upgradation
                                 </div>
                                 <div class="col-4 membership_heading black--text darken-3 f18" align="right" >
-                                  ₹ {{ amountwithoutgst }}
+                                  ₹ {{ amountwithoutgst }} 
                                   
                                 </div>
                               </v-row>
@@ -326,8 +339,8 @@
 </span>
 </div>
                                  <div class="membership_price"   v-else>
-                                {{ invoice_amount
-}}<span class="currency_symbol">INR</span>
+                                <!-- {{ invoice_amount
+}}<span class="currency_symbol">INR</span> -->
 </div>
 
 
