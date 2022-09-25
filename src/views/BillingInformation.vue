@@ -409,12 +409,12 @@
                                 color="white" outlined @click="paynowUpgrade()" v-if="ivrActive != true">
                                 Pay Now
                               </v-btn>
-                        
-                              </div>
                               <v-btn color="red" text class="ma-5 text-capitalize rounded-pill p-3 red_button_outline"
-                                min-width="140px" @click="ivrplan_info = true">
+                                min-width="140px" @click="ivrplan_info = true"  >
                                 View Detail
                               </v-btn>
+                              </div>
+                             <!-- Billing Information check next page -->
                               </v-flex>
                               </v-layout>
 
