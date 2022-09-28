@@ -75,10 +75,10 @@
                                 Next Recharge Due on {{ Rechargeday }}
                               </p>
                               <v-row no-gutters  v-if="Stage != 'TRIAL'">
-                                <div class="col-8 membership_heading f16">
+                                <div class="col-8 membership_heading f18">
                                   Total Cost (Inclusive of GST)
                                 </div>
-                                <div class="col-4 membership_heading f16" align="right" >
+                                <div class="col-4 membership_heading f18" align="right" >
                                   ₹ {{ invoice_amount }}
                                   <!-- ₹ {{ permonth }}/Month --> 
                                   <!-- we can chnage if needed -->
@@ -271,10 +271,10 @@
                                 {{reminingmonths}}
                               </p>
                               <v-row no-gutters  v-if="SwitcherID==4 && ivrActive==true">
-                                <div class="col-8 membership_heading f16">
+                                <div class="col-8 membership_heading f18">
                                   Total Cost (Inclusive of GST)
                                 </div>
-                                <div class="col-4 membership_heading f16" align="right" >
+                                <div class="col-4 membership_heading f18" align="right" >
                                   ₹ {{ invoice_amount }}
                                 </div>
                               </v-row>
@@ -303,10 +303,10 @@
                                 </div>
                               </v-row> -->
                               <v-row no-gutters  v-if="Stage != 'TRIAL' && SwitcherID==2">
-                                <div class="col-8 membership_heading f16">
+                                <div class="col-8 membership_heading f18">
                                   Total Cost (Inclusive of GST)
                                 </div>
-                                <div class="col-4 membership_heading f16" align="right" >
+                                <div class="col-4 membership_heading f18" align="right" >
                                   ₹ {{ permonth }}/Month
                                 </div>
                               </v-row>
