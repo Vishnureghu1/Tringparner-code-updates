@@ -79,7 +79,9 @@
                                   Total Cost (Inclusive of GST)
                                 </div>
                                 <div class="col-4 membership_heading f16" align="right" >
-                                  ₹ {{ permonth }}/Month
+                                  ₹ {{ invoice_amount }}
+                                  <!-- ₹ {{ permonth }}/Month --> 
+                                  <!-- we can chnage if needed -->
                                 </div>
                               </v-row>
 

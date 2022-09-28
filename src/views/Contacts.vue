@@ -412,10 +412,17 @@ var obj ='';
   // var searchQuery = this.searchTerm;
 
   var json = JSON.parse(localStorage.getItem('organizationContactLocal'));
-
+console.log(json);
 for(obj in json) {
-    console.log(json[obj].name); //compare this with your "searchtext"
+
+    console.log(json[obj].ContactName); //compare this with your "searchtext"
+    // console.log(json); //compare this with your "searchtext"
 }
+
+
+
+
+
 
 
       // console.log("this.searchTerm.length", this.searchTerm.length);
