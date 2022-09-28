@@ -357,6 +357,9 @@ export default {
         
         console.log(LocalContactsOrganizationJson);
         localStorage.setItem("organizationContactLocal", LocalContactsOrganizationJson);
+
+        // window.localStorage.setItem("organizationContactLocal", JSON.stringify(LocalContactsOrganizationJson));
+
       }
     }).catch((err) => {
       console.log(err.message)
@@ -407,7 +410,22 @@ export default {
       }
     },
     updateSearchTerm() {
-      console.log(this.searchTerm);
+      // console.log(this.searchTerm);
+// var searchQuery = this.searchTerm;
+      // Get the user's input from the page
+
+// Get the item from LocalStorage
+// var localStorageItem = localStorage.getItem(searchQuery);
+
+// Do your DOM manipulation magic
+// var elementValue = $('#MyTable')
+//   .find('tr#key_' + localStorageItem)
+//   .children('td.two')
+//   .text();
+
+// console.log(localStorageItem);
+
+
 var obj ='';
   // var searchQuery = this.searchTerm;
 
@@ -418,6 +436,8 @@ for(obj in json) {
     console.log(json[obj].ContactName); //compare this with your "searchtext"
     // console.log(json); //compare this with your "searchtext"
 }
+
+
 
 
 
