@@ -809,3 +809,8 @@ h4.background span {
 .pr-45 {
     padding-right: 45px;
 }
+
+span.highlightText {
+    color: #000;
+    background-color: red;
+}

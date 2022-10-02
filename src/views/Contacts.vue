@@ -75,7 +75,10 @@
       >
         <v-card flat elevation="0">
                    <div id="layoutCallLog">
-            <v-expansion-panels accordion flat v-if="organisationContacts && organisationContacts.length > 0">
+
+  
+  
+  <v-expansion-panels accordion flat v-if="organisationContacts && organisationContacts.length > 0">
 
 
               <v-expansion-panel v-for="organisationContact in organisationContacts" :key="organisationContact.Name">
@@ -86,9 +89,9 @@
                         <div class="pa-2 #FFEDEE rounded-circle name-ico d-inline-block mr-5 text-uppercase" style="
     width: 30px;
     text-align: center;">
-                          {{ organisationContact.ContactName.charAt(0) }}
+                         <span v-html="organisationContact.ContactInitial"></span>
                         </div>
-                        {{ organisationContact.ContactName }}
+                        <span v-html="organisationContact.ContactName"></span>
                       </h3>
                     </v-col>
                     <v-col cols="12" sm="2" align="right">
@@ -296,6 +299,7 @@ export default {
     contact_text: "",
     userContacts: [],
     tab:null,
+    searchObject:"",
     // syncOrganisation:false,
     // contactName:"",
     // contactNumber:"",
@@ -305,7 +309,14 @@ export default {
     ],
   }),
   created() {
-    let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+
+    this.syncContents();
+  
+  },
+  methods: {
+
+    syncContents(){
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
     this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
     // console.log(owneruid)
@@ -344,6 +355,7 @@ export default {
           // console.log(contact)
           this.organisationContactsObject = Object.assign({}, this.organisationContactsObject, {
             ContactName: contact.Name,
+            ContactInitial:contact.Name.charAt(0),
             ContactNumber: contact.Number,
 
           })
@@ -364,8 +376,8 @@ export default {
     }).catch((err) => {
       console.log(err.message)
     })
-  },
-  methods: {
+    },
+
     checkboxUpdated(newValue){
   console.log(newValue)
   // this.syncOrganisation = newValue==null?false:true;
@@ -409,49 +421,41 @@ export default {
         this.dialogDelete = false;
       }
     },
+
+
+
     updateSearchTerm() {
-      // console.log(this.searchTerm);
-// var searchQuery = this.searchTerm;
-      // Get the user's input from the page
 
-// Get the item from LocalStorage
-// var localStorageItem = localStorage.getItem(searchQuery);
-
-// Do your DOM manipulation magic
-// var elementValue = $('#MyTable')
-//   .find('tr#key_' + localStorageItem)
-//   .children('td.two')
-//   .text();
-
-// console.log(localStorageItem);
-
-
-var obj ='';
-  // var searchQuery = this.searchTerm;
-
+this.syncContents();
+      console.log(this.searchTerm);
+      var searchObject = [];
+// var ContactName ='';
   var json = JSON.parse(localStorage.getItem('organizationContactLocal'));
-console.log(json);
-for(obj in json) {
-
-    console.log(json[obj].ContactName); //compare this with your "searchtext"
-    // console.log(json); //compare this with your "searchtext"
-}
+// console.log(json);
+  // var stringifiedJson  = JSON.stringify(json);
 
 
+  const searchTerm = this.searchTerm.toLowerCase();
+
+// Finding car object with id 11
+ searchObject = json.filter((Contact) => Contact.ContactName.toLowerCase().indexOf(searchTerm) !== -1);
+
+console.log(searchObject);
+
+let strData = JSON.stringify(searchObject);
+
+
+var dd =strData.replace(new RegExp(this.searchTerm, "gi"), match => {
+  return "<span class='highlightText'>" + match + "</span>";
+});
+// console.log(dd);
+this.organisationContacts.length = 0
+
+this.organisationContacts = JSON.parse(dd);
 
 
 
 
-
-
-
-      // console.log("this.searchTerm.length", this.searchTerm.length);
-      // if (this.searchTerm !== "") {
-      //   this.searchMongo();
-      // } else {
-      //   console.log("searchTerm is empty");
-      //   this.realdata = this.backuprealdata;
-      // }
     },
     threeDotAction(url, contactName, contactNumber) {
       if (url == "edit_contact") {

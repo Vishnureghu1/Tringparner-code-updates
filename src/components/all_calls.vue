@@ -1635,7 +1635,6 @@ export default {
     },
     searchMongo() {
       var searchCallsConditions = {
-        // page_number: this.page ? parseInt(this.page) : 1,
         page_number: 1,
         results_per_page: parseInt(this.limit),
         conditions: {
