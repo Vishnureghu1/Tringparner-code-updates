@@ -175,6 +175,7 @@
                     <!-- IVR icon here -->
                     <v-expansion-panels accordion flat v-if="realdata.length != ''">
                       <v-expansion-panel v-for="details in realdata" :key="details.text">
+                       
 
                         <v-expansion-panel-header v-if="details.callstatus != 'Offline'">
                           <div>
@@ -701,6 +702,7 @@ export default {
     noSearchData: false,
     Department:"",
     Key:"",
+    localContacts:[],
   }),
   watch: {
     sendInviteLoader(val) {
@@ -713,6 +715,68 @@ export default {
     },
   },
   methods: {
+    syncContents(){
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+    const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+    // console.log(owneruid)
+    this.owneruid = owneruid;
+    this.uid = localStorageUserObj.uid;
+    db.collection("UserContacts").where("Uid", "==", owneruid).get().then(async (querySnapshot) => {
+      console.log(querySnapshot);
+      this.userContacts = [];
+      if (!querySnapshot.empty) {
+
+        querySnapshot.forEach(async (doc) => {
+          let contact = doc.data();
+          this.contact = contact;
+          // console.log(contact)
+          this.userContactsObject = Object.assign({}, this.userContactsObject, {
+            ContactName: contact.Name,
+            ContactNumber: contact.Number,
+
+          })
+          this.userContacts.push(this.userContactsObject);
+        })
+      }
+    }).catch((err) => {
+      console.log(err.message)
+    })
+
+
+        db.collection("OrganisationContacts").where("OrganisationUid", "==", owneruid).get().then(async (querySnapshot) => {
+      console.log(querySnapshot);
+      this.organisationContacts = [];
+      if (!querySnapshot.empty) {
+
+        querySnapshot.forEach(async (doc) => {
+          let contact = doc.data();
+          this.contact = contact;
+          // console.log(contact)
+          this.organisationContactsObject = Object.assign({}, this.organisationContactsObject, {
+            ContactName: contact.Name,
+            ContactInitial:contact.Name.charAt(0),
+            ContactNumber: contact.Number,
+
+          })
+          this.organisationContacts.push(this.organisationContactsObject);
+
+          // var docs =  querySnapshot.docs.map(JSON.decode(JSON.encode(doc.data())));
+
+          
+        })
+        const LocalContactsOrganizationJson = JSON.stringify(this.organisationContacts);
+        
+        console.log(LocalContactsOrganizationJson);
+        localStorage.setItem("organizationContactLocal", LocalContactsOrganizationJson);
+ 
+        // window.localStorage.setItem("organizationContactLocal", JSON.stringify(LocalContactsOrganizationJson));
+
+      }
+    }).catch((err) => {
+      console.log(err.message)
+    })
+    },
 
     handleScroll() {
       window.onscroll = () => {
@@ -731,7 +795,7 @@ export default {
     },
 
     callerNumberSpan(text) {
-      return `+91 ${text}`;
+      return `${text}`;
     },
     callNote(text) {
       return `${text}`;
@@ -816,6 +880,16 @@ export default {
                     sort: {},
                   };
 
+
+
+
+           
+
+
+
+
+
+
                   let updatedFilterCallsPayload =
                     this.getCallsFilterPayload(filterCallsPayload);
                   console.log(
@@ -853,6 +927,8 @@ export default {
                       // let List = [];
                       this.realdata = [];
                       this.backuprealdata = [];
+
+
                       dataset.forEach((doc) => {
                         // let callObj = {
 
@@ -863,19 +939,19 @@ export default {
                         this.calldetails = user_details;
                         var timestamp = this.calldetails.dateTime;
                         var date = new Date(timestamp);
-                        console.log("full time", date);
-                        console.log("Time: ", date.getTime());
+                        // console.log("full time", date);
+                        // console.log("Time: ", date.getTime());
 
                         var myCurrentDate = new Date();
                         var missedTresholdDate = new Date(myCurrentDate);
                         missedTresholdDate.setDate(
                           missedTresholdDate.getDate() - 2
                         ); //2 days before
-                        console.log(missedTresholdDate);
+                        // console.log(missedTresholdDate);
 
-                        console.log(timestamp); //missed call date
-                        console.log(missedTresholdDate.getTime()); //addon date
-                        console.log(myCurrentDate.getTime()); //today's date
+                        // console.log(timestamp); //missed call date
+                        // console.log(missedTresholdDate.getTime()); //addon date
+                        // console.log(myCurrentDate.getTime()); //today's date
 
                         if (timestamp <= missedTresholdDate.getTime()) {
                           call_time = moment(date).format("D MMM Y hh:mm a");
@@ -888,23 +964,37 @@ export default {
                         if (this.calldetails.Notes) {
                           note = this.calldetails.Notes;
                         } else {
-                          console.log("no note");
+                          // console.log("no note");
                           note = [{ Note: "" }];
                         }
 
-                        var calledNumber =
-                          this.calldetails.callerNumber.slice(0, 5) +
-                          " " +
-                          this.calldetails.callerNumber.slice(5, 7) +
-                          " " +
-                          this.calldetails.callerNumber.slice(7, 11);
+                        // var calledNumber =
+                        //   this.calldetails.callerNumber.slice(0, 5) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(5, 7) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(7, 11);
                         var virtualnumberDisplay =
                           this.calldetails.virtualnumber.slice(0, 5) +
                           " " +
                           this.calldetails.virtualnumber.slice(5, 7) +
                           " " +
                           this.calldetails.virtualnumber.slice(7, 11);
-                        this.detail = Object.assign({}, this.detail, {
+
+
+                          var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+                          // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
+                          // var data = JSON.stringify(object); // this is a string
+                        // data = data.replace("ContactName", "vegetables");
+                        
+                        localContacts.forEach(element => {
+                          if(this.calldetails.callerNumber==element.ContactNumber){
+
+                            console.log(element.ContactNumber);
+                            console.log(element.ContactName);
+                            var calledNumber =element.ContactName;
+
+                            this.detail = Object.assign({}, this.detail, {
                           callstatus: this.calldetails.callstatus,
                           name: this.calldetails.name[0],
                           dateTime: call_time,
@@ -935,6 +1025,12 @@ export default {
                                           Department:this.calldetails.Department,
                 Key:this.calldetails.Key,
                         });
+                          }
+                        });
+
+
+
+                      
                         this.realdata.push(this.detail);
                         this.backuprealdata.push(this.detail);
                         // console.log("snap1 calllog ", this.realdata);
@@ -943,7 +1039,7 @@ export default {
                       const index = this.realdata.findIndex((object) => {
                         return object.uniqueid === this.uniqueId;
                       });
-                      console.log("testreminder", this.testreminder);
+                      // console.log("testreminder", this.testreminder);
                       this.realdata[index].reminderTime = (this.testreminder == "") ? "" : moment(
                         this.testreminder
                       ).format("D MMM Y hh:mm a");
@@ -1007,13 +1103,13 @@ export default {
       oldradio
     ) {
 
-      console.log('virtualNumber----'+virtualNumber);
-      console.log('uniqueId---------'+uniqueId);
-      console.log('notes_text-------'+notes_text);
-      console.log('noteOwnerId------'+noteOwnerId);
-      console.log('ownerId----------'+ownerId);
-      console.log('oldnote-----------'+oldnote);
-      console.log('oldradio----------'+ oldradio);
+      // console.log('virtualNumber----'+virtualNumber);
+      // console.log('uniqueId---------'+uniqueId);
+      // console.log('notes_text-------'+notes_text);
+      // console.log('noteOwnerId------'+noteOwnerId);
+      // console.log('ownerId----------'+ownerId);
+      // console.log('oldnote-----------'+oldnote);
+      // console.log('oldradio----------'+ oldradio);
       if (action == "add_note" ) {
         console.log("Add Note");
         this.notes_data = notes_text;
@@ -1035,7 +1131,7 @@ export default {
           });
       }
       if (action == "add_reminder") {
-        console.log("Add Reminder");
+        // console.log("Add Reminder");
         console.log(uniqueId);
         this.uniqueId = uniqueId;
         this.addNotesDialog = false;
@@ -1089,35 +1185,35 @@ export default {
 
     handleTimeOfCallChange(opn) {
       this.selectedPaymentOption = opn;
-      console.log(this.selectedTimeOfCall);
+      // console.log(this.selectedTimeOfCall);
     },
     handleDurationOfCallChange(opn) {
       this.selectedDurationOfCall = opn;
-      console.log(this.selectedDurationOfCall);
+      // console.log(this.selectedDurationOfCall);
     },
     handleViewByTypeChange(opn) {
       this.selectedViewByType = opn;
-      console.log(this.selectedViewByType);
+      // console.log(this.selectedViewByType);
     },
     handleIvrOptionChange(opn) {
       this.selectedIvrOption = opn;
-      console.log(this.selectedIvrOption);
+      // console.log(this.selectedIvrOption);
     },
     handleRemindersChange(opn) {
       this.selectedReminders = opn;
-      console.log(this.selectedReminders);
+      // console.log(this.selectedReminders);
     },
     handleNotesChange(opn) {
       this.selectedNotes = opn;
-      console.log(this.selectedNotes);
+      // console.log(this.selectedNotes);
     },
     handleUsersChange(opn) {
       this.selectedUser = opn;
-      console.log(this.selectedUser);
+      // console.log(this.selectedUser);
     },
     handleNumbersChange(opn) {
       this.selectedNumber = opn;
-      console.log(this.selectedNumber);
+      // console.log(this.selectedNumber);
     },
     handleApplyFilter() {
       // this.isUpdating = true;
@@ -1998,7 +2094,7 @@ export default {
     },
   },
   created() {
-
+    this.syncContents();
   firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.uid = user.uid;

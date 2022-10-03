@@ -426,27 +426,22 @@ export default {
 
     updateSearchTerm() {
 
-this.syncContents();
+      this.syncContents();
       console.log(this.searchTerm);
       var searchObject = [];
-// var ContactName ='';
-  var json = JSON.parse(localStorage.getItem('organizationContactLocal'));
-// console.log(json);
-  // var stringifiedJson  = JSON.stringify(json);
+      var json = JSON.parse(localStorage.getItem('organizationContactLocal'));
+      const searchTerm = this.searchTerm.toLowerCase();
 
+      // Finding car object with id 11
+      searchObject = json.filter((Contact) => Contact.ContactName.toLowerCase().indexOf(searchTerm) !== -1);
 
-  const searchTerm = this.searchTerm.toLowerCase();
+      console.log(searchObject);
 
-// Finding car object with id 11
- searchObject = json.filter((Contact) => Contact.ContactName.toLowerCase().indexOf(searchTerm) !== -1);
-
-console.log(searchObject);
-
-let strData = JSON.stringify(searchObject);
+      let strData = JSON.stringify(searchObject);
 
 
 var dd =strData.replace(new RegExp(this.searchTerm, "gi"), match => {
-  return "<span class='highlightText'>" + match + "</span>";
+  return "<mark>" + match + "</mark>";
 });
 // console.log(dd);
 this.organisationContacts.length = 0
