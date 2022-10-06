@@ -715,6 +715,7 @@ export default {
     },
   },
   methods: {
+    
     syncContents(){
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
     const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
@@ -749,7 +750,7 @@ export default {
       this.organisationContacts = [];
       if (!querySnapshot.empty) {
 
-        querySnapshot.forEach(async (doc) => {
+        querySnapshot.forEach(async (doc) => {  
           let contact = doc.data();
           this.contact = contact;
           // console.log(contact)
@@ -1648,49 +1649,65 @@ export default {
               console.log("no note");
               note = [{ Note: "" }];
             }
+// var calledNumber =
+                        //   this.calldetails.callerNumber.slice(0, 5) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(5, 7) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(7, 11);
+                        var virtualnumberDisplay =
+                          this.calldetails.virtualnumber.slice(0, 5) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(5, 7) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(7, 11);
 
-            var calledNumber =
-              this.calldetails.callerNumber.slice(0, 5) +
-              " " +
-              this.calldetails.callerNumber.slice(5, 7) +
-              " " +
-              this.calldetails.callerNumber.slice(7, 11);
-            var virtualnumberDisplay =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
-            this.detail = Object.assign({}, this.detail, {
-              callstatus: this.calldetails.callstatus,
-              name: this.calldetails.name[0],
-              dateTime: call_time,
-              conversationduration: this.calldetails.conversationduration,
-              callerNumber: calledNumber,
-              uniqueid: this.calldetails.uniqueid,
-              Note: note,
-              source: this.calldetails.source,
-              virtualnumber: this.calldetails.callerNumber,
-              virtualnumberDisplay: virtualnumberDisplay,
-              called_name: this.called_name,
-              recordingUrl: this.calldetails.recordingurl,
-              reminder: this.calldetails.Reminder
-                ? this.calldetails.Reminder.ReminderAt
-                : "",
-              reminderPayload: this.calldetails.Reminder
-                ? this.calldetails.Reminder
-                : "",
-              reminderTime: this.calldetails.Reminder
-                ? moment(this.calldetails.Reminder.ReminderAt).format(
-                  "D MMM Y hh:mm a"
-                )
-                : "",
-              isBlocked: this.blocked_numbers_.includes(
-                parseInt(this.calldetails.callerNumber)
-              ),
-                              Department:this.calldetails.Department,
+
+                          var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+                          // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
+                          // var data = JSON.stringify(object); // this is a string
+                        // data = data.replace("ContactName", "vegetables");
+                        
+                        localContacts.forEach(element => {
+                          if(this.calldetails.callerNumber==element.ContactNumber){
+
+                            console.log(element.ContactNumber);
+                            console.log(element.ContactName);
+                            var calledNumber =element.ContactName;
+
+                            this.detail = Object.assign({}, this.detail, {
+                          callstatus: this.calldetails.callstatus,
+                          name: this.calldetails.name[0],
+                          dateTime: call_time,
+                          conversationduration:
+                            this.calldetails.conversationduration,
+                          callerNumber: calledNumber,
+                          uniqueid: this.calldetails.uniqueid,
+                          Note: note,
+                          source: this.calldetails.source,
+                          virtualnumber: this.calldetails.callerNumber,
+                          virtualnumberDisplay: virtualnumberDisplay,
+                          called_name: this.called_name,
+                          recordingUrl: this.calldetails.recordingurl,
+                          reminder: this.calldetails.Reminder
+                            ? this.calldetails.Reminder.ReminderAt
+                            : "",
+                          reminderPayload: this.calldetails.Reminder
+                            ? this.calldetails.Reminder
+                            : "",
+                          reminderTime: this.calldetails.Reminder
+                            ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                            : "",
+                          isBlocked: this.blocked_numbers_.includes(
+                            parseInt(this.calldetails.callerNumber)
+                          ),
+                                          Department:this.calldetails.Department,
                 Key:this.calldetails.Key,
-            });
+                        });
+                          }
+                        });
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
             // call details
@@ -1812,49 +1829,67 @@ export default {
               note = [{ Note: "" }];
             }
 
-            var calledNumber =
-              this.calldetails.callerNumber.slice(0, 5) +
-              " " +
-              this.calldetails.callerNumber.slice(5, 7) +
-              " " +
-              this.calldetails.callerNumber.slice(7, 11);
-            var virtualnumberDisplay =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
-            this.detail = Object.assign({}, this.detail, {
-              callstatus: this.calldetails.callstatus,
-              name: this.calldetails.name[0],
-              dateTime: call_time,
-              conversationduration: this.calldetails.conversationduration,
-              callerNumber: calledNumber,
-              uniqueid: this.calldetails.uniqueid,
-              Note: note,
-              source: this.calldetails.source,
-              virtualnumber: this.calldetails.callerNumber,
-              virtualnumberDisplay: virtualnumberDisplay,
-              called_name: this.called_name,
-              recordingUrl: this.calldetails.recordingurl,
-              reminder: this.calldetails.Reminder
-                ? this.calldetails.Reminder.ReminderAt
-                : "",
-              reminderPayload: this.calldetails.Reminder
-                ? this.calldetails.Reminder
-                : "",
-              reminderTime: this.calldetails.Reminder
-                ? moment(this.calldetails.Reminder.ReminderAt).format(
-                  "D MMM Y hh:mm a"
-                )
-                : "",
-              isBlocked: this.blocked_numbers_.includes(
-                parseInt(this.calldetails.callerNumber)
-              ),
-                              Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
-            });
+            // var calledNumber =
+                        //   this.calldetails.callerNumber.slice(0, 5) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(5, 7) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(7, 11);
+                        var virtualnumberDisplay =
+                          this.calldetails.virtualnumber.slice(0, 5) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(5, 7) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(7, 11);
 
+
+                          var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+                          // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
+                          // var data = JSON.stringify(object); // this is a string
+                        // data = data.replace("ContactName", "vegetables");
+                        
+                        localContacts.forEach(element => {
+                          if(this.calldetails.callerNumber==element.ContactNumber){
+
+                            console.log(element.ContactNumber);
+                            console.log(element.ContactName);
+                            var calledNumber =element.ContactName;
+
+                            this.detail = Object.assign({}, this.detail, {
+                          callstatus: this.calldetails.callstatus,
+                          name: this.calldetails.name[0],
+                          dateTime: call_time,
+                          conversationduration:
+                            this.calldetails.conversationduration,
+                          callerNumber: calledNumber,
+                          callerName: element.ContactName,
+                          uniqueid: this.calldetails.uniqueid,
+                          Note: note,
+                          source: this.calldetails.source,
+                          virtualnumber: this.calldetails.callerNumber,
+                          virtualnumberDisplay: virtualnumberDisplay,
+                          called_name: this.called_name,
+                          recordingUrl: this.calldetails.recordingurl,
+                          reminder: this.calldetails.Reminder
+                            ? this.calldetails.Reminder.ReminderAt
+                            : "",
+                          reminderPayload: this.calldetails.Reminder
+                            ? this.calldetails.Reminder
+                            : "",
+                          reminderTime: this.calldetails.Reminder
+                            ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                            : "",
+                          isBlocked: this.blocked_numbers_.includes(
+                            parseInt(this.calldetails.callerNumber)
+                          ),
+                                          Department:this.calldetails.Department,
+                Key:this.calldetails.Key,
+                        });
+                          }
+                          
+                        });
             // if("Message" in this.detail.reminderPayload) {
             // if(this.detail.reminderPayload.hasOwnProperty("Message")) {
             if (Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
@@ -1876,6 +1911,7 @@ export default {
 
             this.realdata.push(this.detail);
             console.log("snap calllog ", this.realdata);
+            console.log("The Details ", this.detail);
             // call details
           });
         })
@@ -1885,7 +1921,6 @@ export default {
     },
     getNextCalls() {
       //  {{realdata.length}}  {{totalItems}}  
-
       this.loadingMore = true;
       console.log("getting Next Calls");
       console.log("this.lastrecord", this.lastrecord);
@@ -1912,6 +1947,7 @@ export default {
         "getNextCalls updatedFilterCallsPayload",
         JSON.stringify(updatedFilterCallsPayload)
       );
+      this.syncContents();
 
       var cfdata = {
         headers: this.$headerKeyMongo,
@@ -1989,48 +2025,65 @@ export default {
                 note = [{ Note: "" }];
               }
 
-              var calledNumber =
-                this.calldetails.callerNumber.slice(0, 5) +
-                " " +
-                this.calldetails.callerNumber.slice(5, 7) +
-                " " +
-                this.calldetails.callerNumber.slice(7, 11);
-              var virtualnumberDisplay =
-                this.calldetails.virtualnumber.slice(0, 5) +
-                " " +
-                this.calldetails.virtualnumber.slice(5, 7) +
-                " " +
-                this.calldetails.virtualnumber.slice(7, 11);
-              this.detail = Object.assign({}, this.detail, {
-                callstatus: this.calldetails.callstatus,
-                name: this.calldetails.name[0],
-                dateTime: call_time,
-                conversationduration: this.calldetails.conversationduration,
-                callerNumber: calledNumber,
-                uniqueid: this.calldetails.uniqueid,
-                Note: note,
-                source: this.calldetails.source,
-                virtualnumber: this.calldetails.callerNumber,
-                virtualnumberDisplay: virtualnumberDisplay,
-                called_name: this.called_name,
-                recordingUrl: this.calldetails.recordingurl,
-                reminder: this.calldetails.Reminder
-                  ? this.calldetails.Reminder.ReminderAt
-                  : "",
-                reminderPayload: this.calldetails.Reminder
-                  ? this.calldetails.Reminder
-                  : "",
-                reminderTime: this.calldetails.Reminder
-                  ? moment(this.calldetails.Reminder.ReminderAt).format(
-                    "D MMM Y hh:mm a"
-                  )
-                  : "",
-                isBlocked: this.blocked_numbers_.includes(
-                  parseInt(this.calldetails.callerNumber)
-                ),
-                Department:this.calldetails.Department,
+              // var calledNumber =
+                        //   this.calldetails.callerNumber.slice(0, 5) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(5, 7) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(7, 11);
+                        var virtualnumberDisplay =
+                          this.calldetails.virtualnumber.slice(0, 5) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(5, 7) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(7, 11);
+
+
+                          var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+                          // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
+                          // var data = JSON.stringify(object); // this is a string
+                        // data = data.replace("ContactName", "vegetables");
+                        
+                        localContacts.forEach(element => {
+                          if(this.calldetails.callerNumber==element.ContactNumber){
+
+                            console.log(element.ContactNumber);
+                            console.log(element.ContactName);
+                            var calledNumber =element.ContactName;
+
+                            this.detail = Object.assign({}, this.detail, {
+                          callstatus: this.calldetails.callstatus,
+                          name: this.calldetails.name[0],
+                          dateTime: call_time,
+                          conversationduration:
+                            this.calldetails.conversationduration,
+                          callerNumber: calledNumber,
+                          uniqueid: this.calldetails.uniqueid,
+                          Note: note,
+                          source: this.calldetails.source,
+                          virtualnumber: this.calldetails.callerNumber,
+                          virtualnumberDisplay: virtualnumberDisplay,
+                          called_name: this.called_name,
+                          recordingUrl: this.calldetails.recordingurl,
+                          reminder: this.calldetails.Reminder
+                            ? this.calldetails.Reminder.ReminderAt
+                            : "",
+                          reminderPayload: this.calldetails.Reminder
+                            ? this.calldetails.Reminder
+                            : "",
+                          reminderTime: this.calldetails.Reminder
+                            ? moment(this.calldetails.Reminder.ReminderAt).format(
+                              "D MMM Y hh:mm a"
+                            )
+                            : "",
+                          isBlocked: this.blocked_numbers_.includes(
+                            parseInt(this.calldetails.callerNumber)
+                          ),
+                                          Department:this.calldetails.Department,
                 Key:this.calldetails.Key,
-              });
+                        });
+                          }
+                        });
 
 
               if (this.searchTerm !== "") {
