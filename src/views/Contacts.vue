@@ -200,6 +200,7 @@
               </v-tab-item>
               <v-tab-item value="tab-1">
                 <v-card flat elevation="0">
+                  
                   <div id="layoutCallLog">
                     <v-expansion-panels
                       accordion
@@ -286,7 +287,8 @@
                         
                       </v-alert>
                       </div>
-                      <div v-else>
+                     
+                      <div v-else-if="userContact==false">
 
                       <v-alert dense outlined type="error">
                         <h4 class="f16">No contacts found!</h4>
@@ -296,6 +298,10 @@
                           <a href="#"> add a new contact.</a>
                         </p>
                       </v-alert>
+                      </div>
+
+                      <div v-else>
+                        Loading....
                       </div>
 
                     </v-expansion-panels>
