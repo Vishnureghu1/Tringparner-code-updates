@@ -1,12 +1,12 @@
 <template>
   <v-app>
     <v-container fluid>
-      <!-- <v-snackbar :timeout="timeout" v-model="contacts_added" :bottom="bottom" :right="right" color="green" text>
+      <v-snackbar :timeout="timeout" v-model="contacts_added" :bottom="bottom" :right="right" color="green" text>
         Contacts
         added successfully!</v-snackbar>
       <v-snackbar :timeout="timeout" v-model="contacts_removed" :bottom="bottom" :right="right" color="red" text>
         Contact
-        removed successfully!</v-snackbar> -->
+        removed successfully!</v-snackbar>
 
       <v-layout>
         <v-flex xs12 sm12 md12>
@@ -554,6 +554,7 @@ export default {
             this.dialog2 = false;
             this.dialogDelete = false;
             this.syncContents();
+            this.updateSearchTerm();
           }
         });
       } else {
@@ -672,6 +673,25 @@ if(this.searchTerm){
           }
         });
       } else {
+
+        const detailsUser = {
+          url: this.$cloudfareApi + "/contact/user",
+          method: "POST",
+          headers: { token: localStorage.getItem("token") },
+          data: {
+            OwnerUid: this.owneruid,
+            Uid: this.uid,
+            UpdatedBy: this.uid,
+            Name: this.name,
+            Number: this.number,
+            SyncOrganisation: this.syncOrganisation,
+          },
+        };
+        axios(detailsUser).then(async (responsevalue) => {
+          console.log(responsevalue);
+        });
+
+
         const details = {
           url: this.$cloudfareApi + "/contact/organisation",
           method: "POST",
