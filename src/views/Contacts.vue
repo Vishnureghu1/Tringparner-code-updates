@@ -655,8 +655,9 @@ if(this.searchTerm){
     },
 
     saveNow() {
+      console.log(this.syncOrganisation);
       if (this.syncOrganisation == false) {
-        const details = {
+        const details1 = {
           url: this.$cloudfareApi + "/contact/user",
           method: "POST",
           headers: { token: localStorage.getItem("token") },
@@ -669,7 +670,7 @@ if(this.searchTerm){
             SyncOrganisation: this.syncOrganisation,
           },
         };
-        axios(details).then(async (responsevalue) => {
+        axios(details1).then(async (responsevalue) => {
           console.log(responsevalue);
 
           if (responsevalue.data.status == true) {
@@ -678,7 +679,7 @@ if(this.searchTerm){
             this.syncContents();
           }
         });
-      } else {
+      } if (this.syncOrganisation == true) {
 
         const detailsUser = {
           url: this.$cloudfareApi + "/contact/user",
