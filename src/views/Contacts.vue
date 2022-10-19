@@ -581,9 +581,9 @@ if(this.searchTerm){
       // Finding search object
       searchObject = json.filter(
         (Contact) =>
-       ( Contact.ContactName.toLowerCase().indexOf(searchTerm) || Contact.ContactNumber.indexOf(searchTerm) ) !==  -1
-       
-       //search contact number or name here
+        Contact.ContactName.toLowerCase().indexOf(searchTerm) !== -1 
+      //  ( Contact.ContactName.toLowerCase().indexOf(searchTerm) || Contact.ContactNumber.indexOf(searchTerm) ) !==  -1
+
       );
       let strData = JSON.stringify(searchObject);
       var OrganizationContactsData = strData.replace(
