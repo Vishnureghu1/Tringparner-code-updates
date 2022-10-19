@@ -581,7 +581,9 @@ if(this.searchTerm){
       // Finding search object
       searchObject = json.filter(
         (Contact) =>
-          Contact.ContactName.toLowerCase().indexOf(searchTerm) !== -1
+       ( Contact.ContactName.toLowerCase().indexOf(searchTerm) || Contact.ContactNumber.indexOf(searchTerm) ) !==  -1
+       
+       //search contact number or name here
       );
       let strData = JSON.stringify(searchObject);
       var OrganizationContactsData = strData.replace(
@@ -666,7 +668,8 @@ if(this.searchTerm){
             Uid: this.uid,
             UpdatedBy: this.uid,
             Name: this.name,
-            Number: this.number,
+            OldNumber: this.number,
+            NewNumber: this.number,
             SyncOrganisation: this.syncOrganisation,
           },
         };
@@ -690,7 +693,8 @@ if(this.searchTerm){
             Uid: this.uid,
             UpdatedBy: this.uid,
             Name: this.name,
-            Number: this.number,
+            OldNumber: this.number,
+            NewNumber: this.number,
             SyncOrganisation: this.syncOrganisation,
           },
         };
@@ -709,7 +713,8 @@ if(this.searchTerm){
             Uid: this.uid,
             UpdatedBy: this.uid,
             Name: this.name,
-            Number: this.number,
+            OldNumber: this.number,
+            NewNumber: this.number,
             SyncOrganisation: this.syncOrganisation,
           },
         };
