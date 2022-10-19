@@ -444,7 +444,7 @@ export default {
       this.uid = localStorageUserObj.uid;
       await db
         .collection("UserContacts")
-        .where("Uid", "==", owneruid)
+        .where("Uid", "==", this.uid)
         .get()
         .then(async (querySnapshot) => {
           console.log(querySnapshot);
