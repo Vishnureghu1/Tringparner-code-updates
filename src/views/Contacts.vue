@@ -200,7 +200,17 @@
               </v-tab-item>
               <v-tab-item value="tab-1">
                 <v-card flat elevation="0">
-                  
+                  <!-- <div v-if="userContacts==false || userContacts==null">
+                        
+                        <v-alert dense outlined type="error">
+                          <h4 class="f16">No contacts found!</h4>
+                        <p class="mb-0 pb-0 black--text" color="black">
+                          There are no saved contacts. Please
+                          <a href="#">Sync your phone contacts </a>or
+                          <a href="#"> add a new contact.</a>
+                        </p>
+                      </v-alert>
+                    </div> -->
                   <div id="layoutCallLog">
                     <v-expansion-panels
                       accordion
@@ -288,17 +298,7 @@
                       </v-alert>
                       </div>
                      
-                      <div v-else-if="userContact==false || userContact==null">
-                        
-                        <v-alert dense outlined type="error">
-                          <h4 class="f16">No contacts found!</h4>
-                        <p class="mb-0 pb-0 black--text" color="black">
-                          There are no saved contacts. Please
-                          <a href="#">Sync your phone contacts </a>or
-                          <a href="#"> add a new contact.</a>
-                        </p>
-                      </v-alert>
-                    </div>
+                   
                     <div v-else>
                        
                         Loading....
