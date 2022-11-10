@@ -156,12 +156,14 @@
                     </v-col>
                   </v-row>
                   <div id="layoutCallLog">
-                   
- <div v-if="realdata.length!=0">
-
-                    <v-progress-linear v-if="realdata.length == 0 && this.searchTerm.length == 0" color="#ee1c25 "
+                 
+ <div v-if="datafound=='Loading...'">
+<div class="center" align="center">{{datafound}}</div>
+                    <v-progress-linear v-if="datafound=='Loading...'" color="#ee1c25 "
                       indeterminate rounded height="6"></v-progress-linear>
-</div><div v-else align="center">No calls found</div>
+</div>
+
+<div v-if="datafound==false">No calls found</div>
 
 
                     <div v-if="this.searchTerm.length != 0 && totalItems == 0" align="center" class="center">No Calls to
@@ -617,7 +619,7 @@ export default {
     changeEmailPopup: false,
     enterOtpModel: false,
     loadingMore: false,
-
+    datafound:'Loading...',
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
@@ -1052,6 +1054,11 @@ export default {
 
                       
                         this.realdata.push(this.detail);
+                        if(this.detail.length==0){
+                this.datafound = false
+              }else{
+                this.datafound = true
+              }
                         this.backuprealdata.push(this.detail);
                         // console.log("snap1 calllog ", this.realdata);
                         // call details
@@ -1728,6 +1735,11 @@ export default {
                           }
                         });
             this.realdata.push(this.detail);
+            if(this.detail.length==0){
+                this.datafound = false
+              }else{
+                this.datafound = true
+              }
             console.log("snap calllog ", this.realdata);
             // call details
           });
@@ -1929,6 +1941,11 @@ export default {
 
 
             this.realdata.push(this.detail);
+            if(this.detail.length==0){
+                this.datafound = false
+              }else{
+                this.datafound = true
+              }
             console.log("snap calllog ", this.realdata);
             console.log("The Details ", this.detail);
             // call details
@@ -2114,6 +2131,11 @@ export default {
               }
 
               this.realdata.push(this.detail);
+              if(this.detail.length==0){
+                this.datafound = false
+              }else{
+                this.datafound = true
+              }
               this.backuprealdata.push(this.detail);
               console.log("getNextCalls snap calllog ", this.realdata);
               // call details
