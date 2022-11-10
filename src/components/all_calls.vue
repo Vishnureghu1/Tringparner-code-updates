@@ -156,6 +156,7 @@
                     </v-col>
                   </v-row>
                   <div id="layoutCallLog">
+                   
  <div v-if="realdata.length!=0">
 
                     <v-progress-linear v-if="realdata.length == 0 && this.searchTerm.length == 0" color="#ee1c25 "
@@ -780,19 +781,37 @@ export default {
     },
 
     handleScroll() {
+
+
       window.onscroll = () => {
-        let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        // alert("you're at the bottom of the page");
+        if (this.totalPage > 0 && this.totalItems >= this.limit) {
 
-        if (bottomOfWindow) {
-          console.log('bottom of the page');
-          if (this.totalPage > 0 && this.totalItems >= this.limit) {
+          this.getNextCalls();
+           this.scrolledToBottom = true
+        }else{
+           this.scrolledToBottom = false
 
-            this.getNextCalls();
-
-          }
-          //  this.scrolledToBottom = true // replace it with your code
         }
-      }
+        
+    }
+}
+//       window.onscroll = () => {
+//         let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+// console.log(bottomOfWindow);
+//         if (bottomOfWindow) {
+//           console.log('bottom of the page');
+//           if (this.totalPage > 0 && this.totalItems >= this.limit) {
+
+//             this.getNextCalls();
+
+//           if (this.totalPage > 0 && this.totalItems >= this.limit) 
+//           //  this.scrolledToBottom = true // replace it with your code
+//         }
+//       }
+
+
     },
 
     callerNumberSpan(text) {
