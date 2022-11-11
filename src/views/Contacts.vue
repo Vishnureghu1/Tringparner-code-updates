@@ -8,6 +8,9 @@
         Contact
         removed successfully!</v-snackbar>
 
+        <v-snackbar :timeout="timeout" v-model="contacts_error" :bottom="bottom" :right="right" color="red" text>
+        {{error_contacts}}</v-snackbar>
+
       <v-layout>
         <v-flex xs12 sm12 md12>
           <v-row no-gutters>
@@ -135,7 +138,7 @@
 
                                 <v-list>
                                   <v-list-item
-                                    v-for="(item, index) in items"
+                                    v-for="(item, index) in items_organization"
                                     :key="index"
                                     active-class="pink--text"
                                   >
@@ -153,6 +156,8 @@
                                     </v-list-item-title>
                                   </v-list-item>
                                 </v-list>
+
+                                
                               </v-menu>
                             </v-col>
                           </v-row>
@@ -322,12 +327,24 @@
         <v-card-text class="pt-0 pb-0 mb-0">
           <v-text-field label="Name" outlined v-model="name"></v-text-field>
 
-          <v-text-field
+          <v-text-field  v-if="contact_text=='Add Contacts'"
             label="Mobile Number*"
             outlined
             v-model="number"
           ></v-text-field>
-          <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox>
+          <v-text-field v-if="contact_text=='Edit Contact'"
+            label="New Number*"
+            outlined
+            v-model="NewNumber"
+          ></v-text-field>
+          <v-hidden-field v-if="contact_text=='Edit Contact'" hidden
+            label="Old Number"
+            outlined disabled
+            v-model="number"
+          ></v-hidden-field>
+          <div v-if="contact_text=='Add Contacts'">
+            <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox>
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -339,7 +356,7 @@
           >
             Cancel
           </v-btn>
-          <v-btn
+          <v-btn  v-if="contact_text=='Add Contacts'"
             text
             class="text-capitalize ma-3 rounded-pill red_button"
             min-width="140px"
@@ -348,6 +365,16 @@
             @click="saveNow()"
           >
             Save
+          </v-btn>
+          <v-btn  v-else
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+            @click="editNow()"
+          >
+            Update
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -362,8 +389,30 @@
           <h4 class="mb-3 mt-3 text-center">
             Do you want to delete this contact?
           </h4>
+   
         </v-card-body>
-        <v-card-actions>
+        <v-card-actions v-if="organizationContactDelete==true">
+          <v-btn
+            color="red"
+            text
+            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
+            min-width="140px"
+            @click="proceed(0)"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            class="text-capitalize ma-3 rounded-pill red_button"
+            min-width="140px"
+            color="white"
+            outlined
+            @click="proceed(2)"
+          >
+            Yes
+          </v-btn>
+        </v-card-actions>
+        <v-card-actions v-if="userContactDelete==true">
           <v-btn
             color="red"
             text
@@ -423,6 +472,10 @@ export default {
       { title: "Edit Contact", color: "black--text", url: "edit_contact" },
       { title: "Delete Contact", color: "red--text", url: "delete_contact" },
     ],
+    items_organization: [
+      { title: "Edit Contact", color: "black--text", url: "edit_contact" },
+      { title: "Delete Contact", color: "red--text", url: "delete_organization_contact" },
+    ],
   }),
 
   mounted() {
@@ -445,6 +498,7 @@ export default {
       await db
         .collection("UserContacts")
         .where("Uid", "==", this.uid)
+        .where('Mode','in',['Updated','Created'] )
         .get()
         .then(async (querySnapshot) => {
           console.log(querySnapshot);
@@ -477,6 +531,7 @@ export default {
 
       db.collection("OrganisationContacts")
         .where("OrganisationUid", "==", owneruid)
+        .where('Mode','in',['Updated','Created'] )
         .get()
         .then(async (querySnapshot) => {
           console.log(querySnapshot);
@@ -526,6 +581,35 @@ export default {
 
     },
     proceed(e) {
+
+      if (e == 2) {
+        console.log("proceed");
+
+        const details = {
+          url: this.$cloudfareApi + "/contact/organisation",
+          method: "Delete",
+          headers: { token: localStorage.getItem("token") },
+          data: {
+            OrganisationUid: this.owneruid,
+            Uid: this.uid,
+            UpdatedBy: this.uid,
+            Number: this.number,
+          },
+        };
+
+
+        axios(details).then(async (responsevalue) => {
+          console.log(responsevalue);
+
+          if (responsevalue.data.status == true) {
+            this.contacts_removed = true;
+            this.dialog2 = false;
+            this.dialogDelete = false;
+            this.syncContents();
+            this.updateSearchTerm();
+          }
+        });
+      }
       if (e == 1) {
         console.log("proceed");
 
@@ -541,17 +625,7 @@ export default {
           },
         };
 
-        // const details = {
-        //   url: this.$cloudfareApi + "/contact/organisation",
-        //   method: "Delete",
-        //   headers: { token: localStorage.getItem("token") },
-        //   data: {
-        //     OwnerUid: this.owneruid,
-        //     Uid: this.uid,
-        //     UpdatedBy: this.uid,
-        //     Number: this.number,
-        //   },
-        // };
+
         axios(details).then(async (responsevalue) => {
           console.log(responsevalue);
 
@@ -561,6 +635,9 @@ export default {
             this.dialogDelete = false;
             this.syncContents();
             this.updateSearchTerm();
+          }else{
+            this.error_contacts = true;
+            this.error_contacts = responsevalue.data.message;
           }
         });
       } else {
@@ -637,6 +714,7 @@ if(this.searchTerm){
         this.dialog2 = true;
         this.name = contactName;
         this.number = contactNumber;
+        this.NewNumber = contactNumber;
         this.contact_text = "Edit Contact";
       }
       if (url == "add_contact") {
@@ -645,6 +723,7 @@ if(this.searchTerm){
         this.dialog2 = true;
         this.name = contactName;
         this.number = contactNumber;
+        this.NewNumber = contactNumber;
         this.contact_text = "Add a New Contact";
       }
       if (url == "delete_contact") {
@@ -653,6 +732,19 @@ if(this.searchTerm){
         this.name = contactName;
         this.number = contactNumber;
         this.dialogDelete = true;
+        this.userContactDelete = true;
+        this.organizationContactDelete = false;
+
+      }
+      if (url == "delete_organization_contact") {
+        this.dialog = false;
+        this.dialog2 = false;
+        this.name = contactName;
+        this.number = contactNumber;
+        this.dialogDelete = true;
+        this.organizationContactDelete = true;
+        this.userContactDelete =false;
+
       }
     },
 
@@ -680,6 +772,9 @@ if(this.searchTerm){
             this.contacts_added = true;
             this.dialog2 = false;
             this.syncContents();
+          }else{
+            this.error_contacts = true;
+            this.error_contacts = responsevalue.data.message;
           }
         });
       } if (this.syncOrganisation == true) {
@@ -695,6 +790,89 @@ if(this.searchTerm){
             Name: this.name,
             OldNumber: this.number,
             NewNumber: this.number,
+            SyncOrganisation: this.syncOrganisation,
+          },
+        };
+        axios(detailsUser).then(async (responsevalue) => {
+          console.log(responsevalue);
+        });
+
+
+        const details = {
+          url: this.$cloudfareApi + "/contact/organisation",
+          method: "POST",
+          headers: { token: localStorage.getItem("token") },
+          data: {
+            OrganisationUid: this.owneruid,
+            OwnerUid: this.owneruid,
+            Uid: this.uid,
+            UpdatedBy: this.uid,
+            Name: this.name,
+            OldNumber: this.number,
+            NewNumber: this.number,
+            SyncOrganisation: this.syncOrganisation,
+          },
+        };
+        axios(details).then(async (responsevalue) => {
+          console.log(responsevalue);
+
+          if (responsevalue.data.status == true) {
+            this.contacts_added = true;
+            this.dialog2 = false;
+            this.syncContents();
+          }else{
+            this.error_contacts = true;
+            this.error_contacts = responsevalue.data.message;
+          }
+        });
+      }
+    },
+
+
+
+    
+    editNow() {
+      console.log(this.syncOrganisation);
+      if (this.syncOrganisation == false) {
+        const details1 = {
+          url: this.$cloudfareApi + "/contact/user",
+          method: "POST",
+          headers: { token: localStorage.getItem("token") },
+          data: {
+            OwnerUid: this.owneruid,
+            Uid: this.uid,
+            UpdatedBy: this.uid,
+            Name: this.name,
+            OldNumber: this.number,
+            NewNumber: this.NewNumber,
+            SyncOrganisation: this.syncOrganisation,
+          },
+        };
+        axios(details1).then(async (responsevalue) => {
+          console.log(responsevalue);
+
+          if (responsevalue.data.status == true) {  
+            this.contacts_added = true;
+            this.dialog2 = false;
+            this.syncContents();
+          }else{
+            this.error_contacts = true;
+            this.error_contacts = responsevalue.data.message;
+          }
+        });
+      } if (this.syncOrganisation == true) {
+
+        const detailsUser = {
+          url: this.$cloudfareApi + "/contact/user",
+          method: "POST",
+          headers: { token: localStorage.getItem("token") },
+          data: {
+            OwnerUid: this.owneruid,
+            Uid: this.uid,
+            UpdatedBy: this.uid,
+            Name: this.name,
+            OldNumber: this.number,
+            NewNumber: this.NewNumber,
             SyncOrganisation: this.syncOrganisation,
           },
         };
