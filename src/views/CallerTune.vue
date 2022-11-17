@@ -506,7 +506,9 @@ export default {
     },
     goBack(bussinessNumber) {
       let newQuery = {bn: bussinessNumber};
-      this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+      // this.$router.push({ path: '/CallFlowSettings', query: { ...newQuery } });
+      this.$router.push({ path: "/CallandIVRConfig", query: { ...newQuery } });
+
     },
 
     validate(n) {
