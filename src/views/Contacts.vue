@@ -40,14 +40,7 @@
                     >
                       mdi-magnify</v-icon
                     >
-                    <v-menu
-                      v-model="filtermenu"
-                      :close-on-content-click="false"
-                      :nudge-width="200"
-                      offset-x
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <span class="pr-7">
+                    <span class="pr-7">
                           <v-icon
                             class="mt-0 mb-5 mr-4"
                             color="black"
@@ -56,27 +49,9 @@
                             :loading="dialog"
                             >mdi-plus</v-icon
                           >
-                          <v-badge v-if="showBadge == true" dot overlap>
-                            <v-icon
-                              class="mt-0 mb-5 mr-0"
-                              color="black"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-filter-variant
-                            </v-icon>
-                          </v-badge>
-                          <span v-if="showBadge == false" overlap>
-                            <v-icon
-                              class="mt-0 mb-5 mr-0"
-                              color="black"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-filter-variant
-                            </v-icon>
                           </span>
-                        </span>
-                      </template>
-                    </v-menu>
+
+               
                   </v-col>
                 </v-row>
               </div>
