@@ -692,9 +692,12 @@ if(this.searchTerm){
           return "<mark>" + match + "</mark>";
         }
       );
+      
       // console.log(dd);
       this.userContacts.length = 0;
       this.userContacts = JSON.parse(UserContactsData);
+      this.organisationContacts = JSON.parse(OrganizationContactsData);
+      
 }else{
       this.syncContents();
   
