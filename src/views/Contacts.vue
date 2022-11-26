@@ -281,7 +281,21 @@
                    
                     <div v-else>
                        
-                        Loading....
+                      <div v-if="datafound == 'Loading...'">
+                      <div class="center" align="center">{{ datafound }}</div>
+                      <v-progress-linear v-if="datafound == 'Loading...'" color="#ee1c25 " indeterminate rounded
+                        height="6"></v-progress-linear>
+                    </div>
+
+                    <div v-if="datafound == false">
+                      <v-alert dense outlined type="error">
+                        <h4 class="f16">No contacts found!</h4>
+                        <p class="mb-0 pb-0 black--text" color="black">
+                          There are no saved contacts. Please
+                          <a href="#">Sync your phone contacts </a>or
+                          <a href="#"> add a new contact.</a>
+                        </p>
+                      </v-alert></div>
                       </div>
 
                     </v-expansion-panels>
@@ -301,8 +315,8 @@
         </v-card-title>
         <v-card-text class="pt-0 pb-0 mb-0">
           <v-text-field label="Name" outlined v-model="name"></v-text-field>
-
-          <v-text-field  v-if="contact_text=='Add Contacts'"
+<!-- {{contact_text}} -->
+          <v-text-field  v-if="contact_text=='Add a New Contact'"
             label="Mobile Number*"
             outlined
             v-model="number"
@@ -317,7 +331,7 @@
             outlined disabled
             v-model="number"
           ></v-hidden-field>
-          <div v-if="contact_text=='Add Contacts'">
+          <div v-if="contact_text=='Add a New Contact'">
             <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox>
           </div>
         </v-card-text>
@@ -434,6 +448,7 @@ export default {
     changeEmailPopup: false,
     enterOtpModel: false,
     loadingMore: false,
+    datafound: 'Loading...',
     searchTerm: "",
     contact_text: "",
     tab: null,
@@ -478,6 +493,9 @@ export default {
         .then(async (querySnapshot) => {
           console.log(querySnapshot);
           this.userContacts = [];
+          if (querySnapshot.empty) {
+                  this.datafound = false
+                }
           if (!querySnapshot.empty) {
             querySnapshot.forEach(async (doc) => {
               let contact = doc.data();
