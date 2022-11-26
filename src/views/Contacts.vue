@@ -1,15 +1,17 @@
 <template>
   <v-app>
     <v-container fluid>
-      <v-snackbar :timeout="timeout" v-model="contacts_added" :bottom="bottom" :right="right" color="green" text>
-        Contacts
-        added successfully!</v-snackbar>
-      <v-snackbar :timeout="timeout" v-model="contacts_removed" :bottom="bottom" :right="right" color="red" text>
-        Contact
-        removed successfully!</v-snackbar>
+      
+        
+        <v-snackbar v-if="status==true" :timeout="timeout" v-model="success" :bottom="bottom" :right="right" color="green" text>
+         {{message}}</v-snackbar>
+       
+        
+          <v-snackbar  v-if="status==false" :timeout="timeout" v-model="fail" :bottom="bottom" :right="right" color="red" text>
+            {{message}}</v-snackbar>
+        
 
-        <v-snackbar :timeout="timeout" v-model="contacts_error" :bottom="bottom" :right="right" color="red" text>
-        {{error_contacts}}</v-snackbar>
+        
 
       <v-layout>
         <v-flex xs12 sm12 md12>
@@ -351,7 +353,7 @@
           >
             Cancel
           </v-btn>
-          <v-btn  v-if="contact_text=='Add Contacts'"
+          <v-btn  v-if="contact_text=='Add a New Contact'"
             text
             class="text-capitalize ma-3 rounded-pill red_button"
             min-width="140px"
@@ -462,6 +464,10 @@ export default {
     userContacts: false,
     organisationContacts: false,
     syncOrganisation:false,
+    userContactDelete:false,
+    organizationContactDelete:false,
+    status:false,
+    message:'', 
     url:"",
     // contactName:"",
     // contactNumber:"",
@@ -602,7 +608,9 @@ export default {
           console.log(responsevalue);
 
           if (responsevalue.data.status == true) {
-            this.contacts_removed = true;
+            this.status = responsevalue.data.status ;
+            this.success =true;
+            this.message = responsevalue.data.message;
             this.dialog2 = false;
             this.dialogDelete = false;
             this.syncContents();
@@ -630,12 +638,17 @@ export default {
           console.log(responsevalue);
 
           if (responsevalue.data.status == true) {
-            this.contacts_removed = true;
+            this.status = responsevalue.data.status ;
+            this.message = responsevalue.data.message;
+            this.success =true;
+            
             this.dialog2 = false;
             this.dialogDelete = false;
             this.syncContents();
             this.updateSearchTerm();
           }else{
+            this.fail =true;
+
             this.error_contacts = true;
             this.error_contacts = responsevalue.data.message;
           }
@@ -729,6 +742,8 @@ if(this.searchTerm){
         this.number = contactNumber;
         this.NewNumber = contactNumber;
         this.contact_text = "Edit Contact";
+        this.syncOrganisation =true;
+        this.url ="edit_contact_organization";
       }
       
       
@@ -784,37 +799,42 @@ if(this.searchTerm){
           console.log(responsevalue);
 
           if (responsevalue.data.status == true) {
-            this.contacts_added = true;
+            this.success =true;
+
+            this.status = responsevalue.data.status ;
+            this.message = responsevalue.data.message;
             this.dialog2 = false;
             this.syncContents();
           }else{
+            this.fail =true;
+
             this.error_contacts = true;
             this.error_contacts = responsevalue.data.message;
           }
         });
       } if (this.syncOrganisation == true) {
 
-        const detailsUser = {
-          url: this.$cloudfareApi + "/contact/user",
-          method: "POST",
-          headers: { token: localStorage.getItem("token") },
-          data: {
-            OwnerUid: this.owneruid,
-            Uid: this.uid,
-            UpdatedBy: this.uid,
-            Name: this.name,
-            OldNumber: this.number,
-            NewNumber: this.number,
-            SyncOrganisation: this.syncOrganisation,
-          },
-        };
-        axios(detailsUser).then(async (responsevalue) => {
-          console.log(responsevalue);
-        });
+        // const detailsUser = {
+        //   url: this.$cloudfareApi + "/contact/user",
+        //   method: "POST",
+        //   headers: { token: localStorage.getItem("token") },
+        //   data: {
+        //     OwnerUid: this.owneruid,
+        //     Uid: this.uid,
+        //     UpdatedBy: this.uid,
+        //     Name: this.name,
+        //     OldNumber: this.number,
+        //     NewNumber: this.number,
+        //     SyncOrganisation: this.syncOrganisation,
+        //   },
+        // };
+        // axios(detailsUser).then(async (responsevalue) => {
+        //   console.log(responsevalue);
+        // });
 
 
         const details = {
-          url: this.$cloudfareApi + "/contact/organisation",
+          url: this.$cloudfareApi + "/contact/user",
           method: "POST",
           headers: { token: localStorage.getItem("token") },
           data: {
@@ -832,10 +852,15 @@ if(this.searchTerm){
           console.log(responsevalue);
 
           if (responsevalue.data.status == true) {
-            this.contacts_added = true;
+            this.success =true;
+
+            this.status = responsevalue.data.status ;
+            this.message = responsevalue.data.message;
             this.dialog2 = false;
             this.syncContents();
           }else{
+            this.fail =true;
+
             this.error_contacts = true;
             this.error_contacts = responsevalue.data.message;
           }
@@ -858,19 +883,25 @@ if(this.searchTerm){
             Uid: this.uid,
             UpdatedBy: this.uid,
             Name: this.name,
-            OldNumber: this.number,
-            NewNumber: this.NewNumber,
+            OldNumber: parseInt(this.number),
+            NewNumber: parseInt(this.NewNumber),
             SyncOrganisation: this.syncOrganisation,
+
           },
         };
         axios(details1).then(async (responsevalue) => {
           console.log(responsevalue);
 
           if (responsevalue.data.status == true) {  
-            this.contacts_added = true;
+            this.success =true;
+
+            this.status = responsevalue.data.status ;
+            this.message = responsevalue.data.message;
             this.dialog2 = false;
             this.syncContents();
           }else{
+            this.fail =true;
+
             this.error_contacts = true;
             this.error_contacts = responsevalue.data.message;
           }
@@ -878,7 +909,7 @@ if(this.searchTerm){
       } if (this.syncOrganisation == true) {
 
         const detailsUser = {
-          url: this.$cloudfareApi + "/contact/user",
+          url: this.$cloudfareApi + "/contact/organization",
           method: "POST",
           headers: { token: localStorage.getItem("token") },
           data: {
@@ -886,9 +917,9 @@ if(this.searchTerm){
             Uid: this.uid,
             UpdatedBy: this.uid,
             Name: this.name,
-            OldNumber: this.number,
-            NewNumber: this.NewNumber,
-            SyncOrganisation: this.syncOrganisation,
+            OldNumber: parseInt(this.number),
+            NewNumber: parseInt(this.NewNumber),
+            SyncOrganisation: true,
           },
         };
         axios(detailsUser).then(async (responsevalue) => {
@@ -906,8 +937,8 @@ if(this.searchTerm){
             Uid: this.uid,
             UpdatedBy: this.uid,
             Name: this.name,
-            OldNumber: this.number,
-            NewNumber: this.number,
+            OldNumber: parseInt(this.number),
+            NewNumber: parseInt(this.number),
             SyncOrganisation: this.syncOrganisation,
           },
         };
@@ -915,9 +946,15 @@ if(this.searchTerm){
           console.log(responsevalue);
 
           if (responsevalue.data.status == true) {
-            this.contacts_added = true;
+            this.success =true;
+
+            this.status = responsevalue.data.status ;
+            this.message = responsevalue.data.message;
             this.dialog2 = false;
             this.syncContents();
+          }else{
+            this.fail =true;
+
           }
         });
       }
