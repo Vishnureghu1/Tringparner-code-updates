@@ -334,6 +334,12 @@
           <div v-if="contact_text=='Add a New Contact'">
             <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox>
           </div>
+          <div v-else>
+            <div v-if="url=='edit_contact'">
+
+              <v-checkbox class="pb-0 mb-0"  v-model="SyncOrganisation"   @change="checkboxUpdated" label="Update to Organaization contact" value="1" ></v-checkbox>
+            </div>
+            </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -456,6 +462,7 @@ export default {
     userContacts: false,
     organisationContacts: false,
     syncOrganisation:false,
+    url:"",
     // contactName:"",
     // contactNumber:"",
     items: [
@@ -463,7 +470,7 @@ export default {
       { title: "Delete Contact", color: "red--text", url: "delete_contact" },
     ],
     items_organization: [
-      { title: "Edit Contact", color: "black--text", url: "edit_contact" },
+      { title: "Edit Contact", color: "black--text", url: "edit_contact_organization" },
       { title: "Delete Contact", color: "red--text", url: "delete_organization_contact" },
     ],
   }),
@@ -712,7 +719,19 @@ if(this.searchTerm){
         this.number = contactNumber;
         this.NewNumber = contactNumber;
         this.contact_text = "Edit Contact";
+        this.url = "edit_contact";
       }
+      if (url == "edit_contact_organization") {
+        this.dialog = false;
+        this.dialogDelete = false;
+        this.dialog2 = true;
+        this.name = contactName;
+        this.number = contactNumber;
+        this.NewNumber = contactNumber;
+        this.contact_text = "Edit Contact";
+      }
+      
+      
       if (url == "add_contact") {
         this.dialog = false;
         this.dialogDelete = false;
