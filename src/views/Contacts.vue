@@ -908,27 +908,27 @@ if(this.searchTerm){
         });
       } if (this.syncOrganisation == true) {
 
-        const detailsUser = {
-          url: this.$cloudfareApi + "/contact/organization",
-          method: "POST",
-          headers: { token: localStorage.getItem("token") },
-          data: {
-            OwnerUid: this.owneruid,
-            Uid: this.uid,
-            UpdatedBy: this.uid,
-            Name: this.name,
-            OldNumber: parseInt(this.number),
-            NewNumber: parseInt(this.NewNumber),
-            SyncOrganisation: true,
-          },
-        };
-        axios(detailsUser).then(async (responsevalue) => {
-          console.log(responsevalue);
-        });
+        // const detailsUser = {
+        //   url: this.$cloudfareApi + "/contact/organization",
+        //   method: "POST",
+        //   headers: { token: localStorage.getItem("token") },
+        //   data: {
+        //     OwnerUid: this.owneruid,
+        //     Uid: this.uid,
+        //     UpdatedBy: this.uid,
+        //     Name: this.name,
+        //     OldNumber: parseInt(this.number),
+        //     NewNumber: parseInt(this.NewNumber),
+        //     SyncOrganisation: true,
+        //   },
+        // };
+        // axios(detailsUser).then(async (responsevalue) => {
+        //   console.log(responsevalue);
+        // });
 
 
         const details = {
-          url: this.$cloudfareApi + "/contact/organisation",
+          url: this.$cloudfareApi + "/contact/user",
           method: "POST",
           headers: { token: localStorage.getItem("token") },
           data: {

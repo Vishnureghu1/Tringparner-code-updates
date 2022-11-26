@@ -94,12 +94,12 @@
 
                                                                                 <span v-if="departmentTitle">{{departmentTitle}}</span><span v-else>Department Title *</span>
                                                                             </div><div v-if="isEditTitle==true">    <v-text-field
-      label="Department Title" class="pt-0 mt-0"
+      label="Department Title" class="pt-0 mt-0" 
       v-model = "departmentTitle"
      :value="departmentTitle"
       single-line
       full-width
-      hide-details
+      hide-details @keyup.enter="toggleEditTitle()"
     ></v-text-field>
 </div>
                                                                         </h2>
@@ -424,6 +424,7 @@ export default {
         },
     },
     methods: {
+        
         toggleEditTitle(){
                this.isEditTitle = !this.isEditTitle;
                console.log(this.isEditTitle)
