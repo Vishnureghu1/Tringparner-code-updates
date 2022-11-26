@@ -156,29 +156,21 @@
                     </v-col>
                   </v-row>
                   <div id="layoutCallLog">
-                 
- <div v-if="datafound=='Loading...'">
-<div class="center" align="center">{{datafound}}</div>
-                    <v-progress-linear v-if="datafound=='Loading...'" color="#ee1c25 "
-                      indeterminate rounded height="6"></v-progress-linear>
-</div>
 
-<div v-if="datafound==false">No calls found</div>
+                    <div v-if="datafound == 'Loading...'">
+                      <div class="center" align="center">{{ datafound }}</div>
+                      <v-progress-linear v-if="datafound == 'Loading...'" color="#ee1c25 " indeterminate rounded
+                        height="6"></v-progress-linear>
+                    </div>
+
+                    <div v-if="datafound == false" align="center">No calls found</div>
 
 
                     <div v-if="this.searchTerm.length != 0 && totalItems == 0" align="center" class="center">No Calls to
                       show!</div>
-
-                    <!-- <v-icon
-                                class="mt-0 mb-5 mr-0"
-                                color="blue"
-                                
-                                >mdi-swap-vertical-variant</v-icon
-                              > -->
-                    <!-- IVR icon here -->
                     <v-expansion-panels accordion flat v-if="realdata.length != ''">
                       <v-expansion-panel v-for="details in realdata" :key="details.text">
-                       
+
 
                         <v-expansion-panel-header v-if="details.callstatus != 'Offline'">
                           <div>
@@ -204,7 +196,7 @@
                                         active-class="pink--text">
                                         <div v-for="getNotes in details.Note" :key="getNotes.text">
                                           <!-- {{getNotes.Uid}} -->
-                                            <v-list-item-title :class="item.color" @click=" 
+                                          <v-list-item-title :class="item.color" @click="
                                             threeDotAction(
                                               item.url,
                                               details.virtualnumber,
@@ -214,11 +206,11 @@
                                               ownerUid, //6
                                               '',
                                               '10'
-                                              )
-                                              "><span v-if="
-                                              getNotes.Note != '' &&
-                                              item.url == 'add_note'
-                                              ">Edit Note</span>
+                                            )
+                                          "><span v-if="
+  getNotes.Note != '' &&
+  item.url == 'add_note'
+">Edit Note</span>
                                             <span v-else>{{ item.title }}</span>
                                           </v-list-item-title>
                                         </div>
@@ -274,31 +266,34 @@
                           <div>
                             <v-row>
                               <v-col cols="12" sm="8">
- 
+
                                 <div class="ml-10">
                                   <div class="row">
-                                    <div class="col-6"><h6 class="font-weight-thin">Source</h6>
+                                    <div class="col-6">
+                                      <h6 class="font-weight-thin">Source</h6>
 
-                                  <h5 class="font-weight-light">
-                                    {{ details.source }} No: (+91
-                                    {{ details.virtualnumberDisplay }})
-                                  </h5></div>
-                                  
-                                   <div class="col-6" v-if="details.Key!='' && details.Department!=null"> <h6 class="font-weight-thin">Department Selected</h6>
+                                      <h5 class="font-weight-light">
+                                        {{ details.source }} No: (+91
+                                        {{ details.virtualnumberDisplay }})
+                                      </h5>
+                                    </div>
 
-                                  <h5 class="font-weight-light">
-                                     {{details.Department}}
-                                  </h5>                            
-</div>
+                                    <div class="col-6" v-if="details.Key != '' && details.Department != null">
+                                      <h6 class="font-weight-thin">Department Selected</h6>
+
+                                      <h5 class="font-weight-light">
+                                        {{ details.Department }}
+                                      </h5>
+                                    </div>
                                   </div>
-                                  
+
                                   <div v-for="getNotes in details.Note" :key="getNotes.text">
-                                    <span v-if="getNotes.Note != '' ">
-                                      <span  class="mdi mdi-note grey--text" >
+                                    <span v-if="getNotes.Note != ''">
+                                      <span class="mdi mdi-note grey--text">
                                       </span>
                                       <span v-html="callNote(getNotes.Note)" />
-                                    
-                                      <span v-if="getNotes.Uid==ownerUid" class="mdi mdi-pencil grey--text" @click="
+
+                                      <span v-if="getNotes.Uid == ownerUid" class="mdi mdi-pencil grey--text" @click="
                                         threeDotAction(
                                           'add_note',
                                           'virtualNumber',
@@ -324,7 +319,7 @@
                                     <div>
                                       <span v-for="getNotes in details.Note" :key="getNotes.text">
                                         <span v-if="getNotes.Note == ''">
-                                          
+
                                           <v-btn color="red" text class="
                                               ma-2
                                               ml-0
@@ -607,7 +602,6 @@ export default {
     uniqueId: null,
     reminder_added: false,
     blocked_number: false,
-
     unblocked_number: false,
     notes_text: "Add Notes",
     current_email: "",
@@ -619,7 +613,7 @@ export default {
     changeEmailPopup: false,
     enterOtpModel: false,
     loadingMore: false,
-    datafound:'Loading...',
+    datafound: 'Loading...',
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
@@ -703,9 +697,9 @@ export default {
     userRole: "",
     reminder: "",
     noSearchData: false,
-    Department:"",
-    Key:"",
-    localContacts:[],
+    Department: "",
+    Key: "",
+    localContacts: [],
   }),
   watch: {
     sendInviteLoader(val) {
@@ -718,100 +712,88 @@ export default {
     },
   },
   methods: {
-    
-    syncContents(){
+
+    syncContents() {
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
-    const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
-    this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
-    // console.log(owneruid)
-    this.owneruid = owneruid;
-    this.uid = localStorageUserObj.uid;
-    db.collection("UserContacts").where("Uid", "==", owneruid).get().then(async (querySnapshot) => {
-      console.log(querySnapshot);
-      this.userContacts = [];
-      if (!querySnapshot.empty) {
+      const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+      this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+      // console.log(owneruid)
+      this.owneruid = owneruid;
+      this.uid = localStorageUserObj.uid;
+      db.collection("UserContacts").where("Uid", "==", owneruid).get().then(async (querySnapshot) => {
+        console.log(querySnapshot);
+        this.userContacts = [];
+        if (!querySnapshot.empty) {
 
-        querySnapshot.forEach(async (doc) => {
-          let contact = doc.data();
-          this.contact = contact;
-          // console.log(contact)
-          this.userContactsObject = Object.assign({}, this.userContactsObject, {
-            ContactName: contact.Name,
-            ContactNumber: contact.Number,
+          querySnapshot.forEach(async (doc) => {
+            let contact = doc.data();
+            this.contact = contact;
+            // console.log(contact)
+            this.userContactsObject = Object.assign({}, this.userContactsObject, {
+              ContactName: contact.Name,
+              ContactNumber: contact.Number,
+
+            })
+            this.userContacts.push(this.userContactsObject);
+          })
+        }
+      }).catch((err) => {
+        console.log(err.message)
+      })
+
+
+      db.collection("OrganisationContacts").where("OrganisationUid", "==", owneruid).get().then(async (querySnapshot) => {
+        console.log(querySnapshot);
+        this.organisationContacts = [];
+        if (!querySnapshot.empty) {
+
+          querySnapshot.forEach(async (doc) => {
+            let contact = doc.data();
+            this.contact = contact;
+            // console.log(contact)
+            this.organisationContactsObject = Object.assign({}, this.organisationContactsObject, {
+              ContactName: contact.Name,
+              ContactInitial: contact.Name.charAt(0),
+              ContactNumber: contact.Number,
+
+            })
+            this.organisationContacts.push(this.organisationContactsObject);
+
+            // var docs =  querySnapshot.docs.map(JSON.decode(JSON.encode(doc.data())));
+
 
           })
-          this.userContacts.push(this.userContactsObject);
-        })
-      }
-    }).catch((err) => {
-      console.log(err.message)
-    })
+          const LocalContactsOrganizationJson = JSON.stringify(this.organisationContacts);
 
+          console.log(LocalContactsOrganizationJson);
+          localStorage.setItem("organizationContactLocal", LocalContactsOrganizationJson);
 
-        db.collection("OrganisationContacts").where("OrganisationUid", "==", owneruid).get().then(async (querySnapshot) => {
-      console.log(querySnapshot);
-      this.organisationContacts = [];
-      if (!querySnapshot.empty) {
+          // window.localStorage.setItem("organizationContactLocal", JSON.stringify(LocalContactsOrganizationJson));
 
-        querySnapshot.forEach(async (doc) => {  
-          let contact = doc.data();
-          this.contact = contact;
-          // console.log(contact)
-          this.organisationContactsObject = Object.assign({}, this.organisationContactsObject, {
-            ContactName: contact.Name,
-            ContactInitial:contact.Name.charAt(0),
-            ContactNumber: contact.Number,
-
-          })
-          this.organisationContacts.push(this.organisationContactsObject);
-
-          // var docs =  querySnapshot.docs.map(JSON.decode(JSON.encode(doc.data())));
-
-          
-        })
-        const LocalContactsOrganizationJson = JSON.stringify(this.organisationContacts);
-        
-        console.log(LocalContactsOrganizationJson);
-        localStorage.setItem("organizationContactLocal", LocalContactsOrganizationJson);
- 
-        // window.localStorage.setItem("organizationContactLocal", JSON.stringify(LocalContactsOrganizationJson));
-
-      }
-    }).catch((err) => {
-      console.log(err.message)
-    })
+        }
+      }).catch((err) => {
+        console.log(err.message)
+      })
     },
 
     handleScroll() {
 
 
       window.onscroll = () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        // alert("you're at the bottom of the page");
-        if (this.totalPage > 0 && this.totalItems >= this.limit) {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+          // alert("you're at the bottom of the page");
+          if (this.totalPage > 0 && this.totalItems >= this.limit) {
 
-          this.getNextCalls();
-           this.scrolledToBottom = true
-        }else{
-           this.scrolledToBottom = false
+            this.getNextCalls();
+            this.scrolledToBottom = true
+          } else {
+            this.scrolledToBottom = false
+
+          }
 
         }
-        
-    }
-}
-//       window.onscroll = () => {
-//         let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
-// console.log(bottomOfWindow);
-//         if (bottomOfWindow) {
-//           console.log('bottom of the page');
-//           if (this.totalPage > 0 && this.totalItems >= this.limit) {
+      }
 
-//             this.getNextCalls();
-
-//           if (this.totalPage > 0 && this.totalItems >= this.limit) 
-//           //  this.scrolledToBottom = true // replace it with your code
-//         }
-//       }
 
 
     },
@@ -839,19 +821,19 @@ export default {
             this.uid = user.uid;
             this.emailStatus();
             this.blockedStatus(this.ownerUid);
-             if(parsedUser?.Stage == "INPROGRESS"){
-                db.collection("users")
-                .where("uid", "==", this.uid).get().then((snap)=>{
-                if(snap.docs[0].data().Stage == "INPROGRESS"){
-                  this.$router.push("login").catch(() => {});
-                }else{
-                  snap.forEach((doc) => {
-              localStorage.setItem("tpu", JSON.stringify(doc.data()));
-                  })
-                }
-              })
-             }
-             
+            if (parsedUser?.Stage == "INPROGRESS") {
+              db.collection("users")
+                .where("uid", "==", this.uid).get().then((snap) => {
+                  if (snap.docs[0].data().Stage == "INPROGRESS") {
+                    this.$router.push("login").catch(() => { });
+                  } else {
+                    snap.forEach((doc) => {
+                      localStorage.setItem("tpu", JSON.stringify(doc.data()));
+                    })
+                  }
+                })
+            }
+
             // console.log("User Id : " + this.uid);
             // this.sendMessage(this.uid);
             db.collection("users")
@@ -870,7 +852,9 @@ export default {
                 console.log("this.usersObj", this.usersObj);
                 this.Numbers = parsedUser.virtualNumber;
                 this.Numbers.concat(parsedUser.virtualNumber);
-
+                if (querySnapshot.empty) {
+                  this.datafound = false
+                }
                 querySnapshot.forEach((doc) => {
                   let user_details = doc.data();
 
@@ -905,7 +889,7 @@ export default {
 
 
 
-           
+
 
 
 
@@ -1004,61 +988,59 @@ export default {
                           this.calldetails.virtualnumber.slice(7, 11);
 
 
-                          var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
-                          // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
-                          // var data = JSON.stringify(object); // this is a string
-                        // data = data.replace("ContactName", "vegetables");
-                        
+                        var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+            
+
                         localContacts.forEach(element => {
-                          if(this.calldetails.callerNumber==element.ContactNumber){
+                          if (this.calldetails.callerNumber == element.ContactNumber) {
 
                             console.log(element.ContactNumber);
                             console.log(element.ContactName);
-                            var calledNumber =element.ContactName;
+                            var calledNumber = element.ContactName;
 
                             this.detail = Object.assign({}, this.detail, {
-                          callstatus: this.calldetails.callstatus,
-                          name: this.calldetails.name[0],
-                          dateTime: call_time,
-                          conversationduration:
-                            this.calldetails.conversationduration,
-                          callerNumber: calledNumber,
-                          uniqueid: this.calldetails.uniqueid,
-                          Note: note,
-                          source: this.calldetails.source,
-                          virtualnumber: this.calldetails.callerNumber,
-                          virtualnumberDisplay: virtualnumberDisplay,
-                          called_name: this.called_name,
-                          recordingUrl: this.calldetails.recordingurl,
-                          reminder: this.calldetails.Reminder
-                            ? this.calldetails.Reminder.ReminderAt
-                            : "",
-                          reminderPayload: this.calldetails.Reminder
-                            ? this.calldetails.Reminder
-                            : "",
-                          reminderTime: this.calldetails.Reminder
-                            ? moment(this.calldetails.Reminder.ReminderAt).format(
-                              "D MMM Y hh:mm a"
-                            )
-                            : "",
-                          isBlocked: this.blocked_numbers_.includes(
-                            parseInt(this.calldetails.callerNumber)
-                          ),
-                                          Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
-                        });
+                              callstatus: this.calldetails.callstatus,
+                              name: this.calldetails.name[0],
+                              dateTime: call_time,
+                              conversationduration:
+                                this.calldetails.conversationduration,
+                              callerNumber: calledNumber,
+                              uniqueid: this.calldetails.uniqueid,
+                              Note: note,
+                              source: this.calldetails.source,
+                              virtualnumber: this.calldetails.callerNumber,
+                              virtualnumberDisplay: virtualnumberDisplay,
+                              called_name: this.called_name,
+                              recordingUrl: this.calldetails.recordingurl,
+                              reminder: this.calldetails.Reminder
+                                ? this.calldetails.Reminder.ReminderAt
+                                : "",
+                              reminderPayload: this.calldetails.Reminder
+                                ? this.calldetails.Reminder
+                                : "",
+                              reminderTime: this.calldetails.Reminder
+                                ? moment(this.calldetails.Reminder.ReminderAt).format(
+                                  "D MMM Y hh:mm a"
+                                )
+                                : "",
+                              isBlocked: this.blocked_numbers_.includes(
+                                parseInt(this.calldetails.callerNumber)
+                              ),
+                              Department: this.calldetails.Department,
+                              Key: this.calldetails.Key,
+                            });
                           }
                         });
 
 
 
-                      
+
                         this.realdata.push(this.detail);
-                        if(this.detail.length==0){
-                this.datafound = false
-              }else{
-                this.datafound = true
-              }
+                        if (this.detail.length == 0) {
+                          this.datafound = false
+                        } else {
+                          this.datafound = true
+                        }
                         this.backuprealdata.push(this.detail);
                         // console.log("snap1 calllog ", this.realdata);
                         // call details
@@ -1137,7 +1119,7 @@ export default {
       // console.log('ownerId----------'+ownerId);
       // console.log('oldnote-----------'+oldnote);
       // console.log('oldradio----------'+ oldradio);
-      if (action == "add_note" ) {
+      if (action == "add_note") {
         console.log("Add Note");
         this.notes_data = notes_text;
         this.uniqueId = uniqueId;
@@ -1150,12 +1132,12 @@ export default {
           this.notes_text = "Edit Notes";
         }
       }
-      if (action == "add_note_warning" || noteOwnerId!=ownerId) {
+      if (action == "add_note_warning" || noteOwnerId != ownerId) {
         this.$root.vtoast.show({
-            message: "You cannot edit note created by another user",
-            color: "black",
-            timer: 2000,
-          });
+          message: "You cannot edit note created by another user",
+          color: "black",
+          timer: 2000,
+        });
       }
       if (action == "add_reminder") {
         // console.log("Add Reminder");
@@ -1675,71 +1657,71 @@ export default {
               console.log("no note");
               note = [{ Note: "" }];
             }
-// var calledNumber =
-                        //   this.calldetails.callerNumber.slice(0, 5) +
-                        //   " " +
-                        //   this.calldetails.callerNumber.slice(5, 7) +
-                        //   " " +
-                        //   this.calldetails.callerNumber.slice(7, 11);
-                        var virtualnumberDisplay =
-                          this.calldetails.virtualnumber.slice(0, 5) +
-                          " " +
-                          this.calldetails.virtualnumber.slice(5, 7) +
-                          " " +
-                          this.calldetails.virtualnumber.slice(7, 11);
+            // var calledNumber =
+            //   this.calldetails.callerNumber.slice(0, 5) +
+            //   " " +
+            //   this.calldetails.callerNumber.slice(5, 7) +
+            //   " " +
+            //   this.calldetails.callerNumber.slice(7, 11);
+            var virtualnumberDisplay =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
 
 
-                          var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
-                          // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
-                          // var data = JSON.stringify(object); // this is a string
-                        // data = data.replace("ContactName", "vegetables");
-                        
-                        localContacts.forEach(element => {
-                          if(this.calldetails.callerNumber==element.ContactNumber){
+            var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+            // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
+            // var data = JSON.stringify(object); // this is a string
+            // data = data.replace("ContactName", "vegetables");
 
-                            console.log(element.ContactNumber);
-                            console.log(element.ContactName);
-                            var calledNumber =element.ContactName;
+            localContacts.forEach(element => {
+              if (this.calldetails.callerNumber == element.ContactNumber) {
 
-                            this.detail = Object.assign({}, this.detail, {
-                          callstatus: this.calldetails.callstatus,
-                          name: this.calldetails.name[0],
-                          dateTime: call_time,
-                          conversationduration:
-                            this.calldetails.conversationduration,
-                          callerNumber: calledNumber,
-                          uniqueid: this.calldetails.uniqueid,
-                          Note: note,
-                          source: this.calldetails.source,
-                          virtualnumber: this.calldetails.callerNumber,
-                          virtualnumberDisplay: virtualnumberDisplay,
-                          called_name: this.called_name,
-                          recordingUrl: this.calldetails.recordingurl,
-                          reminder: this.calldetails.Reminder
-                            ? this.calldetails.Reminder.ReminderAt
-                            : "",
-                          reminderPayload: this.calldetails.Reminder
-                            ? this.calldetails.Reminder
-                            : "",
-                          reminderTime: this.calldetails.Reminder
-                            ? moment(this.calldetails.Reminder.ReminderAt).format(
-                              "D MMM Y hh:mm a"
-                            )
-                            : "",
-                          isBlocked: this.blocked_numbers_.includes(
-                            parseInt(this.calldetails.callerNumber)
-                          ),
-                                          Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
-                        });
-                          }
-                        });
-            this.realdata.push(this.detail);
-            if(this.detail.length==0){
-                this.datafound = false
-              }else{
-                this.datafound = true
+                console.log(element.ContactNumber);
+                console.log(element.ContactName);
+                var calledNumber = element.ContactName;
+
+                this.detail = Object.assign({}, this.detail, {
+                  callstatus: this.calldetails.callstatus,
+                  name: this.calldetails.name[0],
+                  dateTime: call_time,
+                  conversationduration:
+                    this.calldetails.conversationduration,
+                  callerNumber: calledNumber,
+                  uniqueid: this.calldetails.uniqueid,
+                  Note: note,
+                  source: this.calldetails.source,
+                  virtualnumber: this.calldetails.callerNumber,
+                  virtualnumberDisplay: virtualnumberDisplay,
+                  called_name: this.called_name,
+                  recordingUrl: this.calldetails.recordingurl,
+                  reminder: this.calldetails.Reminder
+                    ? this.calldetails.Reminder.ReminderAt
+                    : "",
+                  reminderPayload: this.calldetails.Reminder
+                    ? this.calldetails.Reminder
+                    : "",
+                  reminderTime: this.calldetails.Reminder
+                    ? moment(this.calldetails.Reminder.ReminderAt).format(
+                      "D MMM Y hh:mm a"
+                    )
+                    : "",
+                  isBlocked: this.blocked_numbers_.includes(
+                    parseInt(this.calldetails.callerNumber)
+                  ),
+                  Department: this.calldetails.Department,
+                  Key: this.calldetails.Key,
+                });
               }
+            });
+            this.realdata.push(this.detail);
+            if (this.detail.length == 0) {
+              this.datafound = false
+            } else {
+              this.datafound = true
+            }
             console.log("snap calllog ", this.realdata);
             // call details
           });
@@ -1861,66 +1843,66 @@ export default {
             }
 
             // var calledNumber =
-                        //   this.calldetails.callerNumber.slice(0, 5) +
-                        //   " " +
-                        //   this.calldetails.callerNumber.slice(5, 7) +
-                        //   " " +
-                        //   this.calldetails.callerNumber.slice(7, 11);
-                        var virtualnumberDisplay =
-                          this.calldetails.virtualnumber.slice(0, 5) +
-                          " " +
-                          this.calldetails.virtualnumber.slice(5, 7) +
-                          " " +
-                          this.calldetails.virtualnumber.slice(7, 11);
+            //   this.calldetails.callerNumber.slice(0, 5) +
+            //   " " +
+            //   this.calldetails.callerNumber.slice(5, 7) +
+            //   " " +
+            //   this.calldetails.callerNumber.slice(7, 11);
+            var virtualnumberDisplay =
+              this.calldetails.virtualnumber.slice(0, 5) +
+              " " +
+              this.calldetails.virtualnumber.slice(5, 7) +
+              " " +
+              this.calldetails.virtualnumber.slice(7, 11);
 
 
-                          var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
-                          // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
-                          // var data = JSON.stringify(object); // this is a string
-                        // data = data.replace("ContactName", "vegetables");
-                        
-                        localContacts.forEach(element => {
-                          if(this.calldetails.callerNumber==element.ContactNumber){
+            var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+            // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
+            // var data = JSON.stringify(object); // this is a string
+            // data = data.replace("ContactName", "vegetables");
 
-                            console.log(element.ContactNumber);
-                            console.log(element.ContactName);
-                            var calledNumber =element.ContactName;
+            localContacts.forEach(element => {
+              if (this.calldetails.callerNumber == element.ContactNumber) {
 
-                            this.detail = Object.assign({}, this.detail, {
-                          callstatus: this.calldetails.callstatus,
-                          name: this.calldetails.name[0],
-                          dateTime: call_time,
-                          conversationduration:
-                            this.calldetails.conversationduration,
-                          callerNumber: calledNumber,
-                          callerName: element.ContactName,
-                          uniqueid: this.calldetails.uniqueid,
-                          Note: note,
-                          source: this.calldetails.source,
-                          virtualnumber: this.calldetails.callerNumber,
-                          virtualnumberDisplay: virtualnumberDisplay,
-                          called_name: this.called_name,
-                          recordingUrl: this.calldetails.recordingurl,
-                          reminder: this.calldetails.Reminder
-                            ? this.calldetails.Reminder.ReminderAt
-                            : "",
-                          reminderPayload: this.calldetails.Reminder
-                            ? this.calldetails.Reminder
-                            : "",
-                          reminderTime: this.calldetails.Reminder
-                            ? moment(this.calldetails.Reminder.ReminderAt).format(
-                              "D MMM Y hh:mm a"
-                            )
-                            : "",
-                          isBlocked: this.blocked_numbers_.includes(
-                            parseInt(this.calldetails.callerNumber)
-                          ),
-                                          Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
-                        });
-                          }
-                          
-                        });
+                console.log(element.ContactNumber);
+                console.log(element.ContactName);
+                var calledNumber = element.ContactName;
+
+                this.detail = Object.assign({}, this.detail, {
+                  callstatus: this.calldetails.callstatus,
+                  name: this.calldetails.name[0],
+                  dateTime: call_time,
+                  conversationduration:
+                    this.calldetails.conversationduration,
+                  callerNumber: calledNumber,
+                  callerName: element.ContactName,
+                  uniqueid: this.calldetails.uniqueid,
+                  Note: note,
+                  source: this.calldetails.source,
+                  virtualnumber: this.calldetails.callerNumber,
+                  virtualnumberDisplay: virtualnumberDisplay,
+                  called_name: this.called_name,
+                  recordingUrl: this.calldetails.recordingurl,
+                  reminder: this.calldetails.Reminder
+                    ? this.calldetails.Reminder.ReminderAt
+                    : "",
+                  reminderPayload: this.calldetails.Reminder
+                    ? this.calldetails.Reminder
+                    : "",
+                  reminderTime: this.calldetails.Reminder
+                    ? moment(this.calldetails.Reminder.ReminderAt).format(
+                      "D MMM Y hh:mm a"
+                    )
+                    : "",
+                  isBlocked: this.blocked_numbers_.includes(
+                    parseInt(this.calldetails.callerNumber)
+                  ),
+                  Department: this.calldetails.Department,
+                  Key: this.calldetails.Key,
+                });
+              }
+
+            });
             // if("Message" in this.detail.reminderPayload) {
             // if(this.detail.reminderPayload.hasOwnProperty("Message")) {
             if (Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
@@ -1941,11 +1923,11 @@ export default {
 
 
             this.realdata.push(this.detail);
-            if(this.detail.length==0){
-                this.datafound = false
-              }else{
-                this.datafound = true
-              }
+            if (this.detail.length == 0) {
+              this.datafound = false
+            } else {
+              this.datafound = true
+            }
             console.log("snap calllog ", this.realdata);
             console.log("The Details ", this.detail);
             // call details
@@ -2062,64 +2044,60 @@ export default {
               }
 
               // var calledNumber =
-                        //   this.calldetails.callerNumber.slice(0, 5) +
-                        //   " " +
-                        //   this.calldetails.callerNumber.slice(5, 7) +
-                        //   " " +
-                        //   this.calldetails.callerNumber.slice(7, 11);
-                        var virtualnumberDisplay =
-                          this.calldetails.virtualnumber.slice(0, 5) +
-                          " " +
-                          this.calldetails.virtualnumber.slice(5, 7) +
-                          " " +
-                          this.calldetails.virtualnumber.slice(7, 11);
+              //   this.calldetails.callerNumber.slice(0, 5) +
+              //   " " +
+              //   this.calldetails.callerNumber.slice(5, 7) +
+              //   " " +
+              //   this.calldetails.callerNumber.slice(7, 11);
+              var virtualnumberDisplay =
+                this.calldetails.virtualnumber.slice(0, 5) +
+                " " +
+                this.calldetails.virtualnumber.slice(5, 7) +
+                " " +
+                this.calldetails.virtualnumber.slice(7, 11);
 
 
-                          var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
-                          // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
-                          // var data = JSON.stringify(object); // this is a string
-                        // data = data.replace("ContactName", "vegetables");
-                        
-                        localContacts.forEach(element => {
-                          if(this.calldetails.callerNumber==element.ContactNumber){
+              var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+              localContacts.forEach(element => {
+                if (this.calldetails.callerNumber == element.ContactNumber) {
 
-                            console.log(element.ContactNumber);
-                            console.log(element.ContactName);
-                            var calledNumber =element.ContactName;
+                  console.log(element.ContactNumber);
+                  console.log(element.ContactName);
+                  var calledNumber = element.ContactName;
 
-                            this.detail = Object.assign({}, this.detail, {
-                          callstatus: this.calldetails.callstatus,
-                          name: this.calldetails.name[0],
-                          dateTime: call_time,
-                          conversationduration:
-                            this.calldetails.conversationduration,
-                          callerNumber: calledNumber,
-                          uniqueid: this.calldetails.uniqueid,
-                          Note: note,
-                          source: this.calldetails.source,
-                          virtualnumber: this.calldetails.callerNumber,
-                          virtualnumberDisplay: virtualnumberDisplay,
-                          called_name: this.called_name,
-                          recordingUrl: this.calldetails.recordingurl,
-                          reminder: this.calldetails.Reminder
-                            ? this.calldetails.Reminder.ReminderAt
-                            : "",
-                          reminderPayload: this.calldetails.Reminder
-                            ? this.calldetails.Reminder
-                            : "",
-                          reminderTime: this.calldetails.Reminder
-                            ? moment(this.calldetails.Reminder.ReminderAt).format(
-                              "D MMM Y hh:mm a"
-                            )
-                            : "",
-                          isBlocked: this.blocked_numbers_.includes(
-                            parseInt(this.calldetails.callerNumber)
-                          ),
-                                          Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
-                        });
-                          }
-                        });
+                  this.detail = Object.assign({}, this.detail, {
+                    callstatus: this.calldetails.callstatus,
+                    name: this.calldetails.name[0],
+                    dateTime: call_time,
+                    conversationduration:
+                      this.calldetails.conversationduration,
+                    callerNumber: calledNumber,
+                    uniqueid: this.calldetails.uniqueid,
+                    Note: note,
+                    source: this.calldetails.source,
+                    virtualnumber: this.calldetails.callerNumber,
+                    virtualnumberDisplay: virtualnumberDisplay,
+                    called_name: this.called_name,
+                    recordingUrl: this.calldetails.recordingurl,
+                    reminder: this.calldetails.Reminder
+                      ? this.calldetails.Reminder.ReminderAt
+                      : "",
+                    reminderPayload: this.calldetails.Reminder
+                      ? this.calldetails.Reminder
+                      : "",
+                    reminderTime: this.calldetails.Reminder
+                      ? moment(this.calldetails.Reminder.ReminderAt).format(
+                        "D MMM Y hh:mm a"
+                      )
+                      : "",
+                    isBlocked: this.blocked_numbers_.includes(
+                      parseInt(this.calldetails.callerNumber)
+                    ),
+                    Department: this.calldetails.Department,
+                    Key: this.calldetails.Key,
+                  });
+                }
+              });
 
 
               if (this.searchTerm !== "") {
@@ -2131,9 +2109,9 @@ export default {
               }
 
               this.realdata.push(this.detail);
-              if(this.detail.length==0){
+              if (this.detail.length == 0) {
                 this.datafound = false
-              }else{
+              } else {
                 this.datafound = true
               }
               this.backuprealdata.push(this.detail);
@@ -2170,7 +2148,7 @@ export default {
               : "";
           this.hidealert =
             snap.docs[0].data().role == "OWNER" &&
-             (snap.docs[0].data().IsEmailVerified == false || snap.docs[0].data()?.IsEmailVerified == undefined)
+              (snap.docs[0].data().IsEmailVerified == false || snap.docs[0].data()?.IsEmailVerified == undefined)
               ? true
               : false;
           // this.hidealert =
@@ -2189,7 +2167,7 @@ export default {
   },
   created() {
     this.syncContents();
-  firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.uid = user.uid;
         this.phno = user.phoneNumber.slice(3);
@@ -2203,8 +2181,8 @@ export default {
                 "<-------------------LOGGING USER DETAILS----------------------->"
               );
               localStorage.setItem("tpu", JSON.stringify(doc.data()));
-  
-          
+
+
             });
           })
           .catch((error) => {

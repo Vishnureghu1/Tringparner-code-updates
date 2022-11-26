@@ -5,10 +5,8 @@
         <v-row align="center">
           <v-col class="grow">
             <h2 class="f16 regular">Email Verification</h2>
-            <span class="f14 light3"
-              >Please verify your email address by clicking on the link we have
-              shared with you on email.</span
-            >
+            <span class="f14 light3">Please verify your email address by clicking on the link we have
+              shared with you on email.</span>
           </v-col>
           <v-col class="shrink">
             <v-btn @click="changeEmailPopup1()">Resend Email</v-btn>
@@ -18,53 +16,19 @@
     </div>
     <div>
       <v-container fluid>
-        <v-snackbar
-          :timeout="timeout"
-          v-model="notes_added"
-          :bottom="bottom"
-          :right="right"
-          color="green"
-          text
-          >Notes added successfully!</v-snackbar
-        ><v-snackbar
-          :timeout="timeout"
-          v-model="notes_removed"
-          :bottom="bottom"
-          :right="right"
-          color="red"
-          text
-          >Notes removed successfully!</v-snackbar
-        >
+        <v-snackbar :timeout="timeout" v-model="notes_added" :bottom="bottom" :right="right" color="green" text>Notes
+          added successfully!</v-snackbar>
+        <v-snackbar :timeout="timeout" v-model="notes_removed" :bottom="bottom" :right="right" color="red" text>Notes
+          removed successfully!</v-snackbar>
 
-        <v-snackbar
-          :timeout="timeout"
-          v-model="reminder_added"
-          :bottom="bottom"
-          :right="right"
-          color="green"
-          text
-          >Reminder added successfully!</v-snackbar
-        >
+        <v-snackbar :timeout="timeout" v-model="reminder_added" :bottom="bottom" :right="right" color="green" text>
+          Reminder added successfully!</v-snackbar>
 
-        <v-snackbar
-          :timeout="timeout"
-          v-model="blocked_number"
-          :bottom="bottom"
-          :right="right"
-          color="red"
-          text
-          >Number blocked successfully!</v-snackbar
-        >
+        <v-snackbar :timeout="timeout" v-model="blocked_number" :bottom="bottom" :right="right" color="red" text>Number
+          blocked successfully!</v-snackbar>
 
-        <v-snackbar
-          :timeout="timeout"
-          v-model="unblocked_number"
-          :bottom="bottom"
-          :right="right"
-          color="green"
-          text
-          >Number unblocked successfully!</v-snackbar
-        >
+        <v-snackbar :timeout="timeout" v-model="unblocked_number" :bottom="bottom" :right="right" color="green" text>
+          Number unblocked successfully!</v-snackbar>
         <v-layout>
           <v-flex xs12 sm12 md12>
             <v-row no-gutters>
@@ -74,59 +38,26 @@
                     <v-col cols="12" sm="5">
                       <h2 class="mt-6 mb-5">Missed Calls</h2>
 
-                      <v-progress-linear
-                        :active="isUpdating"
-                        :indeterminate="isUpdating"
-                        absolute
-                        bottom
-                        color="deep-purple accent-4"
-                      ></v-progress-linear>
+                      <v-progress-linear :active="isUpdating" :indeterminate="isUpdating" absolute bottom
+                        color="deep-purple accent-4"></v-progress-linear>
                     </v-col>
                     <v-col cols="12" sm="7" align="end" class="pt-6">
-                      <v-text-field
-                        v-show="!hidden"
-                        absolute
-                        transition="slide-y-reverse-transition"
-                        append-icon="mdi-magnify"
-                        class="searchForm"
-                        label="Search"
-                        v-model="searchTerm"
-                        @input="updateSearchTerm"
-                        single-line
-                      ></v-text-field>
+                      <v-text-field v-show="!hidden" absolute transition="slide-y-reverse-transition"
+                        append-icon="mdi-magnify" class="searchForm" label="Search" v-model="searchTerm"
+                        @input="updateSearchTerm" single-line></v-text-field>
 
-                      <v-menu
-                        v-model="filtermenu"
-                        :close-on-content-click="false"
-                        :nudge-width="200"
-                        offset-x
-                      >
+                      <v-menu v-model="filtermenu" :close-on-content-click="false" :nudge-width="200" offset-x>
                         <template v-slot:activator="{ on, attrs }">
                           <span class="pr-7">
-                            <v-icon
-                              class="mt-0 mb-5 mr-4"
-                              color="black"
-                              @click="hidden = !hidden"
-                              >mdi-magnify</v-icon
-                            >
+                            <v-icon class="mt-0 mb-5 mr-4" color="black" @click="hidden = !hidden">mdi-magnify</v-icon>
                             <v-badge v-if="showBadge == true" dot overlap>
-                              <v-icon
-                                class="mt-0 mb-5 mr-0"
-                                color="black"
-                                v-bind="attrs"
-                                v-on="on"
-                                >mdi-filter-variant</v-icon
-                              ></v-badge
-                            >
+                              <v-icon class="mt-0 mb-5 mr-0" color="black" v-bind="attrs" v-on="on">mdi-filter-variant
+                              </v-icon>
+                            </v-badge>
                             <span v-if="showBadge == false" overlap>
-                              <v-icon
-                                class="mt-0 mb-5 mr-0"
-                                color="black"
-                                v-bind="attrs"
-                                v-on="on"
-                                >mdi-filter-variant</v-icon
-                              ></span
-                            >
+                              <v-icon class="mt-0 mb-5 mr-0" color="black" v-bind="attrs" v-on="on">mdi-filter-variant
+                              </v-icon>
+                            </span>
                           </span>
                         </template>
 
@@ -136,11 +67,7 @@
                               Filter Content
                               <v-spacer></v-spacer>
 
-                              <div
-                                align="center"
-                                class="notif-mark"
-                                @click="resetFilterParams"
-                              >
+                              <div align="center" class="notif-mark" @click="resetFilterParams">
                                 Reset
                               </div>
 
@@ -155,22 +82,12 @@
                                 </v-list-item>
 
                                 <v-list-item>
-                                  <v-select
-                                    v-model="selectedTimeOfCall"
-                                    :items="timeofCall"
-                                    label="Time of Call"
-                                    outlined
-                                    @change="handleTimeOfCallChange"
-                                  ></v-select>
+                                  <v-select v-model="selectedTimeOfCall" :items="timeofCall" label="Time of Call"
+                                    outlined @change="handleTimeOfCallChange"></v-select>
                                 </v-list-item>
                                 <v-list-item>
-                                  <v-select
-                                    v-model="selectedDurationOfCall"
-                                    :items="DurationOfCall"
-                                    label="Duration Of Call"
-                                    @change="handleDurationOfCallChange"
-                                    outlined
-                                  ></v-select>
+                                  <v-select v-model="selectedDurationOfCall" :items="DurationOfCall"
+                                    label="Duration Of Call" @change="handleDurationOfCallChange" outlined></v-select>
                                 </v-list-item>
 
                                 <v-divider></v-divider>
@@ -180,13 +97,8 @@
                                 </v-list-item>
 
                                 <v-list-item>
-                                  <v-select
-                                    v-model="selectedViewByType"
-                                    :items="ViewByType"
-                                    label="View By Type"
-                                    @change="handleViewByTypeChange"
-                                    outlined
-                                  ></v-select>
+                                  <v-select v-model="selectedViewByType" :items="ViewByType" label="View By Type"
+                                    @change="handleViewByTypeChange" outlined></v-select>
                                 </v-list-item>
 
                                 <v-list-item>
@@ -199,22 +111,12 @@
                                 </v-list-item>
 
                                 <v-list-item>
-                                  <v-select
-                                    v-model="selectedReminders"
-                                    :items="Reminders"
-                                    label="Reminders"
-                                    @change="handleRemindersChange"
-                                    outlined
-                                  ></v-select>
+                                  <v-select v-model="selectedReminders" :items="Reminders" label="Reminders"
+                                    @change="handleRemindersChange" outlined></v-select>
                                 </v-list-item>
                                 <v-list-item>
-                                  <v-select
-                                    v-model="selectedNotes"
-                                    :items="Notes"
-                                    label="Notes"
-                                    @change="handleNotesChange"
-                                    outlined
-                                  ></v-select>
+                                  <v-select v-model="selectedNotes" :items="Notes" label="Notes"
+                                    @change="handleNotesChange" outlined></v-select>
                                 </v-list-item>
 
                                 <v-divider></v-divider>
@@ -224,13 +126,8 @@
                                 </v-list-item>
 
                                 <v-list-item>
-                                  <v-select
-                                    v-model="selectedUser"
-                                    :items="Users"
-                                    label="Users"
-                                    @change="handleUsersChange"
-                                    outlined
-                                  ></v-select>
+                                  <v-select v-model="selectedUser" :items="Users" label="Users"
+                                    @change="handleUsersChange" outlined></v-select>
                                 </v-list-item>
 
                                 <v-divider></v-divider>
@@ -240,29 +137,16 @@
                                 </v-list-item>
 
                                 <v-list-item>
-                                  <v-select
-                                    v-model="selectedNumber"
-                                    :items="Numbers"
-                                    label="Number"
-                                    @change="handleNumbersChange"
-                                    outlined
-                                  ></v-select>
+                                  <v-select v-model="selectedNumber" :items="Numbers" label="Number"
+                                    @change="handleNumbersChange" outlined></v-select>
                                 </v-list-item>
                               </v-list>
                             </v-card>
                             <v-card-actions>
                               <v-spacer></v-spacer>
 
-                              <v-btn
-                                color="white"
-                                width="100%"
-                                text
-                                :disabled="!valid"
-                                class="mr-0 flex red_button"
-                                :loading="isUpdating"
-                                depressed
-                                @click="handleApplyFilter"
-                              >
+                              <v-btn color="white" width="100%" text :disabled="!valid" class="mr-0 flex red_button"
+                                :loading="isUpdating" depressed @click="handleApplyFilter">
                                 Apply Filter
                               </v-btn>
                             </v-card-actions>
@@ -271,341 +155,269 @@
                       </v-menu>
                     </v-col>
                   </v-row>
-                  <div>
-                    
-                        <div v-if="realdata.length!=0">
+                  <div id="layoutCallLog">
 
-                    <v-progress-linear v-if="realdata.length == 0 && this.searchTerm.length == 0" color="#ee1c25 "
-                      indeterminate rounded height="6"></v-progress-linear>
-</div><div v-else align="center">No calls found</div>
-                    
-                            
-                          <div v-if="this.searchTerm.length != 0 && totalItems==0" align="center" class="center">No Calls to show!</div>
-        <v-expansion-panels
-                      accordion
-                      flat
-                      v-if="realdata.length != ''"
-                    >
-                      <v-expansion-panel
-                        v-for="details in realdata"
-                        :key="details.text"
-                      >
-                        <v-expansion-panel-header>
-                          <div>
-                            <v-row class="calls_list">
-                              <v-col cols="12" sm="10">
-                                <h3 class="font-weight-light">
-                                  <v-icon
-                                    v-if="details.callstatus == 'Answered'"
-                                    class="mr-3"
-                                    color="green"
-                                    >mdi-arrow-bottom-left</v-icon
-                                  >
-                                  <Icon
-                                    v-else
-                                    class="mr-3 icon_adjustment"
-                                    color="red"
-                                    icon="mdi:call-missed"
-                                    width="24"
-                                    height="24"
-                                  /><span v-html="callerNumberSpan(details.callerNumber)" /> 
-                                  <v-icon
-                                    color="gray"
-                                    class="mr-5"
-                                    v-if="details.isBlocked == true"
-                                    >mdi-shield-lock-outline</v-icon
-                                  >
-
-                                  <v-menu offset-y>
-                                    <template v-slot:activator="{ on, attrs }">
-                                      <v-icon
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        color="black"
-                                        >mdi-dots-vertical</v-icon
-                                      >
-                                    </template>
-
-                                    <v-list>
-                                      <div
-                                        v-for="getNotes in details.Note"
-                                        :key="getNotes.text"
-                                      ></div>
-                                      <v-list-item
-                                        v-for="(item, index) in items"
-                                        :key="index"
-                                        active-class="pink--text"
-                                      >
-                                        <div
-                                          v-for="getNotes in details.Note"
-                                          :key="getNotes.text"
-                                        >
-                                         <v-list-item-title
-                                            :class="item.color"
-                                            @click="
-                                              threeDotAction(
-                                                item.url,
-                                                details.virtualnumber,
-                                                details.uniqueid,
-                                                getNotes.Note,
-                                                '',
-                                                '10'
-                                              )
-                                            "
-                                          >
-                                            <span
-                                              v-if="
-                                                getNotes.Note != '' &&
-                                                item.url == 'add_note'
-                                              "
-                                              >Edit Note</span
-                                            >
-                                            <span v-else>{{ item.title }}</span>
-                                          </v-list-item-title>
-                                        </div>
-                                      </v-list-item>
-                                    </v-list>
-                                  </v-menu>
-                                </h3>
-                                <br />
-                              </v-col>
-                              <v-spacer></v-spacer>
-                            </v-row>
-
-                            <div class="ml-10 font-weight-thin date_time">
-                              <span v-if="details.conversationduration != 0"
-                                >{{ formatTime(details.conversationduration) }},
-                              </span>
-                              {{ details.dateTime
-                              }}<span
-                                v-if="
-                                  details.name &&
-                                  details.callstatus == 'Answered'
-                                "
-                                >, {{ details.name }}</span
-                              >
-                            </div>
-                            <!-- {{detail}} -->
-                            <div
-                              class="ml-10 mt-3 font-weight-thin hideOnExpand"
-                              v-for="getNotes in details.Note"
-                              :key="getNotes.text"
-                            >
-                              <div>
-                                <span
-                                  v-if="getNotes.Note != ''"
-                                  class="mdi mdi-note grey--text"
-                                >
-                                </span>
-                                 <span v-html="callNote(getNotes.Note)" /> 
-                              </div>
-                            </div>
-                            <!-- {{details.reminder}} -->
-                            <div
-                              v-if="
-                                details.reminderPayload != '' &&
-                                details.reminder
-                              "
-                              class="ml-10 mt-3 font-weight-thin hideOnExpand"
-                            >
-                              <div>
-                                <span class="mdi mdi-alarm grey--text"> </span>
-                                <!-- Sample reminder here -->
-                                <span v-html="callReminder(details.reminderPayload.Message)" /> ,
-                                        {{ details.reminderTime }}
-                              </div>
-                            </div>
-                          </div>
-                        </v-expansion-panel-header>
-                       <v-expansion-panel-content>
-                          <div>
-                            <v-row>
-                              <v-col cols="12" sm="8">
- 
-                                <div class="ml-10">
-                                  <div class="row">
-                                    <div class="col-6"><h6 class="font-weight-thin">Source</h6>
-
-                                  <h5 class="font-weight-light">
-                                    {{ details.source }} No: (+91
-                                    {{ details.virtualnumberDisplay }})
-                                  </h5></div>
-                                  
-                                   <div class="col-6" v-if="details.Key!='' && details.Department!=null"> <h6 class="font-weight-thin">Department Selected</h6>
-
-                                  <h5 class="font-weight-light">
-                                     {{details.Department}}
-                                  </h5>                            
+<div v-if="datafound == 'Loading...'">
+  <div class="center" align="center">{{ datafound }}</div>
+  <v-progress-linear v-if="datafound == 'Loading...'" color="#ee1c25 " indeterminate rounded
+    height="6"></v-progress-linear>
 </div>
-                                  </div>
-                                  <div v-for="getNotes in details.Note" :key="getNotes.text">
-                                    <span v-if="getNotes.Note != '' ">
-                                      <span  class="mdi mdi-note grey--text" >
-                                      </span>
-                                      <span v-html="callNote(getNotes.Note)" />
-                                    
-                                      <span v-if="getNotes.Uid==ownerUid" class="mdi mdi-pencil grey--text" @click="
-                                        threeDotAction(
-                                          'add_note',
-                                          'virtualNumber',
-                                          details.uniqueid,
-                                          getNotes.Note
-                                        )
-                                      ">
-                                      </span>
-                                      <span v-else class="mdi mdi-pencil grey--text" @click="
-                                        threeDotAction(
-                                          'add_note_warning',
-                                          'virtualNumber',
-                                          details.uniqueid,
-                                          getNotes.Note
-                                        )
-                                      ">
-                                      </span>
-                                    </span>
-                                  </div>
 
-                                  <!-- Copied from collapsed reminder section -->
-                                  <div
-                                    class="mt-3 font-weight-thin hideOnExpand"
-                                  >
-                                    <div>
-                                      <span
-                                        v-for="getNotes in details.Note"
-                                        :key="getNotes.text"
-                                      >
-                                        <span v-if="getNotes.Note == ''">
-                                          <v-btn
-                                            color="red"
-                                            text
-                                            class="
-                                              ma-2
-                                              ml-0
-                                              mr-2
-                                              text-capitalize
-                                              rounded-pill
-                                              p-3
-                                              red_button_outline
-                                            "
-                                            min-width="140px"
-                                            @click="
-                                              threeDotAction(
-                                                'add_note',
-                                                'virtualNumber',
-                                                details.uniqueid,
-                                                ''
-                                              )
-                                            "
-                                          >
-                                            Add Notes
-                                          </v-btn>
-                                        </span>
-                                      </span>
-                                      <span
-                                        v-if="
-                                          details.reminderTime != '' &&
-                                          details.reminder
-                                        "
-                                        class="mdi mdi-alarm grey--text"
-                                      >
-                                        <span v-html="callReminder(details.reminderPayload.Message)" /> ,
-                                        {{ details.reminderTime }}
-                                      </span>
-                                      <span
-                                        v-if="
-                                          details.reminder &&
-                                          details.reminderTime != ''
-                                        "
-                                        class="mdi mdi-pencil grey--text"
-                                        @click="
-                                          threeDotAction(
-                                            'add_reminder',
-    'virtualNumber',
-    details.uniqueid,
-    'edit_reminder',
-    '',
-    '',
-    details.reminderPayload.Message,
-    details.reminderPayload.Type
-                                          )
-                                        "
-                                      >
-                                        <!-- </v-btn> -->
-                                      </span>
-                                      <span v-else
-                                        ><v-btn
-                                          color="red"
-                                          text
-                                          class="
-                                            ma-2
-                                            ml-0
-                                            mr-2
-                                            text-capitalize
-                                            rounded-pill
-                                            p-3
-                                            red_button_outline
-                                          "
-                                          min-width="140px"
-                                          @click="
-                                            threeDotAction(
-                                              'add_reminder',
-                                              'virtualNumber',
-                                              details.uniqueid,
-                                              '',
-                                              '',
-                                              '',
-                                              details.reminderPayload.Message,
-                                              '10'
-                                            )
-                                          "
-                                        >
-                                          Add Reminder
-                                        </v-btn>
-                                      </span>
-                                    </div>
-                                    <!-- </div> -->
-                                    <!-- Copied from collapsed reminder section -->
-                                  </div>
-                                </div>
-                              </v-col>
+<div v-if="datafound == false" align="center">No calls found</div>
 
-                              <v-col
-                                cols="12"
-                                sm="4"
-                                v-if="details.callstatus != 'Missed'"
-                              >
-                                <audio controls>
-                                  <source
-                                    :src="details.recordingUrl"
-                                    type="audio/mpeg"
-                                  />
-                                  Your browser does not support the audio tag.
-                                </audio>
-                              </v-col>
-                            </v-row>
-                          </div>
-                        </v-expansion-panel-content>
-                         <v-divider></v-divider>
-                      </v-expansion-panel>
-                    </v-expansion-panels>
-               
-                    
-          <v-container v-if="loadingMore">
-                      <v-row
-                        class="fill-height"
-                        align-content="center"
-                        justify="center"
-                      >
+
+<div v-if="this.searchTerm.length != 0 && totalItems == 0" align="center" class="center">No Calls to
+  show!</div>
+<v-expansion-panels accordion flat v-if="realdata.length != ''">
+  <v-expansion-panel v-for="details in realdata" :key="details.text">
+
+
+    <v-expansion-panel-header v-if="details.callstatus != 'Offline'">
+      <div>
+        <v-row class="calls_list">
+          <v-col cols="12" sm="10">
+            <h3 class="font-weight-light">
+              <v-icon v-if="details.callstatus == 'Answered'" class="mr-3" color="green">
+                mdi-arrow-bottom-left</v-icon>
+              <Icon v-else class="mr-3 icon_adjustment" color="red" icon="mdi:call-missed"
+                width="24" height="24" />
+              <span v-html="callerNumberSpan(details.callerNumber)" />
+              <v-icon color="gray" class="mr-5" v-if="details.isBlocked == true">
+                mdi-shield-lock-outline</v-icon>
+
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon v-bind="attrs" v-on="on" color="black">mdi-dots-vertical</v-icon>
+                </template>
+
+                <v-list>
+                  <div v-for="getNotes in details.Note" :key="getNotes.text"></div>
+                  <v-list-item v-for="(item, index) in items" :key="index"
+                    active-class="pink--text">
+                    <div v-for="getNotes in details.Note" :key="getNotes.text">
+                      <!-- {{getNotes.Uid}} -->
+                      <v-list-item-title :class="item.color" @click="
+                        threeDotAction(
+                          item.url,
+                          details.virtualnumber,
+                          details.uniqueid,
+                          getNotes.Note,
+                          getNotes.Uid, //5
+                          ownerUid, //6
+                          '',
+                          '10'
+                        )
+                      "><span v-if="
+getNotes.Note != '' &&
+item.url == 'add_note'
+">Edit Note</span>
+                        <span v-else>{{ item.title }}</span>
+                      </v-list-item-title>
+                    </div>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </h3>
+            <br />
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+
+        <div class="ml-10 font-weight-thin date_time">
+          <span v-if="details.conversationduration != 0">{{ formatTime(details.conversationduration)
+          }},
+          </span>
+          {{ details.dateTime
+          }}<span v-if="
+details.name &&
+details.callstatus == 'Answered'
+">, {{ details.name }}</span>
+        </div>
+        <!-- {{detail}} -->
+        <div class="ml-10 mt-3 font-weight-thin hideOnExpand" v-for="getNotes in details.Note"
+          :key="getNotes.text">
+          <div>
+
+            <span v-if="getNotes.Note != ''" class="mdi mdi-note grey--text">
+            </span>
+
+            <span v-html="callNote(getNotes.Note)" />
+
+          </div>
+        </div>
+
+        <!-- {{details.reminder}} -->
+        <div v-if="
+          details.reminderPayload != '' &&
+          details.reminder
+        " class="ml-10 mt-3 font-weight-thin hideOnExpand">
+          <div>
+            <span class="mdi mdi-alarm grey--text"> </span>
+            <!-- Sample reminder here -->
+            <span v-html="callReminder(details.reminderPayload.Message)" /> ,
+            {{ details.reminderTime }}
+
+
+          </div>
+        </div>
+      </div>
+    </v-expansion-panel-header>
+    <v-expansion-panel-content>
+      <div>
+        <v-row>
+          <v-col cols="12" sm="8">
+
+            <div class="ml-10">
+              <div class="row">
+                <div class="col-6">
+                  <h6 class="font-weight-thin">Source</h6>
+
+                  <h5 class="font-weight-light">
+                    {{ details.source }} No: (+91
+                    {{ details.virtualnumberDisplay }})
+                  </h5>
+                </div>
+
+                <div class="col-6" v-if="details.Key != '' && details.Department != null">
+                  <h6 class="font-weight-thin">Department Selected</h6>
+
+                  <h5 class="font-weight-light">
+                    {{ details.Department }}
+                  </h5>
+                </div>
+              </div>
+
+              <div v-for="getNotes in details.Note" :key="getNotes.text">
+                <span v-if="getNotes.Note != ''">
+                  <span class="mdi mdi-note grey--text">
+                  </span>
+                  <span v-html="callNote(getNotes.Note)" />
+
+                  <span v-if="getNotes.Uid == ownerUid" class="mdi mdi-pencil grey--text" @click="
+                    threeDotAction(
+                      'add_note',
+                      'virtualNumber',
+                      details.uniqueid,
+                      getNotes.Note
+                    )
+                  ">
+                  </span>
+                  <span v-else class="mdi mdi-pencil grey--text" @click="
+                    threeDotAction(
+                      'add_note_warning',
+                      'virtualNumber',
+                      details.uniqueid,
+                      getNotes.Note
+                    )
+                  ">
+                  </span>
+                </span>
+              </div>
+
+              <!-- Copied from collapsed reminder section -->
+              <div class="mt-3 font-weight-thin hideOnExpand">
+                <div>
+                  <span v-for="getNotes in details.Note" :key="getNotes.text">
+                    <span v-if="getNotes.Note == ''">
+
+                      <v-btn color="red" text class="
+                          ma-2
+                          ml-0
+                          mr-2
+                          text-capitalize
+                          rounded-pill
+                          p-3
+                          red_button_outline
+                        " min-width="140px" @click="
+                          threeDotAction(
+                            'add_note',
+                            'virtualNumber',
+                            details.uniqueid,
+                            ''
+                          )
+                        ">
+                        Add Notes
+                      </v-btn>
+                    </span>
+                  </span>
+                  <span v-if="
+                    details.reminderTime != '' &&
+                    details.reminder
+                  " class="mdi mdi-alarm grey--text">
+                    <span v-html="callReminder(details.reminderPayload.Message)" /> ,
+                    {{ details.reminderTime }}
+                  </span>
+                  <span v-if="
+                    details.reminder &&
+                    details.reminderTime != ''
+                  " class="mdi mdi-pencil grey--text" @click="
+threeDotAction(
+'add_reminder',
+'virtualNumber',
+details.uniqueid,
+'edit_reminder',
+'',
+'',
+details.reminderPayload.Message,
+details.reminderPayload.Type
+)
+">
+                    <!-- </v-btn> -->
+                  </span>
+                  <span v-else>
+                    <v-btn color="red" text class="
+                        ma-2
+                        ml-0
+                        mr-2
+                        text-capitalize
+                        rounded-pill
+                        p-3
+                        red_button_outline
+                      " min-width="140px" @click="
+                        threeDotAction(
+                          'add_reminder',
+                          'virtualNumber',
+                          details.uniqueid,
+                          '',
+                          '',
+                          '',
+                          details.reminderPayload.Message,
+                          '10'
+                        )
+                      ">
+                      Add Reminder
+                    </v-btn>
+                  </span>
+
+                </div>
+                <!-- </div> -->
+                <!-- Copied from collapsed reminder section -->
+              </div>
+            </div>
+          </v-col>
+
+
+          <v-col cols="12" sm="4" v-if="details.callstatus != 'Missed'">
+            <audio controls>
+              <source :src="details.recordingUrl" type="audio/mpeg" />
+              Your browser does not support the audio tag.
+            </audio>
+          </v-col>
+        </v-row>
+      </div>
+    </v-expansion-panel-content>
+    <v-divider></v-divider>
+  </v-expansion-panel>
+</v-expansion-panels>
+
+
+                    <v-container v-if="loadingMore">
+                      <v-row class="fill-height" align-content="center" justify="center">
                         <v-col class="text-subtitle-1 text-center" cols="12">
                           Loading ...
                         </v-col>
                         <v-col cols="12">
-                          <v-progress-linear
-                            color="#ee1c25 "
-                            indeterminate
-                            rounded
-                            height="6"
-                          ></v-progress-linear>
+                          <v-progress-linear color="#ee1c25 " indeterminate rounded height="6"></v-progress-linear>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -615,101 +427,46 @@
             </v-row>
             <v-dialog v-model="dialog" max-width="400px" persistent>
               <v-card max-height>
-                   <v-card-title class="mb-5">
-                  <span class="text-h5">Reminder </span> <v-spacer></v-spacer>
-                  <span
-                    class="red--text light4 f14 cursor"
-                    @click="deleteReminder()"
-                    >Remove</span
-                  ></v-card-title
-                >
+                <v-card-title class="mb-5">
+                  <span class="text-h5">Reminder </span>
+                  <v-spacer></v-spacer>
+                  <span class="red--text light4 f14 cursor" @click="deleteReminder()">Remove</span>
+                </v-card-title>
                 <v-card-text>
-                   <v-text-field
-                    label="Remind About"
-                    v-model="reminderMessage"
-                    outlined  counter="20"
-                  ></v-text-field>
+                  <v-text-field label="Remind About" v-model="reminderMessage" outlined counter="20"></v-text-field>
                   <v-radio-group v-model="radio" column>
-                    <v-radio
-                      label="10 minutes"
-                      value="10"
-                      color="red"
-                    ></v-radio>
-                    <v-radio
-                      label="30 minutes"
-                      value="30"
-                      color="red"
-                    ></v-radio>
+                    <v-radio label="10 minutes" value="10" color="red"></v-radio>
+                    <v-radio label="30 minutes" value="30" color="red"></v-radio>
                     <v-radio label="1 hour" value="60" color="red"></v-radio>
-                    <v-radio
-                      label="Custom"
-                      value="custom"
-                      color="red"
-                    ></v-radio>
+                    <v-radio label="Custom" value="custom" color="red"></v-radio>
                   </v-radio-group>
                   <div v-if="radio == 'custom'">
-                    <v-menu
-                      ref="menu1"
-                      v-model="menu1"
-                      :close-on-content-click="false"
-                      :return-value.sync="date"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
+                    <v-menu ref="menu1" v-model="menu1" :close-on-content-click="false" :return-value.sync="date"
+                      transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="date"
-                          label="Select Date"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
+                        <v-text-field v-model="date" label="Select Date" prepend-icon="mdi-calendar" readonly
+                          v-bind="attrs" v-on="on"></v-text-field>
                       </template>
                       <v-date-picker v-model="date" no-title scrollable>
                         <v-spacer></v-spacer>
                         <v-btn text color="primary" @click="menu1 = false">
                           Cancel
                         </v-btn>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.menu1.save(date)"
-                        >
+                        <v-btn text color="primary" @click="$refs.menu1.save(date)">
                           OK
                         </v-btn>
                       </v-date-picker>
                     </v-menu>
 
-                    <v-menu
-                      ref="menu"
-                      v-model="menu2"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      :return-value.sync="time"
-                      transition="scale-transition"
-                      offset-y
-                      max-width="290px"
-                      min-width="290px"
-                    >
+                    <v-menu ref="menu" v-model="menu2" :close-on-content-click="false" :nudge-right="40"
+                      :return-value.sync="time" transition="scale-transition" offset-y max-width="290px"
+                      min-width="290px">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="time"
-                          label="Select Time"
-                          prepend-icon="mdi-clock-time-four-outline"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
+                        <v-text-field v-model="time" label="Select Time" prepend-icon="mdi-clock-time-four-outline"
+                          readonly v-bind="attrs" v-on="on"></v-text-field>
                       </template>
-                      <v-time-picker
-                        v-if="menu2"
-                        v-model="time"
-                        full-width
-                        color="red"
-                        @click:minute="$refs.menu.save(time)"
-                      ></v-time-picker>
+                      <v-time-picker v-if="menu2" v-model="time" full-width color="red"
+                        @click:minute="$refs.menu.save(time)"></v-time-picker>
                     </v-menu>
                   </div>
                 </v-card-text>
@@ -717,25 +474,12 @@
                 <v-card-actions>
                   <v-row no-gutters>
                     <v-col cols="12" sm="6">
-                      <v-btn
-                        rounded
-                        width="100%"
-                        color="white"
-                        dark
-                        class="primary--text"
-                        @click="dialog = false"
-                      >
+                      <v-btn rounded width="100%" color="white" dark class="primary--text" @click="dialog = false">
                         Cancel
                       </v-btn>
                     </v-col>
                     <v-col cols="12" sm="6">
-                      <v-btn
-                        width="100%"
-                        rounded
-                        color="red"
-                        dark
-                        @click="sendReminder(radio, date, time)"
-                      >
+                      <v-btn width="100%" rounded color="red" dark @click="sendReminder(radio, date, time)">
                         Save
                       </v-btn>
                     </v-col>
@@ -753,30 +497,15 @@
           <h3 class="center">Verify your email address</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field
-            label="Email Address*"
-            v-model="current_email"
-            outlined
-          ></v-text-field>
+          <v-text-field label="Email Address*" v-model="current_email" outlined></v-text-field>
         </v-card-text>
         <v-card-actions>
-          <v-btn
-            color="red"
-            text
-            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-            min-width="140px"
-            @click="close()"
-          >
+          <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
+            @click="close()">
             Cancel
           </v-btn>
-          <v-btn
-            text
-            class="text-capitalize ma-3 rounded-pill red_button"
-            min-width="140px"
-            color="white"
-            outlined
-            @click="SendVerification()"
-          >
+          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
+            @click="SendVerification()">
             Submit
           </v-btn>
         </v-card-actions>
@@ -789,32 +518,16 @@
         </v-card-title>
         <v-card-text class="pt-0">
           <!-- <v-form @submit.prevent="" ref="form" v-model="valid" lazy-validation> -->
-          <v-text-field
-            label="Enter OTP"
-            v-model="otp"
-            value=""
-            required
-          ></v-text-field>
+          <v-text-field label="Enter OTP" v-model="otp" value="" required></v-text-field>
           <!-- </v-form> -->
         </v-card-text>
         <v-card-actions>
-          <v-btn
-            color="red"
-            text
-            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-            min-width="140px"
-            @click="close()"
-          >
+          <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
+            @click="close()">
             Cancel
           </v-btn>
-          <v-btn
-            text
-            class="text-capitalize ma-3 rounded-pill red_button"
-            min-width="140px"
-            color="white"
-            outlined
-            @click="verifyOTP()"
-          >
+          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
+            @click="verifyOTP()">
             Submit
           </v-btn>
         </v-card-actions>
@@ -828,38 +541,18 @@
           <h3 class="center">{{ notes_text }}</h3>
         </v-card-title>
         <v-card-text class="pt-0">
-          <v-text-field
-            v-model="notes_data"
-            clear-icon="mdi-close-circle"
-            clearable
-            label="Notes"
-            :rules="rules"
-            counter
-            maxlength="120"
-            type="text"
-            @click:clear="clearMessage(uniqueId, notes_data)"
-            class="black--text"
-          ></v-text-field>
+          <v-text-field v-model="notes_data" clear-icon="mdi-close-circle" clearable label="Notes" :rules="rules"
+            counter maxlength="120" type="text" @click:clear="clearMessage(uniqueId, notes_data)" class="black--text">
+          </v-text-field>
         </v-card-text>
 
         <v-card-actions>
-          <v-btn
-            color="red"
-            text
-            class="ma-2 text-capitalize rounded-pill p-3 red_button_outline"
-            min-width="140px"
-            @click="addNotesDialog = false"
-          >
+          <v-btn color="red" text class="ma-2 text-capitalize rounded-pill p-3 red_button_outline" min-width="140px"
+            @click="addNotesDialog = false">
             Cancel
           </v-btn>
-          <v-btn
-            text
-            class="text-capitalize ma-3 rounded-pill red_button"
-            min-width="140px"
-            color="white"
-            outlined
-            @click="addNote(uniqueId, notes_data)"
-          >
+          <v-btn text class="text-capitalize ma-3 rounded-pill red_button" min-width="140px" color="white" outlined
+            @click="addNote(uniqueId, notes_data)">
             Save
           </v-btn>
         </v-card-actions>
@@ -871,11 +564,7 @@
       <v-card color="red" dark>
         <v-card-text>
           Sending OTP to your email id
-          <v-progress-linear
-            indeterminate
-            color="white"
-            class="mb-0"
-          ></v-progress-linear>
+          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -901,7 +590,7 @@ export default {
     addNotesDialog: false,
     notes_data: "",
     virtualNumber: null,
-    virtualnumberDisplay:null,
+    virtualnumberDisplay: null,
     uniqueId: null,
     reminder_added: false,
     blocked_number: false,
@@ -916,6 +605,7 @@ export default {
     changeEmailPopup: false,
     enterOtpModel: false,
     loadingMore: false,
+    datafound: 'Loading...',
     items: [
       { title: "Add Note", color: "black--text", url: "add_note" },
       { title: "Add Reminder", color: "black--text", url: "add_reminder" },
@@ -998,9 +688,11 @@ export default {
     name: "",
     userRole: "",
     reminder: "",
-    noSearchData:false,
-    Department:"",
-    Key:"",
+    noSearchData: false,
+    Department: "",
+    Key: "",
+    localContacts: [],
+
   }),
   watch: {
     sendInviteLoader(val) {
@@ -1013,24 +705,92 @@ export default {
     },
   },
   methods: {
-        handleScroll () {
-      window.onscroll = () => {
-        let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+    syncContents() {
+      let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
+      const owneruid = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.uid : localStorageUserObj.OwnerUid;
+      this.AccountId = (localStorageUserObj.role == "OWNER") ? localStorageUserObj.AccountId : localStorageUserObj.OwnerAccountId;
+      // console.log(owneruid)
+      this.owneruid = owneruid;
+      this.uid = localStorageUserObj.uid;
+      db.collection("UserContacts").where("Uid", "==", owneruid).get().then(async (querySnapshot) => {
+        console.log(querySnapshot);
+        this.userContacts = [];
+        if (!querySnapshot.empty) {
 
-        if (bottomOfWindow) {
-console.log('bottom of the page');
-if(this.totalPage>0 && this.totalItems>=this.limit){
+          querySnapshot.forEach(async (doc) => {
+            let contact = doc.data();
+            this.contact = contact;
+            // console.log(contact)
+            this.userContactsObject = Object.assign({}, this.userContactsObject, {
+              ContactName: contact.Name,
+              ContactNumber: contact.Number,
 
-  this.getNextCalls();
-
-}
-        //  this.scrolledToBottom = true // replace it with your code
+            })
+            this.userContacts.push(this.userContactsObject);
+          })
         }
-      }
-      },
+      }).catch((err) => {
+        console.log(err.message)
+      })
+
+
+      db.collection("OrganisationContacts").where("OrganisationUid", "==", owneruid).get().then(async (querySnapshot) => {
+        console.log(querySnapshot);
+        this.organisationContacts = [];
+        if (!querySnapshot.empty) {
+
+          querySnapshot.forEach(async (doc) => {
+            let contact = doc.data();
+            this.contact = contact;
+            // console.log(contact)
+            this.organisationContactsObject = Object.assign({}, this.organisationContactsObject, {
+              ContactName: contact.Name,
+              ContactInitial: contact.Name.charAt(0),
+              ContactNumber: contact.Number,
+
+            })
+            this.organisationContacts.push(this.organisationContactsObject);
+
+            // var docs =  querySnapshot.docs.map(JSON.decode(JSON.encode(doc.data())));
+
+
+          })
+          const LocalContactsOrganizationJson = JSON.stringify(this.organisationContacts);
+
+          console.log(LocalContactsOrganizationJson);
+          localStorage.setItem("organizationContactLocal", LocalContactsOrganizationJson);
+
+          // window.localStorage.setItem("organizationContactLocal", JSON.stringify(LocalContactsOrganizationJson));
+
+        }
+      }).catch((err) => {
+        console.log(err.message)
+      })
+    },
+    handleScroll() {
+
+
+window.onscroll = () => {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    // alert("you're at the bottom of the page");
+    if (this.totalPage > 0 && this.totalItems >= this.limit) {
+
+      this.getNextCalls();
+      this.scrolledToBottom = true
+    } else {
+      this.scrolledToBottom = false
+
+    }
+
+  }
+}
+
+
+
+},
 
     callerNumberSpan(text) {
-      return `+91 ${text}`;
+      return `${text}`;
     },
     callNote(text) {
       return `${text}`;
@@ -1038,7 +798,7 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
     callReminder(text) {
       return `${text}`;
     },
-       emailStatus() {
+    emailStatus() {
       db.collection("users")
         .where("uid", "==", this.uid)
         .get()
@@ -1049,7 +809,7 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
               : "";
           this.hidealert =
             snap.docs[0].data().role == "OWNER" &&
-            snap.docs[0].data().IsEmailVerified == false
+              snap.docs[0].data().IsEmailVerified == false
               ? true
               : false;
           // this.hidealert =
@@ -1065,7 +825,7 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
           console.log(err.message);
         });
     },
-        // Blocked Status
+    // Blocked Status
     async blockedStatus(ownerUID) {
       console.log("Owner UID" + ownerUID);
       this.blocked_numbers_ = [];
@@ -1110,14 +870,14 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
       oldradio
     ) {
 
-      console.log('virtualNumber----'+virtualNumber);
-      console.log('uniqueId---------'+uniqueId);
-      console.log('notes_text-------'+notes_text);
-      console.log('noteOwnerId------'+noteOwnerId);
-      console.log('ownerId----------'+ownerId);
-      console.log('oldnote-----------'+oldnote);
-      console.log('oldradio----------'+ oldradio);
-      if (action == "add_note" ) {
+      console.log('virtualNumber----' + virtualNumber);
+      console.log('uniqueId---------' + uniqueId);
+      console.log('notes_text-------' + notes_text);
+      console.log('noteOwnerId------' + noteOwnerId);
+      console.log('ownerId----------' + ownerId);
+      console.log('oldnote-----------' + oldnote);
+      console.log('oldradio----------' + oldradio);
+      if (action == "add_note") {
         console.log("Add Note");
         this.notes_data = notes_text;
         this.uniqueId = uniqueId;
@@ -1130,12 +890,12 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
           this.notes_text = "Edit Notes";
         }
       }
-      if (action == "add_note_warning" || noteOwnerId!=ownerId) {
+      if (action == "add_note_warning" || noteOwnerId != ownerId) {
         this.$root.vtoast.show({
-            message: "You cannot edit note created by another user",
-            color: "black",
-            timer: 2000,
-          });
+          message: "You cannot edit note created by another user",
+          color: "black",
+          timer: 2000,
+        });
       }
       if (action == "add_reminder") {
         console.log("Add Reminder");
@@ -1216,7 +976,7 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
       // this.isUpdating = true;
       this.filterMongo();
       this.showBadge = true;
-       this.filtermenu=false;
+      this.filtermenu = false;
     },
     updateSearchTerm() {
       console.log(this.searchTerm);
@@ -1662,19 +1422,28 @@ if(this.totalPage>0 && this.totalItems>=this.limit){
               owneruid = "";
               this.called_name = "";
             }
-            var calledNumber =
-              this.calldetails.callerNumber.slice(0, 5) +
-              " " +
-              this.calldetails.callerNumber.slice(5, 7) +
-              " " +
-              this.calldetails.callerNumber.slice(7, 11);
-var virtualnumberDisplay =
+            // var calledNumber =
+            //   this.calldetails.callerNumber.slice(0, 5) +
+            //   " " +
+            //   this.calldetails.callerNumber.slice(5, 7) +
+            //   " " +
+            //   this.calldetails.callerNumber.slice(7, 11);
+            var virtualnumberDisplay =
               this.calldetails.virtualnumber.slice(0, 5) +
               " " +
               this.calldetails.virtualnumber.slice(5, 7) +
               " " +
               this.calldetails.virtualnumber.slice(7, 11);
-            this.detail = Object.assign({}, this.detail, {
+              var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+
+              localContacts.forEach(element => {
+                if (this.calldetails.callerNumber == element.ContactNumber) {
+
+                  console.log(element.ContactNumber);
+                  console.log(element.ContactName);
+                  var calledNumber = element.ContactName;
+
+                  this.detail = Object.assign({}, this.detail, {
               callstatus: this.calldetails.callstatus,
               name: this.calldetails.name[0],
               dateTime: call_time,
@@ -1683,38 +1452,46 @@ var virtualnumberDisplay =
               uniqueid: this.calldetails.uniqueid,
               Note: note,
               source: this.calldetails.source,
-               virtualnumber: this.calldetails.callerNumber,
-                             virtualnumberDisplay: virtualnumberDisplay,
+              virtualnumber: this.calldetails.callerNumber,
+              virtualnumberDisplay: virtualnumberDisplay,
               called_name: this.called_name,
-                                      recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder
-                          ? this.calldetails.Reminder.ReminderAt
-                          : "",
-                        reminderPayload: this.calldetails.Reminder
-                          ? this.calldetails.Reminder
-                          : "",
-                        reminderTime: this.calldetails.Reminder
-                          ? moment(this.calldetails.Reminder.ReminderAt).format(
-                              "D MMM Y hh:mm a"
-                            )
-                          : "",
-                        isBlocked: this.blocked_numbers_.includes(
-                          parseInt(this.calldetails.callerNumber)
-                        ),Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
+              recordingUrl: this.calldetails.recordingurl,
+              reminder: this.calldetails.Reminder
+                ? this.calldetails.Reminder.ReminderAt
+                : "",
+              reminderPayload: this.calldetails.Reminder
+                ? this.calldetails.Reminder
+                : "",
+              reminderTime: this.calldetails.Reminder
+                ? moment(this.calldetails.Reminder.ReminderAt).format(
+                  "D MMM Y hh:mm a"
+                )
+                : "",
+              isBlocked: this.blocked_numbers_.includes(
+                parseInt(this.calldetails.callerNumber)
+              ), Department: this.calldetails.Department,
+              Key: this.calldetails.Key,
             });
+                }
+              });
+
             this.realdata.push(this.detail);
+            if (this.detail.length == 0) {
+                          this.datafound = false
+                        } else {
+                          this.datafound = true
+                        }
             this.backuprealdata.push(this.detail);
             console.log("filterMongo calllog ", this.realdata);
           });
-           const index = this.realdata.findIndex((object) => {
-                      return object.uniqueid === this.uniqueId;
-                    });
-                    this.realdata[index].reminderTime = moment(
-                      this.testreminder
-                    ).format("D MMM Y hh:mm a");
-                    console.log("gfghghgvhgvhgv", this.realdata[index]);
-                    this.testreminder = "";
+          const index = this.realdata.findIndex((object) => {
+            return object.uniqueid === this.uniqueId;
+          });
+          this.realdata[index].reminderTime = moment(
+            this.testreminder
+          ).format("D MMM Y hh:mm a");
+          console.log("gfghghgvhgvhgv", this.realdata[index]);
+          this.testreminder = "";
         })
         .catch((error) => {
           console.log("DL error", error);
@@ -1854,7 +1631,7 @@ var virtualnumberDisplay =
               this.calldetails.callerNumber.slice(5, 7) +
               " " +
               this.calldetails.callerNumber.slice(7, 11);
-var virtualnumberDisplay =
+            var virtualnumberDisplay =
               this.calldetails.virtualnumber.slice(0, 5) +
               " " +
               this.calldetails.virtualnumber.slice(5, 7) +
@@ -1870,495 +1647,543 @@ var virtualnumberDisplay =
               Note: note,
               source: this.calldetails.source,
               virtualnumber: this.calldetails.callerNumber,
-                            virtualnumberDisplay: virtualnumberDisplay,
+              virtualnumberDisplay: virtualnumberDisplay,
               called_name: this.called_name,
-                                      recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder
-                          ? this.calldetails.Reminder.ReminderAt
-                          : "",
-                        reminderPayload: this.calldetails.Reminder
-                          ? this.calldetails.Reminder
-                          : "",
-                        reminderTime: this.calldetails.Reminder
-                          ? moment(this.calldetails.Reminder.ReminderAt).format(
-                              "D MMM Y hh:mm a"
-                            )
-                          : "",
-                        isBlocked: this.blocked_numbers_.includes(
-                          parseInt(this.calldetails.callerNumber)
-                        ),Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
+              recordingUrl: this.calldetails.recordingurl,
+              reminder: this.calldetails.Reminder
+                ? this.calldetails.Reminder.ReminderAt
+                : "",
+              reminderPayload: this.calldetails.Reminder
+                ? this.calldetails.Reminder
+                : "",
+              reminderTime: this.calldetails.Reminder
+                ? moment(this.calldetails.Reminder.ReminderAt).format(
+                  "D MMM Y hh:mm a"
+                )
+                : "",
+              isBlocked: this.blocked_numbers_.includes(
+                parseInt(this.calldetails.callerNumber)
+              ), Department: this.calldetails.Department,
+              Key: this.calldetails.Key,
             });
 
-                   // if("Message" in this.detail.reminderPayload) {
+            // if("Message" in this.detail.reminderPayload) {
             // if(this.detail.reminderPayload.hasOwnProperty("Message")) {
-            if(Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
+            if (Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
               this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
             }
 
-        // note replace
-          // this.detail.Note.forEach(Note => {
-          //     console.log(Note);
-          //     this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
-        
-          //   });
+            // note replace
+            // this.detail.Note.forEach(Note => {
+            //     console.log(Note);
+            //     this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+
+            //   });
 
             this.detail.callerNumber = this.calldetails.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
 
             this.realdata.push(this.detail);
+            if (this.detail.length == 0) {
+              this.datafound = false
+            } else {
+              this.datafound = true
+            }
             this.backuprealdata.push(this.detail);
             console.log("searchMongo calllog ", this.realdata);
           });
-           const index = this.realdata.findIndex((object) => {
-                      return object.uniqueid === this.uniqueId;
-                    });
-                    this.realdata[index].reminderTime = moment(
-                      this.testreminder
-                    ).format("D MMM Y hh:mm a");
-                    console.log("gfghghgvhgvhgv", this.realdata[index]);
-                    this.testreminder = "";
+          const index = this.realdata.findIndex((object) => {
+            return object.uniqueid === this.uniqueId;
+          });
+          this.realdata[index].reminderTime = moment(
+            this.testreminder
+          ).format("D MMM Y hh:mm a");
+          console.log("gfghghgvhgvhgv", this.realdata[index]);
+          this.testreminder = "";
         })
         .catch((error) => {
           console.log("DL error", error);
         });
     },
-      getInitialCalls() {
-    let localStorageUserObj = localStorage.getItem("tpu");
+    getInitialCalls() {
+      this.$vuetify.goTo(0)
 
-    if (localStorageUserObj) {
-      let parsedUser = JSON.parse(localStorageUserObj);
-      this.ownerUid =
-        parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
-      this.userEmail = parsedUser.Email;
+      let localStorageUserObj = localStorage.getItem("tpu");
 
-      this.userRole = parsedUser.role;
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          this.uid = user.uid;
-          this.emailStatus();
-          this.blockedStatus(this.ownerUid);
-          console.log("User Id : " + this.ownerUid);
+      if (localStorageUserObj) {
+        let parsedUser = JSON.parse(localStorageUserObj);
+        this.ownerUid =
+          parsedUser.role == "OWNER" ? parsedUser.uid : parsedUser.OwnerUid;
+        this.userEmail = parsedUser.Email;
 
-          db.collection("users")
-            .where("OwnerUid", "==", this.ownerUid)
-            .orderBy("cDate", "asc")
-            .get()
-            .then((querySnapshot) => {
-              Object.assign(this.usersObj, {
-                [parsedUser.FirstName
-                  ? parsedUser.FirstName
-                  : parsedUser.role]: `+91${parsedUser.PhoneNumber}`,
-              });
-              this.Users.push(
-                parsedUser.FirstName ? parsedUser.FirstName : parsedUser.role
-              );
-              console.log("this.usersObj", this.usersObj);
-              this.Numbers = parsedUser.virtualNumber;
-              this.Numbers.concat(parsedUser.virtualNumber);
+        this.userRole = parsedUser.role;
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            this.uid = user.uid;
+            this.emailStatus();
+            this.blockedStatus(this.ownerUid);
+            console.log("User Id : " + this.ownerUid);
 
-              querySnapshot.forEach((doc) => {
-                let user_details = doc.data();
-
+            db.collection("users")
+              .where("OwnerUid", "==", this.ownerUid)
+              .orderBy("cDate", "asc")
+              .get()
+              .then((querySnapshot) => {
                 Object.assign(this.usersObj, {
-                  [user_details.Name]: `+91${user_details.PhoneNumber}`,
+                  [parsedUser.FirstName
+                    ? parsedUser.FirstName
+                    : parsedUser.role]: `+91${parsedUser.PhoneNumber}`,
                 });
-                this.Users.push(user_details.Name);
-              });
-            })
-            .catch((error) => {
-              console.log("Error getting documents: ", error);
-            });
-
-          db.collection("callLogs")
-            .where("owneruid", "==", this.ownerUid)
-            .where("callstatus", "==", "Missed")
-            .orderBy("dateTime", "desc")
-            .onSnapshot((querySnapshot) => {
-              this.realdata = [];
-              this.backuprealdata = [];
-              if (!querySnapshot.empty) {
-                // querySnapshot.forEach(async (doc) => {
-
-                // API CALL CONFIG
-                // Getting Calls from Mongo on onSnapshot
-                var filterCallsPayload = {
-                  page_number: 1,
-                  results_per_page: parseInt(this.limit),
-                  conditions: {
-                    owneruid: this.ownerUid,
-                    callstatus: "Missed",
-                  },
-                  sort: {},
-                };
-
-                let updatedFilterCallsPayload =
-                  this.getCallsFilterPayload(filterCallsPayload);
-                console.log(
-                  "updatedFilterCallsPayload",
-                  JSON.stringify(updatedFilterCallsPayload)
+                this.Users.push(
+                  parsedUser.FirstName ? parsedUser.FirstName : parsedUser.role
                 );
+                console.log("this.usersObj", this.usersObj);
+                this.Numbers = parsedUser.virtualNumber;
+                this.Numbers.concat(parsedUser.virtualNumber);
+                if (querySnapshot.empty) {
+                  this.datafound = false
+                }
+                querySnapshot.forEach((doc) => {
+                  let user_details = doc.data();
 
-                var cfdata = {
-                  headers: this.$headerKeyMongo,
-                  url: this.$mongoApi + "/api/calllogs/paginate",
-                  payload: updatedFilterCallsPayload,
-                };
-                var raw = JSON.stringify(cfdata);
+                  Object.assign(this.usersObj, {
+                    [user_details.Name]: `+91${user_details.PhoneNumber}`,
+                  });
+                  this.Users.push(user_details.Name);
+                });
+              })
+              .catch((error) => {
+                console.log("Error getting documents: ", error);
+              });
 
-                const headers = {
-                  "Content-Type": "application/json",
-                  token: localStorage.getItem("token"),
-                };
-                axios
-                  .post(this.$cloudfareApi + "/admin/mongo", raw, {
-                    headers: headers,
-                  })
-                  .then((response) => {
-                    console.log("DL response", response.data.data);
-                    let dataset = response.data.data.dataset;
+            db.collection("callLogs")
+              .where("owneruid", "==", this.ownerUid)
+              .where("callstatus", "==", "Missed")
+              .orderBy("dateTime", "desc")
+              .onSnapshot((querySnapshot) => {
+                this.realdata = [];
+                this.backuprealdata = [];
+                if (!querySnapshot.empty) {
+                  // querySnapshot.forEach(async (doc) => {
 
-                    this.totalPage = response.data.data.totalPages;
-                    this.totalItems = response.data.data.totalItems;
+                  // API CALL CONFIG
+                  // Getting Calls from Mongo on onSnapshot
+                  var filterCallsPayload = {
+                    page_number: 1,
+                    results_per_page: parseInt(this.limit),
+                    conditions: {
+                      owneruid: this.ownerUid,
+                      callstatus: "Missed",
+                    },
+                    sort: {},
+                  };
 
-                    // let List = [];
-                    this.realdata = [];
-                    this.backuprealdata = [];
-                    dataset.forEach((doc) => {
-                      //ORIG DATA ITERATOR
-                      // console.log(doc.id, " => ", doc.data());
-                      // let user_details = doc.data();
-                      let user_details = doc;
-                      this.calldetails = user_details;
-                      var timestamp = this.calldetails.dateTime;
-                      var date = new Date(timestamp);
-                      console.log("full time", date);
-                      // var call_time = moment(date).format('hh:mm a')
-                      // call_time = moment(date).fromNow();
-                      // console.log("converted time",call_time)
+                  let updatedFilterCallsPayload =
+                    this.getCallsFilterPayload(filterCallsPayload);
+                  console.log(
+                    "updatedFilterCallsPayload",
+                    JSON.stringify(updatedFilterCallsPayload)
+                  );
 
-                      var myCurrentDate = new Date();
-                      var missedTresholdDate = new Date(myCurrentDate);
-                      missedTresholdDate.setDate(
-                        missedTresholdDate.getDate() - 2
-                      ); //2 days before
-                      console.log(missedTresholdDate);
+                  var cfdata = {
+                    headers: this.$headerKeyMongo,
+                    url: this.$mongoApi + "/api/calllogs/paginate",
+                    payload: updatedFilterCallsPayload,
+                  };
+                  var raw = JSON.stringify(cfdata);
 
-                      console.log(timestamp); //missed call date
-                      console.log(missedTresholdDate.getTime()); //addon date
-                      console.log(myCurrentDate.getTime()); //today's date
+                  const headers = {
+                    "Content-Type": "application/json",
+                    token: localStorage.getItem("token"),
+                  };
+                  axios
+                    .post(this.$cloudfareApi + "/admin/mongo", raw, {
+                      headers: headers,
+                    })
+                    .then((response) => {
+                      console.log("DL response", response.data.data);
+                      let dataset = response.data.data.dataset;
 
-                      if (timestamp <= missedTresholdDate.getTime()) {
-                        call_time = moment(date).format("D MMM Y hh:mm a");
-                      } else {
-                        var call_time = moment(date).format("hh:mm a");
-                        call_time = moment(date).fromNow();
-                      }
+                      this.totalPage = response.data.data.totalPages;
+                      this.totalItems = response.data.data.totalItems;
 
-                      var note = "";
-                      var uid = "";
-                      var user_name = "";
-                      var owneruid = "";
-                      if (this.calldetails.Notes) {
-                        note = this.calldetails.Notes;
-                      } else {
-                        console.log("no note");
-                        note = [{ Note: "" }];
-                      }
-                      if (this.calldetails.ClickCount) {
-                        uid = this.calldetails.ClickCount.Uid;
-                        user_name = this.calldetails.name;
-                        owneruid = this.calldetails.owneruid;
-                        // console.log('user id ', this.click_details.user_name)
-                        if (
-                          uid == owneruid &&
-                          this.calldetails.callstatus == "Missed"
-                        ) {
-                          this.called_name = "You";
-                        } else if (
-                          uid == owneruid &&
-                          this.calldetails.callstatus == "Answered"
-                        ) {
-                          this.called_name = user_name;
+                      // let List = [];
+                      this.realdata = [];
+                      this.backuprealdata = [];
+                      dataset.forEach((doc) => {
+                        //ORIG DATA ITERATOR
+                        // console.log(doc.id, " => ", doc.data());
+                        // let user_details = doc.data();
+                        let user_details = doc;
+                        this.calldetails = user_details;
+                        var timestamp = this.calldetails.dateTime;
+                        var date = new Date(timestamp);
+                        console.log("full time", date);
+                        // var call_time = moment(date).format('hh:mm a')
+                        // call_time = moment(date).fromNow();
+                        // console.log("converted time",call_time)
+
+                        var myCurrentDate = new Date();
+                        var missedTresholdDate = new Date(myCurrentDate);
+                        missedTresholdDate.setDate(
+                          missedTresholdDate.getDate() - 2
+                        ); //2 days before
+                        console.log(missedTresholdDate);
+
+                        console.log(timestamp); //missed call date
+                        console.log(missedTresholdDate.getTime()); //addon date
+                        console.log(myCurrentDate.getTime()); //today's date
+
+                        if (timestamp <= missedTresholdDate.getTime()) {
+                          call_time = moment(date).format("D MMM Y hh:mm a");
+                        } else {
+                          var call_time = moment(date).format("hh:mm a");
+                          call_time = moment(date).fromNow();
                         }
-                      } else {
-                        console.log("no callback");
 
-                        uid = "";
-                        user_name = "";
-                        owneruid = "";
-                        this.called_name = "";
-                      }
-                      var calledNumber =
-                        this.calldetails.callerNumber.slice(0, 5) +
-                        " " +
-                        this.calldetails.callerNumber.slice(5, 7) +
-                        " " +
-                        this.calldetails.callerNumber.slice(7, 11);
-var virtualnumberDisplay =
-              this.calldetails.virtualnumber.slice(0, 5) +
-              " " +
-              this.calldetails.virtualnumber.slice(5, 7) +
-              " " +
-              this.calldetails.virtualnumber.slice(7, 11);
-                      this.detail = Object.assign({}, this.detail, {
-                        callstatus: this.calldetails.callstatus,
-                        name: this.calldetails.name[0],
-                        dateTime: call_time,
-                        conversationduration:
-                          this.calldetails.conversationduration,
-                        callerNumber: calledNumber,
-                        uniqueid: this.calldetails.uniqueid,
-                        Note: note,
-                        source: this.calldetails.source,
-                         virtualnumber: this.calldetails.callerNumber,
-                                       virtualnumberDisplay: virtualnumberDisplay,
-                        called_name: this.called_name,
-                        recordingUrl: this.calldetails.recordingurl,
-                        reminder: this.calldetails.Reminder
-                          ? this.calldetails.Reminder.ReminderAt
-                          : "",
-                        reminderPayload: this.calldetails.Reminder
-                          ? this.calldetails.Reminder
-                          : "",
-                        reminderTime: this.calldetails.Reminder
-                          ? moment(this.calldetails.Reminder.ReminderAt).format(
+                        var note = "";
+                        var uid = "";
+                        var user_name = "";
+                        var owneruid = "";
+                        if (this.calldetails.Notes) {
+                          note = this.calldetails.Notes;
+                        } else {
+                          console.log("no note");
+                          note = [{ Note: "" }];
+                        }
+                        if (this.calldetails.ClickCount) {
+                          uid = this.calldetails.ClickCount.Uid;
+                          user_name = this.calldetails.name;
+                          owneruid = this.calldetails.owneruid;
+                          // console.log('user id ', this.click_details.user_name)
+                          if (
+                            uid == owneruid &&
+                            this.calldetails.callstatus == "Missed"
+                          ) {
+                            this.called_name = "You";
+                          } else if (
+                            uid == owneruid &&
+                            this.calldetails.callstatus == "Answered"
+                          ) {
+                            this.called_name = user_name;
+                          }
+                        } else {
+                          console.log("no callback");
+
+                          uid = "";
+                          user_name = "";
+                          owneruid = "";
+                          this.called_name = "";
+                        }
+                        // var calledNumber =
+                        //   this.calldetails.callerNumber.slice(0, 5) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(5, 7) +
+                        //   " " +
+                        //   this.calldetails.callerNumber.slice(7, 11);
+                        var virtualnumberDisplay =
+                          this.calldetails.virtualnumber.slice(0, 5) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(5, 7) +
+                          " " +
+                          this.calldetails.virtualnumber.slice(7, 11);
+                        var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+  localContacts.forEach(element => {
+                          if (this.calldetails.callerNumber == element.ContactNumber) {
+
+                            console.log(element.ContactNumber);
+                            console.log(element.ContactName);
+                            var calledNumber = element.ContactName;
+
+
+                        this.detail = Object.assign({}, this.detail, {
+                          callstatus: this.calldetails.callstatus,
+                          name: this.calldetails.name[0],
+                          dateTime: call_time,
+                          conversationduration:
+                            this.calldetails.conversationduration,
+                          callerNumber: calledNumber,
+                          uniqueid: this.calldetails.uniqueid,
+                          Note: note,
+                          source: this.calldetails.source,
+                          virtualnumber: this.calldetails.callerNumber,
+                          virtualnumberDisplay: virtualnumberDisplay,
+                          called_name: this.called_name,
+                          recordingUrl: this.calldetails.recordingurl,
+                          reminder: this.calldetails.Reminder
+                            ? this.calldetails.Reminder.ReminderAt
+                            : "",
+                          reminderPayload: this.calldetails.Reminder
+                            ? this.calldetails.Reminder
+                            : "",
+                          reminderTime: this.calldetails.Reminder
+                            ? moment(this.calldetails.Reminder.ReminderAt).format(
                               "D MMM Y hh:mm a"
                             )
-                          : "",
-                        isBlocked: this.blocked_numbers_.includes(
-                          parseInt(this.calldetails.callerNumber)
-                        ),Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
-                      });
+                            : "",
+                          isBlocked: this.blocked_numbers_.includes(
+                            parseInt(this.calldetails.callerNumber)
+                          ), Department: this.calldetails.Department,
+                          Key: this.calldetails.Key,
+                        });
+
+                          }
+                        });
+
                         // console.log('blocked calls'+this.calldetails.callerNumber);
-                      this.realdata.push(this.detail);
-                      this.backuprealdata.push(this.detail);
-                      console.log("snap1 calllog ", this.realdata);
-                      // call details
+                        this.realdata.push(this.detail);
+                        if (this.detail.length == 0) {
+              this.datafound = false
+            } else {
+              this.datafound = true
+            }
+                        this.backuprealdata.push(this.detail);
+                        console.log("snap1 calllog ", this.realdata);
+                        // call details
+                      });
+                      const index = this.realdata.findIndex((object) => {
+                        return object.uniqueid === this.uniqueId;
+                      });
+                      this.realdata[index].reminderTime = moment(
+                        this.testreminder
+                      ).format("D MMM Y hh:mm a");
+                      console.log("gfghghgvhgvhgv", this.realdata[index]);
+                      this.testreminder = "";
+                    })
+                    .catch((error) => {
+                      console.log("DL error", error);
                     });
-                    const index = this.realdata.findIndex((object) => {
-                      return object.uniqueid === this.uniqueId;
-                    });
-                    this.realdata[index].reminderTime = moment(
-                      this.testreminder
-                    ).format("D MMM Y hh:mm a");
-                    console.log("gfghghgvhgvhgv", this.realdata[index]);
-                    this.testreminder = "";
-                  })
-                  .catch((error) => {
-                    console.log("DL error", error);
-                  });
-                // API CALL CONFIG
-                // });
-              } else {
-                //alert('no calls')
-              }
-            });
-        }
-      });
-    }
-  },
+                  // API CALL CONFIG
+                  // });
+                } else {
+                  //alert('no calls')
+                }
+              });
+          }
+        });
+      }
+    },
     getNextCalls() {
 
-this.loadingMore=true;
-          // getting Next calls
-          this.page++;
-          console.log("Filtering Calls.....");
-          var filterCallsPayload = {
-            page_number: this.page ? parseInt(this.page) : 1,
-            results_per_page: parseInt(this.limit),
-            conditions: {
-              owneruid: this.ownerUid,
-              callstatus: "Missed",
-            },
-            sort: {},
-          };
+      this.loadingMore = true;
+      // getting Next calls
+      this.page++;
+      console.log("Filtering Calls.....");
+      var filterCallsPayload = {
+        page_number: this.page ? parseInt(this.page) : 1,
+        results_per_page: parseInt(this.limit),
+        conditions: {
+          owneruid: this.ownerUid,
+          callstatus: "Missed",
+        },
+        sort: {},
+      };
 
-          let updatedFilterCallsPayload =
-            this.getCallsFilterPayload(filterCallsPayload);
-          console.log(
-            "updatedFilterCallsPayload",
-            JSON.stringify(updatedFilterCallsPayload)
-          );
+      let updatedFilterCallsPayload =
+        this.getCallsFilterPayload(filterCallsPayload);
+      console.log(
+        "updatedFilterCallsPayload",
+        JSON.stringify(updatedFilterCallsPayload)
+      );
 
-          var cfdata = {
-            headers: this.$headerKeyMongo,
-            url: this.$mongoApi + "/api/calllogs/paginate",
-            payload: updatedFilterCallsPayload,
-          };
-          var raw = JSON.stringify(cfdata);
+      var cfdata = {
+        headers: this.$headerKeyMongo,
+        url: this.$mongoApi + "/api/calllogs/paginate",
+        payload: updatedFilterCallsPayload,
+      };
+      var raw = JSON.stringify(cfdata);
 
-          const headers = {
-            "Content-Type": "application/json",
-            token: localStorage.getItem("token"),
-          };
-          axios
-            .post(this.$cloudfareApi + "/admin/mongo", raw, {
-              headers: headers,
-            })
-            .then((response) => {
-              console.log("DL response", response.data.data);
-              let dataset = response.data.data.dataset;
+      const headers = {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("token"),
+      };
+      axios
+        .post(this.$cloudfareApi + "/admin/mongo", raw, {
+          headers: headers,
+        })
+        .then((response) => {
+          console.log("DL response", response.data.data);
+          let dataset = response.data.data.dataset;
 
-              this.totalPage = response.data.data.totalPages;
-              this.totalItems = response.data.data.totalItems;
+          this.totalPage = response.data.data.totalPages;
+          this.totalItems = response.data.data.totalItems;
 
-              console.log('getNextCalls dataset.length', dataset.length);
-              if(!dataset.length) {
-                this.page--;
+          console.log('getNextCalls dataset.length', dataset.length);
+          if (!dataset.length) {
+            this.page--;
+          } else {
+
+            // let List = [];
+            // this.realdata = [];
+            dataset.forEach((doc) => {
+              // let callObj = {
+
+              // };
+
+              // call details
+              let user_details = doc;
+              this.calldetails = user_details;
+              var timestamp = this.calldetails.dateTime;
+              var date = new Date(timestamp);
+              console.log("full time", date);
+              // var call_time = moment(date).format('hh:mm a')
+              // call_time = moment(date).fromNow();
+              // console.log("converted time",call_time)
+
+              var myCurrentDate = new Date();
+              var missedTresholdDate = new Date(myCurrentDate);
+              missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
+              console.log(missedTresholdDate);
+
+              console.log(timestamp); //missed call date
+              console.log(missedTresholdDate.getTime()); //addon date
+              console.log(myCurrentDate.getTime()); //today's date
+
+              if (timestamp <= missedTresholdDate.getTime()) {
+                call_time = moment(date).format("D MMM Y hh:mm a");
               } else {
+                var call_time = moment(date).format("hh:mm a");
+                call_time = moment(date).fromNow();
+              }
 
-              // let List = [];
-              // this.realdata = [];
-              dataset.forEach((doc) => {
-                // let callObj = {
-
-                // };
-
-                // call details
-                let user_details = doc;
-                this.calldetails = user_details;
-                var timestamp = this.calldetails.dateTime;
-                var date = new Date(timestamp);
-                console.log("full time", date);
-                // var call_time = moment(date).format('hh:mm a')
-                // call_time = moment(date).fromNow();
-                // console.log("converted time",call_time)
-
-                var myCurrentDate = new Date();
-                var missedTresholdDate = new Date(myCurrentDate);
-                missedTresholdDate.setDate(missedTresholdDate.getDate() - 2); //2 days before
-                console.log(missedTresholdDate);
-
-                console.log(timestamp); //missed call date
-                console.log(missedTresholdDate.getTime()); //addon date
-                console.log(myCurrentDate.getTime()); //today's date
-
-                if (timestamp <= missedTresholdDate.getTime()) {
-                  call_time = moment(date).format("D MMM Y hh:mm a");
-                } else {
-                  var call_time = moment(date).format("hh:mm a");
-                  call_time = moment(date).fromNow();
+              var note = "";
+              var uid = "";
+              var user_name = "";
+              var owneruid = "";
+              if (this.calldetails.Notes) {
+                note = this.calldetails.Notes;
+              } else {
+                console.log("no note");
+                note = [{
+                  Note: ""
+                }];
+              }
+              if (this.calldetails.ClickCount) {
+                uid = this.calldetails.ClickCount.Uid;
+                user_name = this.calldetails.name;
+                owneruid = this.calldetails.owneruid;
+                // console.log('user id ', this.click_details.user_name)
+                if (
+                  uid == owneruid &&
+                  this.calldetails.callstatus == "Missed"
+                ) {
+                  this.called_name = "You";
+                } else if (
+                  uid == owneruid &&
+                  this.calldetails.callstatus == "Answered"
+                ) {
+                  this.called_name = user_name;
                 }
+              } else {
+                console.log("no callback");
 
-                var note = "";
-                var uid = "";
-                var user_name = "";
-                var owneruid = "";
-                if (this.calldetails.Notes) {
-                  note = this.calldetails.Notes;
-                } else {
-                  console.log("no note");
-                  note = [{
-                    Note: ""
-                  }];
-                }
-                if (this.calldetails.ClickCount) {
-                  uid = this.calldetails.ClickCount.Uid;
-                  user_name = this.calldetails.name;
-                  owneruid = this.calldetails.owneruid;
-                  // console.log('user id ', this.click_details.user_name)
-                  if (
-                    uid == owneruid &&
-                    this.calldetails.callstatus == "Missed"
-                  ) {
-                    this.called_name = "You";
-                  } else if (
-                    uid == owneruid &&
-                    this.calldetails.callstatus == "Answered"
-                  ) {
-                    this.called_name = user_name;
-                  }
-                } else {
-                  console.log("no callback");
+                uid = "";
+                user_name = "";
+                owneruid = "";
+                this.called_name = "";
+              }
+              // var calledNumber =
+              //   this.calldetails.callerNumber.slice(0, 5) +
+              //   " " +
+              //   this.calldetails.callerNumber.slice(5, 7) +
+              //   " " +
+              //   this.calldetails.callerNumber.slice(7, 11);
+              var virtualnumberDisplay =
+                this.calldetails.virtualnumber.slice(0, 5) +
+                " " +
+                this.calldetails.virtualnumber.slice(5, 7) +
+                " " +
+                this.calldetails.virtualnumber.slice(7, 11);
 
-                  uid = "";
-                  user_name = "";
-                  owneruid = "";
-                  this.called_name = "";
+
+                var localContacts = JSON.parse(localStorage.getItem('organizationContactLocal'));
+              // var object = JSON.parse(localStorage.getItem('organizationContactLocal'));
+              // var data = JSON.stringify(object); // this is a string
+              // data = data.replace("ContactName", "vegetables");
+
+              localContacts.forEach(element => {
+                if (this.calldetails.callerNumber == element.ContactNumber) {
+
+                  console.log(element.ContactNumber);
+                  console.log(element.ContactName);
+                  var calledNumber = element.ContactName;
+
+                  this.detail = Object.assign({}, this.detail, {
+                callstatus: this.calldetails.callstatus,
+                name: this.calldetails.name[0],
+                dateTime: call_time,
+                conversationduration: this.calldetails.conversationduration,
+                callerNumber: calledNumber,
+                uniqueid: this.calldetails.uniqueid,
+                Note: note,
+                source: this.calldetails.source,
+                virtualnumber: this.calldetails.callerNumber,
+                virtualnumberDisplay: virtualnumberDisplay,
+                called_name: this.called_name,
+                recordingUrl: this.calldetails.recordingurl,
+                reminder: this.calldetails.Reminder ?
+                  this.calldetails.Reminder.ReminderAt :
+                  "",
+                reminderPayload: this.calldetails.Reminder ?
+                  this.calldetails.Reminder :
+                  "",
+                reminderTime: this.calldetails.Reminder ?
+                  moment(this.calldetails.Reminder.ReminderAt).format(
+                    "D MMM Y hh:mm a"
+                  ) :
+                  "",
+                isBlocked: this.blocked_numbers_.includes(
+                  parseInt(this.calldetails.callerNumber)
+                ), Department: this.calldetails.Department,
+                Key: this.calldetails.Key,
+            });
                 }
-                var calledNumber =
-                  this.calldetails.callerNumber.slice(0, 5) +
-                  " " +
-                  this.calldetails.callerNumber.slice(5, 7) +
-                  " " +
-                  this.calldetails.callerNumber.slice(7, 11);
-                var virtualnumberDisplay =
-                  this.calldetails.virtualnumber.slice(0, 5) +
-                  " " +
-                  this.calldetails.virtualnumber.slice(5, 7) +
-                  " " +
-                  this.calldetails.virtualnumber.slice(7, 11);
-                this.detail = Object.assign({}, this.detail, {
-                  callstatus: this.calldetails.callstatus,
-                  name: this.calldetails.name[0],
-                  dateTime: call_time,
-                  conversationduration: this.calldetails.conversationduration,
-                  callerNumber: calledNumber,
-                  uniqueid: this.calldetails.uniqueid,
-                  Note: note,
-                  source: this.calldetails.source,
-                  virtualnumber: this.calldetails.callerNumber,
-                  virtualnumberDisplay: virtualnumberDisplay,
-                  called_name: this.called_name,
-                  recordingUrl: this.calldetails.recordingurl,
-                  reminder: this.calldetails.Reminder ?
-                    this.calldetails.Reminder.ReminderAt :
-                    "",
-                  reminderPayload: this.calldetails.Reminder ?
-                    this.calldetails.Reminder :
-                    "",
-                  reminderTime: this.calldetails.Reminder ?
-                    moment(this.calldetails.Reminder.ReminderAt).format(
-                      "D MMM Y hh:mm a"
-                    ) :
-                    "",
-                  isBlocked: this.blocked_numbers_.includes(
-                    parseInt(this.calldetails.callerNumber)
-                  ),Department:this.calldetails.Department,
-                Key:this.calldetails.Key,
-                });
-                   if(this.searchTerm !== "") {
+              });
+              if (this.searchTerm !== "") {
                 if (Object.getOwnPropertyDescriptor(this.detail.reminderPayload, "Message")) {
                   this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
                 }
 
                 this.detail.callerNumber = this.detail.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
-                }
-                this.realdata.push(this.detail);
-                this.backuprealdata.push(this.detail);
-                console.log("getNextCalls calllog ", this.realdata);
-                // call details
-              });
-
+              }
+              this.realdata.push(this.detail);
+              if (this.detail.length == 0) {
+              this.datafound = false
+            } else {
+              this.datafound = true
             }
-               const index = this.realdata.findIndex((object) => {
-                      return object.uniqueid === this.uniqueId;
-                    });
-                    this.realdata[index].reminderTime = moment(
-                      this.testreminder
-                    ).format("D MMM Y hh:mm a");
-                    console.log("gfghghgvhgvhgv", this.realdata[index]);
-                    this.testreminder = "";
-            })
-            .catch((error) => {
-              console.log("DL error", error);
+              this.backuprealdata.push(this.detail);
+              console.log("getNextCalls calllog ", this.realdata);
+              // call details
             });
-     
+
+          }
+          const index = this.realdata.findIndex((object) => {
+            return object.uniqueid === this.uniqueId;
+          });
+          this.realdata[index].reminderTime = moment(
+            this.testreminder
+          ).format("D MMM Y hh:mm a");
+          console.log("gfghghgvhgvhgv", this.realdata[index]);
+          this.testreminder = "";
+        })
+        .catch((error) => {
+          console.log("DL error", error);
+        });
+
     },
   },
 
   created() {
- this.getInitialCalls();
+    this.getInitialCalls();
     window.addEventListener("scroll", this.handleScroll, false);
 
   },
-  destroyed(){
+  destroyed() {
     window.removeEventListener("scroll", this.handleScroll, false);
 
   },
   beforeMount() {
- this.getInitialCalls();
+    this.getInitialCalls();
   },
   mounted() {
   },
