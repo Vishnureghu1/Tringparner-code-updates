@@ -145,7 +145,7 @@
                               <h6 class="font-weight-thin">Caller Number</h6>
 
                               <h5 class="font-weight-light">
-                                +91 {{ organisationContact.ContactNumber }}
+                                <span v-html="contactNumberSpan(organisationContact.ContactNumber)" />
                               </h5>
                             </div>
                           </div>
@@ -260,7 +260,7 @@
                               <h6 class="font-weight-thin">Caller Number</h6>
 
                               <h5 class="font-weight-light">
-                                +91 {{ userContact.ContactNumber }}
+                                <span v-html="contactNumberSpan(userContact.ContactNumber)" />
                               </h5>
                             </div>
                           </div>
@@ -479,12 +479,21 @@ export default {
       { title: "Edit Contact", color: "black--text", url: "edit_contact_organization" },
       { title: "Delete Contact", color: "red--text", url: "delete_organization_contact" },
     ],
+    organisationContact:'',
+    timeout:null,
+    bottom:null,
+    right:null,
+    fail:null,
+    userContact:null,
   }),
 
   mounted() {
     this.syncContents();
   },
   methods: {
+    contactNumberSpan(number) {
+      return `+91 ${number}`;
+    },
     async syncContents() {
       let localStorageUserObj = JSON.parse(localStorage.getItem("tpu"));
       const owneruid =
@@ -665,36 +674,46 @@ if(this.searchTerm){
       console.log(this.searchTerm);
       var searchObject = [];
       var searchObjectUser = [];
-      var json = JSON.parse(localStorage.getItem("organizationContactLocal"));
-      const searchTerm = this.searchTerm.toLowerCase();
+      var orgLocalContacts = JSON.parse(localStorage.getItem("organizationContactLocal"));
 
-      // Finding search object
-      searchObject = json.filter(
-        (Contact) =>
-        Contact.ContactName.toLowerCase().indexOf(searchTerm) !== -1 
-      //  ( Contact.ContactName.toLowerCase().indexOf(searchTerm) || Contact.ContactNumber.indexOf(searchTerm) ) !==  -1
+      // new logic
+      var sortedOrgContacts =  orgLocalContacts.sort(function(a, b) {
+        return a.ContactName.localeCompare(b.ContactName);
+      });
+      var searchText = this.searchTerm;
+      var regexCondition = new RegExp(searchText.toLowerCase());
 
-      );
-      let strData = JSON.stringify(searchObject);
-      var OrganizationContactsData = strData.replace(
-        new RegExp(this.searchTerm, "gi"),
-        (match) => {
-          return "<mark>" + match + "</mark>";
-        }
-      );
-      // console.log(dd);
+      var filteredOrgContacts = sortedOrgContacts.filter(function (con) {
+        return regexCondition.test(con.ContactName.toLowerCase()) || regexCondition.test(con.ContactNumber);
+      });
+      console.log('filteredContacts Org Con', filteredOrgContacts);
+      var highlightedOrgContacts = filteredOrgContacts.map(obj => ({...obj, ContactName: obj.ContactName.toLowerCase().replace(searchText.toLowerCase(), `<mark>${searchText}</mark>`), ContactNumber: obj.ContactNumber.toString().replace(searchText.toLowerCase(), `<mark>${searchText}</mark>`)}));
+
+      // new logic
+
+      var OrganizationContactsData = highlightedOrgContacts;
+
       this.organisationContacts.length = 0;
-      this.organisationContacts = JSON.parse(OrganizationContactsData);
+
       // Search data contacts =====================================================
       console.log(this.searchTerm);
-      var jsonContacts = JSON.parse(localStorage.getItem("ContactLocal"));
+      var jsonMyContacts = JSON.parse(localStorage.getItem("ContactLocal"));
+      // new logic
+      var sortedMyContacts =  jsonMyContacts.sort(function(a, b) {
+        return a.ContactName.localeCompare(b.ContactName);
+      });
+      var searchText = this.searchTerm;
+      var regexCondition = new RegExp(searchText.toLowerCase());
 
-      // Finding search object
-      searchObjectUser = jsonContacts.filter(
-        (Contact) =>
-          Contact.ContactName.toLowerCase().indexOf(searchTerm) !== -1
-      );
-      console.log(searchObjectUser.length);
+      var filteredMyContacts = sortedMyContacts.filter(function (con) {
+        return regexCondition.test(con.ContactName.toLowerCase()) || regexCondition.test(con.ContactNumber);
+      });
+      var highlightedMyContacts = filteredMyContacts.map(obj => ({...obj, ContactName: obj.ContactName.toLowerCase().replace(searchText.toLowerCase(), `<mark>${searchText}</mark>`), ContactNumber: obj.ContactNumber.toString().replace(searchText.toLowerCase(), `<mark>${searchText}</mark>`)}));
+
+      // new logic
+
+      var searchObjectUser = highlightedMyContacts;
+
       if ( searchObjectUser.length == 0) {
         this.userContact=0;
         this.organisationContacts=0;
@@ -705,18 +724,11 @@ if(this.searchTerm){
         this.organisationContacts = [];
       }
 
-      let strDataUser = JSON.stringify(searchObjectUser);
-      var UserContactsData = strDataUser.replace(
-        new RegExp(this.searchTerm, "gi"),
-        (match) => {
-          return "<mark>" + match + "</mark>";
-        }
-      );
-      
-      // console.log(dd);
+      var UserContactsData = highlightedMyContacts;
+
       this.userContacts.length = 0;
-      this.userContacts = JSON.parse(UserContactsData);
-      this.organisationContacts = JSON.parse(OrganizationContactsData);
+      this.userContacts = UserContactsData;
+      this.organisationContacts = OrganizationContactsData;
       
 }else{
       this.syncContents();
