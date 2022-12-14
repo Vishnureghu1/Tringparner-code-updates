@@ -765,8 +765,26 @@ export default {
           })
           const LocalContactsOrganizationJson = JSON.stringify(this.organisationContacts);
 
+      
+          
           console.log(LocalContactsOrganizationJson);
+
+          var localOrganization =  JSON.stringify(this.organisationContacts);
           localStorage.setItem("organizationContactLocal", LocalContactsOrganizationJson);
+          var localOrganizationJson = JSON.parse(localOrganization);
+          var sortedContacts =  localOrganizationJson.sort(function(a, b) {
+  return a.ContactName.localeCompare(b.ContactName);
+});
+var searchText = this.searchTerm;
+var regexCondition = new RegExp(searchText.toLowerCase());
+
+var filteredContacts = sortedContacts.filter(function (con) {
+  return regexCondition.test(con.ContactName.toLowerCase()) || regexCondition.test(con.ContactNumber);
+});
+
+console.log(filteredContacts);
+
+
 
           // window.localStorage.setItem("organizationContactLocal", JSON.stringify(LocalContactsOrganizationJson));
 
@@ -1923,6 +1941,7 @@ export default {
 
 
             this.realdata.push(this.detail);
+            
             if (this.detail.length == 0) {
               this.datafound = false
             } else {
