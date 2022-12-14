@@ -1697,8 +1697,8 @@ console.log(filteredContacts);
             localContacts.forEach(element => {
               if (this.calldetails.callerNumber == element.ContactNumber) {
 
-                console.log(element.ContactNumber);
-                console.log(element.ContactName);
+                console.log('ContactNumber_ ',element.ContactNumber);
+                console.log('ContactName_', element.ContactName);
                 var calledNumber = element.ContactName;
 
                 this.detail = Object.assign({}, this.detail, {
@@ -1740,7 +1740,7 @@ console.log(filteredContacts);
             } else {
               this.datafound = true
             }
-            console.log("snap calllog ", this.realdata);
+            console.log("filterMongo snap calllog ", this.realdata);
             // call details
           });
         })
@@ -1927,6 +1927,10 @@ console.log(filteredContacts);
               this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
             }
 
+            if(this.detail.Note[0].hasOwnProperty('Note')) {
+              this.detail.Note[0].Note = this.detail.Note[0].Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+            } 
+
             // note replace
             // this.detail.Note.forEach(Note => {
             //     console.log(Note.Note);
@@ -1947,7 +1951,7 @@ console.log(filteredContacts);
             } else {
               this.datafound = true
             }
-            console.log("snap calllog ", this.realdata);
+            console.log("searchMongo snap calllog ", this.realdata);
             console.log("The Details ", this.detail);
             // call details
           });
