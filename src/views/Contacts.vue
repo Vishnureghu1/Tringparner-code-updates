@@ -79,6 +79,8 @@
                       v-if="
                         organisationContacts && organisationContacts.length > 0
                       "
+                      v-model="orgExpand"
+                      multiple
                     >
                       <v-expansion-panel
                         v-for="organisationContact in organisationContacts"
@@ -198,6 +200,8 @@
                       accordion
                       flat
                       v-if="userContacts && userContacts.length > 0"
+                      v-model="myExpand"
+                      multiple
                     >
                       <v-expansion-panel
                         v-for="userContact in userContacts"
@@ -485,6 +489,8 @@ export default {
     right:null,
     fail:null,
     userContact:null,
+    orgExpand: [],
+    myExpand: [],
   }),
 
   mounted() {
@@ -728,7 +734,9 @@ if(this.searchTerm){
 
       this.userContacts.length = 0;
       this.userContacts = UserContactsData;
+      this.myExpand = Array.from(Array(UserContactsData.length+1).keys());
       this.organisationContacts = OrganizationContactsData;
+      this.orgExpand = Array.from(Array(OrganizationContactsData.length+1).keys());
       
 }else{
       this.syncContents();
