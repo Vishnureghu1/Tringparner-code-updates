@@ -1927,7 +1927,7 @@ console.log(filteredContacts);
               this.detail.reminderPayload.Message = this.detail.reminderPayload.Message.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
             }
 
-            if(this.detail.Note[0].hasOwnProperty('Note')) {
+            if(Object.getOwnPropertyDescriptor(this.detail.Note[0], "Note")) {
               this.detail.Note[0].Note = this.detail.Note[0].Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
             } 
 
