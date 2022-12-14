@@ -464,7 +464,8 @@ export default {
     searchTerm: "",
     contact_text: "",
     tab: null,
-    searchObject: "",
+    searchObject: [],
+    searchObjectUser: [],
     userContacts: false,
     organisationContacts: false,
     syncOrganisation:false,
@@ -678,8 +679,8 @@ export default {
 if(this.searchTerm){
 
       console.log(this.searchTerm);
-      var searchObject = [];
-      var searchObjectUser = [];
+      // var searchObject = [];
+      // var searchObjectUser = [];
       var orgLocalContacts = JSON.parse(localStorage.getItem("organizationContactLocal"));
 
       // new logic
@@ -687,7 +688,7 @@ if(this.searchTerm){
         return a.ContactName.localeCompare(b.ContactName);
       });
       var searchText = this.searchTerm;
-      var regexCondition = new RegExp(searchText.toLowerCase());
+      // var regexCondition = new RegExp(searchText.toLowerCase());
 
       var filteredOrgContacts = sortedOrgContacts.filter(function (con) {
         return regexCondition.test(con.ContactName.toLowerCase()) || regexCondition.test(con.ContactNumber);
@@ -708,7 +709,6 @@ if(this.searchTerm){
       var sortedMyContacts =  jsonMyContacts.sort(function(a, b) {
         return a.ContactName.localeCompare(b.ContactName);
       });
-      var searchText = this.searchTerm;
       var regexCondition = new RegExp(searchText.toLowerCase());
 
       var filteredMyContacts = sortedMyContacts.filter(function (con) {
