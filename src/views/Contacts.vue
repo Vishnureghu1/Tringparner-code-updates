@@ -62,11 +62,10 @@
 
           <v-card elevation="0">
             <v-tabs v-model="tab" centered outline>
-              <v-tabs-slider></v-tabs-slider>
+              
+              <v-tab href="#tab-1" name="my_contacts" @click="passTabName(1)"> My Contacts </v-tab>
 
-              <v-tab href="#tab-1"> My Contacts </v-tab>
-
-              <v-tab href="#tab-2"> Organisation Contacts </v-tab>
+              <v-tab href="#tab-2" name="org_contacts"  @click="passTabName(2)"> Organisation Contacts </v-tab>
             </v-tabs>
 
             <v-tabs-items v-model="tab">
@@ -443,6 +442,9 @@
 import { db } from "@/main.js";
 import axios from "axios";
 export default {
+  name: 'StaticTabs',
+  props: [ 'selected' ],
+
   components: {},
   data: () => ({
     number: "",
@@ -474,7 +476,9 @@ export default {
     status:false,
     message:'', 
     url:"",
-    // contactName:"",
+    selectedTab:null,
+    tabId:1,
+    // contactName:"",z
     // contactNumber:"",
     items: [
       { title: "Edit Contact", color: "black--text", url: "edit_contact" },
@@ -496,8 +500,13 @@ export default {
 
   mounted() {
     this.syncContents();
+    this.tab = this.selected
   },
   methods: {
+    passTabName(s) {
+           console.log(s);
+           this.tabId= s;
+        },
     contactNumberSpan(number) {
       return `+91 ${number}`;
     },
@@ -677,33 +686,39 @@ export default {
 
     updateSearchTerm() {
 if(this.searchTerm){
+ 
+      var searchText = this.searchTerm;
 
-      console.log(this.searchTerm);
-      // var searchObject = [];
-      // var searchObjectUser = [];
-      var orgLocalContacts = JSON.parse(localStorage.getItem("organizationContactLocal"));
 
+      if(this.tabId==2){
+      var jsonOrgContacts = JSON.parse(localStorage.getItem("organizationContactLocal"));
       // new logic
-      var sortedOrgContacts =  orgLocalContacts.sort(function(a, b) {
+      var sortedOrgContacts =  jsonOrgContacts.sort(function(a, b) {
         return a.ContactName.localeCompare(b.ContactName);
       });
-      var searchText = this.searchTerm;
-      // var regexCondition = new RegExp(searchText.toLowerCase());
-
+      var regexCondition = new RegExp(searchText.toLowerCase());
       var filteredOrgContacts = sortedOrgContacts.filter(function (con) {
+        // console.log(con);
         return regexCondition.test(con.ContactName.toLowerCase()) || regexCondition.test(con.ContactNumber);
       });
-      console.log('filteredContacts Org Con', filteredOrgContacts);
       var highlightedOrgContacts = filteredOrgContacts.map(obj => ({...obj, ContactName: obj.ContactName.toLowerCase().replace(searchText.toLowerCase(), `<mark>${searchText}</mark>`), ContactNumber: obj.ContactNumber.toString().replace(searchText.toLowerCase(), `<mark>${searchText}</mark>`)}));
 
       // new logic
 
+      var searchObjectOrganization = highlightedOrgContacts;
+      if ( searchObjectOrganization.length == 0) {
+        this.organisationContact=0;
+      }else{
+        this.organisationContacts = [];
+      }
       var OrganizationContactsData = highlightedOrgContacts;
-
       this.organisationContacts.length = 0;
+      this.organisationContacts = OrganizationContactsData;
+      this.orgExpand = Array.from(Array(OrganizationContactsData.length+1).keys());
+    }else{
 
-      // Search data contacts =====================================================
-      console.log(this.searchTerm);
+      // Search data my contacts =====================================================
+      
       var jsonMyContacts = JSON.parse(localStorage.getItem("ContactLocal"));
       // new logic
       var sortedMyContacts =  jsonMyContacts.sort(function(a, b) {
@@ -712,6 +727,8 @@ if(this.searchTerm){
       var regexCondition = new RegExp(searchText.toLowerCase());
 
       var filteredMyContacts = sortedMyContacts.filter(function (con) {
+        // console.log(con);
+
         return regexCondition.test(con.ContactName.toLowerCase()) || regexCondition.test(con.ContactNumber);
       });
       var highlightedMyContacts = filteredMyContacts.map(obj => ({...obj, ContactName: obj.ContactName.toLowerCase().replace(searchText.toLowerCase(), `<mark>${searchText}</mark>`), ContactNumber: obj.ContactNumber.toString().replace(searchText.toLowerCase(), `<mark>${searchText}</mark>`)}));
@@ -722,21 +739,15 @@ if(this.searchTerm){
 
       if ( searchObjectUser.length == 0) {
         this.userContact=0;
-        this.organisationContacts=0;
       }else{
-        // this.syncContents();
-
         this.userContacts = [];
-        this.organisationContacts = [];
       }
 
       var UserContactsData = highlightedMyContacts;
-
       this.userContacts.length = 0;
       this.userContacts = UserContactsData;
       this.myExpand = Array.from(Array(UserContactsData.length+1).keys());
-      this.organisationContacts = OrganizationContactsData;
-      this.orgExpand = Array.from(Array(OrganizationContactsData.length+1).keys());
+    }
       
 }else{
       this.syncContents();
