@@ -103,15 +103,15 @@
           </v-row>
 
           <v-card elevation="0">
-            <v-tabs v-model="tab" centered outline>
+            <v-tabs v-model="tab" centered outline >
               
               <v-tab href="#tab-1" name="my_contacts" @click="passTabName(1)"> My Contacts </v-tab>
 
               <v-tab href="#tab-2" name="org_contacts"  @click="passTabName(2)"> Organisation Contacts </v-tab>
             </v-tabs>
 
-            <v-tabs-items v-model="tab">
-              <v-tab-item value="tab-2">
+            <v-tabs-items v-model="tab" >
+              <v-tab-item value="tab-2" :transition="false">
                 <v-card flat elevation="0">
                   <div id="layoutCallLog">
                     <v-expansion-panels
@@ -223,7 +223,7 @@
                   </div>
                 </v-card>
               </v-tab-item>
-              <v-tab-item value="tab-1">
+              <v-tab-item value="tab-1" :transition="false">
                 <v-card flat elevation="0">
                   <!-- <div v-if="userContacts==false || userContacts==null">
                         
