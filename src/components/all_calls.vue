@@ -1884,7 +1884,7 @@ console.log(filteredContacts);
 
                 console.log(element.ContactNumber);
                 console.log(element.ContactName);
-                var calledNumber = element.ContactName;
+                var calledNumber = element.ContactNumber;
 
                 this.detail = Object.assign({}, this.detail, {
                   callstatus: this.calldetails.callstatus,
@@ -1940,9 +1940,10 @@ console.log(filteredContacts);
             // Note
 
             // this.Note = this.Note.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
+            console.log(this.detail);
 
+            // this.detail.callerNumber = 'sss';
             this.detail.callerNumber = this.calldetails.callerNumber.replace(new RegExp(`${this.searchTerm}`, 'gi'), `<mark>${this.searchTerm}</mark>`);
-
 
             this.realdata.push(this.detail);
             

@@ -809,3 +809,14 @@ h4.background span {
 .pr-45 {
     padding-right: 45px;
 }
+
+.row-pointer {
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+.row-pointer:hover {
+    cursor: pointer;
+    transition: all 0.5s;
+    color: #c62828;
+}

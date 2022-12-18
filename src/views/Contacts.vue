@@ -35,14 +35,8 @@
                       @input="updateSearchTerm"
                       single-line
                     ></v-text-field>
-                    <v-icon
-                      class="mt-0 mb-5 mr-4"
-                      color="black"
-                      @click="hidden = !hidden"
-                    >
-                      mdi-magnify</v-icon
-                    >
-                    <span class="pr-7">
+                   
+                    <!-- <span class="pr-7">
                           <v-icon
                             class="mt-0 mb-5 mr-4"
                             color="black"
@@ -51,7 +45,55 @@
                             :loading="dialog"
                             >mdi-plus</v-icon
                           >
+                          </span> -->
+
+                          
+                      <v-menu v-model="filtermenu" :close-on-content-click="false" :nudge-width="200" offset-x>
+                        <template v-slot:activator="{ on, attrs }">
+                          <span class="pr-7">
+                            <v-icon
+                      class="mt-0 mb-5 mr-4"
+                      color="black"
+                      @click="hidden = !hidden"
+                    >
+                      mdi-magnify</v-icon
+                    >
+                            <v-badge v-if="showBadge == true" dot overlap>
+                              <v-icon class="mt-0 mb-5 mr-0" color="black" v-bind="attrs" v-on="on">mdi-filter-variant
+                              </v-icon>
+                            </v-badge>
+                            <span v-if="showBadge == false" overlap>
+                              <v-icon class="mt-0 mb-5 mr-0" color="black" v-bind="attrs" v-on="on">mdi-plus
+                              </v-icon>
+                            </span>
                           </span>
+                        </template>
+
+                        <v-card min-width="378" class="fixed_filter">
+                          <v-form ref="form" v-model="valid" lazy-validation>
+                            <v-list>
+                                <v-list-item>
+                                  <v-list-item-content>
+        <v-list-item-title :disabled="dialog"  class="row-pointer"
+                                  @click="threeDotAction('add_contact', '')"
+                                  :loading="dialog">Add My Contact
+        </v-list-item-title>
+          </v-list-item-content>                        
+                                </v-list-item>
+                                <v-list-item>
+                                  <v-list-item-content>
+        <v-list-item-title :disabled="dialog"  class="row-pointer"
+                            @click="threeDotAction('add_org_contact', '')"
+                            :loading="dialog">Add Organaization Contact
+                            </v-list-item-title>
+                            </v-list-item-content>
+                                </v-list-item>
+</v-list>
+
+                              </v-form>
+                      </v-card>
+                      </v-menu>
+
 
                
                   </v-col>
@@ -336,13 +378,14 @@
             outlined disabled
             v-model="number"
           ></v-hidden-field>
-          <div v-if="contact_text=='Add a New Contact'">
-            <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox>
-          </div>
-          <div v-else>
-            <div v-if="url=='edit_contact'">
-
-              <v-checkbox class="pb-0 mb-0"  v-model="SyncOrganisation"   @change="checkboxUpdated" label="Update to Organaization contact" value="1" ></v-checkbox>
+          
+          <div v-if="contact_text=='Add a New Contact' && url=='add_contact'">
+              <v-checkbox class="pb-0 mb-0" v-model="SyncOrganisation"   @change="checkboxUpdated" label="Add to Organaization contact" value="1"></v-checkbox>
+            </div>
+            <div v-else>
+              <div v-if="url=='edit_contact' ">
+                
+                <v-checkbox class="pb-0 mb-0"  v-model="SyncOrganisation"   @change="checkboxUpdated" label="Update to Organaization contact" value="1" ></v-checkbox>
             </div>
             </div>
         </v-card-text>
@@ -523,6 +566,9 @@ export default {
       // console.log(owneruid)
       this.owneruid = owneruid;
       this.uid = localStorageUserObj.uid;
+
+
+      
       await db
         .collection("UserContacts")
         .where("Uid", "==", this.uid)
@@ -786,6 +832,17 @@ if(this.searchTerm){
         this.number = contactNumber;
         this.NewNumber = contactNumber;
         this.contact_text = "Add a New Contact";
+        this.url = "add_contact";
+      }
+      if (url == "add_org_contact") {
+        this.dialog = false;
+        this.dialogDelete = false;
+        this.dialog2 = true;
+        this.name = contactName;
+        this.number = contactNumber;
+        this.NewNumber = contactNumber;
+        this.contact_text = "Add a New Contact";
+        this.url = "add_org_contact";
       }
       if (url == "delete_contact") {
         this.dialog = false;
