@@ -107,7 +107,7 @@
               
               <v-tab href="#tab-1" name="my_contacts" @click="passTabName(1)"> My Contacts </v-tab>
 
-              <v-tab href="#tab-2" name="org_contacts"  @click="passTabName(2)"> Organisation Contacts </v-tab>
+              <v-tab href="#tab-2" name="org_contacts"  @click="passTabName(2)"> Organization Contacts </v-tab>
             </v-tabs>
 
             <v-tabs-items v-model="tab" >
@@ -742,8 +742,8 @@ if(this.searchTerm){
       var sortedOrgContacts =  jsonOrgContacts.sort(function(a, b) {
         return a.ContactName.localeCompare(b.ContactName);
       });
-      var regexCondition = new RegExp(searchText.toLowerCase());
       var filteredOrgContacts = sortedOrgContacts.filter(function (con) {
+        var regexCondition = new RegExp(searchText.toLowerCase());
         // console.log(con);
         return regexCondition.test(con.ContactName.toLowerCase()) || regexCondition.test(con.ContactNumber);
       });
