@@ -105,9 +105,9 @@
           <v-card elevation="0">
             <v-tabs v-model="tab" centered outline >
               
-              <v-tab href="#tab-1" name="my_contacts" @click="passTabName(1)"> My Contacts </v-tab>
+              <v-tab href="#tab-1" ref="tab1" name="my_contacts" @click="passTabName(1)"> My Contacts </v-tab>
 
-              <v-tab href="#tab-2" name="org_contacts"  @click="passTabName(2)"> Organization Contacts </v-tab>
+              <v-tab href="#tab-2" ref="tab2" name="org_contacts"  @click="passTabName(2)"> Organization Contacts </v-tab>
             </v-tabs>
 
             <v-tabs-items v-model="tab" >
@@ -369,7 +369,7 @@
             v-model="number"
           ></v-text-field>
           <v-text-field v-if="contact_text=='Edit Contact'"
-            label="New Number*"
+            label="Mobile Number*"
             outlined
             v-model="NewNumber"
           ></v-text-field>
@@ -544,11 +544,14 @@ export default {
   mounted() {
     this.syncContents();
     this.tab = this.selected
+    
   },
   methods: {
     passTabName(s) {
            console.log(s);
            this.tabId= s;
+       
+
         },
     contactNumberSpan(number) {
       return `+91 ${number}`;
@@ -1026,7 +1029,7 @@ if(this.searchTerm){
             UpdatedBy: this.uid,
             Name: this.name,
             OldNumber: parseInt(this.number),
-            NewNumber: parseInt(this.number),
+            NewNumber: parseInt(this.NewNumber),
             SyncOrganisation: this.syncOrganisation,
           },
         };
