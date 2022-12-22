@@ -562,7 +562,10 @@ export default {
     paginationBasedOrganizationContact: [],
     organisationContactList: [],
     userSearchOrganizationContact: [],
-    searchData: []
+    searchData: [],
+    backupPaginationData: [],
+    backupPaginationOrganizationData: [],
+    showContact: false
   }),
 
   mounted() {
@@ -577,12 +580,29 @@ export default {
     );
     this.organisationContactData(organisationContactListData);
   },
+  watch: {
+    searchTerm: {
+      immediate: true,
+      handler(newValue) {
+        if (!newValue && this.tab === 'tab-1') {
+           this.paginationBasedDisplayedContactDataSet(this.backupPaginationData);
+           this.showContact = true;
+          this.myExpand = [];
+        } else if (!newValue && this.tab === 'tab-2') {
+          this.paginationBasedDisplayedContactDataSet(this.backupPaginationOrganizationData);
+          this.showContact = true;
+          this.orgExpand = [];
+        }
+      }
+    }
+  },
   methods: {
     organisationContactData(organisationContactData) {
       let sortData = organisationContactData.sort((a, b) =>
         a.ContactName.localeCompare(b.ContactName)
       );
       this.organisationContactList = sortData;
+      this.backupPaginationOrganizationData = sortData
       sortData = organisationContactData.slice(0, 11);
       sortData.forEach(con =>
         this.paginationBasedOrganizationContact.push(con)
@@ -594,6 +614,7 @@ export default {
         this.userContactDataSet = JSON.parse(
           localStorage.getItem("ContactLocal")
         );
+        this.backupPaginationData =  this.userContactDataSet
       } else {
         this.userContactDataSet = search;
       }
@@ -608,16 +629,16 @@ export default {
       this.userContactDataSet.forEach(item => slicedContacts.push(item));
 
       let slicedResult = search
-        ? slicedContacts.slice(0, 6)
-        : slicedContacts.slice(0, 11);
+        ? slicedContacts.slice(0, 11)
+        : slicedContacts.slice(0, 11)
+        
       slicedResult.forEach(contact =>
         this.paginationBasedDisplayedContactData.push(contact)
       );
-
       if (this.tab === "tab-2" && this.userContactDataSet) {
         this.paginationBasedOrganizationContact = [];
         let organizationData = this.userContactDataSet;
-        let slicedOrganizationData = organizationData.slice(0, 6);
+        let slicedOrganizationData = organizationData.slice(0, 11);
         slicedOrganizationData.forEach(value =>
           this.paginationBasedOrganizationContact.push(value)
         );
