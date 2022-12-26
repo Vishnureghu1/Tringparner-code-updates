@@ -594,7 +594,7 @@ export default {
     });
   },
   destroyed(){
-    window.removeEventListener("scroll");
+    window.removeEventListener("scroll", false);
 
   },
   watch: {
