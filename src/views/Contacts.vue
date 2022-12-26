@@ -565,7 +565,6 @@ export default {
     searchData: [],
     backupPaginationData: [],
     backupPaginationOrganizationData: [],
-    showContact: false
   }),
 
   mounted() {
@@ -579,18 +578,38 @@ export default {
       localStorage.getItem("organizationContactLocal")
     );
     this.organisationContactData(organisationContactListData);
+
+    window.addEventListener("scroll", e => {
+      const bottom =
+        e.target.scrollingElement.scrollHeight -
+          e.target.scrollingElement.scrollTop ===
+        e.target.scrollingElement.clientHeight;
+      if (bottom) {
+        this.$root.vtoast.show({
+          message: "No more contacts",
+          color: "red",
+          timer: 2000
+        });
+      }
+    });
+  },
+  destroyed(){
+    window.removeEventListener("scroll");
+
   },
   watch: {
     searchTerm: {
       immediate: true,
       handler(newValue) {
-        if (!newValue && this.tab === 'tab-1') {
-           this.paginationBasedDisplayedContactDataSet(this.backupPaginationData);
-           this.showContact = true;
+        if (!newValue && this.tab === "tab-1") {
+          this.paginationBasedDisplayedContactDataSet(
+            this.backupPaginationData
+          );
           this.myExpand = [];
-        } else if (!newValue && this.tab === 'tab-2') {
-          this.paginationBasedDisplayedContactDataSet(this.backupPaginationOrganizationData);
-          this.showContact = true;
+        } else if (!newValue && this.tab === "tab-2") {
+          this.paginationBasedDisplayedContactDataSet(
+            this.backupPaginationOrganizationData
+          );
           this.orgExpand = [];
         }
       }
@@ -602,7 +621,7 @@ export default {
         a.ContactName.localeCompare(b.ContactName)
       );
       this.organisationContactList = sortData;
-      this.backupPaginationOrganizationData = sortData
+      this.backupPaginationOrganizationData = sortData;
       sortData = organisationContactData.slice(0, 11);
       sortData.forEach(con =>
         this.paginationBasedOrganizationContact.push(con)
@@ -610,11 +629,11 @@ export default {
     },
     paginationBasedDisplayedContactDataSet(search = "") {
       let slicedContacts = [];
-      if (search == "") {
+      if (search == "" && !this.searchTerm) {
         this.userContactDataSet = JSON.parse(
           localStorage.getItem("ContactLocal")
         );
-        this.backupPaginationData =  this.userContactDataSet
+        this.backupPaginationData = this.userContactDataSet;
       } else {
         this.userContactDataSet = search;
       }
@@ -630,8 +649,8 @@ export default {
 
       let slicedResult = search
         ? slicedContacts.slice(0, 11)
-        : slicedContacts.slice(0, 11)
-        
+        : slicedContacts.slice(0, 11);
+
       slicedResult.forEach(contact =>
         this.paginationBasedDisplayedContactData.push(contact)
       );
